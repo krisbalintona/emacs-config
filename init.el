@@ -246,6 +246,25 @@ that.  Otherwise, remove it from `minor-mode-alist'."
   ;; Don’t warn when advising
   (setopt ad-redefinition-action 'accept)
   
+  ;; Set `cursor-type' based on major mode
+  (setup emacs
+    (defun krisb-set-cursor-code ()
+      "Set cursor settings for `prog-mode'."
+      (setq-local cursor-type 'box
+                  cursor-in-non-selected-windows 'hollow))
+    (add-hook 'prog-mode-hook #'krisb-set-cursor-code)
+  
+    (defun krisb-set-cursor-prose ()
+      "Set cursor settings for prose major modes."
+      (setq-local cursor-type '(bar . 2)
+                  cursor-in-non-selected-windows 'hollow))
+    (dolist (hook '(org-mode-hook
+                    markdown-mode-hook
+                    git-commit-setup-hook
+                    log-edit-mode-hook
+                    message-mode-hook))
+      (add-hook hook #'krisb-set-cursor-prose)))
+  
   ;; Word wrapping.  Continue wrapped lines at whitespace rather than
   ;; breaking in the middle of a word.
   (setopt word-wrap t)
@@ -697,7 +716,7 @@ to if called with ARG, or any prefix argument."
 ;;;;; Org-mode
 (setup org
   (:package org)
-  
+
   (add-hook 'org-mode-hook #'variable-pitch-mode)
   (add-hook 'org-mode-hook #'visual-line-mode)
   (add-hook 'org-mode-hook (lambda ()
@@ -720,7 +739,7 @@ to if called with ARG, or any prefix argument."
   ;; Movement
   (setopt org-special-ctrl-a/e t
           org-ctrl-k-protect-subtree 'error)
-  
+
   ;; Logging
   (setopt org-log-done 'time
           org-log-into-drawer t
@@ -757,10 +776,10 @@ to if called with ARG, or any prefix argument."
 (setup org-agenda
 
   (add-hook 'org-agenda-mode #'hl-line-mode)
-  
+
   (bind-keys :map krisb-open-keymap
              ("a" . org-agenda))
-  
+
   (setopt org-agenda-inhibit-startup t)
   (setopt org-agenda-files (list krisb-org-agenda-directory))
 
@@ -794,7 +813,7 @@ to if called with ARG, or any prefix argument."
 
   ;; Effort
   (setopt org-agenda-sort-noeffort-is-high nil)
-  
+
   (with-eval-after-load 'org-agenda
     (add-to-list 'display-buffer-alist
                  '("\\*\\(?:Org Select\\|Agenda Commands\\)\\*"
@@ -809,7 +828,7 @@ to if called with ARG, or any prefix argument."
 ;;;; Other org packages
 (setup org-modern
   (:package org-modern)
-  
+
   (add-hook 'org-mode-hook #'org-modern-mode)
   (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
 
@@ -868,7 +887,7 @@ to if called with ARG, or any prefix argument."
   (setopt org-modern-table t
           org-modern-table-vertical 3
           org-modern-table-horizontal 0.1)
-  
+
   ;; TODO 2025-05-23: Revisit this.
   ;; (krisb-modus-themes-setup-faces
   ;;  "org-modern"

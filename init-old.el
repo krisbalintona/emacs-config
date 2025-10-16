@@ -1837,25 +1837,6 @@ ORIG-FUN should be `ispell-completion-at-point'."
   (abridge-diff-mode 1)
   (add-to-list 'mode-line-collapse-minor-modes 'abridge-diff-mode))
 
-;;;; Set `cursor-type'
-;; Set `cursor-type' based on major mode.
-(defun krisb-set-cursor-code ()
-  "Set cursor settings for `prog-mode'."
-  (setq-local cursor-type 'box
-              cursor-in-non-selected-windows 'hollow))
-(add-hook 'prog-mode-hook #'krisb-set-cursor-code)
-
-(defun krisb-set-cursor-prose ()
-  "Set cursor settings for prose major modes."
-  (setq-local cursor-type '(bar . 2)
-              cursor-in-non-selected-windows 'hollow))
-(dolist (hook '(org-mode-hook
-                markdown-mode-hook
-                git-commit-setup-hook
-                log-edit-mode-hook
-                message-mode-hook))
-  (add-hook hook #'krisb-set-cursor-prose))
-
 ;;;; Completion-preview
 ;; TODO 2025-05-30: Document:
 ;; - `completion-preview-ignore-case’ in conjunction with `completion-ignore-case'
