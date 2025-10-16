@@ -288,10 +288,6 @@ that.  Otherwise, remove it from `minor-mode-alist'."
   ;; Show context menu from right-click
   (when (display-graphic-p) (context-menu-mode 1))
   
-  ;; TODO 2025-10-14: Document:
-  ;; `history-delete-duplicates'
-  (setopt history-length 1000)
-  
   ;; Don’t wait until yanking to put clipboard text into `kill-ring’
   (setopt save-interprogram-paste-before-kill t)
   
@@ -501,7 +497,87 @@ to if called with ARG, or any prefix argument."
   (setopt ef-themes-to-toggle '(ef-duo-light ef-duo-dark))
   (krisb-enable-theme-time-of-day (car ef-themes-to-toggle) (cadr ef-themes-to-toggle)))
 
-;;; Vertico and extensions
+;;; Completion and minibuffer
+;; TODO 2025-05-27: Document this advice by vertico to show
+;; `completing-read-multiple' separator on Emacs versions below 31:
+;; https://github.com/minad/vertico#completing-read-multiple.
+(setup minibuffer
+  ;; Category settings. A non-exhaustive list of known completion
+  ;; categories:
+  ;; - `bookmark'
+  ;; - `buffer'
+  ;; - `charset'
+  ;; - `coding-system'
+  ;; - `color'
+  ;; - `command' (e.g. `M-x')
+  ;; You can find out the category of the completion canddiate at
+  ;; point via the form below:
+  ;;     (completion-metadata-get (completion-metadata (minibuffer-contents) minibuffer-completion-table minibuffer-completion-predicate) 'category)
+  ;; TODO 2025-10-15: Revisit these:
+  ;; (setopt completion-category-defaults
+  ;;         '((calendar-month (display-sort-function . identity)))
+  ;;         completion-category-overrides
+  ;;         '((file (styles . (partial-completion flex)))))
+                                        ; Include `partial-completion' to enable wildcards and partial paths.
+
+  ;; We don’t want to ignore case for completions, but buffer and file names are
+  ;; exceptions
+  (setopt completion-ignore-case nil
+          read-file-name-completion-ignore-case t
+          read-buffer-completion-ignore-case t))
+
+;; Regarding `completion-styles'
+(setup minibuffer
+  (setopt completion-pcm-leading-wildcard t) ; Emacs 31: Make partial-completion behave more like the substring completion style
+
+  ;; Set up `completion-styles'
+  (defun krisb-completion-styles-setup ()
+    "Set up `completion-styes'."
+    ;; I do this manually last because the final styles I want depend
+    ;; on the packages I want enabled, and so setting this within each
+    ;; use-package, independently of other use-packages, means I have
+    ;; to make sure various packages are loaded after other ones so my
+    ;; `completion-styles' setting isn't overridden in an undesirable
+    ;; way.  Instead, I opt to just set it finally after all those
+    ;; packages are set.
+    (setopt completion-styles (list (if (featurep 'orderless)
+                                        'orderless 'basic)
+                                    (if (featurep 'hotfuzz)
+                                        'hotfuzz 'flex))))
+  ;; Elpaca: (elpaca-after-init-hook . krisb-completion-styles-setup)
+  (add-hook 'after-init-hook #'krisb-completion-styles-setup))
+
+(setup minibuffer
+
+  ;; TODO 2025-10-14: Document:
+  ;; `history-delete-duplicates'
+  (setopt history-length 1000)
+
+  ;; Enable recursive minibuffers
+  (setopt enable-recursive-minibuffers t)
+
+  ;; Minibuffer prompts
+  (setopt minibuffer-default-prompt-format " [%s]")
+  (minibuffer-electric-default-mode 1))  ; Show default value
+
+;;;; Completions buffer
+;; TODO 2025-05-20: Document the following options below in the
+;; literate configuration:
+;; - `completion-cycle-threshold'
+;; - `completion-flex-nospace’
+(setup minibuffer
+  ;; Completions buffer
+  (setup completions-max-height 20 ; Otherwise the completions buffer can grow to fill the entire frame
+         completion-auto-help 'visible
+         completion-lazy-hilit t ; Lazy highlighting for drastic performance increase; added Emacs 30.1
+         completion-auto-select 'second-tab
+         completions-format 'one-column
+         completions-detailed t ; Show annotations for candidates (like `marginalia')
+         completions-group t    ; Emacs 28
+         completions-sort 'historical)  ; Emacs 30.1
+  )
+
+;;;; Vertico and extensions
 (setup vertico
   (:package vertico)
 

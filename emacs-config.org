@@ -843,15 +843,113 @@ A right-click menu:
   (when (display-graphic-p) (context-menu-mode 1))
 #+end_src
 
-** Completion
+** General completion
 
-#+begin_src emacs-lisp :noweb-ref emacs-misc
+#+name: completion
+#+begin_src emacs-lisp
+  ;; TODO 2025-05-27: Document this advice by vertico to show
+  ;; `completing-read-multiple' separator on Emacs versions below 31:
+  ;; https://github.com/minad/vertico#completing-read-multiple.
+  (setup minibuffer
+    ;; Category settings. A non-exhaustive list of known completion
+    ;; categories:
+    ;; - `bookmark'
+    ;; - `buffer'
+    ;; - `charset'
+    ;; - `coding-system'
+    ;; - `color'
+    ;; - `command' (e.g. `M-x')
+    ;; You can find out the category of the completion canddiate at
+    ;; point via the form below:
+    ;;     (completion-metadata-get (completion-metadata (minibuffer-contents) minibuffer-completion-table minibuffer-completion-predicate) 'category)
+    ;; TODO 2025-10-15: Revisit these:
+    ;; (setopt completion-category-defaults
+    ;;         '((calendar-month (display-sort-function . identity)))
+    ;;         completion-category-overrides
+    ;;         '((file (styles . (partial-completion flex)))))
+                                          ; Include `partial-completion' to enable wildcards and partial paths.
+
+    ;; We don’t want to ignore case for completions, but buffer and file names are
+    ;; exceptions
+    (setopt completion-ignore-case nil
+            read-file-name-completion-ignore-case t
+            read-buffer-completion-ignore-case t))
+
+  ;; Regarding `completion-styles'
+  (setup minibuffer
+    (setopt completion-pcm-leading-wildcard t) ; Emacs 31: Make partial-completion behave more like the substring completion style
+
+    ;; Set up `completion-styles'
+    (defun krisb-completion-styles-setup ()
+      "Set up `completion-styes'."
+      ;; I do this manually last because the final styles I want depend
+      ;; on the packages I want enabled, and so setting this within each
+      ;; use-package, independently of other use-packages, means I have
+      ;; to make sure various packages are loaded after other ones so my
+      ;; `completion-styles' setting isn't overridden in an undesirable
+      ;; way.  Instead, I opt to just set it finally after all those
+      ;; packages are set.
+      (setopt completion-styles (list (if (featurep 'orderless)
+                                          'orderless 'basic)
+                                      (if (featurep 'hotfuzz)
+                                          'hotfuzz 'flex))))
+    ;; Elpaca: (elpaca-after-init-hook . krisb-completion-styles-setup)
+    (add-hook 'after-init-hook #'krisb-completion-styles-setup))
+#+end_src
+
+** Completions buffer
+
+#+name: completions-buffer
+#+begin_src emacs-lisp
+  ;; TODO 2025-05-20: Document the following options below in the
+  ;; literate configuration:
+  ;; - `completion-cycle-threshold'
+  ;; - `completion-flex-nospace’
+  (setup minibuffer
+    ;; Completions buffer
+    (setup completions-max-height 20 ; Otherwise the completions buffer can grow to fill the entire frame
+           completion-auto-help 'visible
+           completion-lazy-hilit t ; Lazy highlighting for drastic performance increase; added Emacs 30.1
+           completion-auto-select 'second-tab
+           completions-format 'one-column
+           completions-detailed t ; Show annotations for candidates (like `marginalia')
+           completions-group t    ; Emacs 28
+           completions-sort 'historical)  ; Emacs 30.1
+    )
+#+end_src
+
+** Minibuffer
+
+#+name: minibuffer
+#+begin_src emacs-lisp
+  (setup minibuffer
+
+    <<history-length>>
+
+    <<enable-recursive-minibuffers>>
+
+    ;; Minibuffer prompts
+    (setopt minibuffer-default-prompt-format " [%s]")
+    (minibuffer-electric-default-mode 1))  ; Show default value
+#+end_src
+
+For minibuffer history:
+#+name: history-length
+#+begin_src emacs-lisp
   ;; TODO 2025-10-14: Document:
   ;; `history-delete-duplicates'
   (setopt history-length 1000)
 #+end_src
 
-*** Vertico: Minibuffer completion interface
+*** Recursive minibuffers
+
+#+name: enable-recursive-minibuffers
+#+begin_src emacs-lisp
+  ;; Enable recursive minibuffers
+  (setopt enable-recursive-minibuffers t)
+#+end_src
+
+*** Vertico: Alternative minibuffer completion interface
 
 #+name: vertico
 #+begin_src emacs-lisp
@@ -935,7 +1033,7 @@ Vertico provides several extensions:
                :spacer #(" " 0 1 (cursor t)))))
 #+end_src
 
-*** Corfu: Inline completion interface
+** Corfu: Inline completion interface
 
 #+name: corfu
 #+begin_src emacs-lisp
@@ -1342,7 +1440,15 @@ This section is for the major mode
   ;;;; Ef-themes
   <<ef-themes>>
 
-  ;;; Vertico and extensions
+  ;;; Completion and minibuffer
+  <<completion>>
+
+  <<minibuffer>>
+
+  ;;;; Completions buffer
+  <<completions-buffer>>
+
+  ;;;; Vertico and extensions
   <<vertico>>
 
   ;;; Exec-path-from-shell
@@ -1385,4 +1491,5 @@ This section is for the major mode
 * COMMENT Local words
 
 #  LocalWords:  noweb org's Linters Balintona Kristoffer LocalWords Elpaca el Runtime PDFs Ef elisp
-#  LocalWords:  Minibuffer Vertico Fontaine Theming Savehist minibuffer facto de
+#  LocalWords:  Minibuffer Vertico Fontaine Theming Savehist minibuffer facto de Minibuffers
+#  LocalWords:  minibuffers
