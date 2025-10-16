@@ -4,9 +4,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(arei bui edit-indirect ef-themes el-patch fontaine geiser-guile jinx
-          magit-popup no-littering on tablist))
+ '(package-selected-packages nil)
  '(safe-local-variable-directories
    '("/home/krisbalintona/Documents/org-database/notes/notebooks/buoy/"
      "/home/krisbalintona/Documents/org-database/notes/notebooks/"
@@ -27,11 +25,11 @@
      "/home/krisbalintona/nix-config/"))
  '(safe-local-variable-values
    '((eval add-hook 'org-insert-heading-hook 'org-expiry-insert-created
-           nil t)
+	   nil t)
      (eval add-hook 'before-save-hook 'org-make-toc)
      (org-use-tag-inheritance . t) (org-review-delay . "+3d")
      (eval add-hook 'org-insert-heading-hook
-           'org-expiry-insert-created 99 t)
+	   'org-expiry-insert-created 99 t)
      (org-use-tag-inheritance))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
