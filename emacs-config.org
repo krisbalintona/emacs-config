@@ -309,7 +309,7 @@ There is a problem when we use the typical ~(advice-add ... :override ...)~, nam
 
 ** Dealing with ~custom-file~
 
-We could use a snippet like the one below to set and load the ~custom-file~:
+We use a snippet like the one below to set and load the ~custom-file~:
 #+name: set-and-load-custom-file
 #+begin_src emacs-lisp
   ;;; Set and load custom file
@@ -318,7 +318,7 @@ We could use a snippet like the one below to set and load the ~custom-file~:
     (load custom-file))
 #+end_src
 
-However, we opt to avoid loading any customization set there so that changes set in one Emacs session don't accidentally persist across confusing me and potentially interfering with, e.g., my package.el configuration. This is one method to do so:
+Alternatively, one could have a "temporary" custom file to avoid loading any customization set there so that changes set in one Emacs session don't accidentally persist across confusing me and potentially interfering with, e.g., my package.el configuration. This is one method to do so:
 #+name: just-set-custom-file
 #+begin_src emacs-lisp
   ;;; Set `custom-file' but do not load it
@@ -1189,7 +1189,7 @@ This section is for the major mode
   <<bio>>
 
   ;;; Custom
-  <<just-set-custom-file>>
+  <<set-and-load-custom-file>>
 
   <<safe-themes>>
 

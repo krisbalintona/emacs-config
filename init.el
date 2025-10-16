@@ -6,13 +6,10 @@
         user-mail-address "krisbalintona@gmail.com")
 
 ;;; Custom
-;;; Set `custom-file' but do not load it
-;; Write `custom-file' in a temporary directory but don't load it.
-;; This is just to avoid writing Custom options to the
-;; `user-init-file'.  See
-;; https://protesilaos.com/emacs/dotemacs#h:f2ffe0e9-a58d-4bba-9831-cc35940ea83f
-;; for a more detailed explanation.
-(setopt custom-file (make-temp-file "emacs-custom-file-" nil ".el"))
+;;; Set and load custom file
+(setopt custom-file (no-littering-expand-etc-file-name "custom.el"))
+(when (file-exists-p custom-file)
+  (load custom-file))
 
 ;; Make all themes safe
 (setopt custom-safe-themes t)
