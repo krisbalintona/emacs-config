@@ -972,18 +972,6 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   ;; Add segments to `global-mode-string'
   (add-to-list 'global-mode-string '(vc-mode (:eval (concat vc-mode " ")))))
 
-;;;; Window
-;; TODO 2025-07-21: Document:
-;; - `quit-window-kill-buffer'
-(use-package window
-  :ensure nil
-  :bind* ("M-o" . other-window)
-  :custom
-  (switch-to-buffer-obey-display-actions t)
-  (window-resize-pixelwise t)
-  (quit-restore-window-no-switch t)     ; Emacs 31
-  (kill-buffer-quit-windows t))         ; Emacs 31
-
 ;;;; EAT
 (use-package eat
   ;; 2024-12-29: See https://codeberg.org/akib/emacs-eat/pulls/133 for why we

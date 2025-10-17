@@ -773,6 +773,20 @@ Then apply ARGS."
                    (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
                    (window-height . shrink-window-if-larger-than-buffer)))))
 
+;;; Window.el
+;; TODO 2025-07-21: Document:
+;; - `quit-window-kill-buffer'
+(setup window
+  
+  (:bind-keys ("M-o" . other-window))
+  
+  (setopt switch-to-buffer-obey-display-actions t
+          window-resize-pixelwise t
+          quit-restore-window-no-switch t ; Emacs 31
+          ;; TODO 2025-10-17: Revisit this
+          ;; kill-buffer-quit-windows t    ; Emacs 31
+          ))
+
 ;;; Corfu
 ;; TODO 2025-05-20: Document the user options below in the literate
 ;; config:

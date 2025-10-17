@@ -1249,6 +1249,21 @@ Wayland specific:
 #+end_src
 
 * Window control and management
+#+name: window.el
+#+begin_src emacs-lisp
+  ;; TODO 2025-07-21: Document:
+  ;; - `quit-window-kill-buffer'
+  (setup window
+    
+    (:bind-keys ("M-o" . other-window))
+    
+    (setopt switch-to-buffer-obey-display-actions t
+            window-resize-pixelwise t
+            quit-restore-window-no-switch t ; Emacs 31
+            ;; TODO 2025-10-17: Revisit this
+            ;; kill-buffer-quit-windows t    ; Emacs 31
+            ))
+#+end_src
 
 Below are other modifications to ~display-buffer-alist~ found elsewhere in this configuration:
 #+begin_src emacs-lisp
@@ -1547,6 +1562,9 @@ This section is for the major mode
 
   ;;; Help.el
   <<help.el>>
+
+  ;;; Window.el
+  <<window.el>>
 
   ;;; Corfu
   <<corfu>>
