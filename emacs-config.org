@@ -3,7 +3,7 @@
 #+email: krisbalintona@gmail.com
 #+language: en_US
 #+options: num:t author:t email:t
-#+property: header-args :noweb yes :noweb-sep "\n\n"
+#+property: header-args :noweb yes
 
 * About this document
 
@@ -867,7 +867,7 @@ A right-click menu:
     ;;         '((calendar-month (display-sort-function . identity)))
     ;;         completion-category-overrides
     ;;         '((file (styles . (partial-completion flex)))))
-                                          ; Include `partial-completion' to enable wildcards and partial paths.
+                                          ;  Include `partial-completion' to enable wildcards and partial paths.
 
     ;; We don’t want to ignore case for completions, but buffer and file names are
     ;; exceptions
@@ -1370,7 +1370,7 @@ This section is for the major mode
 
 *** =early-init.el=
 
-#+begin_src emacs-lisp :tangle "early-init.el"
+#+begin_src emacs-lisp :tangle "early-init.el" :noweb-sep "\n\n"
   ;; -*- lexical-binding: t; -*-
 
   <<no-littering-eln-cache>>
@@ -1382,7 +1382,7 @@ This section is for the major mode
 
 *** =init.el=
 
-#+begin_src emacs-lisp :tangle "init.el"
+#+begin_src emacs-lisp :tangle "init.el" :noweb-sep "\n\n"
   ;; -*- lexical-binding: t; -*-
 
   <<set-load-path>>
@@ -1491,5 +1491,5 @@ This section is for the major mode
 * COMMENT Local words
 
 #  LocalWords:  noweb org's Linters Balintona Kristoffer LocalWords Elpaca el Runtime PDFs Ef elisp
-#  LocalWords:  Minibuffer Vertico Fontaine Theming Savehist minibuffer facto de Minibuffers
+#  LocalWords:  Minibuffer Vertico Fontaine Theming Savehist minibuffer facto de Minibuffers pdf
 #  LocalWords:  minibuffers

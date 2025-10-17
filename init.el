@@ -518,7 +518,7 @@ to if called with ARG, or any prefix argument."
   ;;         '((calendar-month (display-sort-function . identity)))
   ;;         completion-category-overrides
   ;;         '((file (styles . (partial-completion flex)))))
-                                        ; Include `partial-completion' to enable wildcards and partial paths.
+                                        ;  Include `partial-completion' to enable wildcards and partial paths.
 
   ;; We don’t want to ignore case for completions, but buffer and file names are
   ;; exceptions
