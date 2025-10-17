@@ -1811,9 +1811,6 @@ which file on the system it backs up."
                             (file-name-directory file))))))
   (advice-add 'make-backup-file-name-1 :around #'krisb-backup-file-name-hash))
 
-;;;; Don't create lock files
-(setopt create-lockfiles nil)
-
 ;;;; Hide-mode-line
 (use-package hide-mode-line
   :ensure t

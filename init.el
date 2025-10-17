@@ -285,6 +285,9 @@ that.  Otherwise, remove it from `minor-mode-alist'."
             (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory "/*")))))
       (message "delete-by-moving-to-trash is nil; not emptying trash")))
   
+  ;; Don't create lock files
+  (setopt create-lockfiles nil)
+  
   ;; Show context menu from right-click
   (when (display-graphic-p) (context-menu-mode 1))
   
