@@ -200,46 +200,6 @@ For example, \“2025-05-19 15:20:57.782742938 -0500\”."
   :config
   (krisb-enable-theme-time-of-day (car doric-themes-to-toggle) (cadr doric-themes-to-toggle)))
 
-;;;;; Electric
-;; Convenient DWIM, out-of-the-way while you edit
-;;
-;; TODO 2025-05-20: Document the user options below in the literate
-;; config:
-;;
-;; - `electric-quote-inhibit-functions'
-;; - `electric-pair-delete-adjacent-pairs'
-;; NOTE: 2025-05-22: For some reason lisp-mode sets these buffer
-;; locally.  See `lisp-mode-variables'.
-;; - `electric-pair-skip-whitespace'
-;; - `electric-pair-open-newline-between-pairs'
-(use-package electric
-  :ensure nil
-  :demand t
-  :custom
-  ;; TODO 2025-06-02: Revisit this.  I think I prefer the default.
-  ;; (electric-pair-inhibit-predicate ; Applies to `electric-quote-mode’ too
-  ;;  'krisb-electric-pair-conservative-inhibit)
-  ;; TODO 2025-05-20: Revisit this.
-  ;; (electric-quote-comment nil)
-  ;; TODO 2025-05-20: Revisit this.
-  ;; (electric-quote-string nil)
-  (electric-quote-context-sensitive t)
-  (electric-quote-replace-double t)
-  :config
-  (electric-pair-mode 1)
-  (electric-indent-mode 1)
-
-  ;; Bespoke inhibit predicate
-  (defun krisb-electric-pair-conservative-inhibit (char)
-    (or
-     ;; Always allow `electric-quote-chars’
-     (member char electric-quote-chars)
-     ;; Regular predicates
-     (eq char (char-after))
-     (and (eq char (char-before))
-          (eq char (char-before (1- (point)))))
-     (eq (char-syntax (following-char)) ?w))))
-
 ;;;; Fixing M-SPC under WSLg
 ;; 2024-10-29: There is currently an issue in WSLg that prevents
 ;; Alt+Space from being caught by X11.  A workaround is described in

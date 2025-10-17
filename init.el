@@ -855,6 +855,25 @@ Then apply ARGS."
           corfu-popupinfo-min-height 1
           corfu-popupinfo-min-width 25))
 
+;;; Electric
+;; TODO 2025-05-20: Document the user options below in the literate
+;; config:
+;; - `electric-quote-comment'
+;; - `electric-quote-string'
+;; - `electric-quote-inhibit-functions'
+;; - `electric-pair-delete-adjacent-pairs'
+;; NOTE: 2025-05-22: For some reason lisp-mode sets these buffer
+;; locally.  See `lisp-mode-variables'.
+;; - `electric-pair-skip-whitespace'
+;; - `electric-pair-open-newline-between-pairs'
+(setup electric
+
+  (setopt electric-quote-context-sensitive t
+          electric-quote-replace-double t)
+
+  (electric-pair-mode 1)
+  (electric-indent-mode 1))
+
 ;;; Org
 ;;;; Org built-ins
 ;;;;; Org-mode

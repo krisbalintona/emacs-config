@@ -1260,11 +1260,38 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
 
 * Domains
 
-** Programming
+** Composition
 
-*** Emacs-lisp
+*** Electric: Auto-insert delimiters
 
-**** Help.el: Documentation
+#+name: electric
+#+begin_src emacs-lisp
+  ;; TODO 2025-05-20: Document the user options below in the literate
+  ;; config:
+  ;; - `electric-quote-comment'
+  ;; - `electric-quote-string'
+  ;; - `electric-quote-inhibit-functions'
+  ;; - `electric-pair-delete-adjacent-pairs'
+  ;; NOTE: 2025-05-22: For some reason lisp-mode sets these buffer
+  ;; locally.  See `lisp-mode-variables'.
+  ;; - `electric-pair-skip-whitespace'
+  ;; - `electric-pair-open-newline-between-pairs'
+  (setup electric
+
+    (setopt electric-quote-context-sensitive t
+            electric-quote-replace-double t)
+
+    (electric-pair-mode 1)
+    (electric-indent-mode 1))
+#+end_src
+
+*** Spell checking
+
+*** Programming
+
+**** Emacs-lisp
+
+***** Help.el: Documentation
 
 #+name: help.el
 #+begin_src emacs-lisp
@@ -1302,15 +1329,13 @@ Tell ~display-buffer-alist~ where to show help buffers:
                  (window-height . shrink-window-if-larger-than-buffer)))
 #+end_src
 
-**** Package authorship
+***** Package authorship
 
-** Prose writing
+*** Prose writing
 
-*** Grammar checking
+**** Grammar checking
 
-*** Spell checking
-
-*** Org-mode: The de facto major mode for writing
+**** Org-mode: The de facto major mode for writing
 
 This section is for the major mode
 
@@ -1556,6 +1581,9 @@ This section is for the major mode
 
   ;;; Corfu
   <<corfu>>
+
+  ;;; Electric
+  <<electric>>
 
   ;;; Org
   ;;;; Org built-ins
