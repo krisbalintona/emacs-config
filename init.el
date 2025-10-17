@@ -502,17 +502,25 @@ to if called with ARG, or any prefix argument."
 ;; `completing-read-multiple' separator on Emacs versions below 31:
 ;; https://github.com/minad/vertico#completing-read-multiple.
 (setup minibuffer
-  ;; Category settings. A non-exhaustive list of known completion
-  ;; categories:
+
+  (setopt completion-styles '(initials basic substring flex)
+          ;; TODO 2025-10-17: Revisit this
+          ;; completion-pcm-leading-wildcard t ; Emacs 31
+          )
+
+  ;; A non-exhaustive list of known completion categories:
   ;; - `bookmark'
   ;; - `buffer'
   ;; - `charset'
   ;; - `coding-system'
   ;; - `color'
   ;; - `command' (e.g. `M-x')
+  ;;
   ;; You can find out the category of the completion canddiate at
-  ;; point via the form below:
-  ;;     (completion-metadata-get (completion-metadata (minibuffer-contents) minibuffer-completion-table minibuffer-completion-predicate) 'category)
+  ;; point by evaluating the form below in the minibuffer when the
+  ;; point is on a completion candidate:
+  ;;  (completion-metadata-get (completion-metadata (minibuffer-contents) minibuffer-completion-table minibuffer-completion-predicate) 'category)
+  ;;
   ;; TODO 2025-10-15: Revisit these:
   ;; (setopt completion-category-defaults
   ;;         '((calendar-month (display-sort-function . identity)))
@@ -525,27 +533,6 @@ to if called with ARG, or any prefix argument."
   (setopt completion-ignore-case nil
           read-file-name-completion-ignore-case t
           read-buffer-completion-ignore-case t))
-
-;; Regarding `completion-styles'
-(setup minibuffer
-  (setopt completion-pcm-leading-wildcard t) ; Emacs 31: Make partial-completion behave more like the substring completion style
-
-  ;; Set up `completion-styles'
-  (defun krisb-completion-styles-setup ()
-    "Set up `completion-styes'."
-    ;; I do this manually last because the final styles I want depend
-    ;; on the packages I want enabled, and so setting this within each
-    ;; use-package, independently of other use-packages, means I have
-    ;; to make sure various packages are loaded after other ones so my
-    ;; `completion-styles' setting isn't overridden in an undesirable
-    ;; way.  Instead, I opt to just set it finally after all those
-    ;; packages are set.
-    (setopt completion-styles (list (if (featurep 'orderless)
-                                        'orderless 'basic)
-                                    (if (featurep 'hotfuzz)
-                                        'hotfuzz 'flex))))
-  ;; Elpaca: (elpaca-after-init-hook . krisb-completion-styles-setup)
-  (add-hook 'after-init-hook #'krisb-completion-styles-setup))
 
 (setup minibuffer
 
@@ -688,11 +675,11 @@ to if called with ARG, or any prefix argument."
 ;; TODO 2025-05-23: Note that auto-save is distinct from
 ;; `auto-save-visited-mode’
 (setup files
-  
+
   (setopt auto-save-default t ; Only a local minor mode exists; this variable influences the global value
           auto-save-timeout 5
           auto-save-interval 150)
-  
+
   ;; Modified from Doom Emacs.  Auto save files have names that are
   ;; hashed.
   (defun krisb-auto-save-hash-file-name (&rest args)
@@ -717,7 +704,7 @@ Then apply ARGS."
 
 ;;; Auto-save-visited
 (setup files
-  
+
   (setopt auto-save-visited-interval 8
           auto-save-visited-predicate ; Value Inspired by `super-save'
           (lambda ()
@@ -734,15 +721,15 @@ Then apply ARGS."
 ;;; Recentf
 ;; Track recently opened files
 (setup recentf
-  
+
   (:bind-keys :map ctl-x-map
               ("M-f" . recentf-open))
-  
+
   (setopt recentf-auto-cleanup 600
           recentf-max-saved-items 1000
           recentf-max-menu-items 15)
   (setopt recentf-show-messages nil)
-  
+
   (add-hook 'on-first-file-hook #'recentf-mode))
 
 ;;; Help.el
@@ -777,9 +764,9 @@ Then apply ARGS."
 ;; TODO 2025-07-21: Document:
 ;; - `quit-window-kill-buffer'
 (setup window
-  
+
   (:bind-keys ("M-o" . other-window))
-  
+
   (setopt switch-to-buffer-obey-display-actions t
           window-resize-pixelwise t
           quit-restore-window-no-switch t ; Emacs 31
