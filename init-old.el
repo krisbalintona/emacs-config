@@ -1889,17 +1889,6 @@ of collision."
     (el-patch-add
       (expand-file-name (sha1 (expand-file-name fpath)) savefold-directory))))
 
-;;;; Saveplace
-;; Save and restore the point's location in files
-(use-package saveplace
-  :ensure nil
-  :defer t
-  :hook
-  (on-first-file-hook . save-place-mode)
-  :custom
-  (save-place-forget-unreadable-files t)
-  (save-place-limit 3000))
-
 ;;;; Calendar
 ;; TODO 2025-06-15: Document:
 ;; - `calendar-time-zone-style’

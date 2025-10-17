@@ -668,6 +668,15 @@ to if called with ARG, or any prefix argument."
   (dolist (var '((Info-history-list . 250)))
     (add-to-list 'savehist-additional-variables var)))
 
+;;; Saveplace
+;; Save and restore the point's location in files
+(setup saveplace
+  
+  (setopt save-place-forget-unreadable-files t
+          save-place-limit 3000)
+  
+  (add-hook 'on-first-file-hook #'save-place-mode))
+
 ;;; Auto-save
 ;; TODO 2025-05-23: Document:
 ;; - `auto-save-no-message'

@@ -1337,6 +1337,18 @@ Wayland specific:
       (add-to-list 'savehist-additional-variables var)))
 #+end_src
 
+** Saveplace: Persist location of point
+
+#+name: saveplace
+#+begin_src emacs-lisp
+  ;; Save and restore the point's location in files
+  (setup saveplace
+    
+    (setopt save-place-forget-unreadable-files t
+            save-place-limit 3000)
+    
+    (add-hook 'on-first-file-hook #'save-place-mode))
+#+end_src
 ** Recentf: Keep track of recent files
 
 #+name: recentf
@@ -1697,6 +1709,9 @@ This section is for the major mode
 
   ;;; Savehist
   <<savehist>>
+
+  ;;; Saveplace
+  <<saveplace>>
 
   ;;; Auto-save
   <<auto-save>>
