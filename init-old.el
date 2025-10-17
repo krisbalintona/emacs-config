@@ -311,16 +311,6 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   (isearch-lax-whitespace t)
   (search-whitespace-regexp ".*?"))
 
-;;;; Elisp-demos
-;; Add example code snippets to some of the help windows
-(use-package elisp-demos
-  :ensure t
-  :hook
-  (help-fns-describe-function-functions . elisp-demos-advice-describe-function-1)
-  :config
-  (with-eval-after-load 'helpful
-    (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)))
-
 ;;;; Insert spaces instead of tab characters
 (setopt indent-tabs-mode nil)
 

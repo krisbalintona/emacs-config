@@ -1329,6 +1329,20 @@ Tell ~display-buffer-alist~ where to show help buffers:
                  (window-height . shrink-window-if-larger-than-buffer)))
 #+end_src
 
+***** Elisp-demos: Examples in documentation
+
+#+name: elisp-demos
+#+begin_src emacs-lisp
+  ;;;; Elisp-demos
+  ;; Add example code snippets to some of the help windows
+  (setup elisp-demos
+    (:package elisp-demos)
+    
+    (add-hook 'help-fns-describe-function-functions #'elisp-demos-advice-describe-function-1)
+    (with-eval-after-load 'helpful
+      (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)))
+#+end_src
+
 ***** Package authorship
 
 *** Prose writing
@@ -1575,6 +1589,9 @@ This section is for the major mode
 
   ;;; Help.el
   <<help.el>>
+
+  ;;; Elisp-demos
+  <<elisp-demos>>
 
   ;;; Window.el
   <<window.el>>

@@ -760,6 +760,16 @@ Then apply ARGS."
                    (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
                    (window-height . shrink-window-if-larger-than-buffer)))))
 
+;;; Elisp-demos
+;;;; Elisp-demos
+;; Add example code snippets to some of the help windows
+(setup elisp-demos
+  (:package elisp-demos)
+  
+  (add-hook 'help-fns-describe-function-functions #'elisp-demos-advice-describe-function-1)
+  (with-eval-after-load 'helpful
+    (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)))
+
 ;;; Window.el
 ;; TODO 2025-07-21: Document:
 ;; - `quit-window-kill-buffer'
