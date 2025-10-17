@@ -324,19 +324,6 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
 
 ;;; Three steps below
 
-;;;; Vc-jj
-;; Integration between vc.el and the jujutsu (JJ) version control
-;; system.  Best jj integration with vc currently (2025-03-13).
-(use-package vc-jj
-  :ensure ( :repo "https://codeberg.org/krisbalintona/vc-jj.el.git"
-            :branch "merge")
-  :after (:any vc project)
-  :demand t
-  :custom
-  (vc-jj-diff-switches '("--git" "--stat"))
-  :config
-  (require 'project-jj))
-
 ;;;; Outline
 (use-package outline
   :ensure nil
@@ -1061,76 +1048,6 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   :config
   (with-eval-after-load 'pulsar
     (add-hook 'imenu-after-jump-hook #'pulsar-reveal-entry)))
-
-;;;; VC
-;; TODO 2025-05-20: Document the user options below in the literate
-;; config:
-;; - `vc-annotate-display-mode'
-;; - `vc-revert-show-diff'
-(use-package vc
-  :ensure nil
-  :defer t
-  :bind
-  ([remap vc-diff] . krisb-vc-diff-dwim)
-  :custom
-  ;; TODO 2025-06-15: Revisit this.
-  ;; (vc-handled-backends '(Git))
-  (vc-follow-symlinks t)
-  (vc-allow-rewriting-published-history 'ask) ; Emacs 31
-  ;; Improves performance by not having to check for other
-  ;; backends. Expand this list when necessary
-  (vc-async-checkin t)
-  (vc-allow-async-diff t)               ; Emacs 31
-  (vc-revert-show-diff t)
-  (vc-find-revision-no-save t)           ; Emacs 31
-  (vc-dir-hide-up-to-date-on-revert t)   ; Emacs 31
-  (vc-dir-save-some-buffers-on-revert t) ; Emacs 31
-  (vc-use-incoming-outgoing-prefixes t)  ; Emacs 31
-  :config
-  (vc-auto-revert-mode 1)
-
-  ;; Additions to `display-buffer-alist’
-  (add-to-list 'display-buffer-alist
-               '((or . ((major-mode . vc-dir-mode)
-                        (major-mode . vc-git-log-view-mode)
-                        (major-mode . vc-git-region-history-mode)))
-                 (display-buffer-same-window)))
-
-  ;; Dispatcher between `vc-diff’ and `diff-buffer-with-file’
-  (defun krisb-vc-diff-dwim ()
-    "Call `vc-diff’ or `diff-buffer-with-file’.
-Calls `vc-diff’ if the buffer is unmodified.  If buffer is modified,
-call `diff-buffer-with-file’ instead."
-    (interactive)
-    (if (and (not (eq major-mode 'vc-dir-mode)) (buffer-modified-p))
-        (diff-buffer-with-file (current-buffer))
-      (vc-diff))))
-
-;; TODO 2025-07-10: Document:
-;; - `vc-git-revision-complete-only-branches'
-(use-package vc-git
-  :ensure nil
-  :custom
-  (vc-git-log-edit-summary-target-len (+ 50 (length "Summary")))
-  (vc-git-log-edit-summary-max-len (+ 70 (length "Summary")))
-  (vc-git-diff-switches    ; Show summary diff summary in diff headers
-   '("--patch-with-stat" "--histogram"))
-  (vc-git-root-log-format
-   `("%h %ad (%ar) %aN%d%n  %s"
-     ;; The first shy group matches the characters drawn by
-     ;; --graph. We use numbered groups because `log-view-message-re'
-     ;; wants the revision number to be group 1.
-     ,(concat "^\\(?:[*/\\|]+\\)\\(?:[*/\\| ]+\\)?"
-              "\\(?1:[0-9a-z]+\\)"      ; %h
-              " "
-              "\\(?4:[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\} (.*? ago)\\)?" ; %ad (%ar)
-              " "
-              "\\(?3:\\(?:[[:alpha:]]+\\.?[\n ]\\)+\\)" ; %aN
-              "\\(?2:([^)]+)\\)?")                      ; %d
-     ((1 'log-view-message)
-      (2 'change-log-list nil lax)
-      (3 'change-log-name)
-      (4 'change-log-date)))))
 
 ;;;; Log-edit
 ;; TODO 2025-05-20: Document the user options below in the literate

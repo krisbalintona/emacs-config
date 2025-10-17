@@ -765,7 +765,7 @@ Then apply ARGS."
 ;; Add example code snippets to some of the help windows
 (setup elisp-demos
   (:package elisp-demos)
-  
+
   (add-hook 'help-fns-describe-function-functions #'elisp-demos-advice-describe-function-1)
   (with-eval-after-load 'helpful
     (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)))
@@ -883,6 +883,80 @@ Then apply ARGS."
 
   (electric-pair-mode 1)
   (electric-indent-mode 1))
+
+;;; Vc.el
+;; TODO 2025-05-20: Document the user options below in the literate
+;; config:
+;; - `vc-annotate-display-mode'
+;; - `vc-revert-show-diff'
+(setup vc
+
+  (setopt vc-follow-symlinks t
+          vc-allow-rewriting-published-history 'ask ; Emacs 31
+          vc-async-checkin t
+          vc-allow-async-diff t         ; Emacs 31
+          vc-revert-show-diff t
+          vc-find-revision-no-save t           ; Emacs 31
+          vc-dir-hide-up-to-date-on-revert t   ; Emacs 31
+          vc-dir-save-some-buffers-on-revert t ; Emacs 31
+          vc-use-incoming-outgoing-prefixes t) ; Emacs 31
+
+  (vc-auto-revert-mode 1)
+
+  (add-to-list 'display-buffer-alist
+               '((or . ((major-mode . vc-dir-mode)
+                        (major-mode . vc-git-log-view-mode)
+                        (major-mode . vc-git-region-history-mode)))
+                 (display-buffer-same-window)))
+
+  ;; Dispatcher between `vc-diff’ and `diff-buffer-with-file’
+  (defun krisb-vc-diff-dwim ()
+    "Call `vc-diff’ or `diff-buffer-with-file’.
+Calls `vc-diff’ if the buffer is unmodified.  If buffer is modified,
+call `diff-buffer-with-file’ instead."
+    (interactive)
+    (if (and (not (eq major-mode 'vc-dir-mode)) (buffer-modified-p))
+        (diff-buffer-with-file (current-buffer))
+      (vc-diff)))
+  (:bind-keys ([remap vc-diff] . krisb-vc-diff-dwim)))
+
+;;;; Vc-git
+;; TODO 2025-07-10: Document:
+;; - `vc-git-revision-complete-only-branches'
+(setup vc-git
+
+  (setopt vc-git-log-edit-summary-target-len (+ 50 (length "Summary"))
+          vc-git-log-edit-summary-max-len (+ 70 (length "Summary"))
+          vc-git-diff-switches '("--patch-with-stat" "--histogram")
+          vc-git-root-log-format
+          `("%h %ad (%ar) %aN%d%n  %s"
+            ;; The first shy group matches the characters drawn by
+            ;; --graph. We use numbered groups because
+            ;; `log-view-message-re' wants the revision number to be
+            ;; group 1.
+            ,(concat "^\\(?:[*/\\|]+\\)\\(?:[*/\\| ]+\\)?"
+                     "\\(?1:[0-9a-z]+\\)"      ; %h
+                     " "
+                     "\\(?4:[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\} (.*? ago)\\)?" ; %ad (%ar)
+                     " "
+                     "\\(?3:\\(?:[[:alpha:]]+\\.?[\n ]\\)+\\)" ; %aN
+                     "\\(?2:([^)]+)\\)?")                      ; %d
+            ((1 'log-view-message)
+             (2 'change-log-list nil lax)
+             (3 'change-log-name)
+             (4 'change-log-date)))))
+
+;;;; Vc-jj
+;; Integration between vc.el and the jujutsu (JJ) version control
+;; system.  Best jj integration with vc currently (2025-10-17).
+(setup vc-jj
+  ;; Elpaca: (:repo "https://codeberg.org/krisbalintona/vc-jj.el.git" :branch "merge")
+  (:package (vc-jj :url "https://codeberg.org/krisbalintona/vc-jj.el.git"
+                   :branch "merge"))
+
+  (setopt vc-jj-diff-switches '("--git" "--stat"))
+
+  (require 'project-jj))
 
 ;;; Org
 ;;;; Org built-ins
