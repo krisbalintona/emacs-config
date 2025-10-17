@@ -894,6 +894,22 @@ See also ~(elisp) Beeping~.
     (add-hook 'on-first-file-hook #'auto-save-visited-mode))
 #+end_src
 
+** Autorevert: Keep buffers up-to-date
+
+#+name: autorevert
+#+begin_src emacs-lisp
+  ;; Automatically update buffers as files are externally modified
+  ;; TODO 2025-05-22: Document:
+  ;; - `auto-revert-verbose’
+  ;; - `auto-revert-avoid-polling'
+  ;; - `auto-revert-check-vc-info'
+  (setup autorevert
+
+    (:hide-mode auto-revert-mode)
+
+    (setopt auto-revert-interval 3))
+#+end_src
+
 * Interfaces
 
 ** Context menu
@@ -1311,6 +1327,10 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
             vc-dir-save-some-buffers-on-revert t ; Emacs 31
             vc-use-incoming-outgoing-prefixes t) ; Emacs 31
 
+    ;; FIXME 2025-10-17: For some reason, I need to manually require
+    ;; autorevert so that `vc-auto-revert-mode' does not error on not
+    ;; being able to find the `auto-revert-mode' variable...
+    (require 'autorevert)
     (vc-auto-revert-mode 1)
 
     <<vc-display-buffer-alist>>
@@ -1695,6 +1715,9 @@ This section is for the major mode
   ;;; Electric
   <<electric>>
 
+  ;;; Autorevert
+  <<autorevert>>
+
   ;;; Vc.el
   <<vc.el>>
 
@@ -1733,4 +1756,4 @@ This section is for the major mode
 
 #  LocalWords:  noweb org's Linters Balintona Kristoffer LocalWords Elpaca el Runtime PDFs Ef elisp
 #  LocalWords:  Minibuffer Vertico Fontaine Theming Savehist minibuffer facto de Minibuffers pdf
-#  LocalWords:  minibuffers
+#  LocalWords:  minibuffers Autorevert

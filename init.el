@@ -884,6 +884,18 @@ Then apply ARGS."
   (electric-pair-mode 1)
   (electric-indent-mode 1))
 
+;;; Autorevert
+;; Automatically update buffers as files are externally modified
+;; TODO 2025-05-22: Document:
+;; - `auto-revert-verbose’
+;; - `auto-revert-avoid-polling'
+;; - `auto-revert-check-vc-info'
+(setup autorevert
+
+  (:hide-mode auto-revert-mode)
+
+  (setopt auto-revert-interval 3))
+
 ;;; Vc.el
 ;; TODO 2025-05-20: Document the user options below in the literate
 ;; config:
@@ -901,6 +913,10 @@ Then apply ARGS."
           vc-dir-save-some-buffers-on-revert t ; Emacs 31
           vc-use-incoming-outgoing-prefixes t) ; Emacs 31
 
+  ;; FIXME 2025-10-17: For some reason, I need to manually require
+  ;; autorevert so that `vc-auto-revert-mode' does not error on not
+  ;; being able to find the `auto-revert-mode' variable...
+  (require 'autorevert)
   (vc-auto-revert-mode 1)
 
   (add-to-list 'display-buffer-alist
