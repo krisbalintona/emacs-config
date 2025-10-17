@@ -505,21 +505,6 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   :hook
   (embark-collect-mode-hook . consult-preview-at-point-mode))
 
-;;;; Recentf
-;; Enable logging of recent files
-(use-package recentf
-  :ensure nil
-  :hook
-  (on-first-file-hook . recentf-mode)
-  :bind
-  ( :map ctl-x-map
-    ("M-f" . recentf-open))
-  :custom
-  (recentf-auto-cleanup 600)
-  (recentf-max-saved-items 1000)
-  (recentf-max-menu-items 15)
-  (recentf-show-messages nil))
-
 ;;;; Grep
 ;; TODO 2025-05-20: Document the user options below in the literate
 ;; config:

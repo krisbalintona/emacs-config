@@ -731,6 +731,20 @@ Then apply ARGS."
 
   (add-hook 'on-first-file-hook #'auto-save-visited-mode))
 
+;;; Recentf
+;; Track recently opened files
+(setup recentf
+  
+  (:bind-keys :map ctl-x-map
+              ("M-f" . recentf-open))
+  
+  (setopt recentf-auto-cleanup 600
+          recentf-max-saved-items 1000
+          recentf-max-menu-items 15)
+  (setopt recentf-show-messages nil)
+  
+  (add-hook 'on-first-file-hook #'recentf-mode))
+
 ;;; Help.el
 ;; TODO 2025-10-14: Document:
 ;; `help-at-pt-display-when-idle'

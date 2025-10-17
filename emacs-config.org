@@ -833,7 +833,7 @@ See also ~(elisp) Beeping~.
       (message "delete-by-moving-to-trash is nil; not emptying trash")))
 #+end_src
 
-** File recovery: Auto save
+** Auto-save: File recovery
 
 #+name: auto-save
 #+begin_src emacs-lisp
@@ -874,7 +874,7 @@ See also ~(elisp) Beeping~.
     (advice-add 'make-auto-save-file-name :around #'krisb-auto-save-hash-file-name))
 #+end_src
 
-** Automatic saves: Auto-save-visited
+** Auto-save-visited: Automatic saves
 
 #+name: auto-save-visited
 #+begin_src emacs-lisp
@@ -1230,6 +1230,24 @@ Wayland specific:
       (add-to-list 'savehist-additional-variables var)))
 #+end_src
 
+** Recentf: Keep track of recent files
+
+#+name: recentf
+#+begin_src emacs-lisp
+  ;; Track recently opened files
+  (setup recentf
+    
+    (:bind-keys :map ctl-x-map
+                ("M-f" . recentf-open))
+    
+    (setopt recentf-auto-cleanup 600
+            recentf-max-saved-items 1000
+            recentf-max-menu-items 15)
+    (setopt recentf-show-messages nil)
+    
+    (add-hook 'on-first-file-hook #'recentf-mode))
+#+end_src
+
 * Window control and management
 
 Below are other modifications to ~display-buffer-alist~ found elsewhere in this configuration:
@@ -1523,6 +1541,9 @@ This section is for the major mode
 
   ;;; Auto-save-visited
   <<auto-save-visited>>
+
+  ;;; Recentf
+  <<recentf>>
 
   ;;; Help.el
   <<help.el>>
