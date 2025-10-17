@@ -40,6 +40,9 @@
 (defvar krisb-org-agenda-directory (expand-file-name "agenda" krisb-folio-directory)
   "The directory holding my main org-agenda files.")
 
+(defvar krisb-org-archive-directory (expand-file-name "archive" krisb-folio-directory)
+  "The archive directory for my org files.")
+
 ;;;;; Functions
 (defun krisb-wayland-p ()
   "Return non-nil if Emacs is under Wayland."
@@ -671,10 +674,10 @@ to if called with ARG, or any prefix argument."
 ;;; Saveplace
 ;; Save and restore the point's location in files
 (setup saveplace
-  
+
   (setopt save-place-forget-unreadable-files t
           save-place-limit 3000)
-  
+
   (add-hook 'on-first-file-hook #'save-place-mode))
 
 ;;; Auto-save
@@ -1101,6 +1104,7 @@ call `diff-buffer-with-file’ instead."
                    (post-command-select-window . t)))))
 
 ;;;; Other org packages
+;;;;; Org-modern
 (setup org-modern
   (:package org-modern)
 
@@ -1171,6 +1175,198 @@ call `diff-buffer-with-file’ instead."
   ;;             :foreground ,(face-background 'default nil t)
   ;;             :background ,(face-foreground 'modus-themes-fg-magenta-cooler nil t)))))
   )
+
+;;;;; Org-mem
+;; FIXME 2025-10-17: Document also:
+;; - `org-mem-db1-mode'
+(setup org-mem
+  (:package org-mem)
+
+  (setopt org-mem-do-sync-with-org-id t
+          org-mem-watch-dirs (list krisb-folio-directory)
+          org-mem-do-warn-title-collisions nil)
+  (with-eval-after-load 'org-mem
+    (cl-pushnew
+     (file-name-as-directory (file-relative-name krisb-org-archive-directory krisb-folio-directory))
+     org-mem-exclude))
+  (org-mem-updater-mode 1)
+
+  ;; FIXME 2025-05-27: Figure out which org-node update is breaking
+  ;; org-roam database compatibility.
+  ;; Load things related to org-mem’s interaction with org-roam
+  (with-eval-after-load 'org-roam
+    ;; End dependence on `org-roam-db-sync'
+    (setopt org-roam-db-update-on-save nil
+            org-mem-roamy-do-overwrite-real-db t)
+    (org-roam-db-autosync-mode -1)
+    (org-mem-roamy-db-mode 1)))
+
+;;;;; Org-node
+(setup org-node
+  (:package org-node)
+
+  (:bind-keys :map krisb-note-keymap
+              ("l" . org-node-context-toggle)
+              ([remap org-roam-buffer-toggle] . org-node-context-toggle)
+              ("f" . org-node-find)
+              ("i" . org-node-insert-link)
+              ("t" . org-node-set-tags-here))
+
+  (setopt org-node-file-directory-ask t
+          org-node-file-timestamp-format "%Y%m%dT%H%M%S--"
+          org-node-renames-allowed-dirs (list krisb-notes-directory))
+  (setopt org-node-alter-candidates t
+          org-node-blank-input-hint nil)
+  (setopt org-node-do-filter-tags t
+          org-node-warn-title-collisions nil)
+
+  (org-node-cache-mode 1)
+
+  (setopt org-node-context-persist-on-disk t)
+  (org-node-context-follow-mode 1)
+
+  ;; Bespoke filtering (exclusion) function.
+  (defun krisb-org-node-filter-fn (node)
+    "Predicate for whether to include NODE.
+If non-nil, include.  If nil, exclude.  This predicate excludes these
+nodes:
+- With non-nil ROAM_EXCLUDE property value."
+    (let ((exclude-val (cdr (assoc "ROAM_EXCLUDE" (org-node-get-properties node)))))
+      (not (or (when exclude-val (string= "t" (string-trim exclude-val)))))))
+  (setopt org-node-filter-fn #'krisb-org-node-filter-fn)
+
+  ;; Bespoke `org-node-custom-link-format-fn' function
+  (cl-defmethod krisb-org-node-custom-link-format-fn ((node org-mem-entry))
+    "Bespoke function for `org-node-custom-link-format-fn'."
+    (if (or (file-in-directory-p (org-node-get-file node) krisb-org-agenda-directory)
+            (file-in-directory-p (org-node-get-file node) krisb-org-archive-directory))
+        (org-node-get-title node)
+      (let* ((place (krisb-org-node-get-place node))
+             (type (krisb-org-node-get-type node))
+             (title (org-node-get-title node))
+             (file-title (org-node-get-file-title node)))
+        (concat (when place (format "(%s) " place))
+                (when type (format "{%s} " type))
+                title
+                (when (or (not (string= title file-title))
+                          (not file-title))
+                  (propertize (concat " (" file-title ")") 'face 'shadow))))))
+  (setopt org-node-custom-link-format-fn #'krisb-org-node-custom-link-format-fn)
+
+  ;; Bespoke org-node node accessors
+  (cl-defmacro krisb-org-node--get-property (property node)
+    "Get value of PROPERTY from NODE.
+NODE is an org-mem-entry."
+    `(cdr (assoc ,property (org-node-get-properties ,node) #'string-equal)))
+
+  (cl-defmethod krisb-org-node-get-box ((node org-mem-entry))
+    "Return the value of the ROAM_BOX property of NODE."
+    (krisb-org-node--get-property "ROAM_BOX" node))
+
+  (cl-defmethod krisb-org-node-box-or-dir ((node org-mem-entry))
+    "Return a fontified value of the ROAM_BOX property of NODE.
+If the ROAM_BOX property of NODE is nil, returns the directory name
+containing NODE instead."
+    (let ((box (krisb-org-node-get-box node))
+          (dir (file-name-nondirectory
+                (directory-file-name
+                 (file-name-directory (org-node-get-file node))))))
+      (propertize (or box (concat "/" dir)) 'face 'shadow)))
+
+  (cl-defmethod krisb-org-node-get-place ((node org-mem-entry))
+    "Return the value of the ROAM_PLACE property of NODE."
+    (krisb-org-node--get-property "ROAM_PLACE" node))
+
+  (cl-defmethod krisb-org-node-get-type ((node org-mem-entry))
+    "Return the value of the ROAM_TYPE property of NODE."
+    (krisb-org-node--get-property "ROAM_TYPE" node))
+
+  (cl-defmethod krisb-org-node-get-person ((node org-mem-entry))
+    "Return the value of the ROAM_PERSON property of NODE."
+    (krisb-org-node--get-property "ROAM_PERSON" node))
+
+  (cl-defmethod krisb-org-node-olp-full-propertized ((node org-mem-entry))
+    "Return the full outline path of NODE fontified.
+The full outline path of NODE (given by `org-node-get-olp-full')
+surrounded by parentheses and whose parts are separated by \" > \".
+Additionally, the entire string is fontified to the shadow face."
+    (let ((olp (propertize (string-join (org-mem-olpath-with-file-title node) " > ") 'face 'shadow)))
+      (unless (string-empty-p olp)
+        (concat
+         (propertize "(" 'face 'shadow)
+         olp
+         (propertize ")" 'face 'shadow)))))
+
+  (cl-defmethod krisb-org-node-tags-propertized ((node org-mem-entry))
+    "Return the full outline path of NODE fontified."
+    (when-let ((tags (org-mem-tags node)))
+      (propertize (concat "#" (string-join tags " #")) 'face 'org-tag)))
+
+  ;; Bespoke `org-node-find' format
+  (defun krisb-org-node-affixation-fn (node title)
+    "Given NODE and TITLE, add a bespoke prefix and suffix.
+For use as `org-node-affixation-fn'."
+    (let ((box-or-dir (krisb-org-node-box-or-dir node))
+          (place (krisb-org-node-get-place node))
+          (type (krisb-org-node-get-type node))
+          (person (krisb-org-node-get-person node))
+          (olp-full (krisb-org-node-olp-full-propertized node))
+          (tags (krisb-org-node-tags-propertized node)))
+      (list title
+            ;; Prefix
+            (concat (when box-or-dir (concat box-or-dir " "))
+                    (when place (propertize (concat place " ") 'face 'shadow))
+                    (when type (propertize (concat "&" type " ") 'face 'font-lock-doc-face))
+                    (when person (propertize (concat "@" person " ") 'face 'font-lock-keyword-face)))
+            ;; Suffix
+            (concat " "
+                    (when olp-full (concat olp-full " "))
+                    tags))))
+  (setopt org-node-affixation-fn #'krisb-org-node-affixation-fn))
+
+;; Rename buffer to the file's title if the file is an org-node node.
+(with-eval-after-load 'org-node
+  (defun krisb-org-node-rename-buffer-name-to-title ()
+    "Rename org buffer to its #+TITLE property.
+This only occurs when the file is an org-mem entry.  (See
+`org-mem-watch-dirs' for files may contain entries.)
+
+This function is written such that it calls org-mem and org-node as late
+as possible, which is useful for ensuring those packages are lazy
+loaded."
+    ;; Our strategy for keeping org-mem and org-node lazy loaded is as
+    ;; follows:
+    ;; 1. Check if there is an ID at the top-level.
+    ;; 2. Check if the ID has an associated org-mem entry (see
+    ;;    `org-mem-watch-dirs'’).
+    ;; 3. Check if entry is would be filter by `org-node-filter-fn’.
+    (when-let* (((eq major-mode 'org-mode)) ; Guard
+                ;; First check if there is an ID
+                (id (save-excursion (widen) (org-id-get (point-min))))
+                ((require 'org-mem))
+                (entry (org-mem-entry-by-id id))
+                ((require 'org-node))
+                ((org-node-p entry))
+                (title (org-mem-file-title-strict entry)))
+      (rename-buffer (generate-new-buffer-name title (buffer-name)))))
+  ;; The reason we add `krisb-org-node-rename-buffer-name-to-title’ to
+  ;; `org-mode-hook’ here is because we do not want org-node being
+  ;; loaded when we opn just any org-mode buffer.  Instead, we require
+  ;; org-mem and org-node only when we need.  This helps keep org-mem
+  ;; and org-node deferred as late as possible.
+  (add-hook 'org-mode-hook #'krisb-org-node-rename-buffer-name-to-title))
+
+;; Bespoke commands
+(with-eval-after-load 'org-node
+  (defun krisb-org-node-add-source-or-context ()
+    "Set ROAM_CONTEXT or ROAM_SOURCE automatically.
+Prompt the user for ROAM_CONTEXT or ROAM_SOURCE.  Set that property to
+the value of the ROAM_REFS property of the nearest parent of the current
+headline."
+    (interactive)
+    (org-set-property
+     (completing-read "Type: " '("ROAM_CONTEXT" "ROAM_SOURCE"))
+     (org-entry-get nil "ROAM_REFS" 'inherit))))
 
 ;;; Startup time
 ;; Message for total init time after startup
