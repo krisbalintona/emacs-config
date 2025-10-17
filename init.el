@@ -678,6 +678,59 @@ to if called with ARG, or any prefix argument."
   (dolist (var '((Info-history-list . 250)))
     (add-to-list 'savehist-additional-variables var)))
 
+;;; Auto-save
+;; TODO 2025-05-23: Document:
+;; - `auto-save-no-message'
+;; - `auto-save-include-big-deletions’
+;; - `delete-auto-save-files’ and
+;;   `kill-buffer-delete-auto-save-files’
+;; - `remote-file-name-inhibit-auto-save-visited’
+;; TODO 2025-05-23: Note that auto-save is distinct from
+;; `auto-save-visited-mode’
+(setup files
+  
+  (setopt auto-save-default t ; Only a local minor mode exists; this variable influences the global value
+          auto-save-timeout 5
+          auto-save-interval 150)
+  
+  ;; Modified from Doom Emacs.  Auto save files have names that are
+  ;; hashed.
+  (defun krisb-auto-save-hash-file-name (&rest args)
+    "Turn `buffer-file-name' into a hash.
+Then apply ARGS."
+    (let ((buffer-file-name
+           (if (or
+                ;; Don't do anything for non-file-visiting
+                ;; buffers. Names generated for those are short enough
+                ;; already.
+                (null buffer-file-name)
+                ;; If an alternate handler exists for this path, bow
+                ;; out. Most of them end up calling
+                ;; `make-auto-save-file-name' again anyway, so we
+                ;; still achieve this advice's ultimate goal.
+                (find-file-name-handler buffer-file-name
+                                        'make-auto-save-file-name))
+               buffer-file-name
+             (sha1 buffer-file-name))))
+      (apply args)))
+  (advice-add 'make-auto-save-file-name :around #'krisb-auto-save-hash-file-name))
+
+;;; Auto-save-visited
+(setup files
+  
+  (setopt auto-save-visited-interval 8
+          auto-save-visited-predicate ; Value Inspired by `super-save'
+          (lambda ()
+            (or
+             ;; Don’t auto save buffers that are too long, since that
+             ;; may lead to noticeable pauses
+             (< (save-restriction (widen) (count-lines (point-min) (point-max)))
+                5000)
+             ;; Don’t auto-save `pdf-view-mode’ buffers
+             (derived-mode-p 'pdf-view-mode))))
+
+  (add-hook 'on-first-file-hook #'auto-save-visited-mode))
+
 ;;; Help.el
 ;; TODO 2025-10-14: Document:
 ;; `help-at-pt-display-when-idle'
