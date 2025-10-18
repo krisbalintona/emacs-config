@@ -503,6 +503,39 @@ to if called with ARG, or any prefix argument."
   (setopt ef-themes-to-toggle '(ef-duo-light ef-duo-dark))
   (krisb-enable-theme-time-of-day (car ef-themes-to-toggle) (cadr ef-themes-to-toggle)))
 
+;;; Tab-bar
+(setup tab-bar
+
+  (:bind-keys :map tab-prefix-map
+	      ("w" . tab-bar-move-window-to-tab)
+	      ("w" . tab-bar-move-window-to-tab)
+	      ("c" . tab-bar-change-tab-group)
+	      ("C-S-g" . tab-bar-move-tab-to-group)
+	      ("D" . tab-bar-close-group-tabs)
+	      :repeat-map krisb-tab-bar-repeat-map
+	      ("C-c <left>" . tab-bar-history-back)
+	      ("C-c <right>" . tab-bar-history-forward)
+	      :continue
+	      ("<left>" . tab-bar-history-back)
+	      ("<right>" . tab-bar-history-forward))
+  
+  (setopt tab-bar-close-button-show nil
+	  tab-bar-close-last-tab-choice 'delete-frame
+	  tab-bar-new-tab-choice 'clone
+	  tab-bar-select-tab-modifiers '(meta)
+	  tab-bar-tab-hints t
+	  tab-bar-show t
+	  tab-bar-separator " "
+	  tab-bar-show-inactive-group-tabs t
+	  tab-bar-format
+	  '(tab-bar-format-tabs-groups
+	    tab-bar-separator
+	    tab-bar-format-align-right
+	    tab-bar-format-global))
+  
+  (tab-bar-mode 1)
+  (tab-bar-history-mode 1))
+
 ;;; Completion and minibuffer
 ;; TODO 2025-05-27: Document this advice by vertico to show
 ;; `completing-read-multiple' separator on Emacs versions below 31:

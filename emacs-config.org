@@ -1301,6 +1301,43 @@ Vertico provides several extensions:
           custom-unlispify-tag-names nil)
 #+end_src
 
+** Tab bar
+
+#+name: tab-bar
+#+begin_src emacs-lisp
+  (setup tab-bar
+
+    (:bind-keys :map tab-prefix-map
+  	      ("w" . tab-bar-move-window-to-tab)
+  	      ("w" . tab-bar-move-window-to-tab)
+  	      ("c" . tab-bar-change-tab-group)
+  	      ("C-S-g" . tab-bar-move-tab-to-group)
+  	      ("D" . tab-bar-close-group-tabs)
+  	      :repeat-map krisb-tab-bar-repeat-map
+  	      ("C-c <left>" . tab-bar-history-back)
+  	      ("C-c <right>" . tab-bar-history-forward)
+  	      :continue
+  	      ("<left>" . tab-bar-history-back)
+  	      ("<right>" . tab-bar-history-forward))
+    
+    (setopt tab-bar-close-button-show nil
+  	  tab-bar-close-last-tab-choice 'delete-frame
+  	  tab-bar-new-tab-choice 'clone
+  	  tab-bar-select-tab-modifiers '(meta)
+  	  tab-bar-tab-hints t
+  	  tab-bar-show t
+  	  tab-bar-separator " "
+  	  tab-bar-show-inactive-group-tabs t
+  	  tab-bar-format
+  	  '(tab-bar-format-tabs-groups
+  	    tab-bar-separator
+  	    tab-bar-format-align-right
+  	    tab-bar-format-global))
+    
+    (tab-bar-mode 1)
+    (tab-bar-history-mode 1))
+#+end_src
+
 * Clipboard
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
@@ -1898,6 +1935,9 @@ This section is for the major mode
 
   ;;;; Ef-themes
   <<ef-themes>>
+
+  ;;; Tab-bar
+  <<tab-bar>>
 
   ;;; Completion and minibuffer
   <<completion>>

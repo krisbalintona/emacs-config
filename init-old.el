@@ -836,42 +836,6 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   :config
   (marginalia-mode 1))
 
-;;;; Tab-bar
-(use-package tab-bar
-  :ensure nil
-  :demand t
-  :bind
-  ( :map tab-prefix-map
-    ("w" . tab-bar-move-window-to-tab)
-    ("w" . tab-bar-move-window-to-tab)
-    ("c" . tab-bar-change-tab-group)
-    ("C-S-g" . tab-bar-move-tab-to-group)
-    ("D" . tab-bar-close-group-tabs)
-    :repeat-map krisb-tab-bar-repeat-map
-    ("C-c <left>" . tab-bar-history-back)
-    ("C-c <right>" . tab-bar-history-forward)
-    :continue
-    ("<left>" . tab-bar-history-back)
-    ("<right>" . tab-bar-history-forward))
-  :custom
-  (tab-bar-close-button-show nil)
-  ;; 2025-05-29: I change this value when I use bufferlo.
-  (tab-bar-new-tab-choice 'clone)
-  (tab-bar-close-last-tab-choice 'delete-frame)
-  (tab-bar-select-tab-modifiers '(meta))
-  (tab-bar-tab-hints t)
-  (tab-bar-show t)
-  (tab-bar-separator " ")
-  (tab-bar-show-inactive-group-tabs t)
-  (tab-bar-format
-   '(tab-bar-format-tabs-groups
-     tab-bar-separator
-     tab-bar-format-align-right
-     tab-bar-format-global))
-  :config
-  (tab-bar-mode 1)
-  (tab-bar-history-mode 1))
-
 ;;;; Mode-line-maker (and `mode-line-format')
 ;; Library for easier alignment of mode-line, header-line, and
 ;; tab-line.
