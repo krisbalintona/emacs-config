@@ -1061,10 +1061,13 @@ call `diff-buffer-with-file’ instead."
   ;; Elpaca: (:repo "https://codeberg.org/krisbalintona/vc-jj.el.git" :branch "merge")
   (:package (vc-jj :url "https://codeberg.org/krisbalintona/vc-jj.el.git"
                    :branch "merge"))
+  (:load-after vc)
 
   (setopt vc-jj-diff-switches '("--git" "--stat"))
 
-  (require 'project-jj))
+  (with-eval-after-load 'vc-jj
+    (require 'project-jj)))
+
 ;;; Outline.el
 (setup outline
   
