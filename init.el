@@ -852,6 +852,15 @@ Then apply ARGS."
                    (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
                    (window-height . shrink-window-if-larger-than-buffer)))))
 
+;;; Messages buffer
+(add-to-list 'display-buffer-alist
+	     `(,(rx (literal messages-buffer-name))
+	       (display-buffer-in-side-window)
+	       (window-height . 0.36)
+	       (side . top)
+	       (slot . 1)
+	       (post-command-select-window . t)))
+
 ;;; Elisp-demos
 ;;;; Elisp-demos
 ;; Add example code snippets to some of the help windows

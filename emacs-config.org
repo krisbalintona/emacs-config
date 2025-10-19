@@ -747,6 +747,19 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
     (pulsar-global-mode 1))
 #+end_src
 
+*** Messages buffer display position
+
+#+name: messages-buffer
+#+begin_src emacs-lisp :noweb-ref display-buffer-alist
+  (add-to-list 'display-buffer-alist
+  	     `(,(rx (literal messages-buffer-name))
+  	       (display-buffer-in-side-window)
+  	       (window-height . 0.36)
+  	       (side . top)
+  	       (slot . 1)
+  	       (post-command-select-window . t)))
+#+end_src
+
 *** Org-mode buffers
 
 **** Org-modern: Successor to org-superstar
@@ -2156,6 +2169,9 @@ This section is for the major mode
 
   ;;; Help.el
   <<help.el>>
+
+  ;;; Messages buffer
+  <<messages-buffer>>
 
   ;;; Elisp-demos
   <<elisp-demos>>

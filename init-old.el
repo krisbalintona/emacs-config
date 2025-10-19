@@ -599,15 +599,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
 ;; disperse additions to `display-buffer-alist' across my package
 ;; configurations.
 (setq display-buffer-alist
-      `(;; Messages
-        (,(rx (literal messages-buffer-name))
-         (display-buffer-in-side-window)
-         (window-height . 0.36)
-         (side . top)
-         (slot . 1)
-         (post-command-select-window . t))
-
-        ;; Occur
+      `(;; Occur
         ("\\*Occur"
          (display-buffer-reuse-mode-window display-buffer-pop-up-window display-buffer-below-selected)
          (window-height . fit-window-to-buffer)
