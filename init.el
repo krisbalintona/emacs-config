@@ -1136,6 +1136,24 @@ call `diff-buffer-with-file’ instead."
 (setup org
   (setopt org-imenu-depth 7))	     ; Show more than just 2 levels...
 
+;;; Isearch
+;; Incremental search
+(setup isearch
+  
+  (setopt isearch-repeat-on-direction-change t
+	  isearch-allow-scroll 'unlimited
+	  isearch-allow-motion t
+	  isearch-lazy-count t
+	  isearch-wrap-pause 'no-wrap)
+
+  ;; Treatment of whitespace.  Also be aware of the
+  ;; `isearch-toggle-lax-whitespace' command during isearch searches
+  (setopt isearch-lax-whitespace t
+	  isearch-regexp-lax-whitespace nil
+	  ;; TODO 2025-10-19: Revisit this
+	  ;; search-whitespace-regexp ".*?"
+	  ))
+
 ;;; Org
 ;;;; Org built-ins
 ;;;;; Org-mode

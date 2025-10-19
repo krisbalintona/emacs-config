@@ -991,6 +991,28 @@ See also ~(elisp) Beeping~.
     (setopt org-imenu-depth 7))	     ; Show more than just 2 levels...
 #+end_src
 
+** Isearch
+
+#+name: isearch
+#+begin_src emacs-lisp
+  ;; Incremental search
+  (setup isearch
+    
+    (setopt isearch-repeat-on-direction-change t
+  	  isearch-allow-scroll 'unlimited
+  	  isearch-allow-motion t
+  	  isearch-lazy-count t
+  	  isearch-wrap-pause 'no-wrap)
+
+    ;; Treatment of whitespace.  Also be aware of the
+    ;; `isearch-toggle-lax-whitespace' command during isearch searches
+    (setopt isearch-lax-whitespace t
+  	  isearch-regexp-lax-whitespace nil
+  	  ;; TODO 2025-10-19: Revisit this
+  	  ;; search-whitespace-regexp ".*?"
+  	  ))
+#+end_src
+
 * VCS
 
 ** VC.el: Interface for version control systems
@@ -2154,6 +2176,9 @@ This section is for the major mode
 
   ;;; Imenu
   <<imenu>>
+
+  ;;; Isearch
+  <<isearch>>
 
   ;;; Org
   ;;;; Org built-ins

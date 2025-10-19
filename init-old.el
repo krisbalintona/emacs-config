@@ -291,23 +291,6 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
       (apply #'narrow-to-region (cdr misc))))
   (advice-add 'desktop-restore-file-buffer :after #'krisb-desktop--restore-narrowing))
 
-;;;; Isearch
-;; Incremental search
-(use-package isearch
-  :ensure nil
-  :defer t
-  :custom
-  (isearch-repeat-on-direction-change t)
-  (isearch-allow-scroll 'unlimited)
-  (isearch-allow-motion t)
-  (isearch-lazy-count t)
-  (isearch-wrap-pause 'no)
-  ;; Make regular isearch interpret the empty space as a regular
-  ;; expression that matches any character between the words you give
-  ;; it.  Also be aware of `isearch-toggle-lax-whitespace'
-  (isearch-lax-whitespace t)
-  (search-whitespace-regexp ".*?"))
-
 ;;;; Insert spaces instead of tab characters
 (setopt indent-tabs-mode nil)
 
