@@ -1154,6 +1154,18 @@ call `diff-buffer-with-file’ instead."
 	  ;; search-whitespace-regexp ".*?"
 	  ))
 
+;;; Pulsar
+;; Alternative to `pulse.el'
+(setup pulsar
+  (:package pulsar)
+  
+  (setopt pulsar-pulse t
+	  pulsar-face 'pulsar-red
+	  pulsar-delay 0.05
+	  pulsar-iterations 5)
+
+  (pulsar-global-mode 1))
+
 ;;; Org
 ;;;; Org built-ins
 ;;;;; Org-mode

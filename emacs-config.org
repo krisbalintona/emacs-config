@@ -731,6 +731,22 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
   (setopt word-wrap t)
 #+end_src
 
+*** Pulsar: Alternative to pulse.el
+
+#+name: pulsar
+#+begin_src emacs-lisp
+  ;; Alternative to `pulse.el'
+  (setup pulsar
+    (:package pulsar)
+    
+    (setopt pulsar-pulse t
+  	  pulsar-face 'pulsar-red
+  	  pulsar-delay 0.05
+  	  pulsar-iterations 5)
+
+    (pulsar-global-mode 1))
+#+end_src
+
 *** Org-mode buffers
 
 **** Org-modern: Successor to org-superstar
@@ -2179,6 +2195,9 @@ This section is for the major mode
 
   ;;; Isearch
   <<isearch>>
+
+  ;;; Pulsar
+  <<pulsar>>
 
   ;;; Org
   ;;;; Org built-ins

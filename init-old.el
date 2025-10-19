@@ -615,19 +615,6 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
 
 ;;; Four steps below
 
-;;;; Pulsar
-;; Alternative to `pulse.el'
-(use-package pulsar
-  :ensure t
-  :demand t
-  :custom
-  (pulsar-pulse t)
-  (pulsar-face 'pulsar-red)
-  (pulsar-delay 0.05)
-  (pulsar-iterations 5)
-  :config
-  (pulsar-global-mode 1))
-
 ;;;; Consult
 ;; Get enhanced or fancy versions of many built-in commands
 ;; TODO 2025-05-23: Document:
