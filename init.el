@@ -1061,6 +1061,48 @@ call `diff-buffer-with-file’ instead."
   (setopt vc-jj-diff-switches '("--git" "--stat"))
 
   (require 'project-jj))
+;;; Outline.el
+(setup outline
+  
+  (:hide-mode outline-minor-mode)
+
+  (setopt outline-minor-mode-cycle t
+	  outline-minor-mode-cycle-filter nil
+	  outline-minor-mode-highlight 'append
+	  outline-blank-line t))
+
+;;; Outli.el
+;; TODO 2025-05-20: Document that I prefer this over the heavier,
+;; less-compatible outshine.el as well as outline-indent.
+;; Coding language-agnostic file outlines.  Lightweight and close to
+;; the built-in outline.el.
+(setup outli
+  ;; Elpaca: :ensure (:repo "https://github.com/jdtsmith/outli")
+  (:package outli)
+  
+  (with-eval-after-load 'outli
+    (require 'outline)
+    (bind-keys :map outline-minor-mode-map
+	       ;; 2025-04-02: Assumes `outline-minor-mode-prefix' is
+	       ;; "C-c @"
+	       ("C-c @ C-<return>" . outli-insert-heading-respect-content)
+	       ("C-c @ ?" . outli-speed-command-help)
+	       ("C-c @ s" . outli-toggle-narrow-to-subtree)))
+  
+  (setopt outli-allow-indented-headlines t
+	  outli-default-nobar nil	; Show a horizontal rule?
+	  outli-blend nil)
+  
+  (add-hook 'prog-mode-hook #'outli-mode)
+  (add-hook 'text-mode-hookprog-mode-hook #'outli-mode))
+
+;; Add "Heading" (which outli headings are categorized as) imenu
+;; group.  Taken from
+;; https://github.com/jdtsmith/outli?tab=readme-ov-file#faq
+(setup consult-imenu
+  (with-eval-after-load 'consult-imenu
+    (push '(?h "Headings")
+          (plist-get (cdr (assoc 'emacs-lisp-mode consult-imenu-config)) :types))))
 
 ;;; Org
 ;;;; Org built-ins
