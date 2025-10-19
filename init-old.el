@@ -954,25 +954,6 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
         (forward-line 2))
       (rename-buffer (concat "*Scratch for " mode "*") t))))
 
-;;;; Log-edit
-;; TODO 2025-05-20: Document the user options below in the literate
-;; config:
-;; - `log-edit-headers-alist'
-;; - `log-edit-setup-add-author'
-(use-package log-edit
-  :ensure nil
-  ;; :defer t
-  ;; NOTE 2025-06-17: For some reason, when I use :defer t, the
-  ;; default value of `log-edit-hook' is overriden.  I've emailed the
-  ;; Emacs mailing lists about this and will change this back to
-  ;; :defer t once my confusion is cleared up or the bug is resolved.
-  :demand t
-  :hook
-  (log-edit-hook . auto-fill-mode)
-  (log-edit-hook . log-edit-maybe-show-diff)
-  :custom-face
-  (log-edit-summary ((t (:family ,(face-attribute 'variable-pitch :family))))))
-
 ;;;; Find-func
 ;; Binds useful commands for jumping to variables, functions, and libraries
 (use-package find-func

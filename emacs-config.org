@@ -174,7 +174,7 @@ Setup.el simply provides various macros inside ~(setup ...)~ forms. It comes wit
     ;; Customize faces.  Taken from
     ;; https://www.emacswiki.org/emacs/SetupEl#h5o-22.
     (setup-define :face
-      (lambda (face spec) `(custom-set-faces (quote (,face ,spec))))
+      (lambda (face spec) `(custom-set-faces (backquote (,face ,spec))))
       :documentation "Customize FACE to SPEC."
       :signature '(face spec ...)
       :debug '(setup)
@@ -1040,6 +1040,22 @@ See also ~(elisp) Beeping~.
                         (major-mode . vc-git-log-view-mode)
                         (major-mode . vc-git-region-history-mode)))
                  (display-buffer-same-window)))
+#+end_src
+
+** Log-edit
+
+#+name: log-edit
+#+begin_src emacs-lisp
+  ;; TODO 2025-05-20: Document the user options below in the literate
+  ;; config:
+  ;; - `log-edit-headers-alist'
+  ;; - `log-edit-setup-add-author'
+  (setup log-edit
+
+    (add-hook 'log-edit-hook #'auto-fill-mode)
+    (add-hook 'log-edit-hook #'log-edit-maybe-show-diff)
+
+    (:face log-edit-summary ((t (:family ,(face-attribute 'variable-pitch :family))))))
 #+end_src
 
 ** Vc-git: VC with git
@@ -2126,6 +2142,9 @@ This section is for the major mode
 
   ;;;; Vc-jj
   <<vc-jj>>
+
+  ;;; Log-edit
+  <<log-edit>>
 
   ;;; Outline.el
   <<outline.el>>

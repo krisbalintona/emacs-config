@@ -143,7 +143,7 @@ that.  Otherwise, remove it from `minor-mode-alist'."
   ;; Customize faces.  Taken from
   ;; https://www.emacswiki.org/emacs/SetupEl#h5o-22.
   (setup-define :face
-    (lambda (face spec) `(custom-set-faces (quote (,face ,spec))))
+    (lambda (face spec) `(custom-set-faces (backquote (,face ,spec))))
     :documentation "Customize FACE to SPEC."
     :signature '(face spec ...)
     :debug '(setup)
@@ -1067,6 +1067,18 @@ call `diff-buffer-with-file’ instead."
 
   (with-eval-after-load 'vc-jj
     (require 'project-jj)))
+
+;;; Log-edit
+;; TODO 2025-05-20: Document the user options below in the literate
+;; config:
+;; - `log-edit-headers-alist'
+;; - `log-edit-setup-add-author'
+(setup log-edit
+
+  (add-hook 'log-edit-hook #'auto-fill-mode)
+  (add-hook 'log-edit-hook #'log-edit-maybe-show-diff)
+
+  (:face log-edit-summary ((t (:family ,(face-attribute 'variable-pitch :family))))))
 
 ;;; Outline.el
 (setup outline
