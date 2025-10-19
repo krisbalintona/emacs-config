@@ -1108,6 +1108,19 @@ call `diff-buffer-with-file’ instead."
     (push '(?h "Headings")
           (plist-get (cdr (assoc 'emacs-lisp-mode consult-imenu-config)) :types))))
 
+;;; Imenu
+(setup imenu
+  
+  (setopt imenu-auto-rescan t
+	  imenu-flatten 'group))
+
+(setup pulsar
+  (with-eval-after-load 'pulsar
+    (add-hook 'imenu-after-jump-hook #'pulsar-reveal-entry)))
+
+(setup org
+  (setopt org-imenu-depth 7))	     ; Show more than just 2 levels...
+
 ;;; Org
 ;;;; Org built-ins
 ;;;;; Org-mode
