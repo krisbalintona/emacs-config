@@ -593,15 +593,14 @@ to if called with ARG, or any prefix argument."
 ;; - `completion-flex-nospace’
 (setup minibuffer
   ;; Completions buffer
-  (setup completions-max-height 20 ; Otherwise the completions buffer can grow to fill the entire frame
-         completion-auto-help 'visible
-         completion-lazy-hilit t ; Lazy highlighting for drastic performance increase; added Emacs 30.1
-         completion-auto-select 'second-tab
-         completions-format 'one-column
-         completions-detailed t ; Show annotations for candidates (like `marginalia')
-         completions-group t    ; Emacs 28
-         completions-sort 'historical)  ; Emacs 30.1
-  )
+  (setopt completions-max-height 20 ; Otherwise the completions buffer can grow to fill the entire frame
+          completion-auto-help 'visible
+          completion-lazy-hilit t ; Lazy highlighting for drastic performance increase; added Emacs 30.1
+          completion-auto-select 'second-tab
+          completions-format 'one-column
+          completions-detailed t ; Show annotations for candidates (like `marginalia')
+          completions-group t    ; Emacs 28
+          completions-sort 'historical)) ; Emacs 30.1
 
 ;;;; Vertico and extensions
 (setup vertico
