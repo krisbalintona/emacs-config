@@ -1042,6 +1042,20 @@ See also ~(elisp) Beeping~.
   	  ))
 #+end_src
 
+** Newcomment: Emacs' commenting suite
+
+#+name: newcomment
+#+begin_src emacs-lisp
+  ;; TODO 2025-05-20: Document the user options below in the literate
+  ;; config:
+  ;; - `comment-fill-column'
+  ;; - `comment-multi-line'
+  ;; - `comment-style'
+  (setup newcomment
+    
+    (setopt comment-empty-lines t))
+#+end_src
+
 * VCS
 
 ** VC.el: Interface for version control systems
@@ -2186,6 +2200,9 @@ This section is for the major mode
 
   ;;; Autorevert
   <<autorevert>>
+
+  ;;; Newcomment
+  <<newcomment>>
 
   ;;; Vc.el
   <<vc.el>>

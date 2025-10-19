@@ -996,6 +996,16 @@ Then apply ARGS."
 
   (setopt auto-revert-interval 3))
 
+;;; Newcomment
+;; TODO 2025-05-20: Document the user options below in the literate
+;; config:
+;; - `comment-fill-column'
+;; - `comment-multi-line'
+;; - `comment-style'
+(setup newcomment
+  
+  (setopt comment-empty-lines t))
+
 ;;; Vc.el
 ;; TODO 2025-05-20: Document the user options below in the literate
 ;; config:

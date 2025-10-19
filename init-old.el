@@ -1400,18 +1400,6 @@ ORIG-FUN should be `ispell-completion-at-point'."
   :config
   (add-to-list 'mode-line-collapse-minor-modes 'eldoc-mode))
 
-;;;; Newcomment
-;; TODO 2025-05-20: Document the user options below in the literate
-;; config:
-;;
-;; - `comment-fill-column'
-;; - `comment-multi-line'
-;; - `comment-style'
-(use-package newcomment
-  :ensure nil
-  :custom
-  (comment-empty-lines t))
-
 ;;;; Prog-mode
 (use-package prog-mode
   :ensure nil
