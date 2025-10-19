@@ -2211,45 +2211,6 @@ For N, see the docstring of `open-line’."
     (funcall indent-line-function)))
 (bind-key [remap open-line] 'krisb-open-line)
 
-;; Joining and inserting newlines
-(defun krisb-open-line-above-goto ()
-  "Insert an empty line above the current line.
-Position the cursor at it's beginning, according to the current mode.
-Credit to https://emacsredux.com/blog/2013/06/15/open-line-above/"
-  (interactive)
-  (beginning-of-line)
-  (newline)
-  (forward-line -1)
-  (indent-according-to-mode))
-
-(defun krisb-open-line-below-goto ()
-  "Insert an empty line after the current line.
-Position the cursor at its beginning, according to the current mode.
-Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
-  (interactive)
-  (move-end-of-line nil)
-  (newline-and-indent))
-
-(defun krisb-join-line-above ()
-  "Join the current line with the line above."
-  (interactive)
-  (save-excursion (delete-indentation))
-  (when (string-match-p "\\`\\s-*$" (thing-at-point 'line))
-    (funcall indent-line-function)))
-
-(defun krisb-join-line-below ()
-  "Join the current line with the line below."
-  (interactive)
-  (save-excursion (delete-indentation t))
-  (when (bolp)
-    (funcall indent-line-function)))
-
-(bind-keys
- ("C-S-p" . krisb-open-line-above-goto)
- ("C-S-n" . krisb-open-line-below-goto)
- ("C-S-k" . krisb-join-line-above)
- ("C-S-j" . krisb-join-line-below))
-
 ;;;; Diff-mode
 ;; TODO 2025-06-07: Document:
 ;; - `diff-font-lock-syntax’
