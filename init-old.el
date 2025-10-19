@@ -320,12 +320,6 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   (add-hook 'window-setup-hook (lambda () (pgtk-use-im-context nil))))
 
 ;;; Three steps below
-;;;; Repeat
-(use-package repeat
-  :ensure nil
-  :hook
-  (on-first-input-hook . repeat-mode))
-
 ;;;; Orderless
 ;; Alternative and powerful completion style (i.e. filters candidates)
 (use-package orderless

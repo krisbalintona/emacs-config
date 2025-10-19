@@ -966,6 +966,14 @@ See also ~(elisp) Beeping~.
    ("C-S-j" . krisb-join-line-below))
 #+end_src
 
+** Repeat.el
+
+#+name: repeat.el
+#+begin_src emacs-lisp
+  (setup repeat
+    (add-hook 'on-first-input-hook #'repeat-mode))
+#+end_src
+
 * VCS
 
 ** VC.el: Interface for version control systems
@@ -2054,6 +2062,9 @@ This section is for the major mode
 
   ;;; Bespoke editing commands
   <<bespoke-editing>>
+
+  ;;; Repeat.el
+  <<repeat.el>>
 
   ;;; Savehist
   <<savehist>>

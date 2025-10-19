@@ -731,6 +731,10 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
  ("C-S-k" . krisb-join-line-above)
  ("C-S-j" . krisb-join-line-below))
 
+;;; Repeat.el
+(setup repeat
+  (add-hook 'on-first-input-hook #'repeat-mode))
+
 ;;; Savehist
 ;; Make history of certain things (e.g. minibuffer) persistent across sessions
 (setup savehist
