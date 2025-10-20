@@ -1093,8 +1093,12 @@ call `diff-buffer-with-file’ instead."
 ;; - `log-edit-setup-add-author'
 (setup log-edit
 
-  (add-hook 'log-edit-hook #'auto-fill-mode)
-  (add-hook 'log-edit-hook #'log-edit-maybe-show-diff)
+  ;; Evaluate after log-edit defines `log-edit-hook' first, since the
+  ;; hook already has several functions.  (Otherwise, we are adding to
+  ;; an empty hook.)
+  (with-eval-after-load 'log-edit
+    (add-hook 'log-edit-hook #'auto-fill-mode)
+    (add-hook 'log-edit-hook #'log-edit-maybe-show-diff))
 
   (:face log-edit-summary ((t (:family ,(face-attribute 'variable-pitch :family))))))
 
