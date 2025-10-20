@@ -741,7 +741,7 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
   ;; Alternative to `pulse.el'
   (setup pulsar
     (:package pulsar)
-    
+
     (pulsar-global-mode 1)
 
     (setopt pulsar-pulse t
@@ -1011,7 +1011,7 @@ See also ~(elisp) Beeping~.
 #+name: imenu
 #+begin_src emacs-lisp
   (setup imenu
-    
+
     (setopt imenu-auto-rescan t
   	  imenu-flatten 'group))
 
@@ -1029,7 +1029,7 @@ See also ~(elisp) Beeping~.
 #+begin_src emacs-lisp
   ;; Incremental search
   (setup isearch
-    
+
     (setopt isearch-repeat-on-direction-change t
   	  isearch-allow-scroll 'unlimited
   	  isearch-allow-motion t
@@ -1055,8 +1055,85 @@ See also ~(elisp) Beeping~.
   ;; - `comment-multi-line'
   ;; - `comment-style'
   (setup newcomment
-    
+
     (setopt comment-empty-lines t))
+#+end_src
+
+** Consult
+
+#+name: consult
+#+begin_src emacs-lisp
+  (setup consult
+    (:package consult)
+
+    (bind-keys ("C-x B" . consult-buffer)
+  	     ;; Remaps of built-ins
+  	     ([remap yank-pop] . consult-yank-pop)
+  	     ([remap goto-line] . consult-goto-line)
+  	     ([remap bookmark-jump] . consult-bookmark)
+  	     ([remap Info-search] . consult-info)
+  	     ([remap imenu] . consult-imenu)
+  	     ([remap flymake-show-buffer-diagnostics] . consult-flymake)
+  	     ([remap repeat-complex-command] . consult-complex-command)
+  	     :map goto-map		; The `M-g' prefix
+  	     ("f" . consult-flymake)
+  	     ("o" . consult-outline)
+  	     ("e" . consult-compile-error)
+  	     ("l" . consult-line)
+  	     ("a" . consult-org-agenda)
+  	     ("m" . consult-mark)
+  	     :map search-map		; The `M-s' prefix
+  	     ("i" . consult-info)
+  	     ("g" . consult-git-grep)
+  	     ("G" . consult-grep)
+  	     ("r" . consult-ripgrep)
+  	     ("f" . consult-find)
+  	     ("F" . consult-locate))
+    (with-eval-after-load 'org
+      (bind-key [remap consult-outline] #'consult-org-heading org-mode-map))
+
+    (:bind-keys :map consult-narrow-map
+  	      ("?" . consult-narrow-help)) ; Show available narrow keys
+
+    (setopt consult-preview-key "C-M-;"
+  	  consult-ripgrep-args
+  	  (concat
+  	   "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /\
+     --smart-case --no-heading --with-filename --line-number --search-zip"
+  	   ;; Additional args
+  	   " --line-number --hidden"))
+
+    ;; `consult-bookmark-narrow'
+    (with-eval-after-load 'activities
+      (add-to-list 'consult-bookmark-narrow '(?a "Activities" activities-bookmark-handler)))
+    (with-eval-after-load 'pdf-tools
+      (add-to-list 'consult-bookmark-narrow '(?p "PDFs" pdf-view-bookmark-jump-handler)))
+
+    ;; Add log-edit histories to `consult-mode-histories'
+    (add-to-list 'consult-mode-histories
+                 '(log-edit-mode
+                   log-edit-comment-ring
+                   log-edit-comment-ring-index
+                   log-edit-beginning-of-line))
+
+    ;; TODO 2025-10-20: Revisit this
+    ;; ;; Use the faster plocate rather than locate
+    ;; (when (executable-find "plocate")
+    ;;   (setopt consult-locate-args "plocate --ignore-case --existing --regexp"))
+
+    ;; Remove sources from `consult-buffer’ I dislike.  Alternatively, I
+    ;; could make these hidden, allowing access to their filter despite
+    ;; being unseen.
+    (dolist (source '(consult--source-recent-file
+  		    consult--source-file-register
+  		    consult--source-bookmark
+  		    consult--source-project-recent-file-hidden))
+      (delq source consult-buffer-sources)))
+
+  ;; Pulsar pulses
+  (setup pulsar
+    (with-eval-after-load 'pulsar
+      (add-hook 'consult-after-jump-hook #'pulsar-reveal-entry)))
 #+end_src
 
 * VCS
@@ -1481,7 +1558,7 @@ Vertico provides several extensions:
   	      :continue
   	      ("<left>" . tab-bar-history-back)
   	      ("<right>" . tab-bar-history-forward))
-    
+
     (setopt tab-bar-close-button-show nil
   	  tab-bar-close-last-tab-choice 'delete-frame
   	  tab-bar-new-tab-choice 'clone
@@ -1495,7 +1572,7 @@ Vertico provides several extensions:
   	    tab-bar-separator
   	    tab-bar-format-align-right
   	    tab-bar-format-global))
-    
+
     (tab-bar-mode 1)
     (tab-bar-history-mode 1))
 #+end_src
@@ -1631,7 +1708,7 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
 #+name: outline.el
 #+begin_src emacs-lisp
   (setup outline
-    
+
     (:hide-mode outline-minor-mode)
 
     (setopt outline-minor-mode-cycle t
@@ -1651,7 +1728,7 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
   (setup outli
     ;; Elpaca: :ensure (:repo "https://github.com/jdtsmith/outli")
     (:package outli)
-    
+
     (with-eval-after-load 'outli
       (require 'outline)
       (bind-keys :map outline-minor-mode-map
@@ -1660,11 +1737,11 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
   	       ("C-c @ C-<return>" . outli-insert-heading-respect-content)
   	       ("C-c @ ?" . outli-speed-command-help)
   	       ("C-c @ s" . outli-toggle-narrow-to-subtree)))
-    
+
     (setopt outli-allow-indented-headlines t
   	  outli-default-nobar nil	; Show a horizontal rule?
   	  outli-blend nil)
-    
+
     (add-hook 'prog-mode-hook #'outli-mode)
     (add-hook 'text-mode-hook #'outli-mode))
 
@@ -1686,7 +1763,7 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
   ;; - `org-edit-src-auto-save-idle-delay’
   ;; - `org-src-block-faces’
   (setup org-src
-    
+
     (setopt org-src-fontify-natively t
   	  org-src-window-setup 'current-window))
 #+end_src
@@ -1755,10 +1832,10 @@ Tell ~display-buffer-alist~ where to show help buffers:
   ;; where readers want the parentheses as unnoticeable as possible.
   (setup paren-face
     (:package paren-face)
-    
+
     (:hide-mode)
     (setopt paren-face-mode-lighter " PF")
-    
+
     (global-paren-face-mode 1))
 #+end_src
 
@@ -1826,7 +1903,7 @@ This section is for the major mode
   ;; TODO 2025-05-23: Document:
   ;; - `org-footnote-define-inline’
   (setup org-footnote
-    
+
     (setopt org-footnote-section nil    ; Don't create footnote headline
   	  org-footnote-auto-adjust t))
 #+end_src
@@ -1840,7 +1917,7 @@ This section is for the major mode
 #+name: org-id
 #+begin_src emacs-lisp
   (setup org-id
-    
+
     (setopt org-id-track-globally t
   	  org-id-method 'ts
   	  org-id-link-to-org-use-id 'use-existing
@@ -1865,7 +1942,7 @@ This section is for the major mode
   	    (odt . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
   	    (docx . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
   	    (t . (csl "modern-language-association.csl")))) ; Fallback
-    
+
     ;; Have citation link faces look closer to as they were for
     ;; `org-ref'
     (:face org-cite ((t (:foreground "DarkSeaGreen4"))))
@@ -2356,6 +2433,9 @@ This section is for the major mode
 
   ;;; Paren-face
   <<paren-face>>
+
+  ;;; Consult
+  <<consult>>
 
   ;;; Startup time
   <<startup-time>>

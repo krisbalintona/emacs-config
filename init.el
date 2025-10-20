@@ -1636,6 +1636,79 @@ headline."
   
   (global-paren-face-mode 1))
 
+;;; Consult
+(setup consult
+  (:package consult)
+
+  (bind-keys ("C-x B" . consult-buffer)
+	     ;; Remaps of built-ins
+	     ([remap yank-pop] . consult-yank-pop)
+	     ([remap goto-line] . consult-goto-line)
+	     ([remap bookmark-jump] . consult-bookmark)
+	     ([remap Info-search] . consult-info)
+	     ([remap imenu] . consult-imenu)
+	     ([remap flymake-show-buffer-diagnostics] . consult-flymake)
+	     ([remap repeat-complex-command] . consult-complex-command)
+	     :map goto-map		; The `M-g' prefix
+	     ("f" . consult-flymake)
+	     ("o" . consult-outline)
+	     ("e" . consult-compile-error)
+	     ("l" . consult-line)
+	     ("a" . consult-org-agenda)
+	     ("m" . consult-mark)
+	     :map search-map		; The `M-s' prefix
+	     ("i" . consult-info)
+	     ("g" . consult-git-grep)
+	     ("G" . consult-grep)
+	     ("r" . consult-ripgrep)
+	     ("f" . consult-find)
+	     ("F" . consult-locate))
+  (with-eval-after-load 'org
+    (bind-key [remap consult-outline] #'consult-org-heading org-mode-map))
+  
+  (:bind-keys :map consult-narrow-map
+	      ("?" . consult-narrow-help)) ; Show available narrow keys
+  
+  (setopt consult-preview-key "C-M-;"
+	  consult-ripgrep-args
+	  (concat
+	   "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /\
+   --smart-case --no-heading --with-filename --line-number --search-zip"
+	   ;; Additional args
+	   " --line-number --hidden"))
+
+  ;; `consult-bookmark-narrow'
+  (with-eval-after-load 'activities
+    (add-to-list 'consult-bookmark-narrow '(?a "Activities" activities-bookmark-handler)))
+  (with-eval-after-load 'pdf-tools
+    (add-to-list 'consult-bookmark-narrow '(?p "PDFs" pdf-view-bookmark-jump-handler)))
+  
+  ;; Add log-edit histories to `consult-mode-histories'
+  (add-to-list 'consult-mode-histories
+               '(log-edit-mode
+                 log-edit-comment-ring
+                 log-edit-comment-ring-index
+                 log-edit-beginning-of-line))
+
+  ;; TODO 2025-10-20: Revisit this
+  ;; ;; Use the faster plocate rather than locate
+  ;; (when (executable-find "plocate")
+  ;;   (setopt consult-locate-args "plocate --ignore-case --existing --regexp"))
+
+  ;; Remove sources from `consult-buffer’ I dislike.  Alternatively, I
+  ;; could make these hidden, allowing access to their filter despite
+  ;; being unseen.
+  (dolist (source '(consult--source-recent-file
+		    consult--source-file-register
+		    consult--source-bookmark
+		    consult--source-project-recent-file-hidden))
+    (delq source consult-buffer-sources)))
+
+;; Pulsar pulses
+(setup pulsar
+  (with-eval-after-load 'pulsar
+    (add-hook 'consult-after-jump-hook #'pulsar-reveal-entry)))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

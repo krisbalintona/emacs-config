@@ -609,63 +609,13 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
 ;; TODO 2025-05-23: Document:
 ;; - `consult-recent-file’
 (use-package consult
-  :ensure t
   :bind
-  (("C-x B" . consult-buffer)
-   ;; Remaps
-   ([remap bookmark-jump] . consult-bookmark)
-   ([remap yank-pop] . consult-yank-pop)
-   ([remap goto-line] . consult-goto-line)
-   ([remap Info-search] . consult-info)
-   ;; TODO 2025-05-20: Revisit this.
+  (;; TODO 2025-05-20: Revisit this.
    ;; ([remap point-to-register] . consult-register-store)
-   ([remap repeat-complex-command] . consult-complex-command)
-   ([remap imenu] . consult-imenu)
-   ([remap flymake-show-buffer-diagnostics] . consult-flymake)
    :map minibuffer-local-map
    ([remap next-matching-history-element] . consult-history)
-   ([remap previous-matching-history-element] . consult-history)
-   :map consult-narrow-map
-   ("?" . consult-narrow-help)          ; Show available narrow keys
-   :map goto-map                  ; The `M-g' prefix
-   ("f" . consult-flymake)
-   ("o" . consult-outline)
-   ("e" . consult-compile-error)
-   ("l" . consult-line)
-   ("a" . consult-org-agenda)
-   ("m" . consult-mark)
-   :map search-map                ; The `M-s' prefix
-   ("i" . consult-info)
-   ("g" . consult-git-grep)
-   ("G" . consult-grep)
-   ("r" . consult-ripgrep)
-   ("f" . consult-find)
-   ("F" . consult-locate))
-  :custom
-  (consult-preview-key "C-M-;")
-  (consult-bookmark-narrow
-   '((?f "File" bookmark-default-handler)
-     (?i "Info" Info-bookmark-jump)
-     (?h "Help" help-bookmark-jump Info-bookmark-jump
-         Man-bookmark-jump woman-bookmark-jump)
-     (?p "PDFs" pdf-view-bookmark-jump-handler)
-     (?a "Activities" activities-bookmark-handler)
-     (?d "Docview" doc-view-bookmark-jump)
-     (?s "Eshell" eshell-bookmark-jump)
-     (?w "Web" eww-bookmark-jump xwidget-webkit-bookmark-jump-handler)
-     (?v "VC Directory" vc-dir-bookmark-jump)
-     (?o "Org headings" org-bookmark-heading-jump)
-     (nil "Other")))
-  (consult-ripgrep-args
-   (concat
-    "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /\
-   --smart-case --no-heading --with-filename --line-number --search-zip"
-    ;; Additional args
-    " --line-number --hidden"))
+   ([remap previous-matching-history-element] . consult-history))
   :init
-  (with-eval-after-load 'org
-    (bind-key [remap consult-outline] #'consult-org-heading org-mode-map))
-
   (with-eval-after-load 'dired
     (bind-keys :map dired-mode-map
                ;; Dired binds its own commands in M-s f, so I rebind
@@ -675,18 +625,7 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   :config
   ;; TODO 2025-05-20: Revisit this.
   ;; (require 'krisb-consult-ext)
-
-  ;; Add log-edit histories to `consult-mode-histories'
-  (add-to-list 'consult-mode-histories
-               '(log-edit-mode
-                 log-edit-comment-ring
-                 log-edit-comment-ring-index
-                 log-edit-beginning-of-line))
-
-  ;; Use the faster plocate rather than locate
-  (when (executable-find "plocate")
-    (setopt consult-locate-args "plocate --ignore-case --existing --regexp"))
-
+  
   ;; TODO 2025-05-20: Revisit this.
   ;; ;; Use consult UI with xref
   ;; (with-eval-after-load 'xref
@@ -704,22 +643,10 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   ;;   ;; https://github.com/minad/consult#use-package-example
   ;;   (advice-add 'register-preview :override #'consult-register-window))
 
-  ;; Pulsar pulses
-  (with-eval-after-load 'pulsar
-    (add-hook 'consult-after-jump-hook #'pulsar-reveal-entry))
-
   ;; Eshell is not loaded at startup, so we have to delay our binding
   ;; in `eshell-mode-map’
   (with-eval-after-load 'eshell
-    (bind-key [remap eshell-previous-matching-input] #'consult-history 'eshell-mode-map))
-
-  ;; Remove sources from `consult-buffer’ I dislike.  Alternatively, I
-  ;; could make these hidden, allowing access to their filter despite
-  ;; being unseen.
-  (delq 'consult--source-recent-file consult-buffer-sources)
-  (delq 'consult--source-file-register consult-buffer-sources)
-  (delq 'consult--source-bookmark consult-buffer-sources)
-  (delq 'consult--source-project-recent-file-hidden consult-buffer-sources))
+    (bind-key [remap eshell-previous-matching-input] #'consult-history 'eshell-mode-map)))
 
 ;;;; Ultra-scroll
 ;; TODO 2025-05-20: Document that this package was the result of the
