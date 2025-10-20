@@ -1310,6 +1310,14 @@ call `diff-buffer-with-file’ instead."
 	  org-id-link-to-org-use-id 'use-existing
 	  org-id-link-consider-parent-id t))
 
+;;;;; Org-footnote
+;; TODO 2025-05-23: Document:
+;; - `org-footnote-define-inline’
+(setup org-footnote
+  
+  (setopt org-footnote-section nil    ; Don't create footnote headline
+	  org-footnote-auto-adjust t))
+
 ;;;;; Org-src
 ;; TODO 2025-05-23: Document:
 ;; - `org-edit-src-turn-on-auto-save'

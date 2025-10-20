@@ -1814,6 +1814,18 @@ This section is for the major mode
               ("*" . "+"))))
 #+end_src
 
+***** Org-footnote
+
+#+name: org-footnote
+#+begin_src emacs-lisp
+  ;; TODO 2025-05-23: Document:
+  ;; - `org-footnote-define-inline’
+  (setup org-footnote
+    
+    (setopt org-footnote-section nil    ; Don't create footnote headline
+  	  org-footnote-auto-adjust t))
+#+end_src
+
 ** Media management
 
 *** General note-taking
@@ -2286,6 +2298,9 @@ This section is for the major mode
 
   ;;;;; Org-id
   <<org-id>>
+
+  ;;;;; Org-footnote
+  <<org-footnote>>
 
   ;;;;; Org-src
   <<org-src>>
