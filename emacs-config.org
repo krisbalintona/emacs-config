@@ -1657,7 +1657,7 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
   	  outli-blend nil)
     
     (add-hook 'prog-mode-hook #'outli-mode)
-    (add-hook 'text-mode-hookprog-mode-hook #'outli-mode))
+    (add-hook 'text-mode-hook #'outli-mode))
 
   ;; Add "Heading" (which outli headings are categorized as) imenu
   ;; group.  Taken from

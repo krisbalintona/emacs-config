@@ -1131,7 +1131,7 @@ call `diff-buffer-with-file’ instead."
 	  outli-blend nil)
   
   (add-hook 'prog-mode-hook #'outli-mode)
-  (add-hook 'text-mode-hookprog-mode-hook #'outli-mode))
+  (add-hook 'text-mode-hook #'outli-mode))
 
 ;; Add "Heading" (which outli headings are categorized as) imenu
 ;; group.  Taken from
