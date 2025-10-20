@@ -1773,18 +1773,6 @@ of collision."
 
 ;;; Coding
 
-;;;; Org-src
-;; TODO 2025-05-23: Document:
-;; - `org-edit-src-auto-save-idle-delay’
-;; - `org-src-block-faces’
-(use-package org-src
-  :ensure nil
-  :after org
-  :custom
-  (org-src-fontify-natively t)
-  (org-src-window-setup 'current-window)
-  (org-edit-src-turn-on-auto-save t))   ; Auto-save for source buffers
-
 ;;;; Whitespace
 ;; Visualize whitespace so mistakes are more easily detectable.
 (use-package whitespace

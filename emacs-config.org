@@ -1668,6 +1668,20 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
             (plist-get (cdr (assoc 'emacs-lisp-mode consult-imenu-config)) :types))))
 #+end_src
 
+**** Org-src: Programming in org-mode
+
+#+name: org-src
+#+begin_src emacs-lisp
+  ;; TODO 2025-05-23: Document:
+  ;; - `org-edit-src-turn-on-auto-save'
+  ;; - `org-edit-src-auto-save-idle-delay’
+  ;; - `org-src-block-faces’
+  (setup org-src
+    
+    (setopt org-src-fontify-natively t
+  	  org-src-window-setup 'current-window))
+#+end_src
+
 **** Emacs-lisp
 
 ***** Help.el: Documentation
@@ -2238,6 +2252,9 @@ This section is for the major mode
 
   ;;;;; Org-agenda
   <<org-agenda>>
+
+  ;;;;; Org-src
+  <<org-src>>
 
   ;;;; Other org packages
   ;;;;; Org-modern

@@ -1298,6 +1298,16 @@ call `diff-buffer-with-file’ instead."
                    (window-parameters . ((mode-line-format . none)))
                    (post-command-select-window . t)))))
 
+;;;;; Org-src
+;; TODO 2025-05-23: Document:
+;; - `org-edit-src-turn-on-auto-save'
+;; - `org-edit-src-auto-save-idle-delay’
+;; - `org-src-block-faces’
+(setup org-src
+  
+  (setopt org-src-fontify-natively t
+	  org-src-window-setup 'current-window))
+
 ;;;; Other org packages
 ;;;;; Org-modern
 (setup org-modern
