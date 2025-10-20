@@ -1738,6 +1738,21 @@ Tell ~display-buffer-alist~ where to show help buffers:
 
 ***** Package authorship
 
+***** Paren-face: Special face for parentheses
+
+#+name: paren-face
+#+begin_src emacs-lisp
+  ;; Creates a face just for parentheses.  Useful for lispy languages
+  ;; where readers want the parentheses as unnoticeable as possible.
+  (setup paren-face
+    (:package paren-face)
+    
+    (:hide-mode)
+    (setopt paren-face-mode-lighter " PF")
+    
+    (global-paren-face-mode 1))
+#+end_src
+
 *** Prose writing
 
 **** Grammar checking
@@ -2265,6 +2280,9 @@ This section is for the major mode
 
   ;;;;; Org-node
   <<org-node>>
+
+  ;;; Paren-face
+  <<paren-face>>
 
   ;;; Startup time
   <<startup-time>>

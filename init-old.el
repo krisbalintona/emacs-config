@@ -2010,17 +2010,6 @@ An example of a return value for this function is: \"9 minutes ago\"."
   :custom-face
   (highlight-function-calls-face ((t (:underline nil :inherit font-lock-function-call-face)))))
 
-;;;; Paren-face
-;; Creates a face just for parentheses. Useful for lispy languages where readers
-;; want the parentheses as unnoticeable as possible.
-(use-package paren-face
-  :ensure t
-  :demand t
-  :custom
-  (paren-face-mode-lighter "")
-  :config
-  (global-paren-face-mode 1))
-
 ;;;; Eros
 ;; Overlay lisp evaluations into the current buffer (near cursor)
 (use-package eros

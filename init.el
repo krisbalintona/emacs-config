@@ -1573,6 +1573,17 @@ headline."
      (completing-read "Type: " '("ROAM_CONTEXT" "ROAM_SOURCE"))
      (org-entry-get nil "ROAM_REFS" 'inherit))))
 
+;;; Paren-face
+;; Creates a face just for parentheses.  Useful for lispy languages
+;; where readers want the parentheses as unnoticeable as possible.
+(setup paren-face
+  (:package paren-face)
+  
+  (:hide-mode)
+  (setopt paren-face-mode-lighter " PF")
+  
+  (global-paren-face-mode 1))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()
