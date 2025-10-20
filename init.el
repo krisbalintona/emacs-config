@@ -1184,12 +1184,12 @@ call `diff-buffer-with-file’ instead."
 (setup pulsar
   (:package pulsar)
   
+  (pulsar-global-mode 1)
+
   (setopt pulsar-pulse t
 	  pulsar-face 'pulsar-red
 	  pulsar-delay 0.05
-	  pulsar-iterations 5)
-
-  (pulsar-global-mode 1))
+	  pulsar-iterations 5))
 
 ;;; Org
 ;;;; Org built-ins
