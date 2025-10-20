@@ -1169,7 +1169,7 @@ call `diff-buffer-with-file’ instead."
 	  isearch-allow-scroll 'unlimited
 	  isearch-allow-motion t
 	  isearch-lazy-count t
-	  isearch-wrap-pause 'no-wrap)
+	  isearch-wrap-pause 'no-ding)
 
   ;; Treatment of whitespace.  Also be aware of the
   ;; `isearch-toggle-lax-whitespace' command during isearch searches
