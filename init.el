@@ -43,6 +43,9 @@
 (defvar krisb-org-archive-directory (expand-file-name "archive" krisb-folio-directory)
   "The archive directory for my org files.")
 
+(defvar krisb-bibliography-files (list (expand-file-name "master-lib.bib" krisb-folio-directory))
+  "A list of my bibliography (.bib) files.")
+
 ;;;;; Functions
 (defun krisb-wayland-p ()
   "Return non-nil if Emacs is under Wayland."
@@ -1327,6 +1330,33 @@ call `diff-buffer-with-file’ instead."
   
   (setopt org-src-fontify-natively t
 	  org-src-window-setup 'current-window))
+
+;;;;; Org-cite
+;; Built-in citations in org-mode
+(setup oc
+
+  (setopt org-cite-global-bibliography krisb-bibliography-files
+	  org-cite-csl-locales-dir nil
+	  ;; TODO 2025-10-19: Avoid hardcoding this path?
+	  org-cite-csl-styles-dir (expand-file-name "~/Zotero/styles/"))
+
+  (setopt org-cite-export-processors
+	  '((md . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
+	    (latex biblatex)		; For humanities
+	    (odt . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
+	    (docx . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
+	    (t . (csl "modern-language-association.csl")))) ; Fallback
+  
+  ;; Have citation link faces look closer to as they were for
+  ;; `org-ref'
+  (:face org-cite ((t (:foreground "DarkSeaGreen4"))))
+  (:face org-cite-key ((t (:foreground "forest green" :slant italic))))
+
+  ;; 2025-03-30: For the biblatex cite export processor.  Otherwise,
+  ;; `org-cite-supported-styles' errors because
+  ;; (org-cite-get-processor 'biblatex) returns nil.
+  (with-eval-after-load 'oc
+    (require 'oc-biblatex)))
 
 ;;;; Other org packages
 ;;;;; Org-modern
