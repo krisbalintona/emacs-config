@@ -1302,6 +1302,14 @@ call `diff-buffer-with-file’ instead."
                    (window-parameters . ((mode-line-format . none)))
                    (post-command-select-window . t)))))
 
+;;;;; Org-id
+(setup org-id
+  
+  (setopt org-id-track-globally t
+	  org-id-method 'ts
+	  org-id-link-to-org-use-id 'use-existing
+	  org-id-link-consider-parent-id t))
+
 ;;;;; Org-src
 ;; TODO 2025-05-23: Document:
 ;; - `org-edit-src-turn-on-auto-save'

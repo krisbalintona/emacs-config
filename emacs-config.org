@@ -1818,6 +1818,18 @@ This section is for the major mode
 
 *** General note-taking
 
+**** Org-id
+
+#+name: org-id
+#+begin_src emacs-lisp
+  (setup org-id
+    
+    (setopt org-id-track-globally t
+  	  org-id-method 'ts
+  	  org-id-link-to-org-use-id 'use-existing
+  	  org-id-link-consider-parent-id t))
+#+end_src
+
 **** Org-mem
 
 #+name: org-mem
@@ -2271,6 +2283,9 @@ This section is for the major mode
 
   ;;;;; Org-agenda
   <<org-agenda>>
+
+  ;;;;; Org-id
+  <<org-id>>
 
   ;;;;; Org-src
   <<org-src>>
