@@ -1670,6 +1670,33 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
   <<display-buffer-alist>>
 #+end_src
 
+* Mode line
+
+** Time: Display time
+
+#+name: time
+#+begin_src emacs-lisp
+  (setup time
+
+    (display-time-mode 1)
+
+    (setopt display-time-24hr-format t
+  	  display-time-format "%R"
+  	  display-time-interval 60
+  	  display-time-default-load-average nil)
+
+    ;; Time zones for `world-clock'
+    (setopt world-clock-list
+  	  '(("America/Los_Angeles" "Seattle")
+  	    ("America/New_York" "New York")
+  	    ("Europe/London" "London")
+  	    ("Europe/Paris" "Paris")
+  	    ("Europe/Nicosia" "Nicosia (capital of Cyprus)")
+  	    ("Asia/Calcutta" "Bangalore")
+  	    ("Asia/Tokyo" "Tokyo")
+  	    ("Asia/Shanghai" "Beijing"))))
+#+end_src
+
 * Domains
 
 ** Composition
@@ -2436,6 +2463,9 @@ This section is for the major mode
 
   ;;; Consult
   <<consult>>
+
+  ;;; Time
+  <<time>>
 
   ;;; Startup time
   <<startup-time>>

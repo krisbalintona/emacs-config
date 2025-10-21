@@ -1281,27 +1281,6 @@ ORIG-FUN should be `ispell-completion-at-point'."
   :config
   (recursion-indicator-mode 1))
 
-;;;; Time
-(use-package time
-  :ensure nil
-  :demand t
-  :custom
-  (display-time-24hr-format t)
-  (display-time-format "%R")
-  (display-time-interval 60)
-  (display-time-default-load-average nil)
-  (world-clock-list
-   '(("America/Los_Angeles" "Seattle")
-     ("America/New_York" "New York")
-     ("Europe/London" "London")
-     ("Europe/Paris" "Paris")
-     ("Europe/Nicosia" "Nicosia (capital of Cyprus)")
-     ("Asia/Calcutta" "Bangalore")
-     ("Asia/Tokyo" "Tokyo")
-     ("Asia/Shanghai" "Beijing")))
-  :config
-  (display-time-mode 1))
-
 ;;;; Eldoc
 ;; TODO 2025-05-20: Document the user options below in the literate
 ;; config:

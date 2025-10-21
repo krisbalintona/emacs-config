@@ -521,7 +521,7 @@ to if called with ARG, or any prefix argument."
 	      :continue
 	      ("<left>" . tab-bar-history-back)
 	      ("<right>" . tab-bar-history-forward))
-  
+
   (setopt tab-bar-close-button-show nil
 	  tab-bar-close-last-tab-choice 'delete-frame
 	  tab-bar-new-tab-choice 'clone
@@ -535,7 +535,7 @@ to if called with ARG, or any prefix argument."
 	    tab-bar-separator
 	    tab-bar-format-align-right
 	    tab-bar-format-global))
-  
+
   (tab-bar-mode 1)
   (tab-bar-history-mode 1))
 
@@ -1006,7 +1006,7 @@ Then apply ARGS."
 ;; - `comment-multi-line'
 ;; - `comment-style'
 (setup newcomment
-  
+
   (setopt comment-empty-lines t))
 
 ;;; Vc.el
@@ -1109,7 +1109,7 @@ call `diff-buffer-with-file’ instead."
 
 ;;; Outline.el
 (setup outline
-  
+
   (:hide-mode outline-minor-mode)
 
   (setopt outline-minor-mode-cycle t
@@ -1125,7 +1125,7 @@ call `diff-buffer-with-file’ instead."
 (setup outli
   ;; Elpaca: :ensure (:repo "https://github.com/jdtsmith/outli")
   (:package outli)
-  
+
   (with-eval-after-load 'outli
     (require 'outline)
     (bind-keys :map outline-minor-mode-map
@@ -1134,11 +1134,11 @@ call `diff-buffer-with-file’ instead."
 	       ("C-c @ C-<return>" . outli-insert-heading-respect-content)
 	       ("C-c @ ?" . outli-speed-command-help)
 	       ("C-c @ s" . outli-toggle-narrow-to-subtree)))
-  
+
   (setopt outli-allow-indented-headlines t
 	  outli-default-nobar nil	; Show a horizontal rule?
 	  outli-blend nil)
-  
+
   (add-hook 'prog-mode-hook #'outli-mode)
   (add-hook 'text-mode-hook #'outli-mode))
 
@@ -1152,7 +1152,7 @@ call `diff-buffer-with-file’ instead."
 
 ;;; Imenu
 (setup imenu
-  
+
   (setopt imenu-auto-rescan t
 	  imenu-flatten 'group))
 
@@ -1166,7 +1166,7 @@ call `diff-buffer-with-file’ instead."
 ;;; Isearch
 ;; Incremental search
 (setup isearch
-  
+
   (setopt isearch-repeat-on-direction-change t
 	  isearch-allow-scroll 'unlimited
 	  isearch-allow-motion t
@@ -1185,7 +1185,7 @@ call `diff-buffer-with-file’ instead."
 ;; Alternative to `pulse.el'
 (setup pulsar
   (:package pulsar)
-  
+
   (pulsar-global-mode 1)
 
   (setopt pulsar-pulse t
@@ -1309,7 +1309,7 @@ call `diff-buffer-with-file’ instead."
 
 ;;;;; Org-id
 (setup org-id
-  
+
   (setopt org-id-track-globally t
 	  org-id-method 'ts
 	  org-id-link-to-org-use-id 'use-existing
@@ -1319,7 +1319,7 @@ call `diff-buffer-with-file’ instead."
 ;; TODO 2025-05-23: Document:
 ;; - `org-footnote-define-inline’
 (setup org-footnote
-  
+
   (setopt org-footnote-section nil    ; Don't create footnote headline
 	  org-footnote-auto-adjust t))
 
@@ -1329,7 +1329,7 @@ call `diff-buffer-with-file’ instead."
 ;; - `org-edit-src-auto-save-idle-delay’
 ;; - `org-src-block-faces’
 (setup org-src
-  
+
   (setopt org-src-fontify-natively t
 	  org-src-window-setup 'current-window))
 
@@ -1348,7 +1348,7 @@ call `diff-buffer-with-file’ instead."
 	    (odt . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
 	    (docx . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
 	    (t . (csl "modern-language-association.csl")))) ; Fallback
-  
+
   ;; Have citation link faces look closer to as they were for
   ;; `org-ref'
   (:face org-cite ((t (:foreground "DarkSeaGreen4"))))
@@ -1630,10 +1630,10 @@ headline."
 ;; where readers want the parentheses as unnoticeable as possible.
 (setup paren-face
   (:package paren-face)
-  
+
   (:hide-mode)
   (setopt paren-face-mode-lighter " PF")
-  
+
   (global-paren-face-mode 1))
 
 ;;; Consult
@@ -1665,10 +1665,10 @@ headline."
 	     ("F" . consult-locate))
   (with-eval-after-load 'org
     (bind-key [remap consult-outline] #'consult-org-heading org-mode-map))
-  
+
   (:bind-keys :map consult-narrow-map
 	      ("?" . consult-narrow-help)) ; Show available narrow keys
-  
+
   (setopt consult-preview-key "C-M-;"
 	  consult-ripgrep-args
 	  (concat
@@ -1682,7 +1682,7 @@ headline."
     (add-to-list 'consult-bookmark-narrow '(?a "Activities" activities-bookmark-handler)))
   (with-eval-after-load 'pdf-tools
     (add-to-list 'consult-bookmark-narrow '(?p "PDFs" pdf-view-bookmark-jump-handler)))
-  
+
   ;; Add log-edit histories to `consult-mode-histories'
   (add-to-list 'consult-mode-histories
                '(log-edit-mode
@@ -1708,6 +1708,27 @@ headline."
 (setup pulsar
   (with-eval-after-load 'pulsar
     (add-hook 'consult-after-jump-hook #'pulsar-reveal-entry)))
+
+;;; Time
+(setup time
+
+  (display-time-mode 1)
+
+  (setopt display-time-24hr-format t
+	  display-time-format "%R"
+	  display-time-interval 60
+	  display-time-default-load-average nil)
+
+  ;; Time zones for `world-clock'
+  (setopt world-clock-list
+	  '(("America/Los_Angeles" "Seattle")
+	    ("America/New_York" "New York")
+	    ("Europe/London" "London")
+	    ("Europe/Paris" "Paris")
+	    ("Europe/Nicosia" "Nicosia (capital of Cyprus)")
+	    ("Asia/Calcutta" "Bangalore")
+	    ("Asia/Tokyo" "Tokyo")
+	    ("Asia/Shanghai" "Beijing"))))
 
 ;;; Startup time
 ;; Message for total init time after startup
