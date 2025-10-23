@@ -1730,6 +1730,45 @@ headline."
 	    ("Asia/Tokyo" "Tokyo")
 	    ("Asia/Shanghai" "Beijing"))))
 
+;;; Diff-mode
+;; TODO 2025-06-07: Document:
+;; - `diff-font-lock-syntax’
+;; - `diff-refine’
+(setup diff-mode
+  
+  (setopt diff-default-read-only t
+	  diff-font-lock-prettify t) ; Make diff headers look like Magit’s
+  
+  (:bind-keys :map diff-mode-map
+	      ("v" . vc-next-action))
+  
+  (add-hook 'diff-mode-hook #'diff-delete-empty-files)
+  
+  ;; TODO 2025-06-07: Revisit this.
+  ;; (krisb-modus-themes-setup-faces
+  ;;  "diff-mode"
+  ;;  (set-face-attribute 'diff-header nil
+  ;;                      :height 1.2
+  ;;                      :overline t
+  ;;                      :width 'expanded
+  ;;                      :foreground (modus-themes-with-colors fg-alt)
+  ;;                      :extend t)
+  ;;  (set-face-attribute 'diff-hunk-header nil
+  ;;                      :height 1.1
+  ;;                      :slant 'italic
+  ;;                      :foreground 'unspecified
+  ;;                      :background (modus-themes-with-colors bg-dim)))
+  )
+
+(setup pulsar
+  ;; Pulsar pulses while navigating
+  (with-eval-after-load 'pulsar
+    (add-to-list 'pulsar-pulse-functions 'diff-file-next)
+    (add-to-list 'pulsar-pulse-functions 'diff-file-prev)
+    (add-to-list 'pulsar-pulse-functions 'diff-hunk-next)
+    (add-to-list 'pulsar-pulse-functions 'diff-hunk-prev)
+    (add-to-list 'pulsar-pulse-functions 'diff-hunk-kill)))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

@@ -1966,44 +1966,7 @@ For N, see the docstring of `open-line’."
     (funcall indent-line-function)))
 (bind-key [remap open-line] 'krisb-open-line)
 
-;;;; Diff-mode
-;; TODO 2025-06-07: Document:
-;; - `diff-font-lock-syntax’
-;; - `diff-refine’
-(use-package diff-mode
-  :ensure nil
-  :defer t
-  :hook
-  (diff-mode-hook . diff-delete-empty-files)
-  :bind
-  ( :map diff-mode-map
-    ("v" . vc-next-action))
-  :custom
-  (diff-default-read-only t)
-  (diff-font-lock-prettify t)    ; Make diff headers look like Magit’s
-  :config
-  ;; TODO 2025-06-07: Revisit this.
-  ;; (krisb-modus-themes-setup-faces
-  ;;  "diff-mode"
-  ;;  (set-face-attribute 'diff-header nil
-  ;;                      :height 1.2
-  ;;                      :overline t
-  ;;                      :width 'expanded
-  ;;                      :foreground (modus-themes-with-colors fg-alt)
-  ;;                      :extend t)
-  ;;  (set-face-attribute 'diff-hunk-header nil
-  ;;                      :height 1.1
-  ;;                      :slant 'italic
-  ;;                      :foreground 'unspecified
-  ;;                      :background (modus-themes-with-colors bg-dim)))
 
-  ;; Pulsar pulses while navigating
-  (with-eval-after-load 'pulsar
-    (add-to-list 'pulsar-pulse-functions 'diff-file-next)
-    (add-to-list 'pulsar-pulse-functions 'diff-file-prev)
-    (add-to-list 'pulsar-pulse-functions 'diff-hunk-next)
-    (add-to-list 'pulsar-pulse-functions 'diff-hunk-prev)
-    (add-to-list 'pulsar-pulse-functions 'diff-hunk-kill)))
 
 ;;;; Ediff
 (use-package ediff
