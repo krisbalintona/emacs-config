@@ -2330,6 +2330,15 @@ This section is for the major mode
             org-footnote-auto-adjust t))
 #+end_src
 
+***** Org-contrib: Collection of org extensions
+
+#+name: org-contrib
+#+begin_src emacs-lisp
+  ;; Collection of org packages
+  (setup org-contrib
+    (:package org-contrib))
+#+end_src
+
 ** Media management
 
 *** General note-taking
@@ -2853,6 +2862,9 @@ This section is for the major mode
   <<org-cite>>
 
   ;;;; Other org packages
+  ;;;;; Org-contrib
+  <<org-contrib>>
+
   ;;;;; Org-modern
   <<org-modern>>
 

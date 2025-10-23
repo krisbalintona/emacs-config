@@ -2092,11 +2092,6 @@ PROP is the name of the property.  See
       '("Netflix" "Hulu" "Disney+" "Tubi" ":ETC")))
   (add-to-list 'org-property-allowed-value-functions #'krisb-org-property-allowed-platform))
 
-;; Collection of org packages
-(use-package org-contrib
-  :ensure t
-  :after org)
-
 ;; Bespoke formatting in org buffers
 (with-eval-after-load 'org
   ;; Like

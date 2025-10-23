@@ -1457,6 +1457,11 @@ call `diff-buffer-with-file’ instead."
     (require 'oc-biblatex)))
 
 ;;;; Other org packages
+;;;;; Org-contrib
+;; Collection of org packages
+(setup org-contrib
+  (:package org-contrib))
+
 ;;;;; Org-modern
 (setup org-modern
   (:package org-modern)
