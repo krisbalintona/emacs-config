@@ -481,7 +481,7 @@ Some bespoke commands and helper functions related to garbage collection:
 
 ** Don't warn when advising functions
 
-#+begin_src emacs-lisp :noweb-ref emacs-misc  :noweb-sep "\n\n"
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   ;; Don’t warn when advising
   (setopt ad-redefinition-action 'accept)
 #+end_src
@@ -1782,7 +1782,7 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
 
 *** Delete-selection-mode
 
-#+begin_src emacs-lisp :noweb-ref emacs-misc
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   ;; Enable `delete-selection-mode'.  When selecting text, if typing new
   ;; text, replace the selected text with the new text
   (delete-selection-mode t)
@@ -1807,7 +1807,7 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
 
 *** Indent-tabs-mode: Spaces over tabs
 
-#+begin_src emacs-lisp :noweb-ref emacs-misc
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   ;; Insert spaces instead of tab characters.  The below disables
   ;; `indent-tabs-mode' globally
   (setopt indent-tabs-mode nil)
@@ -1815,7 +1815,7 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
 
 *** Rebind capitalization commands
 
-#+begin_src emacs-lisp :noweb-ref emacs-misc
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   ;; Use DWIM case commands
   (bind-keys
    ([remap upcase-word] . upcase-dwim)
@@ -1849,7 +1849,7 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
 
 *** Sentence-end-double-space: What counts as a sentence?
 
-#+begin_src emacs-lisp :noweb-ref emacs-misc
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   ;; Set `sentence-end-double-space' conditionally
   (defun krisb-sentence-end-double-space-setup ()
     "Set up the value for `sentence-end-double-space'."

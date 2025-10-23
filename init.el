@@ -310,9 +310,11 @@ that.  Otherwise, remove it from `minor-mode-alist'."
   ;; Enable `delete-selection-mode'.  When selecting text, if typing new
   ;; text, replace the selected text with the new text
   (delete-selection-mode t)
+  
   ;; Insert spaces instead of tab characters.  The below disables
   ;; `indent-tabs-mode' globally
   (setopt indent-tabs-mode nil)
+  
   ;; Use DWIM case commands
   (bind-keys
    ([remap upcase-word] . upcase-dwim)
