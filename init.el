@@ -763,8 +763,16 @@ to if called with ARG, or any prefix argument."
              :spacer #(" " 0 1 (cursor t)))))
 
 ;;;; Dabbrev
+;; 2025-10-23 TODO: Document these:
+;; - `dabbrev-case-distinction'
+;; - `dabbrev-case-fold-search'
 (setup dabbrev
   (with-eval-after-load 'dabbrev
+    (setopt dabbrev-abbrev-char-regexp "\\sw\\|\\s_" ; Look for symbols
+            dabbrev-abbrev-skip-leading-regexp "[$*/=~']"
+            dabbrev-case-fold-search nil ; Case is significant
+            dabbrev-upcase-means-case-search t)
+    
     (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
     (dolist (mode '(doc-view-mode
                     pdf-view-mode
@@ -1994,17 +2002,17 @@ headline."
   (:package olivetti)
 
   (:hide-mode)
-  
+
   (dolist (hook '(org-mode-hook
                   Info-mode-hook
                   emacs-news-view-mode-hook
                   org-msg-edit-mode-hook
                   markdown-mode-hook))
     (add-hook hook #'olivetti-mode))
-  
+
   (:bind-keys :map olivetti-mode-map
               ("C-c |" . nil))
-  
+
   (with-eval-after-load 'olivetti
     (setopt olivetti-body-width 0.55
             olivetti-minimum-body-width 80
