@@ -1082,12 +1082,14 @@ call `diff-buffer-with-file’ instead."
   ;; Elpaca: (:repo "https://codeberg.org/krisbalintona/vc-jj.el.git" :branch "merge")
   (:package (vc-jj :url "https://codeberg.org/krisbalintona/vc-jj.el.git"
                    :branch "merge"))
+  ;; Require vc-jj and project-jj alongside vc and project since some
+  ;; operation results are cached by them, and we don't want them to
+  ;; cache information that disagrees with vc-jj
   (:load-after vc)
+  (:load-after project)
+  (require 'project-jj)
 
-  (setopt vc-jj-diff-switches '("--git" "--stat"))
-
-  (with-eval-after-load 'vc-jj
-    (require 'project-jj)))
+  (setopt vc-jj-diff-switches '("--git" "--stat")))
 
 ;;; Log-edit
 ;; TODO 2025-05-20: Document the user options below in the literate
