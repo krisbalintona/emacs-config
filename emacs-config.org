@@ -1907,6 +1907,70 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
             org-src-window-setup 'current-window))
 #+end_src
 
+**** Shells
+
+***** EAT: Best terminal emulator
+
+#+name: eat
+#+begin_src emacs-lisp
+  (setup eat
+    ;; ;; 2024-12-29: See https://codeberg.org/akib/emacs-eat/pulls/133 for why we
+    ;; ;; use this fork of eat.
+    ;; :ensure ( :repo "https://codeberg.org/vifon/emacs-eat.git"
+    ;;           :branch "fish-integration")
+    (:package eat)
+
+    (bind-keys :map krisb-open-keymap
+               ("s" . eat))
+
+    ;; 2025-04-05: This resolves the continuation lines issue in EAT
+    ;; terminal (including eat-shell in
+    ;; `eat-eshell-visual-command-mode').  The continuation line issue
+    ;; results in, I think, the default font being too wide, causing the
+    ;; width of the characters to exceed the width of the window,
+    ;; resulting in ugly continuation lines that ruin the wrapping of
+    ;; the output.
+    (defun krisb-eat--setup ()
+      "Set up an EAT terminal shell."
+      (when (featurep 'fontaine)
+        (set-face-attribute 'eat-term-font-0 nil
+                            ;; This returns the default-family of the current
+                            ;; preset, whether explicitly or implicitly set
+                            :family (fontaine--get-preset-property fontaine-current-preset :term-family))))
+    (add-hook 'fontaine-set-preset-hook #'krisb-eat--setup))
+
+  ;; Integration with eshell
+  (setup eat
+    (add-hook 'eshell-load-hook #'eat-eshell-mode)
+    (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode))
+
+  ;; Integration with project.el
+  (setup eat
+    (bind-keys :map project-prefix-map
+               ("s" . eat-project))                ; Overshadow `project-shell’
+    ;; Replace `project-shell’ with `eat-project’ in
+    ;; `project-switch-commands’
+    (with-eval-after-load 'project
+      (cl-nsubstitute '(eat-project "EAT") '(project-shell "Shell")
+                      project-switch-commands :test #'equal)))
+
+
+  ;; Unbind M-<NUMBER> keybinds because I use them for switching betweeb
+  ;; tab-bar tabs
+  (setup eat
+    (with-eval-after-load 'tab-bar
+      (:bind-keys :map eat-semi-char-mode-map
+                  ("M-1" . nil)
+                  ("M-2" . nil)
+                  ("M-3" . nil)
+                  ("M-4" . nil)
+                  ("M-5" . nil)
+                  ("M-6" . nil)
+                  ("M-7" . nil)
+                  ("M-8" . nil)
+                  ("M-9" . nil)
+                  ("M-0" . nil))))
+#+end_src
 **** Emacs-lisp
 
 ***** Help.el: Documentation
@@ -2640,6 +2704,9 @@ This section is for the major mode
 
   ;;; Whitespace
   <<whitespace>>
+
+  ;;; EAT
+  <<eat>>
 
   ;;; Startup time
   <<startup-time>>
