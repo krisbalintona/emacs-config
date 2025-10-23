@@ -597,8 +597,7 @@ to if called with ARG, or any prefix argument."
   ;;         '((file (styles . (partial-completion flex)))))
                                         ;  Include `partial-completion' to enable wildcards and partial paths.
 
-  ;; We don’t want to ignore case for completions, but buffer and file names are
-  ;; exceptions
+  ;; How do we want to treat case for varioust types of completion?
   (setopt completion-ignore-case t
           read-file-name-completion-ignore-case t
           read-buffer-completion-ignore-case t))
@@ -651,6 +650,28 @@ to if called with ARG, or any prefix argument."
     (with-eval-after-load 'consult
       (setq consult--tofu-char #x100000
             consult--tofu-range #x00fffe))))
+
+;;;; Orderless
+(setup orderless
+  (:package orderless)
+  
+  (with-eval-after-load 'orderless
+    (setopt orderless-matching-styles
+            '(orderless-regexp
+              orderless-prefixes
+              orderless-initialism
+              ;; orderless-literal
+              ;; orderless-literal-prefix
+              ;; orderless-flex
+              )
+            orderless-component-separator 'orderless-escapable-split-on-space))
+
+  (add-to-list 'completion-styles 'orderless :append)
+  
+  ;; TODO 2025-05-20: Revisit this.
+  ;; ;; Eglot forces `flex' by default.
+  ;; (add-to-list 'completion-category-overrides '(eglot (styles . (orderless flex))))
+  )
 
 ;;;; Completions buffer
 ;; TODO 2025-05-20: Document the following options below in the
@@ -968,9 +989,10 @@ Then apply ARGS."
 
   ;; Allow spaces and don't quit on boundary to leverage orderless's
   ;; space-separated components
-  (setopt corfu-quit-at-boundary nil
-          corfu-separator ?\s ; Use space
-          corfu-quit-no-match 'separator) ; Don't quit if there is `corfu-separator' inserted
+  (with-eval-after-load 'orderless
+    (setopt corfu-quit-at-boundary nil
+            corfu-separator ?\s         ; Use space
+            corfu-quit-no-match 'separator)) ; Don't quit if there is `corfu-separator' inserted
 
   ;; Always use a fixed-pitched font for corfu; variable pitch fonts
   ;; (which will be adopted in a variable pitch buffer) have

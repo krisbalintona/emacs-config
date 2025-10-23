@@ -297,27 +297,6 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   (add-hook 'window-setup-hook (lambda () (pgtk-use-im-context nil))))
 
 ;;; Three steps below
-;;;; Orderless
-;; Alternative and powerful completion style (i.e. filters candidates)
-(use-package orderless
-  :ensure t
-  :demand t
-  :custom
-  (orderless-matching-styles
-   '(orderless-regexp
-     orderless-prefixes
-     orderless-initialism
-     ;; orderless-literal
-     ;; orderless-flex
-     ;; orderless-without-literal          ; Recommended for dispatches instead
-     ))
-  (orderless-component-separator 'orderless-escapable-split-on-space)
-  :config
-  ;; TODO 2025-05-20: Revisit this.
-  ;; ;; Eglot forces `flex' by default.
-  ;; (add-to-list 'completion-category-overrides '(eglot (styles . (orderless flex))))
-  )
-
 ;;;; Embark
 ;; Allow an equivalent to ivy-actions to regular `completing-read'
 ;; minibuffers

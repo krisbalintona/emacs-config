@@ -1209,10 +1209,10 @@ See also ~(elisp) Beeping~.
   (setup diff-mode
 
     (setopt diff-font-lock-prettify t ; Make diff headers look like Magit’s
-  	  ;; 2024-10-23 TODO: Revisit this. I think it causes a bug in
-  	  ;; vc-jj
-  	  ;; diff-default-read-only t
-  	  )
+            ;; 2024-10-23 TODO: Revisit this. I think it causes a bug in
+            ;; vc-jj
+            ;; diff-default-read-only t
+            )
 
     (:bind-keys :map diff-mode-map
                 ("v" . vc-next-action))
@@ -1338,8 +1338,7 @@ A right-click menu:
     ;;         '((file (styles . (partial-completion flex)))))
                                           ;  Include `partial-completion' to enable wildcards and partial paths.
 
-    ;; We don’t want to ignore case for completions, but buffer and file names are
-    ;; exceptions
+    ;; How do we want to treat case for varioust types of completion?
     (setopt completion-ignore-case t
             read-file-name-completion-ignore-case t
             read-buffer-completion-ignore-case t))
@@ -1355,7 +1354,7 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
   ;; bundled dynamic module for improved performance.  (See
   ;; https://github.com/axelf4/hotfuzz?tab=readme-ov-file#dynamic-module
   ;; for how to do so.)
-  ;; 
+  ;;
   ;; When done so, is a much, much faster version of the built-in flex
   ;; style (although it is non-greedy and has a different scoring
   ;; algorithm).  See
@@ -1372,7 +1371,7 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
     ;; `completion-lazy-hilit' (vertico and corfu do, so this setting is
     ;; ignored when using those UIs)
     (setopt hotfuzz-max-highlighted-completions most-positive-fixnum)
-    
+
     ;; Replace the flex completion style with the hotfuzz style after
     ;; I've set `completion-styles'
     (with-eval-after-load 'minibuffer
@@ -1385,6 +1384,32 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
       (with-eval-after-load 'consult
         (setq consult--tofu-char #x100000
               consult--tofu-range #x00fffe))))
+#+end_src
+
+*** Orderless:
+
+#+name: orderless
+#+begin_src emacs-lisp
+  (setup orderless
+    (:package orderless)
+
+    (with-eval-after-load 'orderless
+      (setopt orderless-matching-styles
+              '(orderless-regexp
+                orderless-prefixes
+                orderless-initialism
+                ;; orderless-literal
+                ;; orderless-literal-prefix
+                ;; orderless-flex
+                )
+              orderless-component-separator 'orderless-escapable-split-on-space))
+
+    (add-to-list 'completion-styles 'orderless :append)
+
+    ;; TODO 2025-05-20: Revisit this.
+    ;; ;; Eglot forces `flex' by default.
+    ;; (add-to-list 'completion-category-overrides '(eglot (styles . (orderless flex))))
+    )
 #+end_src
 
 ** Completions buffer
@@ -1549,9 +1574,10 @@ Vertico provides several extensions:
 
     ;; Allow spaces and don't quit on boundary to leverage orderless's
     ;; space-separated components
-    (setopt corfu-quit-at-boundary nil
-            corfu-separator ?\s ; Use space
-            corfu-quit-no-match 'separator) ; Don't quit if there is `corfu-separator' inserted
+    (with-eval-after-load 'orderless
+      (setopt corfu-quit-at-boundary nil
+              corfu-separator ?\s         ; Use space
+              corfu-quit-no-match 'separator)) ; Don't quit if there is `corfu-separator' inserted
 
     ;; Always use a fixed-pitched font for corfu; variable pitch fonts
     ;; (which will be adopted in a variable pitch buffer) have
@@ -1880,7 +1906,7 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
     (:package puni)
 
     (setopt puni-confirm-when-delete-unbalanced-active-region nil)
-    
+
     (bind-keys
      ("C-S-o" . puni-split)
      ("M-+" . puni-splice)
@@ -2101,14 +2127,14 @@ Tell ~display-buffer-alist~ where to show help buffers:
 #+begin_src emacs-lisp
   (setup highlight-function-calls
     (:package highlight-function-calls)
-    
+
     (dolist (hook '(emacs-lisp-mode-hook lisp-interaction-mode-hook))
       (add-hook hook #'highlight-function-calls-mode))
-    
+
     (setopt highlight-function-calls-not t
             highlight-function-calls-macro-calls t
             highlight-function-calls-special-forms t)
-    
+
     (:face highlight-function-calls-face ((t (:underline nil :inherit font-lock-function-call-face)))))
 #+end_src
 
@@ -2640,6 +2666,9 @@ This section is for the major mode
 
   ;;;; Hotfuzz
   <<hotfuzz>>
+
+  ;;;; Orderless
+  <<orderless>>
 
   ;;;; Completions buffer
   <<completions-buffer>>
