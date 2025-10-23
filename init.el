@@ -1774,6 +1774,32 @@ headline."
     (add-to-list 'pulsar-pulse-functions 'diff-hunk-prev)
     (add-to-list 'pulsar-pulse-functions 'diff-hunk-kill)))
 
+;;; Find-func
+;; Binds useful commands for jumping to variables, functions, and
+;; libraries
+(setup find-func
+
+  ;; Emacs 31, formerly `find-function-setup-keys'
+  (find-function-mode 1))
+
+(setup tab-bar
+  ;; Useful keybinds for `tab-bar-mode' usage
+  (with-eval-after-load 'tab-bar
+    (defun krisb-find-library-other-tab (library)
+      "Find LIBRARY in other tab."
+      (interactive (list (read-library-name)))
+      (switch-to-buffer-other-tab
+       (save-window-excursion (funcall-interactively #'find-library library))))
+
+    (defun krisb-find-function-other-tab (function)
+      "Find FUNCTION in other tab."
+      (interactive (find-function-read))
+      (find-function-do-it function nil 'switch-to-buffer-other-tab))
+
+    (:bind-keys :map tab-prefix-map
+                ("F" . krisb-find-function-other-tab)
+                ("L" . krisb-find-library-other-tab))))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

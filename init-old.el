@@ -837,29 +837,6 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
         (forward-line 2))
       (rename-buffer (concat "*Scratch for " mode "*") t))))
 
-;;;; Find-func
-;; Binds useful commands for jumping to variables, functions, and libraries
-(use-package find-func
-  :ensure nil
-  :demand t
-  :bind
-  ( :map tab-prefix-map
-    ("F" . krisb-find-function-other-tab)
-    ("L" . krisb-find-library-other-tab))
-  :init
-  ;; Useful keybinds for my usage
-  (defun krisb-find-library-other-tab (library)
-    "Find LIBRARY in other tab."
-    (interactive (list (read-library-name)))
-    (switch-to-buffer-other-tab (save-window-excursion (funcall-interactively #'find-library library))))
-
-  (defun krisb-find-function-other-tab (function)
-    "Find FUNCTION in other tab."
-    (interactive (find-function-read))
-    (find-function-do-it function nil 'switch-to-buffer-other-tab))
-  :config
-  (find-function-mode 1))               ; Emacs 31
-
 ;;;; Project.el
 ;; TODO 2025-05-22: Document:
 ;; - `project-vc-extra-root-markers’

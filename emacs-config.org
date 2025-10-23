@@ -1957,6 +1957,36 @@ Tell ~display-buffer-alist~ where to show help buffers:
     (global-paren-face-mode 1))
 #+end_src
 
+***** Find-func: Go to elisp definitions
+
+#+name: find-func
+#+begin_src emacs-lisp
+  ;; Binds useful commands for jumping to variables, functions, and
+  ;; libraries
+  (setup find-func
+
+    ;; Emacs 31, formerly `find-function-setup-keys'
+    (find-function-mode 1))
+
+  (setup tab-bar
+    ;; Useful keybinds for `tab-bar-mode' usage
+    (with-eval-after-load 'tab-bar
+      (defun krisb-find-library-other-tab (library)
+        "Find LIBRARY in other tab."
+        (interactive (list (read-library-name)))
+        (switch-to-buffer-other-tab
+         (save-window-excursion (funcall-interactively #'find-library library))))
+
+      (defun krisb-find-function-other-tab (function)
+        "Find FUNCTION in other tab."
+        (interactive (find-function-read))
+        (find-function-do-it function nil 'switch-to-buffer-other-tab))
+
+      (:bind-keys :map tab-prefix-map
+                  ("F" . krisb-find-function-other-tab)
+                  ("L" . krisb-find-library-other-tab))))
+#+end_src
+
 *** Prose writing
 
 **** Grammar checking
@@ -2560,6 +2590,9 @@ This section is for the major mode
 
   ;;; Diff-mode
   <<diff-mode>>
+
+  ;;; Find-func
+  <<find-func>>
 
   ;;; Startup time
   <<startup-time>>
