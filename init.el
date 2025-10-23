@@ -5,22 +5,6 @@
 (setopt user-full-name "Kristoffer Balintona"
         user-mail-address "krisbalintona@gmail.com")
 
-;;; Custom
-;;; Set and load custom file
-(setopt custom-file (no-littering-expand-etc-file-name "custom.el"))
-(when (file-exists-p custom-file)
-  (load custom-file))
-
-;; Make all themes safe
-(setopt custom-safe-themes t)
-
-;; TODO 2025-05-24: Document these options:
-;; - `custom-buffer-style’
-;; - `custom-search-field' -- useful for Android and other touchscreen
-;;                            devices though
-(setopt custom-theme-allow-multiple-selections t
-        custom-unlispify-tag-names nil)
-
 ;;; Meta-configuration
 
 ;;;; Bespoke helpers
@@ -330,6 +314,22 @@ that.  Otherwise, remove it from `minor-mode-alist'."
   
   (dolist (mode '(text-mode-hook prog-mode-hook conf-mode-hook))
     (add-hook mode #'krisb-sentence-end-double-space-setup)))
+
+;;; Custom
+;;; Set and load custom file
+(setopt custom-file (no-littering-expand-etc-file-name "custom.el"))
+(when (file-exists-p custom-file)
+  (load custom-file))
+
+;; Make all themes safe
+(setopt custom-safe-themes t)
+
+;; TODO 2025-05-24: Document these options:
+;; - `custom-buffer-style’
+;; - `custom-search-field' -- useful for Android and other touchscreen
+;;                            devices though
+(setopt custom-theme-allow-multiple-selections t
+        custom-unlispify-tag-names nil)
 
 ;;; Garbage collection
 ;; We set `gc-cons-threshold’ to a high value in early-init.el.  We

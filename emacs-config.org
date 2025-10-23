@@ -2565,13 +2565,6 @@ This section is for the major mode
 
   <<bio>>
 
-  ;;; Custom
-  <<set-and-load-custom-file>>
-
-  <<safe-themes>>
-
-  <<customize-buffers>>
-
   ;;; Meta-configuration
 
   ;;;; Bespoke helpers
@@ -2595,6 +2588,13 @@ This section is for the major mode
   ;;; Miscellaneous options for built-ins
   (setup emacs
     <<emacs-misc>>)
+
+  ;;; Custom
+  <<set-and-load-custom-file>>
+
+  <<safe-themes>>
+
+  <<customize-buffers>>
 
   ;;; Garbage collection
   <<garbage-collection-post-init>>
