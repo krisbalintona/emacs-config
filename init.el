@@ -690,8 +690,7 @@ to if called with ARG, or any prefix argument."
 ;; On-demand change the type of UI
 (setup vertico-multiform
   (:load-after vertico)
-
-  (add-hook 'vertico-mode-hook #'vertico-multiform-mode)
+  (vertico-multiform-mode 1)
 
   (setopt vertico-multiform-categories
           '((buffer flat (vertico-sort-function . nil))
