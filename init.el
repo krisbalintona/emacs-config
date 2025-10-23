@@ -837,7 +837,7 @@ Then apply ARGS."
 ;; Track recently opened files
 (setup recentf
 
-  (:bind-keys :map ctl-x-map
+  (bind-keys :map ctl-x-map
               ("M-f" . recentf-open))
 
   (setopt recentf-auto-cleanup 600
