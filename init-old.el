@@ -4747,9 +4747,6 @@ is to produce the opposite effect of both `fill-paragraph' and
 ;; Avoid collision of mouse with point
 (mouse-avoidance-mode 'jump)
 
-;; Visual-line-mode in *Messages* buffer
-(add-hook 'messages-buffer-mode-hook #'visual-line-mode)
-
 ;; Undo frame deletions
 (undelete-frame-mode 1)
 
