@@ -1182,9 +1182,10 @@ call `diff-buffer-with-file’ instead."
   ;; `isearch-toggle-lax-whitespace' command during isearch searches
   (setopt isearch-lax-whitespace t
           isearch-regexp-lax-whitespace nil
-          ;; TODO 2025-10-19: Revisit this
-          ;; search-whitespace-regexp ".*?"
-          ))
+          ;; Make a whitespace greedily matches everything, meaning
+          ;; the search string "foo bar" matches "foo" and "bar" with
+          ;; any number of anything in between
+          search-whitespace-regexp ".*?"))
 
 ;;; Pulsar
 ;; Alternative to `pulse.el'
