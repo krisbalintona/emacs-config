@@ -1942,6 +1942,23 @@ Tell ~display-buffer-alist~ where to show help buffers:
 
 ***** Package authorship
 
+***** Highlight-function-calls: Highlight function calls!
+
+#+name: highlight-function-calls
+#+begin_src emacs-lisp
+  (setup highlight-function-calls
+    (:package highlight-function-calls)
+    
+    (dolist (hook '(emacs-lisp-mode-hook lisp-interaction-mode-hook))
+      (add-hook hook #'highlight-function-calls-mode))
+    
+    (setopt highlight-function-calls-not t
+            highlight-function-calls-macro-calls t
+            highlight-function-calls-special-forms t)
+    
+    (:face highlight-function-calls-face ((t (:underline nil :inherit font-lock-function-call-face)))))
+#+end_src
+
 ***** Paren-face: Special face for parentheses
 
 #+name: paren-face
@@ -2593,6 +2610,9 @@ This section is for the major mode
 
   ;;; Find-func
   <<find-func>>
+
+  ;;; Highlight-function-calls
+  <<highlight-function-calls>>
 
   ;;; Startup time
   <<startup-time>>

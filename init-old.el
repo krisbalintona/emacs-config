@@ -1859,19 +1859,6 @@ An example of a return value for this function is: \"9 minutes ago\"."
                  (advice-remove sym advice))
                sym))
 
-;;;; Highlight-function-calls
-(use-package highlight-function-calls
-  :ensure t
-  :defer t
-  :hook
-  ((emacs-lisp-mode-hook lisp-interaction-mode-hook) . highlight-function-calls-mode)
-  :custom
-  (highlight-function-calls-not t)
-  (highlight-function-calls-macro-calls t)
-  (highlight-function-calls-special-forms t)
-  :custom-face
-  (highlight-function-calls-face ((t (:underline nil :inherit font-lock-function-call-face)))))
-
 ;;;; Eros
 ;; Overlay lisp evaluations into the current buffer (near cursor)
 (use-package eros

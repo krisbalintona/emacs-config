@@ -1800,6 +1800,19 @@ headline."
                 ("F" . krisb-find-function-other-tab)
                 ("L" . krisb-find-library-other-tab))))
 
+;;; Highlight-function-calls
+(setup highlight-function-calls
+  (:package highlight-function-calls)
+  
+  (dolist (hook '(emacs-lisp-mode-hook lisp-interaction-mode-hook))
+    (add-hook hook #'highlight-function-calls-mode))
+  
+  (setopt highlight-function-calls-not t
+          highlight-function-calls-macro-calls t
+          highlight-function-calls-special-forms t)
+  
+  (:face highlight-function-calls-face ((t (:underline nil :inherit font-lock-function-call-face)))))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()
