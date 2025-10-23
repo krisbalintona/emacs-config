@@ -569,7 +569,7 @@ to if called with ARG, or any prefix argument."
 ;; https://github.com/minad/vertico#completing-read-multiple.
 (setup minibuffer
 
-  (setopt completion-styles '(initials substring flex)
+  (setopt completion-styles '(substring initials flex)
           ;; TODO 2025-10-17: Revisit this
           completion-pcm-leading-wildcard t) ; Emacs 31
 
