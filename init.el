@@ -1831,6 +1831,19 @@ headline."
    ([remap insert-parentheses] . puni-syntactic-backward-punct)
    ([remap move-past-close-and-reindent] . puni-syntactic-forward-punct)))
 
+;;; Whitespace
+;; Visualize whitespace so mistakes are more easily detectable.
+(setup whitespace
+
+  (setopt whitespace-style '(empty face tab-mark tabs page-delimiters)
+          whitespace-display-mappings '((tab-mark ?\t [?› ?\t])
+                                        (newline-mark ?\n [?¬ ?\n])
+                                        (space-mark ?\  [?·] [?.]))
+          whitespace-line-column nil)
+
+  (add-hook 'prog-mode-hook #'whitespace-mode)
+  (:hide-mode))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

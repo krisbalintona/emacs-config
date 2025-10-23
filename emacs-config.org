@@ -1786,14 +1786,13 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
   ;; Visualize whitespace so mistakes are more easily detectable.
   (setup whitespace
 
-    (add-hook 'prog-mode-hook #'whitespace-mode)
-
     (setopt whitespace-style '(empty face tab-mark tabs page-delimiters)
             whitespace-display-mappings '((tab-mark ?\t [?› ?\t])
                                           (newline-mark ?\n [?¬ ?\n])
                                           (space-mark ?\  [?·] [?.]))
             whitespace-line-column nil)
 
+    (add-hook 'prog-mode-hook #'whitespace-mode)
     (:hide-mode))
 #+end_src
 
