@@ -762,6 +762,15 @@ to if called with ARG, or any prefix argument."
              :no-match ,(propertize "\n[No match]" 'face 'shadow)
              :spacer #(" " 0 1 (cursor t)))))
 
+;;;; Dabbrev
+(setup dabbrev
+  (with-eval-after-load 'dabbrev
+    (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
+    (dolist (mode '(doc-view-mode
+                    pdf-view-mode
+                    tags-table-mode))
+      (add-to-list 'dabbrev-ignored-buffer-modes mode))))
+
 ;;; Exec-path-from-shell
 ;; Ensure Emacs inherits specified variables from the user environment
 (setup exec-path-from-shell

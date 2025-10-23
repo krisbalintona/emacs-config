@@ -1295,18 +1295,9 @@ See also ~(elisp) Beeping~.
     (setopt vc-jj-diff-switches '("--git" "--stat")))
 #+end_src
 
-* Interfaces
-
-** Context menu
-
-A right-click menu:
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Show context menu from right-click
-  (when (display-graphic-p) (context-menu-mode 1))
-#+end_src
+* Completion
 
 ** General completion
-
 #+name: completion
 #+begin_src emacs-lisp
   ;; TODO 2025-05-27: Document this advice by vertico to show
@@ -1344,7 +1335,7 @@ A right-click menu:
             read-buffer-completion-ignore-case t))
 #+end_src
 
-*** Hotfuzz: Blazingly fast replacement for the =flex= completion style
+** Hotfuzz: Blazingly fast replacement for the =flex= completion style
 
 See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#results]] for bunchmarks between fuzzy completion styles. Note that the markedly higher performance of the hotfuzz package shown in this benchmark uses the /dynamic module/ bundled with hotfuzz (so to see similar results, users must do the same).
 
@@ -1386,7 +1377,7 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
               consult--tofu-range #x00fffe))))
 #+end_src
 
-*** Orderless:
+** Orderless: A completion-style for flexibility
 
 #+name: orderless
 #+begin_src emacs-lisp
@@ -1410,6 +1401,29 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
     ;; ;; Eglot forces `flex' by default.
     ;; (add-to-list 'completion-category-overrides '(eglot (styles . (orderless flex))))
     )
+#+end_src
+
+** Dabbrev: Guess what I mean
+
+#+name: dabbrev
+#+begin_src emacs-lisp
+  (setup dabbrev
+    (with-eval-after-load 'dabbrev
+      (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
+      (dolist (mode '(doc-view-mode
+                      pdf-view-mode
+                      tags-table-mode))
+        (add-to-list 'dabbrev-ignored-buffer-modes mode))))
+#+end_src
+
+* Interfaces
+
+** Context menu
+
+A right-click menu:
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Show context menu from right-click
+  (when (display-graphic-p) (context-menu-mode 1))
 #+end_src
 
 ** Completions buffer
@@ -2675,6 +2689,9 @@ This section is for the major mode
 
   ;;;; Vertico and extensions
   <<vertico>>
+
+  ;;;; Dabbrev
+  <<dabbrev>>
 
   ;;; Exec-path-from-shell
   <<exec-path-from-shell>>
