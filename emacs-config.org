@@ -1767,6 +1767,34 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
     (electric-indent-mode 1))
 #+end_src
 
+*** Whitespace: Visualize whitespace
+
+#+name: whitespace
+#+begin_src emacs-lisp
+  ;; Visualize whitespace so mistakes are more easily detectable.
+  (setup whitespace
+    
+    (add-hook 'prog-mode-hook #'whitespace-mode)
+    
+    (setopt whitespace-style '(empty face tab-mark tabs page-delimiters)
+  	  whitespace-display-mappings '((tab-mark ?\t [?› ?\t])
+  					(newline-mark ?\n [?¬ ?\n])
+  					(space-mark ?\  [?·] [?.]))
+  	  whitespace-line-column nil)
+    
+    (:hide-mode))
+#+end_src
+
+*** Rebind capitalization commands
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc
+  ;; Use DWIM case commands
+  (bind-keys
+   ([remap upcase-word] . upcase-dwim)
+   ([remap downcase-word] . downcase-dwim)
+   ([remap capitalize-word] . capitalize-dwim))
+#+end_src
+
 *** Spell checking
 
 *** Programming
@@ -1836,24 +1864,6 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
 
     (setopt org-src-fontify-natively t
   	  org-src-window-setup 'current-window))
-#+end_src
-
-**** Whitespace: Visualize whitespace
-
-#+name: whitespace
-#+begin_src emacs-lisp
-  ;; Visualize whitespace so mistakes are more easily detectable.
-  (setup whitespace
-    
-    (add-hook 'prog-mode-hook #'whitespace-mode)
-    
-    (setopt whitespace-style '(empty face tab-mark tabs page-delimiters)
-  	  whitespace-display-mappings '((tab-mark ?\t [?› ?\t])
-  					(newline-mark ?\n [?¬ ?\n])
-  					(space-mark ?\  [?·] [?.]))
-  	  whitespace-line-column nil)
-    
-    (:hide-mode))
 #+end_src
 
 **** Emacs-lisp

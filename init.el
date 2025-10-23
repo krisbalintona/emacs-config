@@ -305,7 +305,13 @@ that.  Otherwise, remove it from `minor-mode-alist'."
     (setopt interprogram-cut-function
             (lambda (text)
               (start-process "wl-copy" nil "wl-copy"
-                             "--trim-newline" "--type" "text/plain;charset=utf-8" text)))))
+                             "--trim-newline" "--type" "text/plain;charset=utf-8" text))))
+  
+  ;; Use DWIM case commands
+  (bind-keys
+   ([remap upcase-word] . upcase-dwim)
+   ([remap downcase-word] . downcase-dwim)
+   ([remap capitalize-word] . capitalize-dwim)))
 
 ;;; Garbage collection
 ;; We set `gc-cons-threshold’ to a high value in early-init.el.  We

@@ -4737,12 +4737,6 @@ is to produce the opposite effect of both `fill-paragraph' and
            cursor-intangible t
            face minibuffer-prompt))
 
-;; Use DWIM case commands
-(bind-keys
- ([remap upcase-word] . upcase-dwim)
- ([remap downcase-word] . downcase-dwim)
- ([remap capitalize-word] . capitalize-dwim))
-
 ;; Recenter upon `next-error'
 (setopt next-error-recenter '(4))
 
