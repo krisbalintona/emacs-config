@@ -612,6 +612,31 @@ to if called with ARG, or any prefix argument."
   (setopt minibuffer-default-prompt-format " [%s]")
   (minibuffer-electric-default-mode 1))  ; Show default value
 
+;;;; Hotfuzz
+;; Hotfuzz is a fuzzy completion style that also can be used with its
+;; bundled dynamic module for improved performance.  (See
+;; https://github.com/axelf4/hotfuzz?tab=readme-ov-file#dynamic-module
+;; for how to do so.)
+;; 
+;; When done so, is a much, much faster version of the built-in flex
+;; style (although it is non-greedy and has a different scoring
+;; algorithm).  See
+;; https://github.com/axelf4/emacs-completion-bench#readme for a
+;; comparison of fuzzy completion style packages
+(setup hotfuzz
+  (:package hotfuzz)
+  (:require)
+
+  ;; This setting applies only to completion UIs that don't support
+  ;; `completion-lazy-hilit' (vertico and corfu do, so this setting is
+  ;; ignored when using those UIs)
+  (setopt hotfuzz-max-highlighted-completions most-positive-fixnum)
+  
+  ;; Replace the flex completion style with the hotfuzz style after
+  ;; I've set `completion-styles'
+  (with-eval-after-load 'minibuffer
+    (cl-nsubstitute 'hotfuzz 'flex completion-styles)))
+
 ;;;; Completions buffer
 ;; TODO 2025-05-20: Document the following options below in the
 ;; literate configuration:

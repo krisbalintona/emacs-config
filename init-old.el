@@ -318,17 +318,6 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
   ;; (add-to-list 'completion-category-overrides '(eglot (styles . (orderless flex))))
   )
 
-;;;; Hotfuzz
-;; Faster version of the flex completion style.  Hotfuzz is a much
-;; faster version of the built-in flex style.  See
-;; https://github.com/axelf4/emacs-completion-bench#readme
-;;
-;; NOTE 2025-05-20: See `krisb-completion-styles-setup' for how I use
-;; this
-(use-package hotfuzz
-  :ensure t
-  :demand t)
-
 ;;;; Embark
 ;; Allow an equivalent to ivy-actions to regular `completing-read'
 ;; minibuffers

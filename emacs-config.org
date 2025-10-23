@@ -1341,6 +1341,37 @@ A right-click menu:
             read-buffer-completion-ignore-case t))
 #+end_src
 
+*** Hotfuzz: Blazingly fast replacement for the =flex= completion style
+
+See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#results]] for bunchmarks between fuzzy completion styles. Note that the markedly higher performance of the hotfuzz package shown in this benchmark uses the /dynamic module/ bundled with hotfuzz (so to see similar results, users must do the same).
+
+#+name: hotfuzz
+#+begin_src emacs-lisp
+  ;; Hotfuzz is a fuzzy completion style that also can be used with its
+  ;; bundled dynamic module for improved performance.  (See
+  ;; https://github.com/axelf4/hotfuzz?tab=readme-ov-file#dynamic-module
+  ;; for how to do so.)
+  ;; 
+  ;; When done so, is a much, much faster version of the built-in flex
+  ;; style (although it is non-greedy and has a different scoring
+  ;; algorithm).  See
+  ;; https://github.com/axelf4/emacs-completion-bench#readme for a
+  ;; comparison of fuzzy completion style packages
+  (setup hotfuzz
+    (:package hotfuzz)
+    (:require)
+
+    ;; This setting applies only to completion UIs that don't support
+    ;; `completion-lazy-hilit' (vertico and corfu do, so this setting is
+    ;; ignored when using those UIs)
+    (setopt hotfuzz-max-highlighted-completions most-positive-fixnum)
+    
+    ;; Replace the flex completion style with the hotfuzz style after
+    ;; I've set `completion-styles'
+    (with-eval-after-load 'minibuffer
+      (cl-nsubstitute 'hotfuzz 'flex completion-styles)))
+#+end_src
+
 ** Completions buffer
 
 #+name: completions-buffer
@@ -2592,6 +2623,9 @@ This section is for the major mode
   <<completion>>
 
   <<minibuffer>>
+
+  ;;;; Hotfuzz
+  <<hotfuzz>>
 
   ;;;; Completions buffer
   <<completions-buffer>>
