@@ -1676,21 +1676,6 @@ of collision."
 
 ;;; Coding
 
-;;;; Whitespace
-;; Visualize whitespace so mistakes are more easily detectable.
-(use-package whitespace
-  :ensure nil
-  :hook
-  (prog-mode-hook . whitespace-mode)
-  :custom
-  (whitespace-style '(empty face tab-mark tabs page-delimiters))
-  (whitespace-display-mappings '((tab-mark ?\t [?› ?\t])
-                                 (newline-mark ?\n [?¬ ?\n])
-                                 (space-mark ?\  [?·] [?.])))
-  (whitespace-line-column nil)
-  :config
-  (add-to-list 'mode-line-collapse-minor-modes 'whitespace-mode))
-
 ;;;; Pcmpl-args
 ;; Extend the build in `pcomplete'.  Includes flag and argument completion in
 ;; the shell.
@@ -1965,8 +1950,6 @@ For N, see the docstring of `open-line’."
     (forward-line n)
     (funcall indent-line-function)))
 (bind-key [remap open-line] 'krisb-open-line)
-
-
 
 ;;;; Ediff
 (use-package ediff
