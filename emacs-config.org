@@ -1194,7 +1194,7 @@ See also ~(elisp) Beeping~.
     (:face log-edit-summary ((t (:family ,(face-attribute 'variable-pitch :family))))))
 #+end_src
 
-** Diff-mode
+** Diff-mode: Display diffs
 
 #+name: diff-mode
 #+begin_src emacs-lisp
@@ -1203,11 +1203,14 @@ See also ~(elisp) Beeping~.
   ;; - `diff-refine’
   (setup diff-mode
 
-    (setopt diff-default-read-only t
-          diff-font-lock-prettify t) ; Make diff headers look like Magit’s
+    (setopt diff-font-lock-prettify t ; Make diff headers look like Magit’s
+  	  ;; 2024-10-23 TODO: Revisit this. I think it causes a bug in
+  	  ;; vc-jj
+  	  ;; diff-default-read-only t
+  	  )
 
     (:bind-keys :map diff-mode-map
-              ("v" . vc-next-action))
+                ("v" . vc-next-action))
 
     (add-hook 'diff-mode-hook #'diff-delete-empty-files)
 

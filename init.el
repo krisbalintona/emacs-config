@@ -1739,11 +1739,14 @@ headline."
 ;; - `diff-refine’
 (setup diff-mode
 
-  (setopt diff-default-read-only t
-        diff-font-lock-prettify t) ; Make diff headers look like Magit’s
+  (setopt diff-font-lock-prettify t ; Make diff headers look like Magit’s
+	  ;; 2024-10-23 TODO: Revisit this. I think it causes a bug in
+	  ;; vc-jj
+	  ;; diff-default-read-only t
+	  )
 
   (:bind-keys :map diff-mode-map
-            ("v" . vc-next-action))
+              ("v" . vc-next-action))
 
   (add-hook 'diff-mode-hook #'diff-delete-empty-files)
 
