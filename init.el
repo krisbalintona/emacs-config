@@ -620,7 +620,7 @@ to if called with ARG, or any prefix argument."
 ;; bundled dynamic module for improved performance.  (See
 ;; https://github.com/axelf4/hotfuzz?tab=readme-ov-file#dynamic-module
 ;; for how to do so.)
-;; 
+;;
 ;; When done so, is a much, much faster version of the built-in flex
 ;; style (although it is non-greedy and has a different scoring
 ;; algorithm).  See
@@ -637,7 +637,7 @@ to if called with ARG, or any prefix argument."
   ;; `completion-lazy-hilit' (vertico and corfu do, so this setting is
   ;; ignored when using those UIs)
   (setopt hotfuzz-max-highlighted-completions most-positive-fixnum)
-  
+
   ;; Replace the flex completion style with the hotfuzz style after
   ;; I've set `completion-styles'
   (with-eval-after-load 'minibuffer
@@ -654,7 +654,7 @@ to if called with ARG, or any prefix argument."
 ;;;; Orderless
 (setup orderless
   (:package orderless)
-  
+
   (with-eval-after-load 'orderless
     (setopt orderless-matching-styles
             '(orderless-regexp
@@ -667,7 +667,7 @@ to if called with ARG, or any prefix argument."
             orderless-component-separator 'orderless-escapable-split-on-space))
 
   (add-to-list 'completion-styles 'orderless :append)
-  
+
   ;; TODO 2025-05-20: Revisit this.
   ;; ;; Eglot forces `flex' by default.
   ;; (add-to-list 'completion-category-overrides '(eglot (styles . (orderless flex))))
@@ -1825,10 +1825,10 @@ headline."
 (setup diff-mode
 
   (setopt diff-font-lock-prettify t ; Make diff headers look like Magit’s
-	  ;; 2024-10-23 TODO: Revisit this. I think it causes a bug in
-	  ;; vc-jj
-	  ;; diff-default-read-only t
-	  )
+          ;; 2024-10-23 TODO: Revisit this. I think it causes a bug in
+          ;; vc-jj
+          ;; diff-default-read-only t
+          )
 
   (:bind-keys :map diff-mode-map
               ("v" . vc-next-action))
@@ -1889,14 +1889,14 @@ headline."
 ;;; Highlight-function-calls
 (setup highlight-function-calls
   (:package highlight-function-calls)
-  
+
   (dolist (hook '(emacs-lisp-mode-hook lisp-interaction-mode-hook))
     (add-hook hook #'highlight-function-calls-mode))
-  
+
   (setopt highlight-function-calls-not t
           highlight-function-calls-macro-calls t
           highlight-function-calls-special-forms t)
-  
+
   (:face highlight-function-calls-face ((t (:underline nil :inherit font-lock-function-call-face)))))
 
 ;;; Puni
@@ -1906,7 +1906,7 @@ headline."
   (:package puni)
 
   (setopt puni-confirm-when-delete-unbalanced-active-region nil)
-  
+
   (bind-keys
    ("C-S-o" . puni-split)
    ("M-+" . puni-splice)
@@ -1988,6 +1988,58 @@ headline."
                 ("M-8" . nil)
                 ("M-9" . nil)
                 ("M-0" . nil))))
+
+;;; Olivetti
+(setup olivetti
+  (:package olivetti)
+
+  (:hide-mode)
+  
+  (dolist (hook '(org-mode-hook
+                  Info-mode-hook
+                  emacs-news-view-mode-hook
+                  org-msg-edit-mode-hook
+                  markdown-mode-hook))
+    (add-hook hook #'olivetti-mode))
+  
+  (:bind-keys :map olivetti-mode-map
+              ("C-c |" . nil))
+  
+  (with-eval-after-load 'olivetti
+    (setopt olivetti-body-width 0.55
+            olivetti-minimum-body-width 80
+            olivetti-margin-width 8
+            olivetti-style 'fancy)) ; Fancy makes the buffer look like a page
+
+  ;; TODO 2025-05-22: Revisit this.
+  ;; ;; FIXME 2024-01-11: This is a temporary solution. Olivetti's
+  ;; ;; changing of margins and fringes messes with the calculation of
+  ;; ;; `mode--line-format-right-align', which determines where the right
+  ;; ;; side of the mode line is placed.
+  ;; (mode-line-format-right-align
+  ;;  '(:eval (if (and (bound-and-true-p olivetti-mode)
+  ;;                   olivetti-style)     ; 'fringes or 'fancy
+  ;;              (let ((mode-line-right-align-edge 'right-fringe))
+  ;;                (mode--line-format-right-align))
+  ;;            (mode--line-format-right-align))))
+
+  ;; TODO 2025-05-22: Revisit this.
+  ;; (krisb-modus-themes-setup-faces
+  ;;  "olivetti"
+  ;;  (set-face-attribute 'olivetti-fringe nil
+  ;;                      :background bg-dim
+  ;;                      :inherit 'unspecified))
+
+  ;; TODO 2025-05-22: Revisit this.
+  ;; ;; Set `bookmark-face' buffer-locally
+  ;;   (defun krisb-olivetti-set-bookmark-face ()
+  ;;     "Sets the buffer-local specification of `bookmark-face'.
+  ;; We do this because the olivetti settings may change the background color
+  ;; of the fringe, meaning bookmark fringe marks, which use the default
+  ;; fringe background color, are out of place."
+  ;;     (face-remap-add-relative 'bookmark-face :inherit '(olivetti-fringe success)))
+  ;; (add-hook 'olivetti-mode-hook #'krisb-olivetti-set-bookmark-face)
+  )
 
 ;;; Startup time
 ;; Message for total init time after startup

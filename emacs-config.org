@@ -832,6 +832,62 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
     )
 #+end_src
 
+*** Olivetti: Horizontally center buffer body
+
+#+name: olivetti
+#+begin_src emacs-lisp
+  (setup olivetti
+    (:package olivetti)
+
+    (:hide-mode)
+
+    (dolist (hook '(org-mode-hook
+                    Info-mode-hook
+                    emacs-news-view-mode-hook
+                    org-msg-edit-mode-hook
+                    markdown-mode-hook))
+      (add-hook hook #'olivetti-mode))
+
+    (:bind-keys :map olivetti-mode-map
+                ("C-c |" . nil))
+
+    (with-eval-after-load 'olivetti
+      (setopt olivetti-body-width 0.55
+              olivetti-minimum-body-width 80
+              olivetti-margin-width 8
+              olivetti-style 'fancy)) ; Fancy makes the buffer look like a page
+
+    ;; TODO 2025-05-22: Revisit this.
+    ;; ;; FIXME 2024-01-11: This is a temporary solution. Olivetti's
+    ;; ;; changing of margins and fringes messes with the calculation of
+    ;; ;; `mode--line-format-right-align', which determines where the right
+    ;; ;; side of the mode line is placed.
+    ;; (mode-line-format-right-align
+    ;;  '(:eval (if (and (bound-and-true-p olivetti-mode)
+    ;;                   olivetti-style)     ; 'fringes or 'fancy
+    ;;              (let ((mode-line-right-align-edge 'right-fringe))
+    ;;                (mode--line-format-right-align))
+    ;;            (mode--line-format-right-align))))
+
+    ;; TODO 2025-05-22: Revisit this.
+    ;; (krisb-modus-themes-setup-faces
+    ;;  "olivetti"
+    ;;  (set-face-attribute 'olivetti-fringe nil
+    ;;                      :background bg-dim
+    ;;                      :inherit 'unspecified))
+
+    ;; TODO 2025-05-22: Revisit this.
+    ;; ;; Set `bookmark-face' buffer-locally
+    ;;   (defun krisb-olivetti-set-bookmark-face ()
+    ;;     "Sets the buffer-local specification of `bookmark-face'.
+    ;; We do this because the olivetti settings may change the background color
+    ;; of the fringe, meaning bookmark fringe marks, which use the default
+    ;; fringe background color, are out of place."
+    ;;     (face-remap-add-relative 'bookmark-face :inherit '(olivetti-fringe success)))
+    ;; (add-hook 'olivetti-mode-hook #'krisb-olivetti-set-bookmark-face)
+    )
+#+end_src
+
 ** Disable the ring bell
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
@@ -2824,6 +2880,9 @@ This section is for the major mode
 
   ;;; EAT
   <<eat>>
+
+  ;;; Olivetti
+  <<olivetti>>
 
   ;;; Startup time
   <<startup-time>>
