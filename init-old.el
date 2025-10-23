@@ -1884,23 +1884,6 @@ An example of a return value for this function is: \"9 minutes ago\"."
   "\\.fish\\'")
 
 ;;;; Enhancements to basic text editing
-;; Puni: major-mode agnostic structural editing.  We use some of its
-;; commands.
-(use-package puni
-  :ensure t
-  :defer t
-  :bind
-  (("C-S-o" . puni-split)
-   ("M-+" . puni-splice)
-   ("M-R" . puni-raise)
-   ([remap transpose-sexps] . puni-transpose)
-   ([remap kill-word] . puni-forward-kill-word)
-   ([remap backward-kill-word] . puni-backward-kill-word)
-   ([remap insert-parentheses] . puni-syntactic-backward-punct)
-   ([remap move-past-close-and-reindent] . puni-syntactic-forward-punct))
-  :custom
-  (puni-confirm-when-delete-unbalanced-active-region nil))
-
 ;; Open line indents too
 (defun krisb-open-line (n)
   "Like `open-line’ but also indent.

@@ -1813,6 +1813,24 @@ headline."
   
   (:face highlight-function-calls-face ((t (:underline nil :inherit font-lock-function-call-face)))))
 
+;;; Puni
+;; Puni: major-mode-agnostic structural editing.  We use some of its
+;; commands, but do not enable the mode.
+(setup puni
+  (:package puni)
+
+  (setopt puni-confirm-when-delete-unbalanced-active-region nil)
+  
+  (bind-keys
+   ("C-S-o" . puni-split)
+   ("M-+" . puni-splice)
+   ("M-R" . puni-raise)
+   ([remap transpose-sexps] . puni-transpose)
+   ([remap kill-word] . puni-forward-kill-word)
+   ([remap backward-kill-word] . puni-backward-kill-word)
+   ([remap insert-parentheses] . puni-syntactic-backward-punct)
+   ([remap move-past-close-and-reindent] . puni-syntactic-forward-punct)))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

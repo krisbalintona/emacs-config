@@ -1817,6 +1817,28 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
 
 *** Spell checking
 
+*** Puni: Enhancements to basic text editing and movement
+
+#+name: puni
+#+begin_src emacs-lisp
+  ;; Puni: major-mode-agnostic structural editing.  We use some of its
+  ;; commands, but do not enable the mode.
+  (setup puni
+    (:package puni)
+
+    (setopt puni-confirm-when-delete-unbalanced-active-region nil)
+    
+    (bind-keys
+     ("C-S-o" . puni-split)
+     ("M-+" . puni-splice)
+     ("M-R" . puni-raise)
+     ([remap transpose-sexps] . puni-transpose)
+     ([remap kill-word] . puni-forward-kill-word)
+     ([remap backward-kill-word] . puni-backward-kill-word)
+     ([remap insert-parentheses] . puni-syntactic-backward-punct)
+     ([remap move-past-close-and-reindent] . puni-syntactic-forward-punct)))
+#+end_src
+
 *** Programming
 
 **** Outlining
@@ -2613,6 +2635,12 @@ This section is for the major mode
 
   ;;; Highlight-function-calls
   <<highlight-function-calls>>
+
+  ;;; Puni
+  <<puni>>
+
+  ;;; Whitespace
+  <<whitespace>>
 
   ;;; Startup time
   <<startup-time>>
