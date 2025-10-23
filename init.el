@@ -1770,12 +1770,12 @@ headline."
 ;;; Time
 (setup time
 
-  (display-time-mode 1)
-
   (setopt display-time-24hr-format t
           display-time-format "%R"
           display-time-interval 60
           display-time-default-load-average nil)
+
+  (display-time-mode 1)
 
   ;; Time zones for `world-clock'
   (setopt world-clock-list
