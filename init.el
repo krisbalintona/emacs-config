@@ -519,31 +519,31 @@ to if called with ARG, or any prefix argument."
 (setup tab-bar
 
   (:bind-keys :map tab-prefix-map
-            ("w" . tab-bar-move-window-to-tab)
-            ("w" . tab-bar-move-window-to-tab)
-            ("c" . tab-bar-change-tab-group)
-            ("C-S-g" . tab-bar-move-tab-to-group)
-            ("D" . tab-bar-close-group-tabs)
-            :repeat-map krisb-tab-bar-repeat-map
-            ("C-c <left>" . tab-bar-history-back)
-            ("C-c <right>" . tab-bar-history-forward)
-            :continue
-            ("<left>" . tab-bar-history-back)
-            ("<right>" . tab-bar-history-forward))
+              ("w" . tab-bar-move-window-to-tab)
+              ("w" . tab-bar-move-window-to-tab)
+              ("c" . tab-bar-change-tab-group)
+              ("C-S-g" . tab-bar-move-tab-to-group)
+              ("D" . tab-bar-close-group-tabs)
+              :repeat-map krisb-tab-bar-repeat-map
+              ("C-c <left>" . tab-bar-history-back)
+              ("C-c <right>" . tab-bar-history-forward)
+              :continue
+              ("<left>" . tab-bar-history-back)
+              ("<right>" . tab-bar-history-forward))
 
   (setopt tab-bar-close-button-show nil
-        tab-bar-close-last-tab-choice 'delete-frame
-        tab-bar-new-tab-choice 'clone
-        tab-bar-select-tab-modifiers '(meta)
-        tab-bar-tab-hints t
-        tab-bar-show t
-        tab-bar-separator " "
-        tab-bar-show-inactive-group-tabs t
-        tab-bar-format
-        '(tab-bar-format-tabs-groups
-          tab-bar-separator
-          tab-bar-format-align-right
-          tab-bar-format-global))
+          tab-bar-close-last-tab-choice 'delete-frame
+          tab-bar-new-tab-choice 'clone
+          tab-bar-select-tab-modifiers '(meta)
+          tab-bar-tab-hints t
+          tab-bar-show t
+          tab-bar-separator " "
+          tab-bar-show-inactive-group-tabs t
+          tab-bar-format
+          '(tab-bar-format-tabs-groups
+            tab-bar-separator
+            tab-bar-format-align-right
+            tab-bar-format-global))
 
   (tab-bar-mode 1)
   (tab-bar-history-mode 1))
@@ -556,8 +556,7 @@ to if called with ARG, or any prefix argument."
 
   (setopt completion-styles '(initials substring flex)
           ;; TODO 2025-10-17: Revisit this
-          ;; completion-pcm-leading-wildcard t ; Emacs 31
-          )
+          completion-pcm-leading-wildcard t) ; Emacs 31
 
   ;; A non-exhaustive list of known completion categories:
   ;; - `bookmark'
@@ -581,7 +580,7 @@ to if called with ARG, or any prefix argument."
 
   ;; We don’t want to ignore case for completions, but buffer and file names are
   ;; exceptions
-  (setopt completion-ignore-case nil
+  (setopt completion-ignore-case t
           read-file-name-completion-ignore-case t
           read-buffer-completion-ignore-case t))
 
@@ -1116,9 +1115,9 @@ call `diff-buffer-with-file’ instead."
   (:hide-mode outline-minor-mode)
 
   (setopt outline-minor-mode-cycle t
-        outline-minor-mode-cycle-filter nil
-        outline-minor-mode-highlight 'append
-        outline-blank-line t))
+          outline-minor-mode-cycle-filter nil
+          outline-minor-mode-highlight 'append
+          outline-blank-line t))
 
 ;;; Outli.el
 ;; TODO 2025-05-20: Document that I prefer this over the heavier,
@@ -1132,15 +1131,15 @@ call `diff-buffer-with-file’ instead."
   (with-eval-after-load 'outli
     (require 'outline)
     (bind-keys :map outline-minor-mode-map
-             ;; 2025-04-02: Assumes `outline-minor-mode-prefix' is
-             ;; "C-c @"
-             ("C-c @ C-<return>" . outli-insert-heading-respect-content)
-             ("C-c @ ?" . outli-speed-command-help)
-             ("C-c @ s" . outli-toggle-narrow-to-subtree)))
+               ;; 2025-04-02: Assumes `outline-minor-mode-prefix' is
+               ;; "C-c @"
+               ("C-c @ C-<return>" . outli-insert-heading-respect-content)
+               ("C-c @ ?" . outli-speed-command-help)
+               ("C-c @ s" . outli-toggle-narrow-to-subtree)))
 
   (setopt outli-allow-indented-headlines t
-        outli-default-nobar nil       ; Show a horizontal rule?
-        outli-blend nil)
+          outli-default-nobar nil       ; Show a horizontal rule?
+          outli-blend nil)
 
   (add-hook 'prog-mode-hook #'outli-mode)
   (add-hook 'text-mode-hook #'outli-mode))
@@ -1157,7 +1156,7 @@ call `diff-buffer-with-file’ instead."
 (setup imenu
 
   (setopt imenu-auto-rescan t
-        imenu-flatten 'group))
+          imenu-flatten 'group))
 
 (setup pulsar
   (with-eval-after-load 'pulsar
@@ -1171,18 +1170,18 @@ call `diff-buffer-with-file’ instead."
 (setup isearch
 
   (setopt isearch-repeat-on-direction-change t
-        isearch-allow-scroll 'unlimited
-        isearch-allow-motion t
-        isearch-lazy-count t
-        isearch-wrap-pause 'no-ding)
+          isearch-allow-scroll 'unlimited
+          isearch-allow-motion t
+          isearch-lazy-count t
+          isearch-wrap-pause 'no-ding)
 
   ;; Treatment of whitespace.  Also be aware of the
   ;; `isearch-toggle-lax-whitespace' command during isearch searches
   (setopt isearch-lax-whitespace t
-        isearch-regexp-lax-whitespace nil
-        ;; TODO 2025-10-19: Revisit this
-        ;; search-whitespace-regexp ".*?"
-        ))
+          isearch-regexp-lax-whitespace nil
+          ;; TODO 2025-10-19: Revisit this
+          ;; search-whitespace-regexp ".*?"
+          ))
 
 ;;; Pulsar
 ;; Alternative to `pulse.el'
@@ -1192,9 +1191,9 @@ call `diff-buffer-with-file’ instead."
   (pulsar-global-mode 1)
 
   (setopt pulsar-pulse t
-        pulsar-face 'pulsar-red
-        pulsar-delay 0.05
-        pulsar-iterations 5))
+          pulsar-face 'pulsar-red
+          pulsar-delay 0.05
+          pulsar-iterations 5))
 
 ;;; Org
 ;;;; Org built-ins
@@ -1314,9 +1313,9 @@ call `diff-buffer-with-file’ instead."
 (setup org-id
 
   (setopt org-id-track-globally t
-        org-id-method 'ts
-        org-id-link-to-org-use-id 'use-existing
-        org-id-link-consider-parent-id t))
+          org-id-method 'ts
+          org-id-link-to-org-use-id 'use-existing
+          org-id-link-consider-parent-id t))
 
 ;;;;; Org-footnote
 ;; TODO 2025-05-23: Document:
@@ -1324,7 +1323,7 @@ call `diff-buffer-with-file’ instead."
 (setup org-footnote
 
   (setopt org-footnote-section nil    ; Don't create footnote headline
-        org-footnote-auto-adjust t))
+          org-footnote-auto-adjust t))
 
 ;;;;; Org-src
 ;; TODO 2025-05-23: Document:
@@ -1334,23 +1333,23 @@ call `diff-buffer-with-file’ instead."
 (setup org-src
 
   (setopt org-src-fontify-natively t
-        org-src-window-setup 'current-window))
+          org-src-window-setup 'current-window))
 
 ;;;;; Org-cite
 ;; Built-in citations in org-mode
 (setup oc
 
   (setopt org-cite-global-bibliography krisb-bibliography-files
-        org-cite-csl-locales-dir nil
-        ;; TODO 2025-10-19: Avoid hardcoding this path?
-        org-cite-csl-styles-dir (expand-file-name "~/Zotero/styles/"))
+          org-cite-csl-locales-dir nil
+          ;; TODO 2025-10-19: Avoid hardcoding this path?
+          org-cite-csl-styles-dir (expand-file-name "~/Zotero/styles/"))
 
   (setopt org-cite-export-processors
-        '((md . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
-          (latex biblatex)            ; For humanities
-          (odt . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
-          (docx . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
-          (t . (csl "modern-language-association.csl")))) ; Fallback
+          '((md . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
+            (latex biblatex)            ; For humanities
+            (odt . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
+            (docx . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
+            (t . (csl "modern-language-association.csl")))) ; Fallback
 
   ;; Have citation link faces look closer to as they were for
   ;; `org-ref'
@@ -1644,41 +1643,41 @@ headline."
   (:package consult)
 
   (bind-keys ("C-x B" . consult-buffer)
-           ;; Remaps of built-ins
-           ([remap yank-pop] . consult-yank-pop)
-           ([remap goto-line] . consult-goto-line)
-           ([remap bookmark-jump] . consult-bookmark)
-           ([remap Info-search] . consult-info)
-           ([remap imenu] . consult-imenu)
-           ([remap flymake-show-buffer-diagnostics] . consult-flymake)
-           ([remap repeat-complex-command] . consult-complex-command)
-           :map goto-map              ; The `M-g' prefix
-           ("f" . consult-flymake)
-           ("o" . consult-outline)
-           ("e" . consult-compile-error)
-           ("l" . consult-line)
-           ("a" . consult-org-agenda)
-           ("m" . consult-mark)
-           :map search-map            ; The `M-s' prefix
-           ("i" . consult-info)
-           ("g" . consult-git-grep)
-           ("G" . consult-grep)
-           ("r" . consult-ripgrep)
-           ("f" . consult-find)
-           ("F" . consult-locate))
+             ;; Remaps of built-ins
+             ([remap yank-pop] . consult-yank-pop)
+             ([remap goto-line] . consult-goto-line)
+             ([remap bookmark-jump] . consult-bookmark)
+             ([remap Info-search] . consult-info)
+             ([remap imenu] . consult-imenu)
+             ([remap flymake-show-buffer-diagnostics] . consult-flymake)
+             ([remap repeat-complex-command] . consult-complex-command)
+             :map goto-map              ; The `M-g' prefix
+             ("f" . consult-flymake)
+             ("o" . consult-outline)
+             ("e" . consult-compile-error)
+             ("l" . consult-line)
+             ("a" . consult-org-agenda)
+             ("m" . consult-mark)
+             :map search-map            ; The `M-s' prefix
+             ("i" . consult-info)
+             ("g" . consult-git-grep)
+             ("G" . consult-grep)
+             ("r" . consult-ripgrep)
+             ("f" . consult-find)
+             ("F" . consult-locate))
   (with-eval-after-load 'org
     (bind-key [remap consult-outline] #'consult-org-heading org-mode-map))
 
   (:bind-keys :map consult-narrow-map
-            ("?" . consult-narrow-help)) ; Show available narrow keys
+              ("?" . consult-narrow-help)) ; Show available narrow keys
 
   (setopt consult-preview-key "C-M-;"
-        consult-ripgrep-args
-        (concat
-         "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /\
+          consult-ripgrep-args
+          (concat
+           "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /\
    --smart-case --no-heading --with-filename --line-number --search-zip"
-         ;; Additional args
-         " --line-number --hidden"))
+           ;; Additional args
+           " --line-number --hidden"))
 
   ;; `consult-bookmark-narrow'
   (with-eval-after-load 'activities
@@ -1702,9 +1701,9 @@ headline."
   ;; could make these hidden, allowing access to their filter despite
   ;; being unseen.
   (dolist (source '(consult--source-recent-file
-                  consult--source-file-register
-                  consult--source-bookmark
-                  consult--source-project-recent-file-hidden))
+                    consult--source-file-register
+                    consult--source-bookmark
+                    consult--source-project-recent-file-hidden))
     (delq source consult-buffer-sources)))
 
 ;; Pulsar pulses
@@ -1718,20 +1717,20 @@ headline."
   (display-time-mode 1)
 
   (setopt display-time-24hr-format t
-        display-time-format "%R"
-        display-time-interval 60
-        display-time-default-load-average nil)
+          display-time-format "%R"
+          display-time-interval 60
+          display-time-default-load-average nil)
 
   ;; Time zones for `world-clock'
   (setopt world-clock-list
-        '(("America/Los_Angeles" "Seattle")
-          ("America/New_York" "New York")
-          ("Europe/London" "London")
-          ("Europe/Paris" "Paris")
-          ("Europe/Nicosia" "Nicosia (capital of Cyprus)")
-          ("Asia/Calcutta" "Bangalore")
-          ("Asia/Tokyo" "Tokyo")
-          ("Asia/Shanghai" "Beijing"))))
+          '(("America/Los_Angeles" "Seattle")
+            ("America/New_York" "New York")
+            ("Europe/London" "London")
+            ("Europe/Paris" "Paris")
+            ("Europe/Nicosia" "Nicosia (capital of Cyprus)")
+            ("Asia/Calcutta" "Bangalore")
+            ("Asia/Tokyo" "Tokyo")
+            ("Asia/Shanghai" "Beijing"))))
 
 ;;; Diff-mode
 ;; TODO 2025-06-07: Document:
