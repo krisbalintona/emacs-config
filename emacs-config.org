@@ -35,9 +35,13 @@ See also the useful command ~org-babel-goto-named-src-block~ and other useful co
                                        ("nongnu" . 3)
                                        ("gnu-elpa-devel" . 2)
                                        ("melpa" . 1))
-          package-install-upgrade-built-in t
+          package-install-upgrade-built-in t)
 
-          load-prefer-newer t)
+  (setopt load-prefer-newer t)
+
+  ;; 2025-10-23 TODO: Revisit this.  Ideally, should be more safe than
+  ;; setting this value to an outright t
+  (setopt package-vc-allow-build-commands t)
 #+end_src
 
 ** Elpaca
@@ -1358,7 +1362,10 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
   ;; https://github.com/axelf4/emacs-completion-bench#readme for a
   ;; comparison of fuzzy completion style packages
   (setup hotfuzz
-    (:package hotfuzz)
+    (:package (hotfuzz :url "https://github.com/axelf4/hotfuzz.git"
+                       ;; Compile the dynamic module.  See
+                       ;; https://github.com/axelf4/hotfuzz?tab=readme-ov-file#dynamic-module
+                       :shell-command "cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS=-march=native && cmake --build build"))
     (:require)
 
     ;; This setting applies only to completion UIs that don't support
@@ -1369,7 +1376,15 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
     ;; Replace the flex completion style with the hotfuzz style after
     ;; I've set `completion-styles'
     (with-eval-after-load 'minibuffer
-      (cl-nsubstitute 'hotfuzz 'flex completion-styles)))
+      (cl-nsubstitute 'hotfuzz 'flex completion-styles))
+
+    ;; We have to change some internal variables consult uses if the
+    ;; dynamic module is compiled.  See
+    ;; https://github.com/axelf4/hotfuzz?tab=readme-ov-file#dynamic-module
+    (when (featurep 'hotfuzz-module)
+      (with-eval-after-load 'consult
+        (setq consult--tofu-char #x100000
+              consult--tofu-range #x00fffe))))
 #+end_src
 
 ** Completions buffer
