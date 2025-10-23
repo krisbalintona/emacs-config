@@ -288,9 +288,6 @@ https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=shar
       (apply #'narrow-to-region (cdr misc))))
   (advice-add 'desktop-restore-file-buffer :after #'krisb-desktop--restore-narrowing))
 
-;;;; Insert spaces instead of tab characters
-(setopt indent-tabs-mode nil)
-
 ;;;; Don’t let GTK override key sequences on wayland
 ;; See the section titled “Certain keys such as 'C-S-u' are not
 ;; reported correctly.” in etc/PROBLEMS (M-x C-h C-p).

@@ -1795,6 +1795,14 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
     (:hide-mode))
 #+end_src
 
+*** Indent-tabs-mode: Spaces over tabs
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc
+  ;; Insert spaces instead of tab characters.  The below disables
+  ;; `indent-tabs-mode' globally
+  (setopt indent-tabs-mode nil)
+#+end_src
+
 *** Rebind capitalization commands
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc
