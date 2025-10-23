@@ -4635,10 +4635,6 @@ is to produce the opposite effect of both `fill-paragraph' and
 ;; Recenter upon `next-error'
 (setopt next-error-recenter '(4))
 
-;; Enable `delete-selection-mode'.  When selecting text, if typing new
-;; text, replace the selected text with the new text
-(delete-selection-mode t)
-
 ;; Avoid collision of mouse with point
 (mouse-avoidance-mode 'jump)
 
