@@ -1847,6 +1847,20 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
      ([remap move-past-close-and-reindent] . puni-syntactic-forward-punct)))
 #+end_src
 
+*** Sentence-end-double-space: What counts as a sentence?
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc
+  ;; Set `sentence-end-double-space' conditionally
+  (defun krisb-sentence-end-double-space-setup ()
+    "Set up the value for `sentence-end-double-space'."
+    (setq-local sentence-end-double-space
+                (cond ((derived-mode-p '(prog-mode conf-mode log-edit-mode)) t)
+                      ((derived-mode-p '(text-mode wombag-show-mode)) nil))))
+
+  (dolist (mode '(text-mode-hook prog-mode-hook conf-mode-hook))
+    (add-hook mode #'krisb-sentence-end-double-space-setup))
+#+end_src
+
 *** Programming
 
 **** Outlining

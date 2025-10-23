@@ -317,7 +317,17 @@ that.  Otherwise, remove it from `minor-mode-alist'."
   (bind-keys
    ([remap upcase-word] . upcase-dwim)
    ([remap downcase-word] . downcase-dwim)
-   ([remap capitalize-word] . capitalize-dwim)))
+   ([remap capitalize-word] . capitalize-dwim))
+  
+  ;; Set `sentence-end-double-space' conditionally
+  (defun krisb-sentence-end-double-space-setup ()
+    "Set up the value for `sentence-end-double-space'."
+    (setq-local sentence-end-double-space
+                (cond ((derived-mode-p '(prog-mode conf-mode log-edit-mode)) t)
+                      ((derived-mode-p '(text-mode wombag-show-mode)) nil))))
+  
+  (dolist (mode '(text-mode-hook prog-mode-hook conf-mode-hook))
+    (add-hook mode #'krisb-sentence-end-double-space-setup)))
 
 ;;; Garbage collection
 ;; We set `gc-cons-threshold’ to a high value in early-init.el.  We
