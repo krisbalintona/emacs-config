@@ -1952,7 +1952,9 @@ headline."
 ;; Visualize whitespace so mistakes are more easily detectable.
 (setup whitespace
 
-  (setopt whitespace-style '(empty face tab-mark tabs page-delimiters)
+  (setopt whitespace-style             ; See also `whitespace-cleanup'
+          '( empty face tab-mark tabs page-delimiters
+             indentation space-before-tab space-after-tab)
           whitespace-display-mappings '((tab-mark ?\t [?› ?\t])
                                         (newline-mark ?\n [?¬ ?\n])
                                         (space-mark ?\  [?·] [?.]))
@@ -2008,6 +2010,8 @@ headline."
 ;; tab-bar tabs
 (setup eat
   (with-eval-after-load 'tab-bar
+    ;; 2025-10-23 TODO: Why not just use
+    ;; `eat-semi-char-non-bound-keys' instead?
     (:bind-keys :map eat-semi-char-mode-map
                 ("M-1" . nil)
                 ("M-2" . nil)
