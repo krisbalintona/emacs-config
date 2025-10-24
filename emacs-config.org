@@ -2441,14 +2441,14 @@ This section is for the major mode
 
 ** Media management
 
-*** General note-taking
+*** Zettelkasten
 
 **** Org-id
 
 #+name: org-id
 #+begin_src emacs-lisp
   (setup org-id
-    (:if-feature org)
+    (:if-package org)
 
     (setopt org-id-track-globally t
             org-id-method 'ts
@@ -2462,7 +2462,7 @@ This section is for the major mode
 #+begin_src emacs-lisp
   ;; Built-in citations in org-mode
   (setup oc
-    (:if-feature org)
+    (:if-package org)
 
     (setopt org-cite-global-bibliography krisb-bibliography-files
             org-cite-csl-locales-dir nil
@@ -2495,8 +2495,8 @@ This section is for the major mode
   ;; FIXME 2025-10-17: Document also:
   ;; - `org-mem-db1-mode'
   (setup org-mem
-    (:if-feature org)
     (:package org-mem)
+    (:if-package org)
 
     (setopt org-mem-do-sync-with-org-id t
             org-mem-watch-dirs (list krisb-folio-directory)
@@ -2523,8 +2523,8 @@ This section is for the major mode
 #+name: org-node
 #+begin_src emacs-lisp
   (setup org-node
-    (:if-feature org)
     (:package org-node)
+    (:if-package org)
 
     (:bind-keys :map krisb-note-keymap
                 ("l" . org-node-context-toggle)
@@ -2695,7 +2695,7 @@ This section is for the major mode
 #+name: org-web-tools
 #+begin_src emacs-lisp
   (setup org-web-tools
-    (:if-feature org)
+    (:if-package org)
     (:package org-web-tools)
 
     (with-eval-after-load 'org-mode-map
@@ -2714,6 +2714,101 @@ This section is for the major mode
 #+end_src
 
 *** Email
+
+*** Films, shows, and comics
+
+Log when the value of certain properties are changed:
+#+name: org-log-properties
+#+begin_src emacs-lisp
+  ;; Log changes to certain properties.
+  ;;
+  ;; The following describes how it works.  We add a function to
+  ;; `org-property-changed-functions' (`krisb-org-log-property-change')
+  ;; that calls `org-add-log-setup' to log a change to properties listed
+  ;; in `krisb-org-log-properties' when they are changed.  (This logging
+  ;; follows the value of of the `org-log-into-drawer' option.)  The
+  ;; PURPOSE argument of `org-add-log-setup' is 'property; a
+  ;; corresponding entry in `org-log-note-headings' is added.  This
+  ;; option controls the format of logged entries based on the PURPOSE
+  ;; argument passed to `org-add-log-setup'.
+  ;;
+  ;; `org-log-note-headings' offers several %-escape sequences.  My
+  ;; desired behavior is to (i) log the name of the property and (ii)
+  ;; the old value of the property, before it is changed.  We abuse the
+  ;; "%s" escape sequence (initially for original todo states) to insert
+  ;; the name of the property changed (by also passing the name of the
+  ;; property as the STATE argument in `org-add-log-setup').  The
+  ;; @-escape sequences offered cannot accommodate (ii) neatly.  To
+  ;; accomplish (ii), we advise `org-entry-put' to store the value of
+  ;; the property before it is changed in
+  ;; `krisb-org-log-property-before'.  Then, we pass this as the
+  ;; PREV-STATE in `krisb-org-log-property-change' so that it can be
+  ;; inserted via the "%S" escape sequence in `org-log-note-headings'.
+  ;; 
+  ;; See also
+  ;; https://www.reddit.com/r/emacs/comments/7gr9ps/add_logbook_entry_and_note_on_orgmode_property/.
+  (with-eval-after-load 'org
+    (defvar krisb-org-log-properties nil
+      "List of properties that are logged when their value is changed.
+  Users can set this variable globally, buffer locally, and directory
+  locally.")
+    (put 'krisb-org-log-properties 'safe-local-variable #'listp)
+
+    (defvar krisb-org-log-property-before nil
+      "Temporary storage of property value before its change.")
+
+    (defun krisb-org-log-property-set-before (epom property _value)
+      "Set the value of `krisb-org-log-property-before'.
+  Meant as advice before `org-entry-put'.  Set the value of
+  `krisb-org-log-property-before' to the value of the property set by
+  `org-entry-put' before it is changed."
+      (setq krisb-org-log-property-before (org-entry-get epom property)))
+    (advice-add 'org-entry-put :before #'krisb-org-log-property-set-before)
+
+    (defun krisb-org-log-property-change (prop _newval)
+      "Log when certain properties change value.
+  PROP is the name of the property being changed and _NEWVAL is the value
+  this property has been set to."
+      ;; NOTE: We allow inserting empty values of
+      ;; `krisb-org-log-property-before' (i.e., when PROP is set for the
+      ;; first time) because org's logging of todo state changes does
+      ;; the same.
+      (when (member prop krisb-org-log-properties)
+        (org-add-log-setup 'property prop krisb-org-log-property-before 'time)))
+    (add-hook 'org-property-changed-functions #'krisb-org-log-property-change)
+
+    ;; We abuse the "%s" key in `org-log-note-headings' to store the
+    ;; name of the property changed rather than the previous todo state,
+    ;; which is the intended use of "%s"
+    (add-to-list 'org-log-note-headings '(property . "Property %s changed from %S on %t")))
+
+  ;; Bespoke settings for my media tracking system
+  (with-eval-after-load 'org
+    (defun krisb-org-property-set-rating (&rest _args)
+      "Read a number for the RATING property.
+  Prompts for a number until the user chooses a number between 0 and 10,
+  inclusive.
+
+  ARGS are the same as `completing-read'."
+      (let* ((existing-rating (org-entry-get (point) "RATING"))
+             (default (when existing-rating (string-to-number existing-rating)))
+             (rating
+              (read-number "Input a rating between 0 and 10, inclusive: " default)))
+        (while (or (< rating 0) (> rating 10))
+          (sleep-for 0.5)
+          (setq rating (read-number "Rating not between 0 and 10, inclusive: " default)))
+        (number-to-string rating)))
+    (add-to-list 'org-property-set-functions-alist
+                 '("RATING" . krisb-org-property-set-rating))
+
+    (defun krisb-org-property-allowed-platform (prop)
+      "Return allowed list of values for the PLATFORM property.
+  PROP is the name of the property.  See
+  `org-property-allowed-value-functions'."
+      (when (string= prop "PLATFORM")
+        '("Netflix" "Hulu" "Disney+" "Tubi" ":ETC")))
+    (add-to-list 'org-property-allowed-value-functions #'krisb-org-property-allowed-platform))
+#+end_src
 
 ** Task direction
 
@@ -2737,9 +2832,9 @@ This section is for the major mode
   ;; - https://lists.gnu.org/archive/html/emacs-orgmode/2022-10/msg01174.html.
   ;; We either must set it via file-local keywords or using #+SETUPFILE.
   (setup org-agenda
-    (:if-feature org)
+    (:if-package org)
 
-    (add-hook 'org-agenda-mode #'hl-line-mode)
+    (add-hook 'org-agenda-mode-hook #'hl-line-mode)
 
     (bind-keys :map krisb-open-keymap
                ("a" . org-agenda))
@@ -2800,7 +2895,7 @@ This section is for the major mode
 #+name: org-capture
 #+begin_src emacs-lisp
   (setup org-capture
-    (:if-feature org)
+    (:if-package org)
 
     (bind-keys ("C-c c" . org-capture))
 
@@ -3176,6 +3271,9 @@ This section is for the major mode
 
   ;;;;; Org-web-tools
   <<org-web-tools>>
+
+  ;;;; Bespoke code
+  <<org-log-properties>>
 
   ;;; Paren-face
   <<paren-face>>
