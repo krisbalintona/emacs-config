@@ -2146,6 +2146,14 @@ headline."
       (apply #'narrow-to-region (cdr misc))))
   (advice-add 'desktop-restore-file-buffer :after #'krisb-desktop--restore-narrowing))
 
+;;; Smart-mark
+;; When pressing C-g while marking a region, move point to the
+;; location the marking command was invoked from.
+(setup smart-mark
+  (:package smart-mark)
+  
+  (smart-mark-mode 1))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

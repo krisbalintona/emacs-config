@@ -1189,6 +1189,18 @@ See also ~(elisp) Beeping~.
       (add-hook 'consult-after-jump-hook #'pulsar-reveal-entry)))
 #+end_src
 
+** Smart-mark: =C-g= restores point when marking
+
+#+name: smart-mark
+#+begin_src emacs-lisp
+  ;; When pressing C-g while marking a region, move point to the
+  ;; location the marking command was invoked from.
+  (setup smart-mark
+    (:package smart-mark)
+    
+    (smart-mark-mode 1))
+#+end_src
+
 * VCS
 
 ** VC.el: Interface for version control systems
@@ -3014,6 +3026,9 @@ This section is for the major mode
 
   ;;; Desktop
   <<desktop>>
+
+  ;;; Smart-mark
+  <<smart-mark>>
 
   ;;; Startup time
   <<startup-time>>

@@ -1196,15 +1196,6 @@ ORIG-FUN should be `ispell-completion-at-point'."
   :config
   (global-dash-fontify-mode 1))
 
-;;;; Smart-mark
-;; When pressing C-g while marking a region, move point to the
-;; location the marking command was invoked from.
-(use-package smart-mark
-  :ensure t
-  :demand t
-  :config
-  (smart-mark-mode 1))
-
 ;;;; Man
 (use-package man
   :ensure nil
