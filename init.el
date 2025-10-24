@@ -917,7 +917,7 @@ Then apply ARGS."
 (setup recentf
 
   (bind-keys :map ctl-x-map
-              ("M-f" . recentf-open))
+             ("M-f" . recentf-open))
 
   (setopt recentf-auto-cleanup 600
           recentf-max-saved-items 1000
@@ -1352,6 +1352,7 @@ call `diff-buffer-with-file’ instead."
 ;; - https://lists.gnu.org/archive/html/emacs-orgmode/2022-10/msg01174.html.
 ;; We either must set it via file-local keywords or using #+SETUPFILE.
 (setup org-agenda
+  (:if-feature org)
 
   (add-hook 'org-agenda-mode #'hl-line-mode)
 
@@ -1405,6 +1406,7 @@ call `diff-buffer-with-file’ instead."
 
 ;;;;; Org-id
 (setup org-id
+  (:if-feature org)
 
   (setopt org-id-track-globally t
           org-id-method 'ts
@@ -1425,6 +1427,7 @@ call `diff-buffer-with-file’ instead."
 ;; - `org-edit-src-auto-save-idle-delay’
 ;; - `org-src-block-faces’
 (setup org-src
+  (:if-feature org)
 
   (setopt org-src-fontify-natively t
           org-src-window-setup 'current-window))
@@ -1432,6 +1435,7 @@ call `diff-buffer-with-file’ instead."
 ;;;;; Org-cite
 ;; Built-in citations in org-mode
 (setup oc
+  (:if-feature org)
 
   (setopt org-cite-global-bibliography krisb-bibliography-files
           org-cite-csl-locales-dir nil
@@ -1538,6 +1542,7 @@ call `diff-buffer-with-file’ instead."
 ;; FIXME 2025-10-17: Document also:
 ;; - `org-mem-db1-mode'
 (setup org-mem
+  (:if-feature org)
   (:package org-mem)
 
   (setopt org-mem-do-sync-with-org-id t
@@ -1561,6 +1566,7 @@ call `diff-buffer-with-file’ instead."
 
 ;;;;; Org-node
 (setup org-node
+  (:if-feature org)
   (:package org-node)
 
   (:bind-keys :map krisb-note-keymap
@@ -1728,16 +1734,17 @@ headline."
 
 ;;;;; Org-web-tools
 (setup org-web-tools
+  (:if-feature org)
   (:package org-web-tools)
-  
+
   (with-eval-after-load 'org-mode-map
     (bind-keys :map org-mode-map
                ("C-c u" . org-web-tools-insert-link-for-url)))
-  
+
   ;; Open then go into `view-mode'
   (with-eval-after-load 'org-web-tools
     (advice-add 'org-web-tools-read-url-as-org :after #'view-mode))
-  
+
   ;; Add an org-attach entry for `org-web-tools-archive-attach’
   (with-eval-after-load 'org-attach
     (add-to-list 'org-attach-commands
@@ -2155,7 +2162,7 @@ headline."
 ;; location the marking command was invoked from.
 (setup smart-mark
   (:package smart-mark)
-  
+
   (smart-mark-mode 1))
 
 ;;; Startup time

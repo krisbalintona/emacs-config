@@ -1197,7 +1197,7 @@ See also ~(elisp) Beeping~.
   ;; location the marking command was invoked from.
   (setup smart-mark
     (:package smart-mark)
-    
+
     (smart-mark-mode 1))
 #+end_src
 
@@ -1859,7 +1859,7 @@ Wayland specific:
   (setup recentf
 
     (bind-keys :map ctl-x-map
-                ("M-f" . recentf-open))
+               ("M-f" . recentf-open))
 
     (setopt recentf-auto-cleanup 600
             recentf-max-saved-items 1000
@@ -2171,6 +2171,7 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
   ;; - `org-edit-src-auto-save-idle-delay’
   ;; - `org-src-block-faces’
   (setup org-src
+    (:if-feature org)
 
     (setopt org-src-fontify-natively t
             org-src-window-setup 'current-window))
@@ -2447,6 +2448,7 @@ This section is for the major mode
 #+name: org-id
 #+begin_src emacs-lisp
   (setup org-id
+    (:if-feature org)
 
     (setopt org-id-track-globally t
             org-id-method 'ts
@@ -2460,6 +2462,7 @@ This section is for the major mode
 #+begin_src emacs-lisp
   ;; Built-in citations in org-mode
   (setup oc
+    (:if-feature org)
 
     (setopt org-cite-global-bibliography krisb-bibliography-files
             org-cite-csl-locales-dir nil
@@ -2492,6 +2495,7 @@ This section is for the major mode
   ;; FIXME 2025-10-17: Document also:
   ;; - `org-mem-db1-mode'
   (setup org-mem
+    (:if-feature org)
     (:package org-mem)
 
     (setopt org-mem-do-sync-with-org-id t
@@ -2519,6 +2523,7 @@ This section is for the major mode
 #+name: org-node
 #+begin_src emacs-lisp
   (setup org-node
+    (:if-feature org)
     (:package org-node)
 
     (:bind-keys :map krisb-note-keymap
@@ -2690,16 +2695,17 @@ This section is for the major mode
 #+name: org-web-tools
 #+begin_src emacs-lisp
   (setup org-web-tools
+    (:if-feature org)
     (:package org-web-tools)
-    
+
     (with-eval-after-load 'org-mode-map
       (bind-keys :map org-mode-map
                  ("C-c u" . org-web-tools-insert-link-for-url)))
-    
+
     ;; Open then go into `view-mode'
     (with-eval-after-load 'org-web-tools
       (advice-add 'org-web-tools-read-url-as-org :after #'view-mode))
-    
+
     ;; Add an org-attach entry for `org-web-tools-archive-attach’
     (with-eval-after-load 'org-attach
       (add-to-list 'org-attach-commands
@@ -2731,6 +2737,7 @@ This section is for the major mode
   ;; - https://lists.gnu.org/archive/html/emacs-orgmode/2022-10/msg01174.html.
   ;; We either must set it via file-local keywords or using #+SETUPFILE.
   (setup org-agenda
+    (:if-feature org)
 
     (add-hook 'org-agenda-mode #'hl-line-mode)
 
@@ -2786,6 +2793,178 @@ This section is for the major mode
                  (preserve-size . (nil . t))
                  (window-parameters . ((mode-line-format . none)))
                  (post-command-select-window . t)))
+#+end_src
+
+*** Org-capture
+
+#+name: org-capture
+#+begin_src emacs-lisp
+  (setup org-capture
+    (:if-feature org)
+
+    (bind-keys ("C-c c" . org-capture))
+
+
+    (setopt org-capture-use-agenda-date t)
+
+    ;; Helperes for `org-capture-templates'
+    (defun krisb-org-capture--org-node-by-tags (tags)
+      "Interactively prompt for an org-node candidate matching TAGS.
+  TAGS is a list of regexps that match org-node tags.
+
+  This function will use `completing-read' whose candidates are the
+  org-node nodes that match all of TAGS.  It will return a candidate (see
+  `org-node--candidate<>entry')."
+      (require 'org-node)
+      (gethash (completing-read "Select node: "
+                                #'org-node-collection-basic
+                                (lambda (_title node)
+                                  (cl-every (lambda (re)
+                                              (cl-some (lambda (str)
+                                                         (string-match-p re str))
+                                                       (org-node-get-tags node)))
+                                            tags))
+                                t nil 'org-node-hist)
+               org-node--candidate<>entry))
+
+    ;; See also `org-capture-templates-contexts'
+    (setopt org-capture-templates
+            '(("t" "Todo" entry
+               (file krisb-org-agenda-main-file)
+               "* TODO %? :inbox:%^g\n"
+               :empty-lines 1)
+              ("T" "Todo (without processing)" entry
+               (file krisb-org-agenda-main-file)
+               "* TODO %? %^g\n"
+               :empty-lines 1)
+              ("j" "Journal" entry
+               (file+olp+datetree
+                (lambda ()
+                  (let* ((node (krisb-org-capture--org-node-by-tags `(,(rx bol (or "__journal" "__top_of_mind") eol)))))
+                    (org-capture-put :krisb-node node)
+                    (org-node-get-file node)))
+                (lambda ()
+                  (let ((node (org-capture-get :krisb-node)))
+                    ;; Should return nil if node is a file
+                    (when (org-node-is-subtree node)
+                      (org-node-get-olp-with-self node)))))
+               "* %<%c>\n"
+               :tree-type (year quarter month)
+               :jump-to-captured t
+               :immediate-finish t
+               :empty-lines 1
+               :hook org-expiry-insert-created
+               :clock-in t
+               :clock-resume t)
+              ("w" "Just write" entry
+               (file+olp+datetree
+                (lambda ()
+                  (let* ((node (org-mem-entry-by-id "20241006T214800.000000")))
+                    (org-capture-put :krisb-node node)
+                    (org-node-get-file node)))
+                (lambda ()
+                  (let ((node (org-capture-get :krisb-node)))
+                    ;; Should return nil if node is a file
+                    (when (org-node-is-subtree node)
+                      (org-node-get-olp-with-self node)))))
+               "* %<%c>\n\n*P:* %(car (krisb-oblique-strategies--random))\n\n"
+               :tree-type (year quarter month)
+               :jump-to-captured t
+               :immediate-finish t
+               :empty-lines 1
+               :clock-in t
+               :clock-resume t)
+              ("l" "Log" item
+               (file+olp+datetree
+                (lambda ()
+                  (let* ((node (krisb-org-capture--org-node-by-tags '("^__log$"))))
+                    (org-capture-put :krisb-node node)
+                    (org-node-get-file node)))
+                (lambda ()
+                  (let ((node (org-capture-get :krisb-node)))
+                    ;; Should return nil if node is a file
+                    (when (org-node-is-subtree node)
+                      (org-node-get-olp-with-self node)))))
+               "%U %?"
+               :tree-type (quarter week)
+               :clock-in t
+               :clock-resume t)
+              ("m" "Work meeting notes" entry
+               (file+olp+datetree
+                (lambda ()
+                  (let* ((node (org-mem-entry-by-id "20241114T091749.707997")))
+                    (org-capture-put :krisb-node node)
+                    (org-node-get-file node)))
+                (lambda ()
+                  (let ((node (org-capture-get :krisb-node)))
+                    ;; Should return nil if node is a file
+                    (when (org-node-is-subtree node)
+                      (org-node-get-olp-with-self node)))))
+               "* (%<%c>)%?\n\n"
+               :tree-type (year quarter month)
+               :jump-to-captured t
+               :immediate-finish t)
+              ("r" "New reference" entry
+               (file+olp+datetree
+                (lambda ()
+                  (let* ((node (krisb-org-capture--org-node-by-tags '("^__references$"))))
+                    (org-capture-put :krisb-node node)
+                    (org-node-get-file node)))
+                (lambda ()
+                  (let ((node (org-capture-get :krisb-node)))
+                    ;; Should return nil if node is a file
+                    (when (org-node-is-subtree node)
+                      (org-node-get-olp-with-self node)))))
+               "* %?\n"
+               :tree-type (year month)
+               :jump-to-captured t
+               :immediate-finish t
+               :empty-lines 1
+               :hook (org-id-get-create org-expiry-insert-created)
+               :before-finalize (org-node-add-refs
+                                 (lambda () (org-set-property "ROAM_BOX" "references"))))
+              ("b" "Blog post" plain
+               (function (lambda ()
+                           (let ((org-node-ask-directory krisb-blog-directory))
+                             (org-node-capture-target))))
+               "#+filetags: :__blog_draft:
+  ,#+hugo_bundle:
+  ,#+export_file_name: index
+  ,#+hugo_tags:
+  ,#+hugo_categories:
+  ,#+hugo_publishdate:
+  ,#+hugo_lastmod:
+  ,#+hugo_custom_front_matter: :TableOfContents true
+  ,#+hugo_draft: true
+  ,#+hugo_paired_shortcodes:\n\n%?"
+               :jump-to-captured t
+               :immediate-finish t)
+              ("g" "Game review" entry
+               (file+olp+datetree
+                (lambda ()
+                  (let* ((candidate-ids
+                          (list "20250809T050805.074803"   ; Mid
+                                "20250809T050803.643974")) ; ADC
+                         (node
+                          (gethash
+                           (completing-read "Select node: "
+                                            #'org-node-collection-basic
+                                            (lambda (_title node)
+                                              (member (org-mem-id node) candidate-ids))
+                                            t nil 'org-node-hist)
+                           org-node--candidate<>entry)))
+                    (org-capture-put :krisb-node node)
+                    (org-node-get-file node)))
+                (lambda ()
+                  (let ((node (org-capture-get :krisb-node)))
+                    ;; Should return nil if node is a file
+                    (when (org-node-is-subtree node)
+                      (org-node-get-olp-with-self node)))))
+               "* %?
+  ,** Successes
+  ,** Mistakes"
+               :tree-type (month day)
+               :empty-lines 1))))
 #+end_src
 
 * Deployments
