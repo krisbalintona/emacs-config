@@ -55,8 +55,6 @@
                                      ("melpa" . 1))
         package-install-upgrade-built-in t)
 
-(setopt load-prefer-newer t)
-
 ;; 2025-10-23 TODO: Revisit this.  Ideally, should be more safe than
 ;; setting this value to an outright t
 (setopt package-vc-allow-build-commands t)
@@ -234,6 +232,8 @@ that.  Otherwise, remove it from `minor-mode-alist'."
 
 ;;; Miscellaneous options for built-ins
 (setup emacs
+  ;; Always load newest byte code
+  (setopt load-prefer-newer t)
   ;; Enable all disabled commands
   (setopt disabled-command-function nil)
   
@@ -1725,6 +1725,24 @@ headline."
     (org-set-property
      (completing-read "Type: " '("ROAM_CONTEXT" "ROAM_SOURCE"))
      (org-entry-get nil "ROAM_REFS" 'inherit))))
+
+;;;;; Org-web-tools
+(setup org-web-tools
+  (:package org-web-tools)
+  
+  (with-eval-after-load 'org-mode-map
+    (bind-keys :map org-mode-map
+               ("C-c u" . org-web-tools-insert-link-for-url)))
+  
+  ;; Open then go into `view-mode'
+  (with-eval-after-load 'org-web-tools
+    (advice-add 'org-web-tools-read-url-as-org :after #'view-mode))
+  
+  ;; Add an org-attach entry for `org-web-tools-archive-attach’
+  (with-eval-after-load 'org-attach
+    (add-to-list 'org-attach-commands
+                 '((?w) org-web-tools-archive-attach
+                   "Download then attach an archive of a webpage using `org-web-tools'\n"))))
 
 ;;; Paren-face
 ;; Creates a face just for parentheses.  Useful for lispy languages

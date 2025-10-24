@@ -23,6 +23,13 @@ See also the useful command ~org-babel-goto-named-src-block~ and other useful co
 
 * Emacs package management
 
+** Always load newest byte code
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc
+  ;; Always load newest byte code
+  (setopt load-prefer-newer t)
+#+end_src
+
 ** Package.el
 
 #+name: package.el
@@ -36,8 +43,6 @@ See also the useful command ~org-babel-goto-named-src-block~ and other useful co
                                        ("gnu-elpa-devel" . 2)
                                        ("melpa" . 1))
           package-install-upgrade-built-in t)
-
-  (setopt load-prefer-newer t)
 
   ;; 2025-10-23 TODO: Revisit this.  Ideally, should be more safe than
   ;; setting this value to an outright t
@@ -2664,6 +2669,28 @@ This section is for the major mode
        (org-entry-get nil "ROAM_REFS" 'inherit))))
 #+end_src
 
+**** Org-web-tools
+
+#+name: org-web-tools
+#+begin_src emacs-lisp
+  (setup org-web-tools
+    (:package org-web-tools)
+    
+    (with-eval-after-load 'org-mode-map
+      (bind-keys :map org-mode-map
+                 ("C-c u" . org-web-tools-insert-link-for-url)))
+    
+    ;; Open then go into `view-mode'
+    (with-eval-after-load 'org-web-tools
+      (advice-add 'org-web-tools-read-url-as-org :after #'view-mode))
+    
+    ;; Add an org-attach entry for `org-web-tools-archive-attach’
+    (with-eval-after-load 'org-attach
+      (add-to-list 'org-attach-commands
+                   '((?w) org-web-tools-archive-attach
+                     "Download then attach an archive of a webpage using `org-web-tools'\n"))))
+#+end_src
+
 *** Email
 
 ** Task direction
@@ -2951,6 +2978,9 @@ This section is for the major mode
 
   ;;;;; Org-node
   <<org-node>>
+
+  ;;;;; Org-web-tools
+  <<org-web-tools>>
 
   ;;; Paren-face
   <<paren-face>>

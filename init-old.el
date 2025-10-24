@@ -2211,24 +2211,6 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
   ;; directly
   (setf (alist-get ?* jinx--save-keys) #'krisb-jinx-save-as-ispell-localword))
 
-;;;; Org-web-tools
-(use-package org-web-tools
-  :ensure t
-  :defer t
-  :bind
-  ( :map org-mode-map
-    ("C-c u" . org-web-tools-insert-link-for-url))
-  :init
-  ;; Add an org-attach entry for `org-web-tools-archive-attach’.  We
-  ;; place this in :init since we want this added to the menu even if
-  ;; org-web-tools isn’t currently loaded
-  (with-eval-after-load 'org-attach
-    (add-to-list 'org-attach-commands
-                 '((?w) org-web-tools-archive-attach
-                   "Download then attach an archive of a webpage using `org-web-tools'\n")))
-  :config
-  (advice-add 'org-web-tools-read-url-as-org :after #'view-mode))
-
 ;;;; Dictionary
 ;; See definitions of words from an online dictionary.
 ;; TODO 2025-05-23: Document these options:
