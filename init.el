@@ -1905,7 +1905,7 @@ headline."
   (:if-package org)
   (:package org-web-tools)
 
-  (with-eval-after-load 'org-mode-map
+  (with-eval-after-load 'org
     (bind-keys :map org-mode-map
                ("C-c u" . org-web-tools-insert-link-for-url)))
 
