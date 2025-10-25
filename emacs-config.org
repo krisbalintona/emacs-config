@@ -893,6 +893,24 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
     )
 #+end_src
 
+*** Mixed-pitch
+
+#+name: mixed-pitch
+#+begin_src emacs-lisp
+  ;; Locally remap default face to variable-pitch.
+  (setup mixed-pitch
+    (:package mixed-pitch)
+    
+    (:hide-mode)
+
+    ;; We don't want to set the height of variable-pitch faces because
+    ;; non-variable-pitch faces will be "out of sync" with the height.
+    ;; Therefore, to have larger font sizes in these buffers, we have to
+    ;; remap those faces manually and locally.
+    (setopt mixed-pitch-set-height nil
+            mixed-pitch-variable-pitch-cursor nil))
+#+end_src
+
 ** Disable the ring bell
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
@@ -2171,7 +2189,7 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
   ;; - `org-edit-src-auto-save-idle-delay’
   ;; - `org-src-block-faces’
   (setup org-src
-    (:if-feature org)
+    (:if-package org)
 
     (setopt org-src-fontify-natively t
             org-src-window-setup 'current-window))
@@ -2714,6 +2732,128 @@ This section is for the major mode
 #+end_src
 
 *** Email
+
+**** Message.el: Emacs's message composition major mode
+
+#+name: message
+#+begin_src emacs-lisp
+  ;; TODO 2025-05-23: Document:
+  ;; - `message-confirm-send’
+  ;; - `mml-attach-file-at-the-end’
+  ;; - `message-ignored-cited-headers’
+  ;; - `message-alternative-emails’
+  ;; - `message-confirm-send’
+  ;; - `message-send-rename-function’
+  ;; - `message-generate-new-buffers’
+  ;; - `message-mark-insert-begin’
+  ;; - `message-mark-insert-end’
+  ;; - `message-signature-insert-empty-line’
+  ;; TODO 2025-05-23: Can we use `message-add-action’ effectively?  See
+  ;; (info "(message) Message Actions")
+  ;; TODO 2025-05-23: Document that users should probably read all the
+  ;; nodes in (info "(message) Commands")
+  ;; Universal email composition mode.  See (info "(message) Variables")
+  ;; for more information.
+  (setup message
+
+    (with-eval-after-load 'message
+      (add-hook 'message-setup-hook #'message-sort-headers)
+      (add-hook 'message-mode-hook #'flymake-mode)
+      (add-hook 'message-mode-hook #'olivetti-mode)
+      (add-hook 'message-mode-hook #'mixed-pitch-mode))
+
+    (setopt message-directory krisb-email-directory
+            message-mail-user-agent t)    ; Use `mail-user-agent'
+
+    ;; Citations. See e.g. `message-cite-style-gmail' for the options
+    ;; relevant to citations.  Importantly, I can set these options
+    ;; buffer locally.
+    (setopt message-cite-function 'message-cite-original-without-signature
+            message-citation-line-function 'message-insert-formatted-citation-line
+            message-citation-line-format "On %a, %b %d %Y, %N wrote:\n"
+            message-cite-reply-position 'below)
+
+    ;; Composition
+    (setopt message-hidden-headers nil   ; Show all headers
+            ;; Generates all headers in the variables
+            ;; `message-required-headers’,
+            ;; `message-required-news-headers', and
+            ;; `message-required-mail-headers'.  Otherwise, unless
+            ;; another package manually adds headers (e.g. mu4e), those
+            ;; headers won't be inserted into a message draft buffer.  I
+            ;; enable this to make sure that the date header is inserted
+            ;; in a draft.  (No date header means the date is set to
+            ;; time 0, which is annoying for querying emails via their
+            ;; date using e.g. notmuch.)
+            message-generate-headers-first t
+            message-wide-reply-confirm-recipients t
+            message-elide-ellipsis "> [... %l lines elided]\n"
+            message-signature-insert-empty-line t
+            message-signature "Kind regards,\nKristoffer\n"
+            message-signature-separator "^-- *$")
+    ;; REVIEW 2025-05-23: `message-auto-save-directory’ should be set
+    ;; relative to `message-directory’, but based on the order of
+    ;; evaluation, it never does so correctly when we set
+    ;; `message-directory’ via :custom.  Submit a patch upstream?
+    (setopt message-auto-save-directory krisb-email-drafts-directory ; Directory where drafts are saved
+            message-subject-trailing-was-query 'ask
+            message-kill-buffer-on-exit t
+            mml-dnd-attach-options t)
+
+    ;; Forwarding
+    (setopt message-forward-as-mime t          ; NOTE 2024-09-27: Experimental
+            ;; TODO 2025-05-23: Change value per-email depending on
+            ;; `message-cite-reply-position'?
+            message-forward-before-signature nil)
+
+    ;; TODO 2025-05-23: Revisit this.
+    ;; (krisb-modus-themes-setup-faces
+    ;;  "message"
+    ;;  (set-face-attribute 'message-mml nil :weight 'bold :background bg-sage))
+    )
+
+  (setup message
+    (with-eval-after-load 'mu4e
+      (setopt mu4e-attachment-dir (expand-file-name ".attachments/" message-directory))))
+
+  (setup message
+    (with-eval-after-load 'message
+      ;; Taken from Doom. Detect empty subjects, and give users an
+      ;; opportunity to fill something in
+      (defun krisb-message-check-subject ()
+        "Check that a subject is present, and prompt for a subject if not."
+        (save-excursion
+          (goto-char (point-min))
+          (search-forward "--text follows this line--")
+          (re-search-backward "^Subject:")
+          (let ((subject (string-trim (substring (thing-at-point 'line) 8))))
+            (when (string-empty-p subject)
+              (end-of-line)
+              (insert (read-string "Subject (optional): "))))))
+      (add-hook 'message-send-hook #'krisb-message-check-subject)
+
+      (defun krisb-message-check-from ()
+        "Prompt user to confirm sending from this email.
+  If the `user-mail-address’ does not match the email in the FROM header,
+  ask to confirm.  This is useful if we have multiple email addresses and
+  ensure `user-mail-address’ matches the one we currently would like to
+  send from."
+        (save-excursion
+          (goto-char (point-min))
+          (search-forward "--text follows this line--")
+          (re-search-backward "^From:")
+          (let ((from (string-trim (substring (thing-at-point 'line) 5))))
+            (when (and (not (string-match-p (rx (literal user-mail-address)) from))
+                       (not (yes-or-no-p (concat
+                                          "Are you sure you want to send from "
+                                          (propertize from 'face 'highlight)
+                                          "?"))))
+              (cl--set-buffer-substring (pos-bol) (pos-eol)
+                                        (concat
+                                         "From: "
+                                         (read-string "Set FROM to: " user-mail-address)))))))
+      (add-hook 'message-send-hook #'krisb-message-check-from)))
+#+end_src
 
 *** Films, shows, and comics
 
@@ -3313,6 +3453,12 @@ Log when the value of certain properties are changed:
 
   ;;; Smart-mark
   <<smart-mark>>
+
+  ;;; Message
+  <<message>>
+
+  ;;; Mixed-pitch
+  <<mixed-pitch>>
 
   ;;; Startup time
   <<startup-time>>
