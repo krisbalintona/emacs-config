@@ -2855,6 +2855,25 @@ This section is for the major mode
       (add-hook 'message-send-hook #'krisb-message-check-from)))
 #+end_src
 
+**** Footnote.el
+
+#+name: footnote.el
+#+begin_src emacs-lisp
+  ;; TODO 2025-05-24: Document:
+  ;; - `footnote-section-tag’
+  ;; Footnotes for `message-mode'
+  (setup footnote
+    
+    (add-hook message-mode-hook #'footnote-mode)
+
+    (:hide-mode)
+
+    (with-eval-after-load 'footnote
+      (setopt footnote-mode-line-string "FN"
+              footnote-spaced-footnotes nil
+              footnote-prompt-before-deletion nil)))
+#+end_src
+
 *** Films, shows, and comics
 
 Log when the value of certain properties are changed:
@@ -3459,6 +3478,9 @@ Log when the value of certain properties are changed:
 
   ;;; Mixed-pitch
   <<mixed-pitch>>
+
+  ;;; Footnote.el
+  <<footnote.el>>
 
   ;;; Startup time
   <<startup-time>>

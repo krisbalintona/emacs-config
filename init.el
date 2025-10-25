@@ -2555,6 +2555,21 @@ send from."
   (setopt mixed-pitch-set-height nil
           mixed-pitch-variable-pitch-cursor nil))
 
+;;; Footnote.el
+;; TODO 2025-05-24: Document:
+;; - `footnote-section-tag’
+;; Footnotes for `message-mode'
+(setup footnote
+  
+  (add-hook message-mode-hook #'footnote-mode)
+
+  (:hide-mode)
+
+  (with-eval-after-load 'footnote
+    (setopt footnote-mode-line-string "FN"
+            footnote-spaced-footnotes nil
+            footnote-prompt-before-deletion nil)))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()
