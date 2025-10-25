@@ -3244,6 +3244,9 @@ Log when the value of certain properties are changed:
   ;;;;; Org-agenda
   <<org-agenda>>
 
+  ;;;;; Org-capture
+  <<org-capture>>
+
   ;;;;; Org-id
   <<org-id>>
 
