@@ -167,10 +167,6 @@ For example, \“2025-05-19 15:20:57.782742938 -0500\”."
 (defvar krisb-email-drafts-directory (expand-file-name "drafts" krisb-email-directory)
   "Directory that houses my local email drafts.")
 
-;;;;; Files
-(defvar krisb-org-agenda-main-file (expand-file-name "todo.org" krisb-org-agenda-directory)
-  "My main org-agenda file.")
-
 ;;; A step below
 
 ;;;; Theming

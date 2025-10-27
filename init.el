@@ -24,6 +24,9 @@
 (defvar krisb-org-agenda-directory (expand-file-name "agenda" krisb-folio-directory)
   "The directory holding my main org-agenda files.")
 
+(defvar krisb-org-agenda-main-file (expand-file-name "todo.org" krisb-org-agenda-directory)
+  "My main org-agenda file.")
+
 (defvar krisb-org-archive-directory (expand-file-name "archive" krisb-folio-directory)
   "The archive directory for my org files.")
 
