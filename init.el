@@ -76,13 +76,6 @@
 (unless (package-installed-p 'setup)
   (package-install 'setup))
 
-(setup setup
-  (:package setup)
-
-  ;; Demote setup errors to warnings.  Taken from the note left in
-  ;; https://www.emacswiki.org/emacs/SetupEl#h5o-27.
-  (add-to-list 'setup-modifier-list 'setup-wrap-to-demote-errors))
-
 ;; Define my own setup.el macros
 (with-eval-after-load 'setup
   ;; Mimic use-package's :after keyword.  Taken from
