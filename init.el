@@ -3039,6 +3039,22 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
     ;; directly
     (setf (alist-get ?* jinx--save-keys) #'krisb-jinx-save-as-ispell-localword)))
 
+;;; Orgmdb
+;; Use the OMdb API to populate org headings with IMDB information on
+;; movies, shows, and episodes.
+(setup orgmdb
+  (:package orgmdb)
+  
+  ;; FIXME 2025-10-06: Should I obfuscate my API key?  There's a limit
+  ;; of 1000 requests per day.
+  (setopt orgmdb-omdb-apikey "8ab4d64e"
+          orgmdb-show-tag "show"
+          orgmdb-type-prop "CATEGORY"
+          orgmdb-fill-property-list
+          '( imdb-link
+             genre director writer actors box-office
+             tomatometer metascore metacritic imdb-rating)))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

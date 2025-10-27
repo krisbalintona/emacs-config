@@ -3463,6 +3463,26 @@ Log when the value of certain properties are changed:
     (add-to-list 'org-property-allowed-value-functions #'krisb-org-property-allowed-platform))
 #+end_src
 
+**** Orgmd: Retrieve and populate IMDB information
+
+#+name: orgmdb
+#+begin_src emacs-lisp
+  ;; Use the OMdb API to populate org headings with IMDB information on
+  ;; movies, shows, and episodes.
+  (setup orgmdb
+    (:package orgmdb)
+    
+    ;; FIXME 2025-10-06: Should I obfuscate my API key?  There's a limit
+    ;; of 1000 requests per day.
+    (setopt orgmdb-omdb-apikey "8ab4d64e"
+            orgmdb-show-tag "show"
+            orgmdb-type-prop "CATEGORY"
+            orgmdb-fill-property-list
+            '( imdb-link
+               genre director writer actors box-office
+               tomatometer metascore metacritic imdb-rating)))
+#+end_src
+
 ** Task direction
 
 *** Org-agenda
@@ -3990,6 +4010,9 @@ Log when the value of certain properties are changed:
 
   ;;; Jinx
   <<jinx>>
+
+  ;;; Orgmdb
+  <<orgmdb>>
 
   ;;; Startup time
   <<startup-time>>
