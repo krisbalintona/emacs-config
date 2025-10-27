@@ -2084,11 +2084,12 @@ PROP is the name of the property.  See
     (add-to-list 'consult-bookmark-narrow '(?p "PDFs" pdf-view-bookmark-jump-handler)))
 
   ;; Add log-edit histories to `consult-mode-histories'
-  (add-to-list 'consult-mode-histories
-               '(log-edit-mode
-                 log-edit-comment-ring
-                 log-edit-comment-ring-index
-                 log-edit-beginning-of-line))
+  (with-eval-after-load 'consult
+    (add-to-list 'consult-mode-histories
+                 '(log-edit-mode
+                   log-edit-comment-ring
+                   log-edit-comment-ring-index
+                   log-edit-beginning-of-line)))
 
   ;; TODO 2025-10-20: Revisit this
   ;; ;; Use the faster plocate rather than locate
@@ -2098,11 +2099,12 @@ PROP is the name of the property.  See
   ;; Remove sources from `consult-buffer’ I dislike.  Alternatively, I
   ;; could make these hidden, allowing access to their filter despite
   ;; being unseen.
-  (dolist (source '(consult--source-recent-file
-                    consult--source-file-register
-                    consult--source-bookmark
-                    consult--source-project-recent-file-hidden))
-    (delq source consult-buffer-sources)))
+  (with-eval-after-load 'consult
+    (dolist (source '(consult--source-recent-file
+                      consult--source-file-register
+                      consult--source-bookmark
+                      consult--source-project-recent-file-hidden))
+      (delq source consult-buffer-sources))))
 
 ;; Pulsar pulses
 (setup pulsar
@@ -2577,7 +2579,7 @@ send from."
 ;; Footnotes for `message-mode'
 (setup footnote
   
-  (add-hook message-mode-hook #'footnote-mode)
+  (add-hook 'message-mode-hook #'footnote-mode)
 
   (:hide-mode)
 
