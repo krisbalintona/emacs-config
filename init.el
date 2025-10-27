@@ -3066,13 +3066,14 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
   
   ;; FIXME 2025-10-06: Should I obfuscate my API key?  There's a limit
   ;; of 1000 requests per day.
-  (setopt orgmdb-omdb-apikey "8ab4d64e"
-          orgmdb-show-tag "show"
-          orgmdb-type-prop "CATEGORY"
-          orgmdb-fill-property-list
-          '( imdb-link
-             genre director writer actors box-office
-             tomatometer metascore metacritic imdb-rating)))
+  (with-eval-after-load 'orgmdb
+    (setopt orgmdb-omdb-apikey "8ab4d64e"
+            orgmdb-show-tag "show"
+            orgmdb-type-prop "CATEGORY"
+            orgmdb-fill-property-list
+            '( imdb-link
+               genre director writer actors box-office
+               tomatometer metascore metacritic imdb-rating))))
 
 ;;; Lin
 ;; Lin is a stylistic enhancement for Emacs' built-in `hl-line-mode'.
