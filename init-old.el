@@ -2709,14 +2709,6 @@ Returns non-nil when there is mail."
   ;; TODO 2025-05-24: Revisit this.
   (org-fast-tag-selection-single-key 'expert))
 
-;;;; Org-clock
-;; TODO 2025-05-24: Document:
-;; - `org-clock-out-when-done’
-(use-package org-clock
-  :custom
-  (org-clock-in-resume t)
-  (org-clock-out-remove-zero-time-clocks t))
-
 ;;;; Org-depend
 ;; Add blocking and triggering actions when an org-todo state is
 ;; changed.

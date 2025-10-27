@@ -1420,6 +1420,15 @@ call `diff-buffer-with-file’ instead."
                    (window-parameters . ((mode-line-format . none)))
                    (post-command-select-window . t)))))
 
+;;;;; Org-clock
+;; TODO 2025-05-24: Document:
+;; - `org-clock-out-when-done’
+(setup org-clock
+  (:if-package org)
+  
+  (setopt org-clock-in-resume t
+          org-clock-out-remove-zero-time-clocks t))
+
 ;;;;; Org-capture
 (setup org-capture
   (:if-package org)
