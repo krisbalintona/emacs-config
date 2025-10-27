@@ -2906,7 +2906,7 @@ from a `notmuch-search-mode' buffer.")
   
   (bind-keys ("M-*" . tempel-insert))
   
-  (dolist (hook (prog-mode-hook text-mode-hook))
+  (dolist (hook '(prog-mode-hook text-mode-hook))
     (add-hook hook #'krisb-tempel-setup-capf))
   
   ;; Applies to `tempel-expand' and `tempel-complete'.  We prefer
