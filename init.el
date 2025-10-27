@@ -2570,6 +2570,253 @@ send from."
             footnote-spaced-footnotes nil
             footnote-prompt-before-deletion nil)))
 
+;;; Notmuch
+;; TODO 2025-05-23: Document:
+;; - `notmuch-identities’
+(setup notmuch
+  (:package notmuch)
+  ;; For AUR:
+  ;; :ensure-system-package (notmuch
+  ;;                         (gmi . lieer-git))
+
+  (bind-keys ([remap compose-mail] . notmuch-mua-new-mail)
+             :map krisb-open-keymap
+             ("n" . notmuch))
+  (:bind-keys :map notmuch-search-mode-map
+              ("a" . nil)           ; The default is too easy to hit accidentally
+              ("/" . notmuch-search-filter)
+              ("r" . notmuch-search-reply-to-thread)
+              ("R" . notmuch-search-reply-to-thread-sender)
+              :map notmuch-tree-mode-map
+              ("S-SPC" . notmuch-tree-scroll-message-window-back)
+              :map notmuch-show-mode-map
+              ("S-SPC" . notmuch-show-rewind)
+              ("a" . nil)
+              ("r" . notmuch-show-reply)
+              ("R" . notmuch-show-reply-sender)
+              ;; TODO 2025-05-23: Revisit these.  Also move to krisb-notmuch-ext
+              ;; configuration
+              ;; ("T" . krisb-notmuch-show-trash-thread-then-next)
+              ;; ([remap notmuch-show-advance-and-archive] . krisb-notmuch-show-advance-and-tag)
+              )
+
+  (setopt mail-user-agent 'notmuch-user-agent)
+
+  ;; Hello UI
+  (setopt notmuch-hello-sections (list #'notmuch-hello-insert-saved-searches
+                                       #'notmuch-hello-insert-alltags
+                                       #'notmuch-hello-insert-recent-searches)
+          notmuch-hello-thousands-separator ","
+          notmuch-show-all-tags-list t)
+
+  ;; Notmuch-searches
+  (setopt notmuch-saved-searches
+          '(( :name "inbox"
+              :query "(tag:inbox and not tag:list) or (tag:inbox and tag:watch)"
+              :sort-order oldest-first
+              :key "i")
+            ( :name "Emacs mailing lists"
+              :query "tag:list and tag:inbox and tag:emacs"
+              :sort-order newest-first
+              :key "e")
+            ( :name "Guix mailing lists"
+              :query "tag:list and tag:inbox and (tag:guix or tag:mumi)"
+              :sort-order newest-first
+              :key "g")
+            ( :name "Other mailing lists"
+              :query "tag:list and tag:inbox and (path:l2md/other/** or List:\"~abcdw/rde-discuss@lists.sr.ht\" or to:\"~abcdw/rde-discuss@lists.sr.ht\""
+              :sort-order newest-first
+              :key "o")
+            ( :name "sent"
+              :query "tag:sent"
+              :sort-order newest-first
+              :key "s")
+            ( :name "drafts"
+              :query "tag:draft or path:drafts/"
+              :sort-order newest-first
+              :key "d"
+              :search-type unthreaded)
+            ( :name "archived"
+              :query "not tag:inbox and not tag:trash"
+              :key "a")
+            ( :name "all"
+              :query "path:**"
+              :key "A")
+            ( :name "trash"
+              :query "tag:trash"
+              :key "t")))
+  ;; See `man' for mbsync and notmuch to see valid search terms. See
+  ;; https://www.emacswiki.org/emacs/NotMuch#h5o-2 on how to expunge local files
+  ;; via cli
+  (setopt notmuch-search-hide-excluded t
+          notmuch-show-empty-saved-searches t
+          notmuch-search-oldest-first nil
+          notmuch-search-result-format '(("date" . "%14s ")
+                                         ("count" . "%-7s ")
+                                         ("authors" . "%-30s ")
+                                         ("subject" . "%-75.75s ")
+                                         ("tags" . "(%s)")))
+
+  ;; Tags
+  (setopt notmuch-archive-tags '("-inbox")
+          notmuch-message-replied-tags '("+replied")
+          notmuch-message-forwarded-tags '("+forwarded")
+          notmuch-show-mark-read-tags '("-unread")
+          notmuch-draft-tags '("+draft")
+          notmuch-draft-folder     ; Relative to root of the notmuch database
+          (file-relative-name krisb-email-drafts-directory krisb-email-directory)
+          notmuch-draft-save-plaintext 'ask
+          notmuch-tagging-keys
+          `(("a" notmuch-archive-tags "Archive")
+            ("r" notmuch-show-mark-read-tags "Mark read")
+            ("f" ("+flagged") "Flag")
+            ("s" ("+spam" "-inbox") "Mark as spam")
+            ("t" ("+trash" "-inbox") "Trash"))
+          notmuch-tag-formats
+          '(("unread" (propertize tag 'face 'notmuch-tag-unread))
+            ("flagged" (propertize tag 'face 'notmuch-tag-flagged))
+            ("watch" (propertize tag 'face 'font-lock-warning-face)))
+          notmuch-tag-deleted-formats
+          '(("unread" (notmuch-apply-face bare-tag `notmuch-tag-deleted))
+            (".*" (notmuch-apply-face tag `notmuch-tag-deleted))))
+
+  ;; Notmuch-show-mode (i.e. reading emails)
+  (with-eval-after-load 'notmuch-show
+    (add-hook 'notmuch-show-hook #'olivetti-mode)
+    (add-hook 'notmuch-show-hook #'visual-line-mode)
+    (add-hook 'notmuch-show-hook #'visual-wrap-prefix-mode))
+  (setopt notmuch-show-relative-dates t
+          notmuch-show-all-multipart/alternative-parts nil
+          notmuch-show-indent-multipart nil
+          notmuch-show-indent-messages-width 3 ; We can toggle indentation anyway
+          notmuch-show-part-button-default-action 'notmuch-show-interactively-view-part
+          notmuch-show-text/html-blocked-images "." ; Block everything
+          notmuch-wash-wrap-lines-length nil
+          notmuch-unthreaded-show-out t
+          notmuch-message-headers-visible nil
+          ;; The order of headers in this list seems to be the order in which
+          ;; they will appear in `notmuch-show’ buffers.  See also the user
+          ;; option `notmuch-show-message-visible'.  Additionally, to add
+          ;; headers to this list that are beyond the default, you must add to
+          ;; the “extra_headers” setting in the “show” section of your notmuch
+          ;; config.  Finally, to have these extra headers be query-able via
+          ;; notmuch search queries, be sure to define a search term prefix
+          ;; for it.  (See (info "(notmuch-config) DESCRIPTION") for how to
+          ;; achieve such a set up.)
+          notmuch-message-headers '("To" "Cc" "List-Id" ; Show mailing list ID
+                                    "Date" "Subject")
+          notmuch-multipart/alternative-discouraged
+          '("text/html" "multipart/related"
+            ;; FIXME 2025-05-23: This doesn’t work?
+            "text/x-patch"))
+
+  ;; Notmuch-tree-mode
+  (setopt notmuch-tree-show-out nil
+          notmuch-tree-result-format '(("date" . "%12s  ")
+                                       ("authors" . "%-20s  ")
+                                       ((("tree" . "%s")
+                                         ("subject" . "%s"))
+                                        . " %-85.85s  ")
+                                       ("tags" . "(%s)"))
+          notmuch-tree-outline-enabled nil)
+
+  ;; Email composition
+  (with-eval-after-load 'notmuch-mua
+    (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check)) ; See also `notmuch-mua-attachment-regexp'
+  (setopt notmuch-mua-compose-in 'current-window
+          notmuch-mua-hidden-headers nil
+          notmuch-address-command 'internal
+          notmuch-address-internal-completion '(sent nil)
+          notmuch-always-prompt-for-sender t  ; See also the `notmuch-mua-prompt-for-sender' function
+          notmuch-mua-cite-function 'message-cite-original-without-signature
+          notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never
+          notmuch-mua-user-agent-function nil
+          notmuch-maildir-use-notmuch-insert t
+          notmuch-wash-citation-lines-prefix 0
+          notmuch-wash-citation-lines-suffix 0
+          notmuch-crypto-process-mime t
+          notmuch-crypto-get-keys-asynchronously t
+          ;; See `notmuch-mua-send-hook'
+          notmuch-mua-attachment-regexp (concat "\\b\\("
+                                                "attache\?ment\\|attached\\|attach\\|"
+                                                "pi[èe]ce\s+jointe?"
+                                                "\\)\\b"))
+
+  ;; Sending emails.
+  ;; Use Lieer to send emails.  Also see
+  ;; `krisb-notmuch-set-sendmail-args'.  Read
+  ;; https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer.
+  (setopt sendmail-program (if (executable-find "gmi") "gmi" "sendmail")
+          send-mail-function 'sendmail-send-it
+          notmuch-fcc-dirs nil) ; Gmail already copies sent emails, so don't move them elsewhere locally
+
+  ;; TODO 2025-05-23: Revisit this.
+  ;; (krisb-modus-themes-setup-faces
+  ;;  "notmuch"
+  ;;  ;; More noticeable demarcation of emails in thread in notmuch-show-mode
+  ;;  (set-face-attribute 'notmuch-message-summary-face nil
+  ;;                      :foreground fg-alt
+  ;;                      ;; NOTE 2024-09-26: We do it this way since changing
+  ;;                      ;; faces will refresh the font to be 1.1 times the 1.1
+  ;;                      ;; times height, and so on
+  ;;                      :height (truncate (* (face-attribute 'default :height nil) 1.1))
+  ;;                      :overline t
+  ;;                      :extend nil
+  ;;                      :inherit 'unspecified)
+  ;;  (set-face-attribute 'notmuch-tag-added nil
+  ;;                      :underline `(:color ,cyan-cooler :style double-line :position t))
+  ;;  (add-to-list 'notmuch-tag-formats
+  ;;               `("correspondence" (propertize tag 'face '(:foreground ,green-faint))))
+  ;;  (add-to-list 'notmuch-tag-formats
+  ;;               `("commitment" (propertize tag 'face '(:foreground ,yellow-faint)))))
+
+  ;; Don't buttonize citations
+  ;; FIXME 2024-10-07: For some reason putting this in :custom and setting it to
+  ;; a high value doesn't work, so I put it here
+  (setq notmuch-wash-citation-lines-prefix most-positive-fixnum
+        notmuch-wash-citation-lines-suffix most-positive-fixnum)
+
+  ;; Set sendmail args appropriate to using lieer as
+  ;; `sendmail-program'
+  (defun krisb-notmuch-set-sendmail-args ()
+    "Set `message-sendmail-extra-arguments' arguments.
+Set `message-sendmail-extra-arguments' accordingly (changing the
+maildir) such that lieer can properly send the email. (This assumes
+`sendmail-program' is set to the gmi executable.) Instruction from
+https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
+    (when (and (stringp sendmail-program) (string-match-p "gmi" sendmail-program))
+      (let* ((from (downcase (message-fetch-field "from")))
+             (root-maildir krisb-email-directory)
+             ;; These maildirs are according to the structure in my
+             ;; local filesystem
+             (personal-maildir (expand-file-name "personal" root-maildir))
+             (uni-maildir (expand-file-name "uni" root-maildir)))
+        (cond
+         ((string-match-p (rx (literal "krisbalintona@gmail.com")) from)
+          (setq-local message-sendmail-extra-arguments `("send" "--quiet" "-t" "-C" ,personal-maildir)))
+         ((string-match-p (rx (literal "kristoffer_balintona@alumni.brown.edu")) from)
+          (setq-local message-sendmail-extra-arguments `("send" "--quiet" "-t" "-C" ,uni-maildir)))))))
+  (with-eval-after-load 'message
+    (add-hook 'message-send-mail-hook #'krisb-notmuch-set-sendmail-args))
+
+  ;; TODO 2025-05-23: Revisit this.
+  ;; REVIEW 2024-09-26: Prot's lin package apparently makes disabling
+  ;; this better?
+  (with-eval-after-load 'lin
+    (remove-hook 'notmuch-search-hook #'notmuch-hl-line-mode))
+
+  ;; TODO 2025-05-23: Revisit this.
+  ;; Prefer not to have emails recentered as I readjust them
+  (advice-add 'notmuch-show-message-adjust :override #'ignore))
+
+;; Set `display-buffer-alist'
+(setup notmuch
+  ;; Add to `display-buffer-alist'
+  (add-to-list 'display-buffer-alist
+               '("\\*notmuch-hello\\*"
+                 (display-buffer-in-tab display-buffer-full-frame)
+                 (tab-group . "media")))))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()
