@@ -2899,6 +2899,50 @@ from a `notmuch-search-mode' buffer.")
             (kill-buffer buf)
             org-store-link-plist)))))))
 
+;;; Tempel
+;; Like tempo.el but updated to modern standards.
+(setup tempel
+  (:package tempel)
+  
+  (bind-keys ("M-*" . tempel-insert))
+  
+  (dolist (hook (prog-mode-hook text-mode-hook))
+    (add-hook hook #'krisb-tempel-setup-capf))
+  
+  ;; Applies to `tempel-expand' and `tempel-complete'.  We prefer
+  ;; non-pair characters to avoid inserting an extra pair from
+  ;; `electric-pair-mode'.  If set, it should be an unused (or at
+  ;; least very rarely used) comment delimiter to avoid indenting the
+  ;; line when pressing the TAB key and with `tab-always-indent' set
+  ;; to \\='complete.  If this is set to nil, then template names
+  ;; should not be ambiguous, otherwise trying to complete other
+  ;; symbol names will get hijacked by completing for tempel templates
+  ;; (assuming the tempel `completion-at-point’ functions are set).
+  (setopt tempel-trigger-prefix nil)
+  
+  ;; Element that expands other templates by name.  E.g., (i header)
+  ;; expands the template named "header."
+  (with-eval-after-load 'tempel
+    (defun krisb-tempel-include (elt)
+      (when (eq (car-safe elt) 'include)
+        (if-let (template (alist-get (cadr elt) (tempel--templates)))
+            (cons 'l template)
+          (message "Template %s not found" (cadr elt))
+          nil)))
+    (add-to-list 'tempel-user-elements #'krisb-tempel-include))
+
+  ;; Set up with `completion-at-point-functions'
+  (defun krisb-tempel-setup-capf ()
+    "Add `tempel-expand' to the beginning of local `completion-at-point-functions'.
+We also add `tempel-expand' to the beginning of the global value for
+`completion-at-point-functions'.  The difference here is that we want
+`tempel-expand' to be the first `completion-at-point' function for the
+buffers in which this function is run."
+    (add-hook 'completion-at-point-functions 'tempel-expand -90 t))
+  ;; Place `tempel-complete' at the beginning of the fallback (global
+  ;; value) `completion-at-point-functions'
+  (add-hook 'completion-at-point-functions #'tempel-complete -90))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

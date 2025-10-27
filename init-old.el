@@ -1189,49 +1189,6 @@ ORIG-FUN should be `ispell-completion-at-point'."
   :custom
   (Man-notify-method 'aggressive)) ; Instead of `display-buffer-alist', use this
 
-;;;; Tempel
-;; Like tempel.el but updated to modern standards.
-(use-package tempel
-  :ensure t
-  :hook
-  ((prog-mode-hook text-mode-hook) . krisb-tempel-setup-capf)
-  :bind
-  ("M-*" . tempel-insert)
-  :custom
-  ;; Applies to `tempel-expand' and `tempel-complete'.  We prefer
-  ;; non-pair characters to avoid inserting an extra pair from
-  ;; `electric-pair-mode'.  If set, it should be an unused (or at
-  ;; least very rarely used) comment delimiter to avoid indenting the
-  ;; line when pressing the TAB key and with `tab-always-indent' set
-  ;; to \\='complete.  If this is set to nil, then template names
-  ;; should not be ambiguous, otherwise trying to complete other
-  ;; symbol names will get hijacked by completing for tempel templates
-  ;; (assuming the tempel `completion-at-point’ functions are set).
-  (tempel-trigger-prefix nil)
-  :init
-  ;; Element that expands other templates by name.  E.g., (i header)
-  ;; expands the template named "header."
-  (defun krisb-tempel-include (elt)
-    (when (eq (car-safe elt) 'include)
-      (if-let (template (alist-get (cadr elt) (tempel--templates)))
-          (cons 'l template)
-        (message "Template %s not found" (cadr elt))
-        nil)))
-  :config
-  (add-to-list 'tempel-user-elements #'krisb-tempel-include)
-
-  ;; Set up with `completion-at-point-functions'
-  (defun krisb-tempel-setup-capf ()
-    "Add `tempel-expand' to the beginning of local `completion-at-point-functions'.
-We also add `tempel-expand' to the beginning of the global value for
-`completion-at-point-functions'.  The difference here is that we want
-`tempel-expand' to be the first `completion-at-point' function for the
-buffers in which this function is run."
-    (add-hook 'completion-at-point-functions 'tempel-expand -90 t))
-  ;; Place `tempel-complete' at the beginning of the fallback (global
-  ;; value) `completion-at-point-functions'
-  (add-hook 'completion-at-point-functions #'tempel-complete -90))
-
 ;;;; Dired
 ;; Emacs' file manager
 ;; TODO 2025-05-22: Document:
