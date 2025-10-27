@@ -2125,7 +2125,25 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
     (add-hook mode #'krisb-sentence-end-double-space-setup))
 #+end_src
 
-*** Tempel: Inline expansions
+*** Abbrev: Inline expansion library
+
+#+name: abbrev
+#+begin_src emacs-lisp
+  ;; Automatically correct typed strings (e.g. words).  Most useful for
+  ;; correcting spelling mistakes as they are made.
+  (setup abbrev
+    
+    (:hide-mode)
+    
+    (setopt save-abbrevs 'silently
+            abbrev-suggest t
+            abbrev-suggest-hint-threshold 2)
+
+    ;; Enable the mode globally
+    (setopt abbrev-mode t))
+#+end_src
+
+*** Tempel: Modern inline expansions
 
 #+name: tempel
 #+begin_src emacs-lisp
@@ -3877,6 +3895,9 @@ Log when the value of certain properties are changed:
 
   ;;; Ol-notmuch
   <<ol-notmuch>>
+
+  ;;; Abbrev
+  <<abbrev>>
 
   ;;; Tempel
   <<tempel>>

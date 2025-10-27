@@ -2899,6 +2899,20 @@ from a `notmuch-search-mode' buffer.")
             (kill-buffer buf)
             org-store-link-plist)))))))
 
+;;; Abbrev
+;; Automatically correct typed strings (e.g. words).  Most useful for
+;; correcting spelling mistakes as they are made.
+(setup abbrev
+  
+  (:hide-mode)
+  
+  (setopt save-abbrevs 'silently
+          abbrev-suggest t
+          abbrev-suggest-hint-threshold 2)
+
+  ;; Enable the mode globally
+  (setopt abbrev-mode t))
+
 ;;; Tempel
 ;; Like tempo.el but updated to modern standards.
 (setup tempel
