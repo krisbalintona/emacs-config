@@ -968,7 +968,17 @@ Then apply ARGS."
                    (window-height . shrink-window-if-larger-than-buffer)))))
 
 ;;; Messages buffer
+;; Visual-line-mode in *Messages* buffer
+(add-hook 'messages-buffer-mode-hook #'visual-line-mode)
 
+;; Mesages buffer positioning
+(add-to-list 'display-buffer-alist
+             `(,(rx (literal messages-buffer-name))
+               (display-buffer-in-side-window)
+               (window-height . 0.36)
+               (side . top)
+               (slot . 1)
+               (post-command-select-window . t)))
 
 ;;; Elisp-demos
 ;;;; Elisp-demos
