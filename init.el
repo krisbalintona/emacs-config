@@ -2815,7 +2815,7 @@ https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
   (add-to-list 'display-buffer-alist
                '("\\*notmuch-hello\\*"
                  (display-buffer-in-tab display-buffer-full-frame)
-                 (tab-group . "media")))))
+                 (tab-group . "media"))))
 
 ;;; Ol-notmuch
 ;; Org-links for search queries (i.e. notmuch-search-mode,

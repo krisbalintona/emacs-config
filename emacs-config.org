@@ -3279,7 +3279,7 @@ This section is for the major mode
   (add-to-list 'display-buffer-alist
                '("\\*notmuch-hello\\*"
                  (display-buffer-in-tab display-buffer-full-frame)
-                 (tab-group . "media"))))
+                 (tab-group . "media")))
 #+end_src
 
 **** Ol-notmuch: Integration between notmuch and org links
