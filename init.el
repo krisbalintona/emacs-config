@@ -33,6 +33,16 @@
 (defvar krisb-bibliography-files (list (expand-file-name "master-lib.bib" krisb-folio-directory))
   "A list of my bibliography (.bib) files.")
 
+;;;;; Directories
+(defvar krisb-blog-manuscripts-directory (expand-file-name "manuscripts/blog" krisb-notes-directory)
+  "The directory for my pre-export blog files.")
+
+(defvar krisb-email-directory (expand-file-name "emails/" "~/Documents/")
+  "Directory that houses my local email files.")
+
+(defvar krisb-email-drafts-directory (expand-file-name "drafts" krisb-email-directory)
+  "Directory that houses my local email drafts.")
+
 ;;;;; Functions
 (defun krisb-wayland-p ()
   "Return non-nil if Emacs is under Wayland."
