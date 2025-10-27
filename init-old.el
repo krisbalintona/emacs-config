@@ -1280,21 +1280,6 @@ which file on the system it backs up."
   ( :map krisb-toggle-keymap
     ("m" . hide-mode-line-mode)))
 
-;;;; Lin
-;; Lin is a stylistic enhancement for Emacs' built-in
-;; `hl-line-mode'. It remaps the `hl-line' face (or equivalent)
-;; buffer-locally to a style that is optimal for major modes where
-;; line selection is the primary mode of interaction.
-(use-package lin
-  :ensure t
-  :demand t
-  :custom
-  (lin-face 'lin-cyan)
-  :config
-  (lin-global-mode 1)
-
-  (add-to-list 'lin-mode-hooks 'LaTeX-mode-hook))
-
 ;;;; Info-colors
 ;; TODO 2025-05-26: Document that this is somewhat of a hacky solution
 ;; because it uses non-guaranteed regexps to find e.g. code blocks.

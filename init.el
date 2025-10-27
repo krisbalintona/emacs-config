@@ -3078,6 +3078,21 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
              genre director writer actors box-office
              tomatometer metascore metacritic imdb-rating)))
 
+;;; Lin
+;; Lin is a stylistic enhancement for Emacs' built-in `hl-line-mode'.
+;; It remaps the `hl-line' face (or equivalent) buffer-locally to a
+;; style that is optimal for major modes where line selection is the
+;; primary mode of interaction.
+(setup lin
+  (:package lin)
+
+  (setopt lin-face 'lin-cyan)
+  
+  (lin-global-mode 1)
+
+  (with-eval-after-load 'lin
+    (add-to-list 'lin-mode-hooks 'LaTeX-mode-hook)))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

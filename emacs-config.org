@@ -924,6 +924,25 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
             mixed-pitch-variable-pitch-cursor nil))
 #+end_src
 
+*** Lin: Stylistic enhancement to ~hl-line-mode~
+
+#+name: lin
+#+begin_src emacs-lisp
+  ;; Lin is a stylistic enhancement for Emacs' built-in `hl-line-mode'.
+  ;; It remaps the `hl-line' face (or equivalent) buffer-locally to a
+  ;; style that is optimal for major modes where line selection is the
+  ;; primary mode of interaction.
+  (setup lin
+    (:package lin)
+
+    (setopt lin-face 'lin-cyan)
+    
+    (lin-global-mode 1)
+
+    (with-eval-after-load 'lin
+      (add-to-list 'lin-mode-hooks 'LaTeX-mode-hook)))
+#+end_src
+
 ** Disable the ring bell
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
@@ -4025,6 +4044,9 @@ Log when the value of certain properties are changed:
 
   ;;; Orgmdb
   <<orgmdb>>
+
+  ;;; Lin
+  <<lin>>
 
   ;;; Startup time
   <<startup-time>>
