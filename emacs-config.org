@@ -3846,6 +3846,18 @@ Log when the value of certain properties are changed:
             org-clock-out-remove-zero-time-clocks t))
 #+end_src
 
+*** Org-expiry
+
+#+name: org-expiry
+#+begin_src emacs-lisp
+  (setup org-expiry
+    (:if-package org-contrib)
+    (:load-after org)
+    
+    (with-eval-after-load 'org-expiry
+      (setopt org-expiry-inactive-timestamps t)))
+#+end_src
+
 * Deployments
 
 ** PC
@@ -4061,6 +4073,9 @@ Log when the value of certain properties are changed:
 
   ;;;;; Org-web-tools
   <<org-web-tools>>
+
+  ;;;;; Org-expiry
+  <<org-expiry>>
 
   ;;;; Bespoke code
   <<org-log-properties>>

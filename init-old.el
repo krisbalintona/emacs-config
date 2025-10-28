@@ -1901,13 +1901,6 @@ widen the buffer first."
     ["Headlines"
      [("b" "Show branches" org-kill-note-or-show-branches)]]))
 
-;;;; Org-expiry
-(use-package org-expiry
-  :ensure nil
-  :after org-contrib
-  :custom
-  (org-expiry-inactive-timestamps t))
-
 ;;;; Visual-wrap
 ;; TODO 2025-05-27: Document history with `visual-wrap’
 (use-package visual-wrap

@@ -1944,6 +1944,14 @@ headline."
                  '((?w) org-web-tools-archive-attach
                    "Download then attach an archive of a webpage using `org-web-tools'\n"))))
 
+;;;;; Org-expiry
+(setup org-expiry
+  (:if-package org-contrib)
+  (:load-after org)
+  
+  (with-eval-after-load 'org-expiry
+    (setopt org-expiry-inactive-timestamps t)))
+
 ;;;; Bespoke code
 ;; Log changes to certain properties.
 ;;
