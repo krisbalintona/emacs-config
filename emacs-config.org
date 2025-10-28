@@ -2659,6 +2659,52 @@ This section is for the major mode
     (:package org-contrib))
 #+end_src
 
+**** Dictionary.el: Built-in dictionary
+
+#+name: dictionary
+#+begin_src emacs-lisp
+  ;; See definitions of words from an online dictionary.
+  ;; TODO 2025-05-23: Document these options:
+  ;; - `dictionary-create-buttons’
+  ;; - `dictionary-read-word-function’
+  ;; - `dictionary-search-interface’
+  ;; - `dictionary-server'
+  (setup dictionary
+    :ensure nil
+    ;; Don't forget to install the following packages from the AUR:
+    ;; paru -S dict-wn dict-gcide dict-moby-thesaurus dict-foldoc
+    ;; :ensure-system-package (dict . dictd) ; Localhost (offline). Don't forget to enable the systemd service
+
+    (with-eval-after-load 'dictionary
+      (setopt dictionary-use-single-buffer t
+              dictionary-read-dictionary-function 'dictionary-completing-read-dictionary)
+
+      (when (package-installed-p 'hide-mode-line)
+        (add-hook 'dictionary-mode-hook #'hide-mode-line-mode)))
+    
+    (defun krisb-dictionary-dwim (promptp)
+      "Show dictionary definition for word at point.
+  If region is active, use the region's contents instead.
+
+  If PROMPTP is non-nil, prompt for a word to find the definition of
+  instead."
+      (interactive "P")
+      (if-let ((word (cond
+                      (promptp (read-string "Define: "))
+                      ((use-region-p)
+                       (buffer-substring-no-properties (region-beginning) (region-end)))
+                      (t (thing-at-point 'word :no-properties)))))
+          (dictionary-search word)
+        (message "No word or region selected.")))
+    (bind-keys ("C-h =" . krisb-dictionary-dwim)))
+
+  (setup embark
+    (:bind-keys :map embark-region-map
+                ("=" . krisb-dictionary-dwim)
+                :map embark-identifier-map
+                ("=" . krisb-dictionary-dwim)))
+#+end_src
+
 ** Media management
 
 *** Zettelkasten
@@ -4087,6 +4133,9 @@ Log when the value of certain properties are changed:
 
   ;;; Astute
   <<astute>>
+
+  ;;; Dictionary
+  <<dictionary>>
 
   ;;; Startup time
   <<startup-time>>

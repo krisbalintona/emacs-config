@@ -1915,52 +1915,6 @@ widen the buffer first."
   :hook
   (on-first-buffer-hook . global-visual-wrap-prefix-mode))
 
-;;;; Dictionary
-;; See definitions of words from an online dictionary.
-;; TODO 2025-05-23: Document these options:
-;; - `dictionary-create-buttons’
-;; - `dictionary-read-word-function’
-;; - `dictionary-search-interface’
-(use-package dictionary
-  :ensure nil
-  ;; Don't forget to install the following packages from the AUR:
-  ;; paru -S dict-wn dict-gcide dict-moby-thesaurus dict-foldoc
-  ;; :ensure-system-package (dict . dictd) ; Localhost (offline). Don't forget to enable the systemd service
-  :hook
-  (dictionary-mode-hook . hide-mode-line-mode)
-  :bind
-  ("C-h =" . krisb-dictionary-dwim)
-  :custom
-  (dictionary-use-single-buffer t)
-  (dictionary-read-dictionary-function 'dictionary-completing-read-dictionary)
-  ;; (dictionary-server "localhost")
-  (dictionary-server nil)
-  :init
-  ;; FIXME 2025-05-23: For some reason, if we use :bind to set these
-  ;; commands, they are gone in the respective embark keymaps if
-  ;; embark is loaded after this package.  So we use this solution
-  ;; below.  Am I mistaken?
-  (with-eval-after-load 'embark
-    (bind-keys :map embark-region-map
-               ("=" . krisb-dictionary-dwim)
-               :map embark-identifier-map
-               ("=" . krisb-dictionary-dwim)))
-  :config
-  (defun krisb-dictionary-dwim (promptp)
-    "Show dictionary definition for word at point.
-If region is active, use the region's contents instead.
-
-If PROMPTP is non-nil, prompt for a word to find the definition of
-instead."
-    (interactive "P")
-    (if-let ((word (cond
-                    (promptp (read-string "Define: "))
-                    ((use-region-p)
-                     (buffer-substring-no-properties (region-beginning) (region-end)))
-                    (t (thing-at-point 'word :no-properties)))))
-        (dictionary-search word)
-      (message "No word or region selected."))))
-
 ;;;; Powerthesaurus
 ;; Search for synonyms using an online thesaurus.
 (use-package powerthesaurus
