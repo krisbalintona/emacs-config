@@ -2262,25 +2262,6 @@ Meant to be used as around advice for `org-archive--compute-location'."
   :config
   (global-word-wrap-whitespace-mode 1))
 
-;;;; Astute.el
-;; Display punctuation typographically (e.g., em-dashes as "—" and
-;; en-dashes as "–")
-(use-package astute
-  :ensure t
-  :defer t
-  :hook
-  (text-mode-hook . astute-mode)
-  :custom
-  (astute-lighter "")
-  (astute-prefix-single-quote-exceptions
-   '("bout"
-     "em"
-     "n'"
-     "cause"
-     "round"
-     "twas"
-     "tis")))
-
 ;;;; Flymake-vale
 (use-package flymake-vale
   :ensure (:repo "https://github.com/tpeacock19/flymake-vale.git")

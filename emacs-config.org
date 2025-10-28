@@ -843,6 +843,30 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
     )
 #+end_src
 
+**** Astute.el: Display punctuation typographically
+
+#+name: astute
+#+begin_src emacs-lisp
+  ;; Display punctuation typographically (e.g., em-dashes as "—" and
+  ;; en-dashes as "–")
+  (setup astute
+    (:package astute)
+    
+    (with-eval-after-load 'org
+      (add-hook 'org-mode-hook #'astute-mode))
+    
+    (with-eval-after-load 'astute
+      (setopt astute-lighter "As"
+              astute-prefix-single-quote-exceptions
+              '("bout"
+                "em"
+                "n'"
+                "cause"
+                "round"
+                "twas"
+                "tis"))))
+#+end_src
+
 *** Olivetti: Horizontally center buffer body
 
 #+name: olivetti
@@ -4060,6 +4084,9 @@ Log when the value of certain properties are changed:
 
   ;;; Lin
   <<lin>>
+
+  ;;; Astute
+  <<astute>>
 
   ;;; Startup time
   <<startup-time>>
