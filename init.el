@@ -1952,6 +1952,105 @@ headline."
   (with-eval-after-load 'org-expiry
     (setopt org-expiry-inactive-timestamps t)))
 
+;;;;; Org-review
+(setup org-review
+  (:if-package org)
+  (:package org-review)
+  
+  (with-eval-after-load 'org
+    (bind-keys :map org-mode-map
+               ("C-c r s" . org-review-insert-next-review)
+               ("C-c r l" . org-review-insert-last-review)))
+  (with-eval-after-load 'org-agenda
+    (bind-keys :map org-agenda-mode-map
+               ("C-c r s" . org-review-insert-next-review)
+               ("C-c r l" . org-review-insert-last-review)))
+  
+  (with-eval-after-load 'org-review
+    (setopt org-review-delay "+8d"
+            org-review-last-timestamp-format 'inactive
+            org-review-next-timestamp-format 'inactive
+            org-review-sets-next-date t)))
+
+(setup org-review
+  ;; Agenda helpers
+  (defun krisb-org-review-has-review-property-p ()
+    "Skip the current todo if it has an org-review property.
+Returns non-nil if the current todo has a property by the name of the
+value of `org-review-next-property-name' or
+`org-review-last-property-name'."
+    (and (or (org-entry-get (point) org-review-next-property-name)
+             (org-entry-get (point) org-review-last-property-name))
+         (org-with-wide-buffer (or (outline-next-heading) (point-max)))))
+
+  ;; Commands
+  (defun krisb-org-review-unreview ()
+    "Un-review the current heading.
+Removes the properties denoted by `org-review-next-property-name' and
+`org-review-last-property-name'."
+    (interactive)
+    (when (org-entry-get (point) org-review-next-property-name)
+      (org-delete-property org-review-next-property-name))
+    (when (org-entry-get (point) org-review-last-property-name)
+      (org-delete-property org-review-last-property-name)))
+  (with-eval-after-load 'org
+    (bind-keys :map org-mode-map
+               ("C-c r u" . krisb-org-review-unreview)))
+  (with-eval-after-load 'org-agenda
+    (bind-keys :map org-agenda-mode-map
+               ("C-c r u" . krisb-org-review-unreview)))
+
+  (defun krisb-org-review-scheduled-to-review ()
+    "Turn the scheduled date of an agenda entry to a review date.
+Sets the value of `org-review-next-property-name' to the scheduled
+date.  Deletes the scheduled date afterward.
+
+This command was initially used to help me transition from a
+non-org-review workflow (a combination of an INBOX tag and scheduling)
+to an org-review workflow."
+    (interactive)
+    (org-agenda-with-point-at-orig-entry nil
+      (let ((date (org-entry-get (point) "SCHEDULED")))
+        (if date
+            (progn
+              (org-set-property org-review-next-property-name
+                                (concat "["
+                                        (substring date 1 -1)
+                                        "]"))
+              (org-schedule '(4))
+              (message "No scheduled date found for this item."))))))
+
+  ;; "Scatter" org-review function; intended to be used as an org-agenda-bulk
+  ;; action/function
+  (defun krisb-org-review--select-day ()
+    "Prompt for a number of days and return as an integer."
+    (let ((days 0)
+          (prompt "Scatter tasks across how many days? "))
+      (while (<= days 0)
+        (setq days (read-number prompt 7)
+              prompt "Scatter tasks across how many days? Must be greater than 0: "))
+      days))
+  (defun krisb-org-review-randomize (days)
+    "Randomly set the next review date for entry within the next DAYS days.
+DAYS should be a positive integer.  Calls `org-review-insert-date' onto
+a random date within the next DAYS days."
+    (interactive (list (krisb-org-review--select-day)))
+    (let* ((random-day (1+ (random days)))
+           (ts (format-time-string (car org-time-stamp-formats)
+                                   (time-add (current-time) (days-to-time random-day)))))
+      ;; We don't also call `org-review-insert-last-review' because I sometimes
+      ;; I do not want that.  In the cases when I'd like that function called as
+      ;; well, I persist the org-agenda marks and call that function before or
+      ;; after this one
+      (org-review-insert-date org-review-next-property-name
+                              org-review-next-timestamp-format
+                              ts)))
+  (with-eval-after-load 'org-agenda
+    (add-to-list 'org-agenda-bulk-custom-functions
+                 '(?R krisb-org-review-randomize
+                      ;; Must return a list (of arguments)
+                      (lambda () (list (krisb-org-review--select-day)))))))
+
 ;;;; Bespoke code
 ;; Log changes to certain properties.
 ;;
