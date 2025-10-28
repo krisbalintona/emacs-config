@@ -2427,38 +2427,6 @@ The context buffer is the buffer that shows annotation contents in
   ( :map pdf-view-mode-map
     ("C-c M" . pdf-meta-edit-modify)))
 
-;;;; Wombag
-(use-package wombag
-  :ensure ( :repo "https://github.com/krisbalintona/wombag.git"
-            :branch "merge")
-  :defer t
-  :hook
-  ((wombag-show-mode-hook . org-remark-mode)
-   (wombag-show-mode-hook . krisb-wombag-entry-setup))
-  :bind
-  ( :map krisb-open-keymap
-    ("w" . wombag))
-  :custom
-  (wombag-dir (no-littering-expand-var-file-name "wombag"))
-  (wombag-db-file (no-littering-expand-var-file-name "wombag/wombag.sqlite"))
-  (wombag-username "krisbalintona")
-  (wombag-host "https://app.wallabag.it")
-  (wombag-password (auth-source-pick-first-password :host "app.wallabag.it"))
-  (wombag-client-id "23882_1jzdzdd09ikgw4k8o0cog4wggk48cgc0gwk8oos0gsc44gcsco")
-  (wombag-client-secret (auth-source-pick-first-password :host "emacs-wombag.el"))
-  (wombag-search-filter "")
-  :config
-  (defun krisb-wombag-entry-setup ()
-    "Set up the visual for wombag-entry buffers."
-    (setq-local line-spacing 0.08)
-    (face-remap-add-relative 'default :height 1.1)
-    (when (require 'olivetti nil t)
-      (olivetti-mode 1)
-      (olivetti-set-width 120))
-    (when (require 'mixed-pitch nil t)
-      (mixed-pitch-mode 1))
-    (visual-line-mode 1)))
-
 ;;;; Org-keyterm-index
 (use-package org-keyterm-index
   :ensure (:repo "https://github.com/krisbalintona/org-keyterm-index.git")
