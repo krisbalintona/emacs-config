@@ -325,9 +325,7 @@ that.  Otherwise, remove it from `minor-mode-alist'."
     (setq-local sentence-end-double-space
                 (cond ((derived-mode-p '(prog-mode conf-mode log-edit-mode)) t)
                       ((derived-mode-p '(text-mode wombag-show-mode)) nil))))
-  
-  (dolist (mode '(text-mode-hook prog-mode-hook conf-mode-hook))
-    (add-hook mode #'krisb-sentence-end-double-space-setup)))
+  (add-hook 'after-change-major-mode-hook #'krisb-sentence-end-double-space-setup))
 
 ;;; Custom
 ;;; Set and load custom file
