@@ -3323,6 +3323,160 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
   (with-eval-after-load 'lin
     (add-to-list 'lin-mode-hooks 'LaTeX-mode-hook)))
 
+;;; Org-mime
+;; TODO 2025-10-28: Document:
+;; - `org-mime-debug'
+(setup org-mime
+  (:package org-mime)
+
+  (with-eval-after-load 'message
+    (bind-keys :map message-mode-map
+               ("C-c M-o" . org-mime-htmlize)
+               ("C-c '" . org-mime-edit-mail-in-org-mode))
+    
+    (add-hook 'message-send-hook #'org-mime-confirm-when-no-multipart))
+
+  (with-eval-after-load 'org-mime
+    (setopt ;; org-mime-export-ascii 'utf-8
+            org-mime-preserve-breaks nil
+            org-mime-export-options '( :with-latex imagemagick
+                                       :section-numbers nil
+                                       :with-author nil
+                                       :with-toc nil
+                                       :with-title nil)
+            ;; Keep GPG signatures outside of multipart.  Modified
+            ;; version of
+            ;; https://github.com/org-mime/org-mime?tab=readme-ov-file#keep-gpg-signatures-outside-of-multipart
+            org-mime-find-html-start
+            (lambda (start)
+              (save-excursion
+                (goto-char start)
+                (if (search-forward "<#secure method=pgpmime mode=sign>" nil t)
+                    (1+ (point))
+                  start)))
+            )
+
+    (defun krisb-org-mime-setup ()
+      "Nicely offset block quotes in email bodies.
+Taken from
+https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization."
+      (org-mime-change-element-style
+       "blockquote" "border-left: 2px solid gray; padding-left: 4px;"))
+    (add-hook 'org-mime-html-hook #'krisb-org-mime-setup)))
+
+;;; Astute
+;; Display punctuation typographically (e.g., em-dashes as "—" and
+;; en-dashes as "–")
+(setup astute
+  (:package astute)
+  
+  (with-eval-after-load 'org
+    (add-hook 'org-mode-hook #'astute-mode))
+  
+  (with-eval-after-load 'astute
+    (setopt astute-lighter "As"
+            astute-prefix-single-quote-exceptions
+            '("bout"
+              "em"
+              "n'"
+              "cause"
+              "round"
+              "twas"
+              "tis"))))
+
+;;; Dictionary
+;; See definitions of words from an online dictionary.
+;; TODO 2025-05-23: Document these options:
+;; - `dictionary-create-buttons’
+;; - `dictionary-read-word-function’
+;; - `dictionary-search-interface’
+;; - `dictionary-server'
+(setup dictionary
+  :ensure nil
+  ;; Don't forget to install the following packages from the AUR:
+  ;; paru -S dict-wn dict-gcide dict-moby-thesaurus dict-foldoc
+  ;; :ensure-system-package (dict . dictd) ; Localhost (offline). Don't forget to enable the systemd service
+
+  (with-eval-after-load 'dictionary
+    (setopt dictionary-use-single-buffer t
+            dictionary-read-dictionary-function 'dictionary-completing-read-dictionary)
+
+    (when (package-installed-p 'hide-mode-line)
+      (add-hook 'dictionary-mode-hook #'hide-mode-line-mode)))
+  
+  (defun krisb-dictionary-dwim (promptp)
+    "Show dictionary definition for word at point.
+If region is active, use the region's contents instead.
+
+If PROMPTP is non-nil, prompt for a word to find the definition of
+instead."
+    (interactive "P")
+    (if-let ((word (cond
+                    (promptp (read-string "Define: "))
+                    ((use-region-p)
+                     (buffer-substring-no-properties (region-beginning) (region-end)))
+                    (t (thing-at-point 'word :no-properties)))))
+        (dictionary-search word)
+      (message "No word or region selected.")))
+  (bind-keys ("C-h =" . krisb-dictionary-dwim)))
+
+(setup embark
+  (:bind-keys :map embark-region-map
+              ("=" . krisb-dictionary-dwim)
+              :map embark-identifier-map
+              ("=" . krisb-dictionary-dwim)))
+
+;;; Powerthesaurus
+;; Search for synonyms using an online thesaurus.
+(setup powerthesaurus
+  (:package powerthesaurus)
+  
+  (with-eval-after-load 'embark
+    (bind-keys :map embark-region-map
+               ("t" . powerthesaurus-lookup-synonyms-dwim)
+               ("T" . powerthesaurus-lookup-dwim)
+               :map embark-identifier-map
+               ("t" . powerthesaurus-lookup-synonyms-dwim)
+               ("T" . powerthesaurus-lookup-dwim))))
+
+;;; Wombag
+(setup wombag
+  ;; Elpaca:
+  ;; :ensure ( :repo "https://github.com/krisbalintona/wombag.git"
+  ;;           :branch "merge")
+  (:package (wombag :url "https://github.com/krisbalintona/wombag.git"
+                    :branch "merge"))
+  
+  (bind-keys :map krisb-open-keymap
+             ("w" . wombag))
+  
+  (setopt wombag-dir (no-littering-expand-var-file-name "wombag")
+          wombag-db-file (no-littering-expand-var-file-name "wombag/wombag.sqlite")
+          wombag-username "krisbalintona"
+          wombag-host "https://app.wallabag.it"
+          wombag-password (auth-source-pick-first-password :host "app.wallabag.it")
+          wombag-client-id "23882_1jzdzdd09ikgw4k8o0cog4wggk48cgc0gwk8oos0gsc44gcsco"
+          wombag-client-secret (auth-source-pick-first-password :host "emacs-wombag.el")
+          wombag-search-filter "")
+  
+  (with-eval-after-load 'wombag
+    (defun krisb-wombag-entry-setup ()
+      "Set up the visual for wombag-entry buffers."
+      (setq-local line-spacing 0.08)
+      (face-remap-add-relative 'default :height 1.1)
+      (when (require 'olivetti nil t)
+        (olivetti-mode 1)
+        (olivetti-set-width 120))
+      (when (require 'mixed-pitch nil t)
+        (mixed-pitch-mode 1))
+      (visual-line-mode 1))
+    (add-hook 'wombag-show-mode-hook #'krisb-wombag-entry-setup)))
+
+(setup wombag
+  (with-eval-after-load 'wombag
+    (when (package-installed-p 'org-remark)
+      (add-hook 'wombag-show-mode-hook #'org-remark-mode))))
+
 ;;; Display-line-numbers
 ;; Show line numbers on the left fringe
 (setup display-line-numbers

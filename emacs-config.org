@@ -3623,6 +3623,51 @@ Mode line indicator for notmuch emails:
               org-store-link-plist)))))))
 #+end_src
 
+**** Org-mime: HTML multiparts for emails
+
+#+name: org-mime
+#+begin_src emacs-lisp
+  ;; TODO 2025-10-28: Document:
+  ;; - `org-mime-debug'
+  (setup org-mime
+    (:package org-mime)
+
+    (with-eval-after-load 'message
+      (bind-keys :map message-mode-map
+                 ("C-c M-o" . org-mime-htmlize)
+                 ("C-c '" . org-mime-edit-mail-in-org-mode))
+      
+      (add-hook 'message-send-hook #'org-mime-confirm-when-no-multipart))
+
+    (with-eval-after-load 'org-mime
+      (setopt ;; org-mime-export-ascii 'utf-8
+              org-mime-preserve-breaks nil
+              org-mime-export-options '( :with-latex imagemagick
+                                         :section-numbers nil
+                                         :with-author nil
+                                         :with-toc nil
+                                         :with-title nil)
+              ;; Keep GPG signatures outside of multipart.  Modified
+              ;; version of
+              ;; https://github.com/org-mime/org-mime?tab=readme-ov-file#keep-gpg-signatures-outside-of-multipart
+              org-mime-find-html-start
+              (lambda (start)
+                (save-excursion
+                  (goto-char start)
+                  (if (search-forward "<#secure method=pgpmime mode=sign>" nil t)
+                      (1+ (point))
+                    start)))
+              )
+
+      (defun krisb-org-mime-setup ()
+        "Nicely offset block quotes in email bodies.
+  Taken from
+  https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization."
+        (org-mime-change-element-style
+         "blockquote" "border-left: 2px solid gray; padding-left: 4px;"))
+      (add-hook 'org-mime-html-hook #'krisb-org-mime-setup)))
+#+end_src
+
 *** Films, shows, and comics
 
 Log when the value of certain properties are changed:
@@ -4456,6 +4501,9 @@ Log when the value of certain properties are changed:
 
   ;;; Lin
   <<lin>>
+
+  ;;; Org-mime
+  <<org-mime>>
 
   ;;; Astute
   <<astute>>

@@ -252,31 +252,6 @@
 ;;;; Org-mime
 (use-package org-mime
   :pin melpa
-  :after message
-  :hook ((message-send . org-mime-confirm-when-no-multipart)
-         (org-mime-html . (lambda ()
-                            "Nicely offset block quotes in email bodies.
-Taken from
-https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization."
-                            (org-mime-change-element-style
-                             "blockquote" "border-left: 2px solid gray; padding-left: 4px;"))))
-  :bind ( :map message-mode-map
-          ("C-c M-o" . org-mime-htmlize)
-          ("C-c '" . org-mime-edit-mail-in-org-mode))
-  :custom
-  (org-mime-library 'mml)               ; For gnus
-  (org-mime-export-ascii 'ascii)
-  (org-mime-preserve-breaks nil)
-  ;; Keep GPG signatures outside of multipart. Modified version of
-  ;; https://github.com/org-mime/org-mime?tab=readme-ov-file#keep-gpg-signatures-outside-of-multipart
-  (org-mime-find-html-start
-   (lambda (start)
-     (save-excursion
-       (goto-char start)
-       (if (search-forward "<#secure method=pgpmime mode=sign>" nil t)
-           (1+ (point))
-         start))))
-  (org-mime-debug nil)
   :config
   (defun krisb-org-mime--remove-spacer ()
     "Remove the \"spacer\" above the line at point.
@@ -289,10 +264,7 @@ A spacer is two newlines inserted after portions inserted by
   :config
   ;; FIXME 2024-10-07: For some reason, setting these in :custom doesn't work...
   (setq org-mime-src--hint "# org-mime hint: Press C-c C-c to commit change.\n" ; Start with a single # to font-lock as comment
-        org-mime-export-options '( :with-latex t
-                                   :section-numbers nil
-                                   :with-author nil
-                                   :with-toc nil))
+        )
 
   ;; Pop buffer according to `display-buffer-alist'
   (el-patch-defun org-mime-edit-mail-in-org-mode ()
