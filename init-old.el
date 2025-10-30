@@ -1940,17 +1940,6 @@ Meant to be used as around advice for `org-archive--compute-location'."
       (apply orig-fun args)))
   (advice-add 'org-archive--compute-location :around #'krisb-org-archive--compute-location-id-format-string))
 
-;;;; Display-line-numbers
-;; Show line numbers on the left fringe
-(use-package display-line-numbers
-  :ensure nil
-  :bind
-  ( :map krisb-toggle-keymap
-    ("l" . display-line-numbers-mode))
-  :custom
-  (display-line-numbers-type t)
-  (display-line-numbers-width-start t)) ; Use same width throughout
-
 ;;;; Citar
 (use-package citar
   :ensure t

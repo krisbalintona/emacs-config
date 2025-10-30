@@ -2388,6 +2388,20 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
 
 *** Programming
 
+**** Display-line-numbers
+
+#+name: display-line-numbers
+#+begin_src emacs-lisp
+  ;; Show line numbers on the left fringe
+  (setup display-line-numbers
+    
+    (bind-keys :map krisb-toggle-keymap
+               ("l" . display-line-numbers-mode))
+    
+    (setopt display-line-numbers-type t
+            display-line-numbers-width-start t)) ; Use same width throughout
+#+end_src
+
 **** Outlining
 
 ***** Outline.el
@@ -4434,6 +4448,9 @@ Log when the value of certain properties are changed:
 
   ;;; Wombag
   <<wombag>>
+
+  ;;; Display-line-numbers
+  <<display-line-numbers>>
 
   ;;; Startup time
   <<startup-time>>

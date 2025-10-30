@@ -3323,6 +3323,16 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
   (with-eval-after-load 'lin
     (add-to-list 'lin-mode-hooks 'LaTeX-mode-hook)))
 
+;;; Display-line-numbers
+;; Show line numbers on the left fringe
+(setup display-line-numbers
+  
+  (bind-keys :map krisb-toggle-keymap
+             ("l" . display-line-numbers-mode))
+  
+  (setopt display-line-numbers-type t
+          display-line-numbers-width-start t)) ; Use same width throughout
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()
