@@ -142,21 +142,6 @@ For example, \“2025-05-19 15:20:57.782742938 -0500\”."
 
 ;;;; My variables, functions, macros, and keymaps
 
-;;;;; Keymaps
-;; TODO 2025-05-22: Revisit this.
-;; (defvar-keymap krisb-file-keymap
-;;   :doc "Prefix for file-related commands.")
-;; (bind-key "C-c f" krisb-file-keymap 'global-map)
-
-;; TODO 2025-05-22: Revisit this.
-;; (defvar-keymap krisb-yank-keymap
-;;   :doc "Prefix for yanking stuff.")
-;; (bind-key "C-c i" krisb-yank-keymap 'global-map)
-
-(defvar-keymap krisb-toggle-keymap
-  :doc "Prefix for toggling stuff.")
-(bind-key "C-c t" krisb-toggle-keymap 'global-map)
-
 ;;; A step below
 
 ;;;; Theming
@@ -2214,53 +2199,6 @@ Meant to be used as around advice for `org-archive--compute-location'."
   :ensure (:repo "https://github.com/tpeacock19/flymake-vale.git")
   :defer t
   :hook (text-mode-hook . flymake-vale-load))
-
-;;;; Org-hide-drawers
-;; Make org drawers less visually obtrusive.
-(use-package org-hide-drawers
-  :ensure ( :repo "https://github.com/krisbalintona/org-hide-drawers.git"
-            :branch "devel")
-  :defer t
-  :hook
-  (org-mode-hook . org-hide-drawers-mode)
-  :bind
-  ( :map krisb-toggle-keymap
-    ("h" . org-hide-drawers-transient))
-  :custom
-  (org-hide-drawers-display-strings
-   (list (list 'property-drawer-regexp
-               (lambda (property-drawer)
-                 (let* ((property-info (org-hide-drawers--get-properties property-drawer))
-                        (rating (alist-get "RATING" property-info nil nil #'string-equal)))
-                   (propertize (when rating (concat "⎹ Rating — " rating " ")) 'face 'shadow)))
-               "^RATING$")
-         (list 'property-drawer-regexp
-               (lambda (property-drawer)
-                 (let* ((property-info (org-hide-drawers--get-properties property-drawer))
-                        (box (alist-get "ROAM_BOX" property-info nil nil #'string-equal))
-                        (place (alist-get "ROAM_PLACE" property-info nil nil #'string-equal)))
-                   (propertize (if (or box place)
-                                   (concat (when box (concat "⎹ Box — " box " "))
-                                           (when place (concat "⎹ Place — " place " ")))
-                                 "󠁼⎹ NO INFO")
-                               'face 'shadow)))
-               "^ID$")
-         (list 'property-drawer-regexp nil "^CUSTOM_ID$")
-         (list 'property-drawer-regexp nil "^TOC$") ; For org-make-toc
-         (list 'drawer-regexp nil "^CONTENTS$")     ; For org-make-toc
-         (list 'drawer-regexp nil "^KEYTERM_INDEX$") ; For org-keyterm-index
-         (list 'drawer-regexp (propertize "[Logbook]" 'face 'shadow) "^LOGBOOK$")
-         (list 'drawer-regexp (propertize "[Hidden...]" 'face 'shadow) (rx (0+ anychar)))
-         (list 'property-drawer-regexp (propertize " #" 'face 'shadow) (rx (0+ anychar)))))
-  :config
-  (add-to-list 'mode-line-collapse-minor-modes 'org-hide-drawers-mode)
-
-  (require 'transient)
-  (transient-define-prefix org-hide-drawers-transient ()
-    "Transient map for useful org-hide-drawers commands."
-    [("h" "Hide drawers" org-hide-drawers-make-overlays)
-     ("u" "Unhide drawers" org-hide-drawers-delete-overlays)
-     ("t" "Toggle hiding" org-hide-drawers-toggle)]))
 
 ;;;; Markdown-mode
 (use-package markdown-mode
