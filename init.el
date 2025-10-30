@@ -3416,7 +3416,7 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
     (add-hook 'org-mode-hook #'astute-mode))
   
   (with-eval-after-load 'astute
-    (setopt astute-lighter "As"
+    (setopt astute-lighter " As"
             astute-prefix-single-quote-exceptions
             '("bout"
               "em"

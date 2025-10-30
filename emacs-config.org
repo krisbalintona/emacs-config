@@ -860,7 +860,7 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
       (add-hook 'org-mode-hook #'astute-mode))
     
     (with-eval-after-load 'astute
-      (setopt astute-lighter "As"
+      (setopt astute-lighter " As"
               astute-prefix-single-quote-exceptions
               '("bout"
                 "em"
