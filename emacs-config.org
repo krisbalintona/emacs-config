@@ -2679,6 +2679,42 @@ This section is for the major mode
     (setopt org-directory krisb-folio-directory)
 
     ;; TODO 2025-05-22: Document:
+    ;; - `org-special-ctrl-k'
+    ;; Command special behaviors
+    (setopt org-blank-before-new-entry
+            '((heading . auto)
+              (plain-list-item . nil))
+            org-M-RET-may-split-line
+            '((table . nil)
+              (default . t))
+            org-special-ctrl-a/e t
+            org-ctrl-k-protect-subtree 'error)
+
+    ;; TODO 2025-05-22: Document:
+    ;; - `org-hide-leading-stars'
+    ;; - `org-n-level-faces'
+    ;; - `org-cycle-separator-lines'
+    ;; - `org-cycle-level-faces'
+    ;; - `org-insert-heading-respect-content'
+    ;; - `org-fontify-todo-headline’
+    ;; - `org-ellipsis'
+    ;; Headlines
+    (setopt org-fontify-done-headline nil)
+
+    ;; Org blocks
+    (setopt org-structure-template-alist
+            '(("s" . "src")
+              ("S" . "src emacs-lisp")
+              ("q" . "quote")
+              ("c" . "comment")
+              ("C" . "center")
+              ("e" . "export")
+              ("E" . "example")
+              ("v" . "verse"))
+            org-fontify-quote-and-verse-blocks t
+            org-fontify-whole-block-delimiter-line nil)
+    
+    ;; TODO 2025-05-22: Document:
     ;; - `org-hide-macro-markers'
     ;; - `org-pretty-entities-include-sub-superscripts' - see also `org-export-with-sub-superscripts'
     ;; - `org-hidden-keywords'
@@ -2686,19 +2722,25 @@ This section is for the major mode
     (setopt org-hide-emphasis-markers t
             org-pretty-entities t ; Show as UTF-8 characters (useful for math)
             org-use-sub-superscripts '{}) ; Requires brackets to recognize superscripts and subscripts
-
-    ;; TODO 2025-05-22: Document:
-    ;; - `org-special-ctrl-k'
-    ;; Movement
-    (setopt org-special-ctrl-a/e t
-            org-ctrl-k-protect-subtree 'error)
-
+    
     ;; Logging
     (setopt org-log-done 'time
             org-log-into-drawer t
             org-log-refile 'time
             org-log-reschedule 'time
             org-log-redeadline 'time)
+
+    ;; Time and timestamps
+    (setopt org-edit-timestamp-down-means-later t
+            org-extend-today-until 4
+            org-use-effective-time t)
+
+    ;; Tags
+    (setopt org-tags-column 0
+            org-tags-exclude-from-inheritance '("__journal" "__log" "__top_of_mind"))
+
+    ;; Properties
+    (setopt org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
 
     ;; TODO 2025-05-22: Document the "Org Plain List" customize group as
     ;; well as these options:

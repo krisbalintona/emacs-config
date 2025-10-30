@@ -1677,41 +1677,6 @@ For N, see the docstring of `open-line’."
   :bind
   ("C-c s" . org-store-link)
   :custom
-  ;; Headlines
-  ;; TODO 2025-05-22: Document:
-  ;; - `org-hide-leading-stars'
-  ;; - `org-n-level-faces'
-  ;; - `org-cycle-separator-lines'
-  ;; - `org-cycle-level-faces'
-  ;; - `org-insert-heading-respect-content'
-  ;; - `org-fontify-todo-headline’
-  ;; (org-ellipsis " ⮷")                        ; TODO 2025-05-22: Revisit this
-  (org-blank-before-new-entry
-   '((heading . auto)
-     (plain-list-item . nil)))
-  (org-M-RET-may-split-line
-   '((table . nil)
-     (default . t)))
-  (org-startup-folded 'nofold)
-  (org-fontify-done-headline nil)
-
-  ;; Org blocks
-  (org-structure-template-alist
-   '(("s" . "src")
-     ("S" . "src emacs-lisp")
-     ("q" . "quote")
-     ("c" . "comment")
-     ("C" . "center")
-     ("e" . "export")
-     ("E" . "example")
-     ("v" . "verse")))
-  (org-fontify-quote-and-verse-blocks t)
-  (org-fontify-whole-block-delimiter-line nil)
-
-  ;; Timestamps
-  (org-edit-timestamp-down-means-later t)
-  (org-extend-today-until 4)
-  (org-use-effective-time t)
 
   ;; TODO 2025-05-22: Revisit this.
   ;; (org-file-apps
@@ -1723,14 +1688,7 @@ For N, see the docstring of `open-line’."
   ;;    ("\\.odt\\'" . system)
   ;;    ;; Default to `auto-mode-alist'
   ;;    (auto-mode . emacs)))
-
-  ;; Tags
-  (org-tags-column 0)
-  (org-tags-exclude-from-inheritance '("__journal" "__top_of_mind"))
-
-  ;; Properties
-  (org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
-
+  
   ;; TODO 2025-05-22: Revisit these.
   ;; :custom-face
   ;; (org-quote ((t (:family ,(face-attribute 'variable-pitch :family) :extend t :inherit 'org-block))))
