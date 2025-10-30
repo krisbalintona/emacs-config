@@ -2,6 +2,37 @@
 
 
 
+;;; Add WIP "monkey patches" to `load-path'
+(defvar krisb-wip-monkeypatches-dir (expand-file-name "wip" user-emacs-directory)
+  "Directory holding my WIP \"monkey patches.\"
+\"Monkey patches\" are files that are different version of upstream
+files.  Either for third-party packages or Emacs itself.
+
+This directory is added to `load-path' in order for these WIP files to
+be loaded instead of their upstream versions.  This allows me to work on
+patches to, say, org-mode or Emacs, by loading those versions at
+startup.")
+
+(unless (file-exists-p krisb-wip-monkeypatches-dir)
+  (message "Making directory %s..." krisb-wip-monkeypatches-dir)
+  (make-directory krisb-wip-monkeypatches-dir))
+
+(add-to-list 'load-path krisb-wip-monkeypatches-dir)
+
+;; Symbolically link my monkeypatches to `krisb-wip-monkeypatches-dir'
+(defmacro krisb-wip-monkeypatch-symlink (path)
+  "Symlink PATH into `krisb-wip-monkeypatches-dir'.
+If PATH is already symlinked into `krisb-wip-monkeypatches-dir', then do
+nothing."
+  `(let* ((patch-path (expand-file-name ,path))
+          (link-path
+           (expand-file-name (file-name-nondirectory patch-path) krisb-wip-monkeypatches-dir)))
+     (unless (file-exists-p link-path)
+       (message "Symlinking %s to %s..." patch-path link-path)
+       (make-symbolic-link patch-path link-path))))
+
+
+
 (setopt user-full-name "Kristoffer Balintona"
         user-mail-address "krisbalintona@gmail.com")
 
@@ -3516,7 +3547,7 @@ instead."
 
 (setup wombag
   (with-eval-after-load 'wombag
-    (when (package-installed-p 'org-remark)
+    (with-eval-after-load 'org-remark
       (add-hook 'wombag-show-mode-hook #'org-remark-mode))))
 
 ;;; Display-line-numbers
