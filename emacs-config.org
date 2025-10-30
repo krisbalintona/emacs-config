@@ -2778,6 +2778,23 @@ This section is for the major mode
                 ("=" . krisb-dictionary-dwim)))
 #+end_src
 
+**** Powerthesaurus: Preferred thesaurus
+
+#+name: powerthesaurus
+#+begin_src emacs-lisp
+  ;; Search for synonyms using an online thesaurus.
+  (setup powerthesaurus
+    (:package powerthesaurus)
+    
+    (with-eval-after-load 'embark
+      (bind-keys :map embark-region-map
+                 ("t" . powerthesaurus-lookup-synonyms-dwim)
+                 ("T" . powerthesaurus-lookup-dwim)
+                 :map embark-identifier-map
+                 ("t" . powerthesaurus-lookup-synonyms-dwim)
+                 ("T" . powerthesaurus-lookup-dwim))))
+#+end_src
+
 ** Media management
 
 *** Zettelkasten
@@ -4445,6 +4462,9 @@ Log when the value of certain properties are changed:
 
   ;;; Dictionary
   <<dictionary>>
+
+  ;;; Powerthesaurus
+  <<powerthesaurus>>
 
   ;;; Wombag
   <<wombag>>

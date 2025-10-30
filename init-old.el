@@ -1893,24 +1893,6 @@ widen the buffer first."
   :hook
   (on-first-buffer-hook . global-visual-wrap-prefix-mode))
 
-;;;; Powerthesaurus
-;; Search for synonyms using an online thesaurus.
-(use-package powerthesaurus
-  :ensure t
-  :defer t
-  :init
-  ;; FIXME 2025-05-23: For some reason, if we use :bind to set these
-  ;; commands, they are gone in the respective embark keymaps if
-  ;; embark is loaded after this package.  So we use this solution
-  ;; below.  Am I mistaken?
-  (with-eval-after-load 'embark
-    (bind-keys :map embark-region-map
-               ("t" . powerthesaurus-lookup-synonyms-dwim)
-               ("T" . powerthesaurus-lookup-dwim)
-               :map embark-identifier-map
-               ("t" . powerthesaurus-lookup-synonyms-dwim)
-               ("T" . powerthesaurus-lookup-dwim))))
-
 ;;;; Org-archive
 (use-package org-archive
   :ensure nil
