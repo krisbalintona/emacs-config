@@ -41,6 +41,9 @@ nothing."
 ;; load that file
 (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/emacs-vtable-ship-mints/lisp/emacs-lisp/vtable.el")
 
+;; Load my bespoke version before org's version of org-capture
+(krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/org-mode/lisp/org-capture.el")
+
 ;;; Meta-configuration
 
 ;;;; Bespoke helpers

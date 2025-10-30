@@ -4211,6 +4211,11 @@ Log when the value of certain properties are changed:
                :empty-lines 1))))
 #+end_src
 
+#+begin_src emacs-lisp :noweb-ref link-monkeypatches :noweb-sep "\n\n"
+  ;; Load my bespoke version before org's version of org-capture
+  (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/org-mode/lisp/org-capture.el")
+#+end_src
+
 *** Org-clock
 
 #+name: org-clock
