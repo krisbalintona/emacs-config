@@ -88,13 +88,6 @@ For example, \“2025-05-19 15:20:57.782742938 -0500\”."
 ;; in the configuration, prior to anything else potentially loading
 ;; them.
 (elpaca '(org :wait t))
-;; Until the vtable work I’ve been testing is upstreamed, we manually
-;; load that file for now.  NOTE: I have not figured out a way to
-;; replace the built-in vtable Info manual with this one.
-(elpaca '(vtable :wait t
-                 :repo "https://github.com/krisbalintona/emacs.git"
-                 :branch "vtable-ship-mints"
-                 :files ("lisp/emacs-lisp/vtable.el")))
 (elpaca '(org-capture :wait t
                       :repo "https://github.com/krisbalintona/org-mode.git"
                       :branch "org-capture"
@@ -2033,48 +2026,6 @@ Meant to be used as around advice for `org-archive--compute-location'."
   ;;                                       :description (org-roam-node-formatted node))
   ;;               (funcall 'org-id-store-link-maybe interactive?)))))
   )
-
-;;;; Org-roam-folgezettel
-(use-package org-roam-folgezettel
-  :ensure ( :repo "https://github.com/krisbalintona/org-roam-folgezettel.git"
-            :branch "vtable-unstable")
-  :defer t
-  :hook
-  (org-roam-folgezettel-mode-hook . hl-line-mode)
-  (org-roam-folgezettel-mode-hook . (lambda () (setq-local line-spacing 0.2)))
-  :bind
-  ( :map krisb-note-keymap
-    ("m" . org-roam-folgezettel-list)
-    ("s" . org-roam-folgezettel-show-node-in-list))
-  :custom
-  (org-roam-folgezettel-default-filter-query '(box "main"))
-  :config
-  ;; FIXME 2025-06-30: Eventually upstream contents of
-  ;; krisb-org-roam-ext once I figure out a generalizable zettelkasten
-  ;; workflow for most/all users.
-  (require 'krisb-org-roam-ext)
-
-  ;; Load embark integration
-  (with-eval-after-load 'embark
-    (require 'org-roam-folgezettel-embark))
-
-  ;; We must add these after their default values are set by org
-  (with-eval-after-load 'org
-    ;; Add ROAM_* properties to properties completing-read interface
-    ;; completions
-    (dolist (prop '("ROAM_EXCLUDE"
-                    "ROAM_PLACE"
-                    "ROAM_PERSON"
-                    "ROAM_SOURCE"
-                    "ROAM_CONTEXT"
-                    "ROAM_REFS"
-                    "ROAM_TYPE"
-                    "ROAM_BOX"))
-      (add-to-list 'org-default-properties prop))
-
-    ;; Set inherited default values for some ROAM_* properties
-    (add-to-list 'org-global-properties '("ROAM_TYPE" . "source collection pointer"))
-    (add-to-list 'org-use-property-inheritance "ROAM_BOX")))
 
 ;;;; Citar-org-node
 (use-package citar-org-node

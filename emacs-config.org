@@ -3145,6 +3145,62 @@ This section is for the major mode
                      "Download then attach an archive of a webpage using `org-web-tools'\n"))))
 #+end_src
 
+**** Org-roam-folgezettel
+
+#+name: org-roam-folgezettel
+#+begin_src emacs-lisp
+  (setup org-roam-folgezettel
+    (:if-package org-roam)
+    (:package (org-roam-folgezettel :url "https://github.com/krisbalintona/org-roam-folgezettel.git"
+                                    :branch "vtable-unstable"))
+
+    (add-hook 'org-roam-folgezettel-mode-hook #'hl-line-mode)
+    (add-hook 'org-roam-folgezettel-mode-hook (lambda () (setq-local line-spacing 0.2)))
+
+    (bind-keys :map krisb-note-keymap
+               ("m" . org-roam-folgezettel-list)
+               ;; TODO 2025-10-30: Bind only in org-mode buffers
+               ("s" . org-roam-folgezettel-show-node-in-list))
+
+    (setopt org-roam-folgezettel-default-filter-query '(box "main"))
+
+    ;; FIXME 2025-06-30: Eventually upstream contents of
+    ;; krisb-org-roam-ext once I figure out a generalizable zettelkasten
+    ;; workflow for most/all users.
+    (require 'krisb-org-roam-ext)
+
+    ;; Load embark integration
+    (with-eval-after-load 'embark
+      (require 'org-roam-folgezettel-embark)))
+
+  (setup org-roam-folgezettel
+    ;; We must add these after their default values are set by org
+    (with-eval-after-load 'org
+      (with-eval-after-load 'org-roam-folgezettel
+        ;; Add ROAM_* properties to properties completing-read interface
+        ;; completions
+        (dolist (prop '("ROAM_EXCLUDE"
+                        "ROAM_PLACE"
+                        "ROAM_PERSON"
+                        "ROAM_SOURCE"
+                        "ROAM_CONTEXT"
+                        "ROAM_REFS"
+                        "ROAM_TYPE"
+                        "ROAM_BOX"))
+          (add-to-list 'org-default-properties prop))
+
+        ;; Set inherited default values for some ROAM_* properties
+        (add-to-list 'org-global-properties '("ROAM_TYPE" . "source collection pointer"))
+        (add-to-list 'org-use-property-inheritance "ROAM_BOX"))))
+#+end_src
+
+My org-roam-folgezettel uses a yet-upstreamed version of vtable.el:
+#+begin_src emacs-lisp :noweb-ref link-monkeypatches :noweb-sep "\n\n"
+  ;; Until the vtable work I’ve been testing is upstreamed, we manually
+  ;; load that file
+  (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/emacs-vtable-ship-mints/lisp/emacs-lisp/vtable.el")
+#+end_src
+
 *** Email
 
 **** Message.el: Emacs's message composition major mode
@@ -3900,7 +3956,7 @@ Log when the value of certain properties are changed:
 
   (setup wombag
     (with-eval-after-load 'wombag
-      (with-eval-after-load 'org-remark
+      (when (package-installed-p 'org-remark)
         (add-hook 'wombag-show-mode-hook #'org-remark-mode))))
 #+end_src
 
@@ -3990,9 +4046,8 @@ Log when the value of certain properties are changed:
 #+begin_src emacs-lisp
   (setup org-capture
     (:if-package org)
-
+    
     (bind-keys ("C-c c" . org-capture))
-
 
     (setopt org-capture-use-agenda-date t)
 
@@ -4512,6 +4567,9 @@ Log when the value of certain properties are changed:
 
   ;;;;; Org-hide-drawers
   <<org-hide-drawers>>
+
+  ;;;;; Org-roam-folgezettel
+  <<org-roam-folgezettel>>
 
   ;;;; Bespoke code
   <<org-log-properties>>

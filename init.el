@@ -37,7 +37,9 @@ nothing."
        (message "Symlinking %s to %s..." patch-path link-path)
        (make-symbolic-link patch-path link-path))))
 
-
+;; Until the vtable work I’ve been testing is upstreamed, we manually
+;; load that file
+(krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/emacs-vtable-ship-mints/lisp/emacs-lisp/vtable.el")
 
 ;;; Meta-configuration
 
@@ -1510,9 +1512,8 @@ call `diff-buffer-with-file’ instead."
 ;;;;; Org-capture
 (setup org-capture
   (:if-package org)
-
+  
   (bind-keys ("C-c c" . org-capture))
-
 
   (setopt org-capture-use-agenda-date t)
 
@@ -2181,6 +2182,51 @@ a random date within the next DAYS days."
     ;; map when first needed?
     (bind-keys :map krisb-toggle-keymap
                ("h" . org-hide-drawers-transient))))
+
+;;;;; Org-roam-folgezettel
+(setup org-roam-folgezettel
+  (:if-package org-roam)
+  (:package (org-roam-folgezettel :url "https://github.com/krisbalintona/org-roam-folgezettel.git"
+                                  :branch "vtable-unstable"))
+
+  (add-hook 'org-roam-folgezettel-mode-hook #'hl-line-mode)
+  (add-hook 'org-roam-folgezettel-mode-hook (lambda () (setq-local line-spacing 0.2)))
+
+  (bind-keys :map krisb-note-keymap
+             ("m" . org-roam-folgezettel-list)
+             ;; TODO 2025-10-30: Bind only in org-mode buffers
+             ("s" . org-roam-folgezettel-show-node-in-list))
+
+  (setopt org-roam-folgezettel-default-filter-query '(box "main"))
+
+  ;; FIXME 2025-06-30: Eventually upstream contents of
+  ;; krisb-org-roam-ext once I figure out a generalizable zettelkasten
+  ;; workflow for most/all users.
+  (require 'krisb-org-roam-ext)
+
+  ;; Load embark integration
+  (with-eval-after-load 'embark
+    (require 'org-roam-folgezettel-embark)))
+
+(setup org-roam-folgezettel
+  ;; We must add these after their default values are set by org
+  (with-eval-after-load 'org
+    (with-eval-after-load 'org-roam-folgezettel
+      ;; Add ROAM_* properties to properties completing-read interface
+      ;; completions
+      (dolist (prop '("ROAM_EXCLUDE"
+                      "ROAM_PLACE"
+                      "ROAM_PERSON"
+                      "ROAM_SOURCE"
+                      "ROAM_CONTEXT"
+                      "ROAM_REFS"
+                      "ROAM_TYPE"
+                      "ROAM_BOX"))
+        (add-to-list 'org-default-properties prop))
+
+      ;; Set inherited default values for some ROAM_* properties
+      (add-to-list 'org-global-properties '("ROAM_TYPE" . "source collection pointer"))
+      (add-to-list 'org-use-property-inheritance "ROAM_BOX"))))
 
 ;;;; Bespoke code
 ;; Log changes to certain properties.
@@ -3550,7 +3596,7 @@ instead."
 
 (setup wombag
   (with-eval-after-load 'wombag
-    (with-eval-after-load 'org-remark
+    (when (package-installed-p 'org-remark)
       (add-hook 'wombag-show-mode-hook #'org-remark-mode))))
 
 ;;; Display-line-numbers
