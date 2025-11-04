@@ -1688,6 +1688,45 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
           org-id-link-to-org-use-id 'use-existing
           org-id-link-consider-parent-id t))
 
+;; Standardize creation of IDs and targets with bespoke commands
+(setup org-id
+  (with-eval-after-load 'org
+    (defun krisb-org-create-custom-id ()
+      "Get the CUSTOM_ID of the current entry.
+If the entry already has a CUSTOM_ID, return it as-is, else create a new
+one.
+
+This function is a copy of `denote-link-ol-get-id'."
+      (interactive nil org-mode)
+      (let* ((pos (point))
+             (id (org-entry-get pos "CUSTOM_ID")))
+        (if (and (stringp id) (string-match-p "\\S-" id))
+            id
+          (setq id (org-id-new "h"))
+          (org-entry-put pos "CUSTOM_ID" id)
+          id)))
+
+    (defun krisb-org-create-dedicated-target ()
+      "Return a unique dedicated target as a string.
+Based on the current time.  See (info \"(org) Internal Links\") for more
+information on dedicated targets.
+
+If called interactively, then insert the target into the buffer.
+Otherwise, just return the target as a string.
+
+In either case, also store the target as an org link that can be
+inserted with e.g. `org-insert-last-stored-link' or
+`org-insert-all-links'."
+      (interactive)
+      (let* ((id (format-time-string "%Y%m%dT%H%M%S"))
+             (target (concat "")))
+        (if (called-interactively-p 'interactive)
+            (insert target)
+          target)
+        (let ((org-link-context-for-files t))
+          (org-link--add-to-stored-links (org-store-link '(16)) id))
+        target))))
+
 ;;;;; Org-footnote
 ;; TODO 2025-05-23: Document:
 ;; - `org-footnote-define-inline’
