@@ -3498,6 +3498,7 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
                ("C-c M-o" . org-mime-htmlize)
                ("C-c '" . org-mime-edit-mail-in-org-mode))
     
+    (autoload 'org-mime-confirm-when-no-multipart "org-mime")
     (add-hook 'message-send-hook #'org-mime-confirm-when-no-multipart))
 
   (with-eval-after-load 'org-mime
