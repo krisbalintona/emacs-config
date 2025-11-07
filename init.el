@@ -456,6 +456,10 @@ that.  Otherwise, remove it from `minor-mode-alist'."
     (advice-add 'corfu-quit :after #'krisb-gcmh-minibuffer-exit)
     (advice-add 'corfu-insert :after #'krisb-gcmh-minibuffer-exit)))
 
+;;; Try
+(setup try
+  (:package try))
+
 ;;; Fontaine
 ;; Define and apply face presets.
 (setup fontaine

@@ -84,6 +84,14 @@ See also the useful command ~org-babel-goto-named-src-block~ and other useful co
   (setopt package-vc-allow-build-commands t)
 #+end_src
 
+*** Try: Try out Emacs packages
+
+#+name: try
+#+begin_src emacs-lisp
+  (setup try
+    (:package try))
+#+end_src
+
 ** Elpaca
 
 #+name: elpaca
@@ -4451,6 +4459,9 @@ Log when the value of certain properties are changed:
 
   ;;;; GCMH
   <<gcmh>>
+
+  ;;; Try
+  <<try>>
 
   ;;; Fontaine
   <<fontaine>>
