@@ -1922,67 +1922,6 @@ Meant to be used as around advice for `org-archive--compute-location'."
 ;;   (org-cite-activate-processor 'citar)
 ;;   (citar-org-styles-format 'long))
 
-;;;; Org-roam
-(use-package org-roam
-  :ensure t
-  :defer t
-  ;; TODO 2025-05-27: Revisit this
-  ;; :bind
-  ;; ( :map krisb-note-keymap
-  ;;   ("f" . org-roam-node-find)
-  ;;   ("i" . org-roam-node-insert)
-  ;;   ("c" . org-roam-capture)
-  ;;   ("l" . org-roam-buffer-toggle)
-  ;;   ("ta" . org-roam-tag-add)
-  ;;   ("tr" . org-roam-tag-remove)
-  ;;   ("g" . org-roam-graph))
-  :custom
-  (org-roam-directory krisb-notes-directory)
-  (org-roam-db-node-include-function
-   (lambda () (not (member "ATTACH" (org-get-tags)))))
-  (org-roam-db-gc-threshold most-positive-fixnum)
-  (org-roam-mode-sections
-   '((org-roam-backlinks-section :unique t)
-     org-roam-reflinks-section))
-  :config
-  ;; Fold headings by default
-  (add-to-list 'org-roam-buffer-postrender-functions #'magit-section-show-level-2)
-
-  ;; 2025-03-24: Using org-node/org-mem.el to replace this.  I dont enable it at
-  ;; all because enabling causes a `org-roam-db-sync' on startup since it
-  ;; detects that org-mem's db isn't its own...
-  ;; (org-roam-db-autosync-mode 1)
-
-  ;; TODO 2025-05-27: Revisit this.
-  ;; ;; Custom face for ID links to org-roam-nodes.  I prefer to change
-  ;; ;; their foreground color to differentiate them from other types of
-  ;; ;; links as well as to use a lighter face because a buffer
-  ;; ;; packed-full of org links can become visually distracting and
-  ;; ;; cluttered otherwise.
-  ;; (org-link-set-parameters
-  ;;  "id"
-  ;;  :face (lambda (id)
-  ;;          (if (org-roam-node-from-id id)
-  ;;              '(:weight light :inherit font-lock-keyword-face)
-  ;;            'org-link)))
-  ;;
-  ;; ;; Custom stored description
-  ;; (org-link-set-parameters
-  ;;  "id"
-  ;;  :store (lambda (&optional interactive?)
-  ;;           (let* ((id (org-id-get))
-  ;;                  (node (org-roam-node-from-id id)))
-  ;;             (if (and (equal major-mode 'org-mode)
-  ;;                      ;; We want to check more than if there is a node at
-  ;;                      ;; point; we want to make sure ID corresponds to an
-  ;;                      ;; existing node
-  ;;                      node)
-  ;;                 (org-link-store-props :type "id"
-  ;;                                       :link (concat "id:" id)
-  ;;                                       :description (org-roam-node-formatted node))
-  ;;               (funcall 'org-id-store-link-maybe interactive?)))))
-  )
-
 ;;;; Citar-org-node
 (use-package citar-org-node
   :ensure (:repo "https://github.com/krisbalintona/citar-org-node.git")
