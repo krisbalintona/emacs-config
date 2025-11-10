@@ -2242,6 +2242,32 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
 
 *** Spell checking
 
+**** Ispell
+
+#+name: ispell
+#+begin_src emacs-lisp
+  (setup ispell
+
+    (with-eval-after-load 'ispell
+      ;; TODO 2025-11-09: Ensure that the enchant system package is
+      ;; installed, too
+      (setopt ispell-program-name (executable-find "enchant-2")
+              ispell-dictionary "en_US"
+              ispell-help-in-bufferp 'electric)))
+#+end_src
+
+**** Flyspell
+
+#+name: flyspell
+#+begin_src emacs-lisp
+  (setup flyspell
+    
+    (with-eval-after-load 'flyspell
+      (setopt flyspell-delay-use-timer t ; Emacs 31.1
+              flyspell-abbrev-p t
+              flyspell-check-changes t)))
+#+end_src
+
 **** Jinx: Fast and painless spell checker
 
 #+name: jinx
@@ -4713,6 +4739,12 @@ Log when the value of certain properties are changed:
 
   ;;; Display-line-numbers
   <<display-line-numbers>>
+
+  ;;; Ispell
+  <<ispell>>
+
+  ;;; Flyspell
+  <<flyspell>>
 
   ;;; Startup time
   <<startup-time>>

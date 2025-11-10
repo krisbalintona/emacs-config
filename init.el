@@ -3656,6 +3656,24 @@ instead."
   (setopt display-line-numbers-type t
           display-line-numbers-width-start t)) ; Use same width throughout
 
+;;; Ispell
+(setup ispell
+
+  (with-eval-after-load 'ispell
+    ;; TODO 2025-11-09: Ensure that the enchant system package is
+    ;; installed, too
+    (setopt ispell-program-name (executable-find "enchant-2")
+            ispell-dictionary "en_US"
+            ispell-help-in-bufferp 'electric)))
+
+;;; Flyspell
+(setup flyspell
+  
+  (with-eval-after-load 'flyspell
+    (setopt flyspell-delay-use-timer t ; Emacs 31.1
+            flyspell-abbrev-p t
+            flyspell-check-changes t)))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()
