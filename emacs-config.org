@@ -1381,6 +1381,14 @@ See also ~(elisp) Beeping~.
     (smart-mark-mode 1))
 #+end_src
 
+** The ~duplicate-*~ commands
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep  "\n\n"
+  ;; TODO 2025-05-22: Document the `duplicate-line-final-position'and
+  ;; `duplicate-region-final-position' user options
+  (bind-key "C-x ;" #'duplicate-dwim)
+#+end_src
+
 * VCS
 
 ** VC.el: Interface for version control systems

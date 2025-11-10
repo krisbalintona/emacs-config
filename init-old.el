@@ -3073,11 +3073,6 @@ is to produce the opposite effect of both `fill-paragraph' and
 ;; Prefer unicode charset
 (set-charset-priority 'unicode)
 
-;; `duplicate-dwim' binding
-;; TODO 2025-05-22: Document the `duplicate-line-final-position'and
-;; `duplicate-region-final-position' user options
-(bind-key "C-x ;" #'duplicate-dwim)
-
 ;; Don't prompt user to confirm killing running sub-processes when
 ;; quitting Emacs
 (setopt confirm-kill-processes nil)

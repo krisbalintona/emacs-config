@@ -337,6 +337,10 @@ that.  Otherwise, remove it from `minor-mode-alist'."
   ;; Don't create lock files
   (setopt create-lockfiles nil)
   
+  ;; TODO 2025-05-22: Document the `duplicate-line-final-position'and
+  ;; `duplicate-region-final-position' user options
+  (bind-key "C-x ;" #'duplicate-dwim)
+  
   ;; Show context menu from right-click
   (when (display-graphic-p) (context-menu-mode 1))
   
