@@ -1,6 +1,12 @@
 ;; -*- lexical-binding: t; -*-
 
+(setopt user-full-name "Kristoffer Balintona"
+        user-mail-address "krisbalintona@gmail.com")
 
+;;; Add bespoke lisp modules to `load-path'
+(dolist (path (list (expand-file-name "modules" user-emacs-directory)
+                    (expand-file-name "lisp" user-emacs-directory)))
+  (add-to-list 'load-path path))
 
 ;;; Add WIP "monkey patches" to `load-path'
 (defvar krisb-wip-monkeypatches-dir (expand-file-name "wip" user-emacs-directory)
@@ -32,9 +38,6 @@ nothing."
        (make-symbolic-link patch-path link-path))))
 
 
-
-(setopt user-full-name "Kristoffer Balintona"
-        user-mail-address "krisbalintona@gmail.com")
 
 ;;; Meta-configuration
 

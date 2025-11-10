@@ -150,11 +150,10 @@ See also the useful command ~org-babel-goto-named-src-block~ and other useful co
   (bind-key "C-c t" krisb-toggle-keymap 'global-map)
 #+end_src
 
-** COMMENT Load path for personal libraries
+** Add bespoke lisp modules to ~load-path~
 
-#+name: set-load-path
+#+name: site-lisp
 #+begin_src emacs-lisp
-  ;;; Add modules and personal lisp files to `load-path'
   (dolist (path (list (expand-file-name "modules" user-emacs-directory)
                       (expand-file-name "lisp" user-emacs-directory)))
     (add-to-list 'load-path path))
@@ -4306,12 +4305,13 @@ Log when the value of certain properties are changed:
 #+begin_src emacs-lisp :tangle "init.el"
   ;; -*- lexical-binding: t; -*-
 
-  <<set-load-path>>
+  <<bio>>
+
+  ;;; Add bespoke lisp modules to `load-path'
+  <<site-lisp>>
 
   ;;; Add WIP "monkey patches" to `load-path'
   <<wip>>
-
-  <<bio>>
 
   ;;; Meta-configuration
 
