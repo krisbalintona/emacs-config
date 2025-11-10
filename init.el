@@ -207,7 +207,13 @@ that.  Otherwise, remove it from `minor-mode-alist'."
   ;; Redefine :require macro to use current feature.
   (setup-define :require
     (lambda () `(require ',(setup-get 'feature) nil t))
-    :documentation "Try to require the current feature, or stop evaluating body."))
+    :documentation "Try to require the current feature, or stop evaluating body.")
+
+  ;; Unconditional quit.  Taken from
+  ;; https://www.emacswiki.org/emacs/SetupEl#h5o-8.
+  (setup-define :quit
+    #'setup-quit
+    :documentation "Unconditionally abort the evaluation of the current body."))
 
 ;; Add setup entries to imenu.  Modified from
 ;; https://www.emacswiki.org/emacs/SetupEl#h5o-31.
@@ -3378,10 +3384,14 @@ buffers in which this function is run."
   (add-hook 'completion-at-point-functions #'tempel-complete -90))
 
 ;;; Jinx
-;; JIT spell checker that uses `enchant'.  The executable is
-;; enchant-2.  See the manual for more information:
-;; https://abiword.github.io/enchant/src/enchant.html
+;; JIT spell checker that uses Enchant.  The executable is enchant-2.
+;; See the Enchant manual for more information about the
+;; spell-checker's features and using it:
+;; https://abiword.github.io/enchant/src/enchant.html.
 (setup jinx
+  ;; NOTE 2025-11-10: Disable for now. Trying out ispell + flyspell
+  (:quit)
+  
   ;; Installed via Guix because it needs to compile a C module
   ;; For AUR:
   ;; :ensure-system-package ((enchant-2 . enchant)
