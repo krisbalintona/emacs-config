@@ -3483,12 +3483,11 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
 ;; primary mode of interaction.
 (setup lin
   (:package lin)
-
-  (setopt lin-face 'lin-cyan)
   
   (lin-global-mode 1)
 
   (with-eval-after-load 'lin
+    (setopt lin-face 'lin-cyan)
     (add-to-list 'lin-mode-hooks 'LaTeX-mode-hook)))
 
 ;;; Org-mime
@@ -3498,6 +3497,7 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
   (:package org-mime)
 
   (with-eval-after-load 'message
+    (autoload 'org-mime-edit-mail-in-org-mode "org-mime")
     (bind-keys :map message-mode-map
                ("C-c M-o" . org-mime-htmlize)
                ("C-c '" . org-mime-edit-mail-in-org-mode))
@@ -3522,8 +3522,7 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
                 (goto-char start)
                 (if (search-forward "<#secure method=pgpmime mode=sign>" nil t)
                     (1+ (point))
-                  start)))
-            )
+                  start))))
 
     (defun krisb-org-mime-setup ()
       "Nicely offset block quotes in email bodies.
