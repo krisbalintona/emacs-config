@@ -2671,7 +2671,6 @@ Additionally, all apropos commands will expand the subset of symbols they search
 
 #+name: elisp-demos
 #+begin_src emacs-lisp
-  ;;;; Elisp-demos
   ;; Add example code snippets to some of the help windows
   (setup elisp-demos
     (:package elisp-demos)

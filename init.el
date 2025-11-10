@@ -1030,7 +1030,6 @@ Then apply ARGS."
                (post-command-select-window . t)))
 
 ;;; Elisp-demos
-;;;; Elisp-demos
 ;; Add example code snippets to some of the help windows
 (setup elisp-demos
   (:package elisp-demos)
