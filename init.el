@@ -321,6 +321,9 @@ that.  Otherwise, remove it from `minor-mode-alist'."
   ;; Disable the ring-bell (it's annoying)
   (setopt ring-bell-function #'ignore)
   
+  ;; Follow symlinks when opening files
+  (setopt find-file-visit-truename t)
+  
   ;; Move files into trash directory
   (setopt trash-directory (no-littering-expand-var-file-name "trash")
           delete-by-moving-to-trash t)

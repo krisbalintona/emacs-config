@@ -1081,6 +1081,13 @@ See also ~(elisp) Beeping~.
 
 * General file handling
 
+** Follow symlinks when opening files
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Follow symlinks when opening files
+  (setopt find-file-visit-truename t)
+#+end_src
+
 ** Trash
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
