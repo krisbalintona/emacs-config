@@ -2288,7 +2288,7 @@ a random date within the next DAYS days."
       (add-to-list 'org-global-properties '("ROAM_TYPE" . "source collection pointer"))
       (add-to-list 'org-use-property-inheritance "ROAM_BOX"))))
 
-;;;; Bespoke code
+;;;; Bespoke extensions
 ;; Log changes to certain properties.
 ;;
 ;; The following describes how it works.  We add a function to

@@ -4686,7 +4686,7 @@ Log when the value of certain properties are changed:
   ;;;;; Org-roam-folgezettel
   <<org-roam-folgezettel>>
 
-  ;;;; Bespoke code
+  ;;;; Bespoke extensions
   <<org-log-properties>>
 
   ;;; Paren-face
