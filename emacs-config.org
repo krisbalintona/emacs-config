@@ -2618,7 +2618,7 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
 #+end_src
 **** Emacs-lisp
 
-***** Help.el: Documentation
+***** Help.el: Emacs's self-documentation
 
 #+name: help.el
 #+begin_src emacs-lisp
@@ -2654,6 +2654,15 @@ Tell ~display-buffer-alist~ where to show help buffers:
                '((major-mode . help-mode)
                  (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
                  (window-height . shrink-window-if-larger-than-buffer)))
+#+end_src
+
+***** Apropos: Discover meaningful lisp symbols
+
+#+name: apropos
+#+begin_src emacs-lisp
+  (setup apropos
+    
+    (bind-keys ("C-h u" . apropos-user-option)))
 #+end_src
 
 ***** Elisp-demos: Examples in documentation
@@ -4562,6 +4571,9 @@ Log when the value of certain properties are changed:
 
   ;;; Help.el
   <<help.el>>
+
+  ;;; Apropos
+  <<apropos>>
 
   ;;; Messages buffer
   <<messages-buffer>>

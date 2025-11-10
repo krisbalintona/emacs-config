@@ -1011,6 +1011,11 @@ Then apply ARGS."
                    (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
                    (window-height . shrink-window-if-larger-than-buffer)))))
 
+;;; Apropos
+(setup apropos
+  
+  (bind-keys ("C-h u" . apropos-user-option)))
+
 ;;; Messages buffer
 ;; Visual-line-mode in *Messages* buffer
 (add-hook 'messages-buffer-mode-hook #'visual-line-mode)
