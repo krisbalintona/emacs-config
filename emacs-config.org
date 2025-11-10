@@ -304,6 +304,9 @@ This lets setup.el configurations be transparent rather than opaque: I understan
 
 ** No-littering.el: keep a tidy =.emacs.d/=
 
+# TODO 2025-11-10: Look into having package-user-dir follow no-littering's conventions? Should be in
+# no-littering-var-directory, I think.
+
 #+name: no-littering
 #+begin_src emacs-lisp
   ;; Have packages write their files in locations adhering to a
