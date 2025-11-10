@@ -30,7 +30,7 @@ See also the useful command ~org-babel-goto-named-src-block~ and other useful co
   (setopt load-prefer-newer t)
 #+end_src
 
-** Add my WIP "monkeypatches" directory to ~load-path~
+** Add my WIP "monkey patches" directory to ~load-path~
 
 #+name: wip
 #+begin_src emacs-lisp
@@ -1614,7 +1614,7 @@ See also ~(elisp) Beeping~.
 
 ** Hotfuzz: Blazingly fast replacement for the =flex= completion style
 
-See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#results]] for bunchmarks between fuzzy completion styles. Note that the markedly higher performance of the hotfuzz package shown in this benchmark uses the /dynamic module/ bundled with hotfuzz (so to see similar results, users must do the same).
+See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#results]] for benchmarks between fuzzy completion styles. Note that the markedly higher performance of the hotfuzz package shown in this benchmark uses the /dynamic module/ bundled with hotfuzz (so to see similar results, users must do the same).
 
 #+name: hotfuzz
 #+begin_src emacs-lisp
@@ -4881,5 +4881,6 @@ Log when the value of certain properties are changed:
 * COMMENT Local words
 
 #  LocalWords:  noweb org's Linters Balintona Kristoffer LocalWords Elpaca el Runtime PDFs Ef elisp
-#  LocalWords:  Minibuffer Vertico Fontaine Theming Savehist minibuffer facto de Minibuffers pdf
-#  LocalWords:  minibuffers Autorevert
+#  LocalWords:  Minibuffer Vertico Fontaine Theming Savehist minibuffer facto de Minibuffers pdf El
+#  LocalWords:  minibuffers Autorevert WIP EmacsWiki TODO GCMH Imenu Isearch Newcomment VCS VC jj
+#  LocalWords:  jujutsu JJ Hotfuzz hotfuzz
