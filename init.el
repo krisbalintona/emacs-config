@@ -3760,10 +3760,22 @@ instead."
 ;;; Flyspell
 (setup flyspell
   
+  (add-hook 'text-mode-hook #'flyspell-mode)
+  (add-hook 'prog-mode-hook #'flyspell-prog-mode)
+
+  (:hide-mode)
+  
   (with-eval-after-load 'flyspell
-    (setopt flyspell-delay-use-timer t ; Emacs 31.1
+    (setopt flyspell-issue-welcome-flag nil
+            flyspell-issue-message-flag nil ; Greatly increase `flyspell-buffer' speed
             flyspell-abbrev-p t
-            flyspell-check-changes t)))
+            flyspell-check-changes t
+            flyspell-delay-use-timer t)) ; Emacs 31.1
+            
+  (:bind-keys :map flyspell-mode-map
+              ("C-;" . nil)
+              ("C-." . nil)
+              ("C-M-i" . nil)))
 
 ;;; Startup time
 ;; Message for total init time after startup
