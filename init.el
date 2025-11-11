@@ -1111,7 +1111,7 @@ Then apply ARGS."
   ;; https://github.com/minad/corfu#completing-with-corfu-in-the-minibuffer
   (defun krisb-corfu-enable-in-minibuffer-conditionally ()
     "Enable Corfu in the minibuffer if vertico is not active."
-    (unless (bound-and-true-p vertico-mode)
+    (when (and global-corfu-mode (not (bound-and-true-p vertico-mode)))
       (setq-local corfu-auto nil) ; Ensure auto completion is disabled
       (corfu-mode 1)))
   (add-hook 'minibuffer-setup-hook #'krisb-corfu-enable-in-minibuffer-conditionally)
