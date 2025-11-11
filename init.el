@@ -979,7 +979,7 @@ Then apply ARGS."
              ;; Don’t auto save buffers that are too long, since that
              ;; may lead to noticeable pauses
              (< (save-restriction (widen) (count-lines (point-min) (point-max)))
-                5000)
+                500000)
              ;; Don’t auto-save `pdf-view-mode’ buffers
              (derived-mode-p 'pdf-view-mode))))
 
