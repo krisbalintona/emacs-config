@@ -1208,19 +1208,18 @@ Then apply ARGS."
           vc-dir-save-some-buffers-on-revert t ; Emacs 31
           vc-use-incoming-outgoing-prefixes t) ; Emacs 31
 
-  ;; FIXME 2025-10-17: For some reason, I need to manually require
-  ;; autorevert so that `vc-auto-revert-mode' does not error on not
-  ;; being able to find the `auto-revert-mode' variable...
-  (require 'autorevert)
-  (vc-auto-revert-mode 1)
+  (if (fboundp 'vc-auto-revert-mode)
+      (vc-auto-revert-mode 1)           ; Emacs 31
+    (global-auto-revert-mode 1))
 
   (add-to-list 'display-buffer-alist
                '((or . ((major-mode . vc-dir-mode)
                         (major-mode . vc-git-log-view-mode)
                         (major-mode . vc-git-region-history-mode)))
-                 (display-buffer-same-window)))
+                 (display-buffer-same-window))))
 
-  ;; Dispatcher between `vc-diff’ and `diff-buffer-with-file’
+;; Dispatcher between `vc-diff’ and `diff-buffer-with-file’
+(setup vc
   (defun krisb-vc-diff-dwim ()
     "Call `vc-diff’ or `diff-buffer-with-file’.
 Calls `vc-diff’ if the buffer is unmodified.  If buffer is modified,
@@ -2606,8 +2605,11 @@ PROP is the name of the property.  See
 ;; libraries
 (setup find-func
 
-  ;; Emacs 31, formerly `find-function-setup-keys'
-  (find-function-mode 1))
+  ;; Emacs 31 converted `find-function-setup-keys' into
+  ;; `find-function-setup-keys'
+  (if (fboundp 'find-function-mode)
+      (find-function-mode 1)
+    (find-function-setup-keys)))
 
 (setup tab-bar
   ;; Useful keybinds for `tab-bar-mode' usage
