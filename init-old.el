@@ -1604,8 +1604,7 @@ For N, see the docstring of `open-line’."
   :ensure nil                           ; Activated by elpaca earlier
   :bind
   ("C-c s" . org-store-link)
-  :custom
-
+  ;; :custom
   ;; TODO 2025-05-22: Revisit this.
   ;; (org-file-apps
   ;;  '((directory . emacs)
@@ -2092,19 +2091,6 @@ The context buffer is the buffer that shows annotation contents in
 (require 'krisb-org-publish)
 
 ;;; Emails
-
-;;;; Notmuch-addr
-;; Better address completion for notmuch; replaces the built-in
-;; `notmuch-address' completion system. Read
-;; https://nmbug.notmuchmail.org/nmweb/show/20201108231150.5419-1-jonas%40bernoul.li
-;; for more information
-(use-package notmuch-addr
-  :ensure t
-  :after notmuch-address
-  :demand t
-  :config
-  (notmuch-addr-setup))
-
 ;;;; Notmuch-bookmarks
 (use-package notmuch-bookmarks
   :ensure t

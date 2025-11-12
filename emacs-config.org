@@ -3953,7 +3953,22 @@ Mode line indicator for notmuch emails:
                   (apply args))))
 #+end_src
 
-**** Ol-notmuch: Integration between notmuch and org links
+***** Notmuch-addr:
+
+#+name: notmuch-addr
+#+begin_src emacs-lisp
+  ;; Better email address completion for notmuch.  Replaces the built-in
+  ;; `notmuch-address' completion system.  See
+  ;; https://nmbug.notmuchmail.org/nmweb/show/20201108231150.5419-1-jonas%40bernoul.li
+  ;; for more information
+  (setup notmuch-addr
+    (:package notmuch-addr)
+    
+    (with-eval-after-load 'notmuch-address
+      (notmuch-addr-setup)))
+#+end_src
+
+***** Ol-notmuch: Integration between notmuch and org links
 
 #+name: ol-notmuch
 #+begin_src emacs-lisp
@@ -4920,6 +4935,9 @@ Log when the value of certain properties are changed:
 
   ;;; Notmuch
   <<notmuch>>
+
+  ;;; Notmuch-addr
+  <<notmuch-addr>>
 
   ;;; Ol-notmuch
   <<ol-notmuch>>

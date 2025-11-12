@@ -3329,6 +3329,17 @@ https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
                     (display-time-update))
                   (apply args)))))
 
+;;; Notmuch-addr
+;; Better email address completion for notmuch.  Replaces the built-in
+;; `notmuch-address' completion system.  See
+;; https://nmbug.notmuchmail.org/nmweb/show/20201108231150.5419-1-jonas%40bernoul.li
+;; for more information
+(setup notmuch-addr
+  (:package notmuch-addr)
+  
+  (with-eval-after-load 'notmuch-address
+    (notmuch-addr-setup)))
+
 ;;; Ol-notmuch
 ;; Org-links for search queries (i.e. notmuch-search-mode,
 ;; notmuch-tree-mode) and messages (i.e. notmuch-show-mode).
