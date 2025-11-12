@@ -3768,9 +3768,14 @@ instead."
   (with-eval-after-load 'ispell
     ;; TODO 2025-11-09: Ensure that the enchant system package is
     ;; installed, too
-    (setopt ispell-program-name (executable-find "enchant-2")
+    (setopt ispell-program-name (or (executable-find "enchant-2")
+                                    (executable-find "aspell"))
+            ispell-help-in-bufferp 'electric
             ispell-dictionary "en_US"
-            ispell-help-in-bufferp 'electric)))
+            ispell-complete-word-dict
+            (when (string-match-p "enchant" ispell-program-name)
+              (require 'xdg)
+              (expand-file-name (format "enchant/%s.dic" ispell-dictionary) (xdg-config-home))))))
 
 ;;; Flyspell
 (setup flyspell
