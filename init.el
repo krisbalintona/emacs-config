@@ -2335,11 +2335,13 @@ a random date within the next DAYS days."
   ;; FIXME 2025-06-30: Eventually upstream contents of
   ;; krisb-org-roam-ext once I figure out a generalizable zettelkasten
   ;; workflow for most/all users.
-  (require 'krisb-org-roam-ext)
+  (with-eval-after-load 'org-roam
+    (require 'krisb-org-roam-ext))
 
   ;; Load embark integration
-  (with-eval-after-load 'embark
-    (require 'org-roam-folgezettel-embark)))
+  (with-eval-after-load 'org-roam
+    (with-eval-after-load 'embark
+      (require 'org-roam-folgezettel-embark))))
 
 (setup org-roam-folgezettel
   ;; We must add these after their default values are set by org
