@@ -84,6 +84,20 @@ See also the useful command ~org-babel-goto-named-src-block~ and other useful co
   (setopt package-vc-allow-build-commands t)
 #+end_src
 
+I also relativize the packages that package.el installs by Emacs version, since I sometimes run different versions of Emacs to test packages, and bytecode incompatibilities might arise between my compiled Emacs and the package.el packages. I make sure to place this before ~package-initialize~ is called; therefore, unless ~package-enable-at-startup~ is nil, this should be placed in early-init.el.
+#+name: package-relativize-version
+#+begin_src emacs-lisp
+  ;; Install package.el packages into separate directories for each
+  ;; Emacs version, to prevent bytecode incompatibility.
+  ;; 
+  ;; I had this idea myself, but I this specific implementation is
+  ;; nearly identical to the one in from
+  ;; https://github.com/purcell/emacs.d.
+  (setopt package-user-dir
+          (expand-file-name (format "elpa/%s.%s" emacs-major-version emacs-minor-version)
+                            user-emacs-directory))
+#+end_src
+
 *** Try: Try out Emacs packages
 
 #+name: try
@@ -4807,6 +4821,8 @@ Log when the value of certain properties are changed:
   <<early-perf-optimizations>>
 
   <<garbage-collection-early-init>>
+
+  <<package-relativize-version>>
 #+end_src
 
 *** =init.el=

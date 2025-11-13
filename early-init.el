@@ -58,3 +58,13 @@
 ;; `gc-cons-threshold' to as high a number as possible.  See also my
 ;; configuration of `gcmh-mode'.
 (setopt gc-cons-threshold most-positive-fixnum)
+
+;; Install package.el packages into separate directories for each
+;; Emacs version, to prevent bytecode incompatibility.
+;; 
+;; I had this idea myself, but I this specific implementation is
+;; nearly identical to the one in from
+;; https://github.com/purcell/emacs.d.
+(setopt package-user-dir
+        (expand-file-name (format "elpa/%s.%s" emacs-major-version emacs-minor-version)
+                          user-emacs-directory))
