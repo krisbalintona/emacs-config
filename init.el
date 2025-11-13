@@ -3968,6 +3968,36 @@ completion at point function."
     (dolist (capf '(cape-elisp-symbol elisp-completion-at-point))
       (advice-add capf :around #'krisb-cape-elisp--around-advice))))
 
+;;; Project
+;; TODO 2025-05-22: Document:
+;; - `project-vc-extra-root-markers’
+(setup project
+
+  (with-eval-after-load 'project
+    (setopt project-file-history-behavior 'relativize
+            ;; The commands in `project-switch-commands' must be found
+            ;; in `project-prefix-map'
+            project-switch-commands
+            `((project-find-file "Find file")
+              (project-switch-to-buffer "Switch to buffer")
+              (project-find-regexp "Find regexp")
+              (project-find-dir "Find directory")
+              (project-vc-dir "VC-Dir")
+              (project-eshell "Eshell")
+              (project-shell "Shell")
+              (project-any-command "Other"))
+            project-compilation-buffer-name-function 'project-prefixed-buffer-name
+            project-vc-merge-submodules nil ; Respect subprojects as their own projects
+            project-mode-line t
+            project-mode-line-face 'italic))
+
+  (with-eval-after-load 'project
+    (bind-keys :map project-prefix-map
+               ("e" . project-eshell)
+               ("C" . project-recompile))
+    (add-to-list 'project-switch-commands '(project-compile "Compile"))
+    (add-to-list 'project-switch-commands '(project-recompile "Recompile"))))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

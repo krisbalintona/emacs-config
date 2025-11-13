@@ -640,41 +640,6 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
         (forward-line 2))
       (rename-buffer (concat "*Scratch for " mode "*") t))))
 
-;;;; Project.el
-;; TODO 2025-05-22: Document:
-;; - `project-vc-extra-root-markers’
-(use-package project
-  :ensure nil
-  :defer t
-  :bind
-  ( :map project-prefix-map
-    ("e" . project-eshell)
-    ("C" . project-recompile))
-  :custom
-  (project-vc-merge-submodules nil)
-  (project-file-history-behavior 'relativize)
-  ;; The commands in `project-switch-commands' must be found in
-  ;; `project-prefix-map'
-  (project-switch-commands
-   `((project-find-file "Find file")
-     (project-find-regexp "Find regexp")
-     (project-find-dir "Find directory")
-     (project-switch-to-buffer "Switch to buffer")
-     (project-vc-dir "VC-Dir")
-     (project-eshell "Eshell")
-     (project-shell "Shell")
-     (project-compile "Compile")
-     (project-recompile "Recompile")
-     (project-any-command "Other")))
-  (project-compilation-buffer-name-function 'project-prefixed-buffer-name)
-  (project-mode-line t)
-  (project-mode-line-face 'italic)
-  :config
-  ;; TODO 2025-05-22: Revisit this
-  ;; ;; On startup, remove non-existent directories from remembered projects list
-  ;; (project-forget-zombie-projects)
-  )
-
 ;;;; Info
 ;; TODO 2025-06-16: Document:
 ;; - `Info-hide-note-references’
