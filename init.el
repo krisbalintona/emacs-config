@@ -2702,7 +2702,8 @@ PROP is the name of the property.  See
                           ;; This returns the default-family of the current
                           ;; preset, whether explicitly or implicitly set
                           :family (fontaine--get-preset-property fontaine-current-preset :term-family))))
-  (add-hook 'fontaine-set-preset-hook #'krisb-eat--setup))
+  (with-eval-after-load 'fontaine
+    (add-hook 'fontaine-set-preset-hook #'krisb-eat--setup)))
 
 ;; Integration with eshell
 (setup eat
