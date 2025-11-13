@@ -1700,6 +1700,115 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
         (add-to-list 'dabbrev-ignored-buffer-modes mode))))
 #+end_src
 
+** Cape: ~completion-at-point-functions~ extensions and helpers
+
+#+name: cape
+#+begin_src emacs-lisp
+  (setup cape
+    (:package cape)
+
+    (bind-keys ("C-c p" . cape-prefix-map))
+    
+    (with-eval-after-load 'ispell
+      (setopt cape-dict-file (list ispell-complete-word-dict))))
+
+  ;; Add cape functions to `completion-at-point-functions'
+  (setup cape
+    ;; For Emacs >30, disable the ispell capf automatically added to
+    ;; text-mode buffers.  Recommended in
+    ;; https://github.com/minad/corfu?tab=readme-ov-file#configuration.
+    ;; We use `cape-dict' as an alternative, adding it where needed
+    ;; (below).
+    (setopt text-mode-ispell-word-completion nil)
+    
+    (defun krisb-cape-super-capf--dict-dabbrev ()
+      "Super-capf of `cape-dict' and `cape-dabbrev'."
+      (cape-wrap-super 'cape-dict :with 'cape-dabbrev))
+
+    ;; Capfs added to the end of the global value of
+    ;; `completion-at-point-functions'.  Consequently, they act as
+    ;; fallback backends.
+    (dolist (capf (reverse '(krisb-cape-super-capf--dict-dabbrev)))
+      (add-hook 'completion-at-point-functions capf 100))
+    
+    ;; Macro to help adding capfs via major mode hooks
+    (defmacro krisb-cape-setup-capfs (label hooks capfs)
+      "Set up `completion-at-point-functions' for HOOKS.
+  CAPFS are a list of `completion-at-point-functions'. Adds CAPFS when a
+  hook in HOOKS is run. These effects are added by a defined function with
+  LABEL appended to `krisb-cape-setup-capfs-'.
+
+  The order of elements in CAPFS are the order they will appear in
+  `completion-at-point-functions' for that buffer. That is, the first
+  element in CAPFS will be the first element in
+  `completion-at-point-functions'.
+
+  This macro does not affect capfs already in
+  `completion-at-point-functions' nor how later capfs are added to
+  `completion-at-point-functions'."
+      (declare (indent 0))
+      `(dolist (hook ,hooks)
+         (add-hook hook
+                   (defun ,(intern (concat "krisb-cape-setup-capfs-" label)) ()
+                     (dolist (capf (reverse ,capfs))
+                       (add-hook 'completion-at-point-functions capf -50 t))))))
+
+    ;; Add capfs by major-mode
+    (krisb-cape-setup-capfs
+      "elisp"
+      '(emacs-lisp-mode-hook lisp-interaction-mode-hook)
+      (list #'cape-file #'cape-elisp-symbol))
+    
+    (krisb-cape-setup-capfs
+      "commit"
+      '(git-commit-setup-hook log-edit-mode-hook)
+      (list #'cape-elisp-symbol))
+
+    (krisb-cape-setup-capfs
+      "shells"
+      '(eshell-mode-hook comint-mode-hook)
+      (list #'cape-file #'cape-history)))
+
+  ;; Make eglot's capf non-exclusive
+  (setup cape
+    (with-eval-after-load 'cape
+      (with-eval-after-load 'eglot
+        (advice-add #'eglot-completion-at-point :around #'cape-wrap-nonexclusive))))
+
+  ;; Resolve the undesirable behavior of `cape-elisp-symbol' and friends
+  ;; with occupying the *Help* buffer, as described here:
+  ;; https://github.com/minad/corfu/discussions/504#discussioncomment-12592545.
+  ;; This solution was taken from the suggestion of
+  ;; https://github.com/minad/corfu/discussions/504#discussioncomment-12593463
+  (setup cape
+    (with-eval-after-load 'corfu
+      (defun krisb-cape-corfu-popupinfo--doc-buffer (str)
+        "Wrapper around `elisp--company-doc-buffer'.
+  This function is a replacement for `elisp--company-doc-buffer', which
+  normally returns the main Help buffer (returned by `help-buffer').
+  Instead, this function returns a separate buffer to use as the Help
+  buffer.
+
+  Accepts the same argument as `elisp--company-doc-buffer' (STR).
+
+  Meant to be used with `cape-capf-properties' on the `cape-elisp-symbol'
+  completion at point function."
+        (let* ((help-xref-following t)
+               (new-help-buf-name
+                "*corfu-popupinfo documentation*")
+               (new-help-buf (get-buffer-create new-help-buf-name)))
+          (with-current-buffer new-help-buf
+            (help-mode)
+            (elisp--company-doc-buffer str))))
+
+      (defun krisb-cape-elisp--around-advice (orig-fun &rest _args)
+        "Advice to use a different doc buffer for documentation."
+        (cape-wrap-properties orig-fun :company-doc-buffer #'krisb-cape-corfu-popupinfo--doc-buffer))
+
+      (dolist (capf '(cape-elisp-symbol elisp-completion-at-point))
+        (advice-add capf :around #'krisb-cape-elisp--around-advice))))
+#+end_src
+
 * Interfaces
 
 ** Context menu
@@ -4988,6 +5097,9 @@ Log when the value of certain properties are changed:
 
   ;;; Xref
   <<xref>>
+
+  ;;; Cape
+  <<cape>>
 
   ;;; Startup time
   <<startup-time>>
