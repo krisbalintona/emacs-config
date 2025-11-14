@@ -1387,6 +1387,7 @@ call `diff-buffer-with-file’ instead."
 ;;;; Org built-ins
 ;;;;; Org-mode
 (setup org
+  (:pin org-mode "gnu-elpa-devel")
   (:package org)
 
   (add-hook 'org-mode-hook #'variable-pitch-mode)

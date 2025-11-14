@@ -3057,6 +3057,7 @@ This section is for the major mode
 #+name: org-mode
 #+begin_src emacs-lisp
   (setup org
+    (:pin org-mode "gnu-elpa-devel")
     (:package org)
 
     (add-hook 'org-mode-hook #'variable-pitch-mode)
