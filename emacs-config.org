@@ -2457,6 +2457,7 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
     
     (add-hook 'text-mode-hook #'flyspell-mode)
     (add-hook 'prog-mode-hook #'flyspell-prog-mode)
+    (add-hook 'conf-mode-hook #'flyspell-prog-mode)
 
     (:hide-mode)
     
