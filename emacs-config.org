@@ -2891,6 +2891,15 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
                   ("M-9" . nil)
                   ("M-0" . nil))))
 #+end_src
+
+***** Fish-mode: Major mode for =.fish= files
+
+#+name: fish-mode
+#+begin_src emacs-lisp
+  (setup fish-mode
+    (:package fish-mode))
+#+end_src
+
 **** Emacs-lisp
 
 ***** Help.el: Emacs's self-documentation
@@ -5263,6 +5272,9 @@ Log when the value of certain properties are changed:
 
   ;;; Project
   <<project>>
+
+  ;;; Fish-mode
+  <<fish-mode>>
 
   ;;; Startup time
   <<startup-time>>

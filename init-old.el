@@ -1327,12 +1327,6 @@ An example of a return value for this function is: \"9 minutes ago\"."
   :ensure t
   :defer t)
 
-;;;; Fish-mode
-(use-package fish-mode
-  :ensure t
-  :mode
-  "\\.fish\\'")
-
 ;;;; Enhancements to basic text editing
 ;; Open line indents too
 (defun krisb-open-line (n)

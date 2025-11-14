@@ -8,7 +8,7 @@
    '(arei astute bind-key bui cape citeproc cl-generic cl-lib cond-star
           consult corfu eat edit-indirect editorconfig ef-themes eglot
           el-patch eldoc elisp-demos erc exec-path-from-shell
-          external-completion faceup flymake fontaine gcmh
+          external-completion faceup fish-mode flymake fontaine gcmh
           geiser-guile highlight-function-calls hotfuzz jinx jsonrpc
           let-alist lin magit-popup map mixed-pitch nadvice
           no-littering notmuch-addr ntlm ol-notmuch olivetti on
