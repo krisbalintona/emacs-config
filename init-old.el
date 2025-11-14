@@ -1990,10 +1990,6 @@ The context buffer is the buffer that shows annotation contents in
 ;;;; Org-agenda
 (use-package org-agenda
   :custom
-  ;; Org-agenda buffer
-  (org-agenda-window-setup 'only-window)
-  (org-agenda-restore-windows-after-quit t)
-  (org-agenda-sticky t)
   (org-agenda-tags-column 0)
   ;; TODO 2025-05-24: Revisit these.
   ;; (org-agenda-format-date #'krisb-org-agenda-format-date-aligned)

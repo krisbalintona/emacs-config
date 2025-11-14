@@ -13,7 +13,7 @@
           let-alist lin magit-popup map mixed-pitch nadvice
           no-littering notmuch-addr ntlm ol-notmuch olivetti on
           orderless org org-contrib org-hide-drawers org-mime
-          org-modern org-node org-review org-roam-folgezettel
+          org-modern org-node org-ql org-review org-roam-folgezettel
           org-web-tools orgmdb outli paren-face peg powerthesaurus
           project pulsar puni python seq sesman setup smart-mark
           so-long soap-client svg tablist tempel timeout track-changes

@@ -1390,87 +1390,117 @@ call `diff-buffer-with-file’ instead."
   (:pin org-mode "gnu-elpa-devel")
   (:package org)
 
-  (add-hook 'org-mode-hook #'variable-pitch-mode)
-  (add-hook 'org-mode-hook #'visual-line-mode)
-  (add-hook 'org-mode-hook (lambda ()
-                             (setq-local line-spacing 0.2
-                                         fill-column 100)))
+  (with-eval-after-load 'org
+    (add-hook 'org-mode-hook #'variable-pitch-mode)
+    (add-hook 'org-mode-hook #'visual-line-mode)
+    (add-hook 'org-mode-hook (lambda ()
+                               (setq-local line-spacing 0.2
+                                           fill-column 100))))
 
   (setopt org-directory krisb-folio-directory)
 
-  ;; TODO 2025-05-22: Document:
-  ;; - `org-special-ctrl-k'
-  ;; Command special behaviors
-  (setopt org-blank-before-new-entry
-          '((heading . auto)
-            (plain-list-item . nil))
-          org-M-RET-may-split-line
-          '((table . nil)
-            (default . t))
-          org-special-ctrl-a/e t
-          org-ctrl-k-protect-subtree 'error)
+  (with-eval-after-load 'org
+    ;; TODO 2025-10-15: Document these:
+    ;; - `org-use-fast-todo-selection'
+    ;; Todos
+    (setopt org-todo-keywords
+            '((sequence "TODO(t)" "NEXT(n)" "HOLD(h@/!)" "MAYBE(m)" "|"
+                        "DONE(d!/@)" "CANCELED(c@/!)"))
+            org-todo-keyword-faces
+            '(("NEXT" . (bold success))
+              ("TODO" . org-todo)
+              ("HOLD" . (shadow error))
+              ("MAYBE" . (shadow org-todo))
+              ("DONE" . (bold org-done))
+              ("CANCELED" . error))
+            org-enforce-todo-dependencies t
+            org-agenda-dim-blocked-tasks t)
+    
+    ;; TODO 2025-05-22: Document:
+    ;; - `org-special-ctrl-k'
+    ;; Command special behaviors
+    (setopt org-blank-before-new-entry
+            '((heading . auto)
+              (plain-list-item . nil))
+            org-M-RET-may-split-line
+            '((table . nil)
+              (default . t))
+            org-special-ctrl-a/e t
+            org-ctrl-k-protect-subtree 'error)
 
-  ;; TODO 2025-05-22: Document:
-  ;; - `org-hide-leading-stars'
-  ;; - `org-n-level-faces'
-  ;; - `org-cycle-separator-lines'
-  ;; - `org-cycle-level-faces'
-  ;; - `org-insert-heading-respect-content'
-  ;; - `org-fontify-todo-headline’
-  ;; - `org-ellipsis'
-  ;; Headlines
-  (setopt org-fontify-done-headline nil)
+    ;; TODO 2025-05-22: Document:
+    ;; - `org-hide-leading-stars'
+    ;; - `org-n-level-faces'
+    ;; - `org-cycle-separator-lines'
+    ;; - `org-cycle-level-faces'
+    ;; - `org-insert-heading-respect-content'
+    ;; - `org-fontify-todo-headline’
+    ;; - `org-ellipsis'
+    ;; Headlines
+    (setopt org-fontify-done-headline nil)
 
-  ;; Org blocks
-  (setopt org-structure-template-alist
-          '(("s" . "src")
-            ("S" . "src emacs-lisp")
-            ("q" . "quote")
-            ("c" . "comment")
-            ("C" . "center")
-            ("e" . "export")
-            ("E" . "example")
-            ("v" . "verse"))
-          org-fontify-quote-and-verse-blocks t
-          org-fontify-whole-block-delimiter-line nil)
-  
-  ;; TODO 2025-05-22: Document:
-  ;; - `org-hide-macro-markers'
-  ;; - `org-pretty-entities-include-sub-superscripts' - see also `org-export-with-sub-superscripts'
-  ;; - `org-hidden-keywords'
-  ;; Fancy markup
-  (setopt org-hide-emphasis-markers t
-          org-pretty-entities t ; Show as UTF-8 characters (useful for math)
-          org-use-sub-superscripts '{}) ; Requires brackets to recognize superscripts and subscripts
-  
-  ;; Logging
-  (setopt org-log-done 'time
-          org-log-into-drawer t
-          org-log-refile 'time
-          org-log-reschedule 'time
-          org-log-redeadline 'time)
+    ;; Priorities
+    (setopt org-priority-highest ?A
+            org-priority-default ?E
+            org-priority-lowest ?F
+            org-priority-faces
+            '((?A . (bold org-priority))
+              (?B . (bold org-priority))
+              (?C . org-priority)
+              (?D . org-priority)
+              (?E . (shadow org-priority))
+              (?F . (shadow org-priority))))
+    
+    ;; Org blocks
+    (setopt org-structure-template-alist
+            '(("s" . "src")
+              ("S" . "src emacs-lisp")
+              ("q" . "quote")
+              ("c" . "comment")
+              ("C" . "center")
+              ("e" . "export")
+              ("E" . "example")
+              ("v" . "verse"))
+            org-fontify-quote-and-verse-blocks t
+            org-fontify-whole-block-delimiter-line nil)
+    
+    ;; TODO 2025-05-22: Document:
+    ;; - `org-hide-macro-markers'
+    ;; - `org-pretty-entities-include-sub-superscripts' - see also `org-export-with-sub-superscripts'
+    ;; - `org-hidden-keywords'
+    ;; Fancy markup
+    (setopt org-hide-emphasis-markers t
+            org-pretty-entities t ; Show as UTF-8 characters (useful for math)
+            org-use-sub-superscripts '{}) ; Requires brackets to recognize superscripts and subscripts
+    
+    ;; Logging
+    (setopt org-log-done 'time
+            org-log-into-drawer t
+            org-log-refile 'time
+            org-log-reschedule 'time
+            org-log-redeadline 'time)
 
-  ;; Time and timestamps
-  (setopt org-edit-timestamp-down-means-later t
-          org-extend-today-until 4
-          org-use-effective-time t)
+    ;; Time and timestamps
+    (setopt org-edit-timestamp-down-means-later t
+            org-extend-today-until 4
+            org-use-effective-time t)
 
-  ;; Tags
-  (setopt org-tags-column 0
-          org-tags-exclude-from-inheritance '("__journal" "__log" "__top_of_mind"))
+    ;; Tags
+    (setopt org-tags-column 0
+            org-tags-exclude-from-inheritance '("__journal" "__log" "__top_of_mind"))
 
-  ;; Properties
-  (setopt org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
+    ;; Properties
+    (setopt org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
 
-  ;; TODO 2025-05-22: Document the "Org Plain List" customize group as
-  ;; well as these options:
-  ;; - `org-list-use-circular-motion'
-  ;; Plain lists
-  (setopt org-list-allow-alphabetical t
-          org-list-demote-modify-bullet
-          '(("+" . "-")
-            ("-" . "*")
-            ("*" . "+"))))
+    ;; TODO 2025-05-22: Document the "Org Plain List" customize group
+    ;; as well as these options:
+    ;; - `org-list-use-circular-motion'
+    ;; Plain lists
+    (setopt org-list-allow-alphabetical t
+            org-list-demote-modify-bullet
+            '(("+" . "-")
+              ("-" . "*")
+              ("*" . "+")))))
 
 ;;;;; Org-agenda
 ;; TODO 2025-05-24: Document these options:
@@ -1491,44 +1521,23 @@ call `diff-buffer-with-file’ instead."
 (setup org-agenda
   (:if-package org)
 
-  (add-hook 'org-agenda-mode-hook #'hl-line-mode)
-
   (bind-keys :map krisb-open-keymap
              ("a" . org-agenda))
 
-  (setopt org-agenda-inhibit-startup t)
-  (setopt org-agenda-files (list krisb-org-agenda-directory))
+  (with-eval-after-load 'org-agenda
+    (add-hook 'org-agenda-mode-hook #'hl-line-mode))
 
-  ;; TODO 2025-10-15: Document these:
-  ;; - `org-use-fast-todo-selection'
-  ;; Todos
-  (setopt org-todo-keywords
-          '((sequence "TODO(t)" "NEXT(n)" "HOLD(h@/!)" "MAYBE(m)" "|"
-                      "DONE(d!/@)" "CANCELED(c@/!)"))
-          org-todo-keyword-faces
-          '(("NEXT" . (bold success))
-            ("TODO" . org-todo)
-            ("HOLD" . (shadow error))
-            ("MAYBE" . (shadow org-todo))
-            ("DONE" . (bold org-done))
-            ("CANCELED" . error)))
-  (setopt org-enforce-todo-dependencies t)
-  (setopt org-agenda-dim-blocked-tasks t)
+  (setopt org-agenda-inhibit-startup t
+          org-agenda-files (list krisb-org-agenda-directory))
 
-  ;; Priorities
-  (setopt org-priority-highest ?A
-          org-priority-default ?E
-          org-priority-lowest ?F
-          org-priority-faces
-          '((?A . (bold org-priority))
-            (?B . (bold org-priority))
-            (?C . org-priority)
-            (?D . org-priority)
-            (?E . (shadow org-priority))
-            (?F . (shadow org-priority))))
-
-  ;; Effort
-  (setopt org-agenda-sort-noeffort-is-high nil)
+  (with-eval-after-load 'org-agenda
+    ;; Agenda buffer/window
+    (setopt org-agenda-window-setup 'only-window
+            org-agenda-restore-windows-after-quit t
+            org-agenda-sticky t)
+    
+    ;; Effort
+    (setopt org-agenda-sort-noeffort-is-high nil))
 
   (with-eval-after-load 'org-agenda
     (add-to-list 'display-buffer-alist
@@ -2371,6 +2380,82 @@ a random date within the next DAYS days."
       ;; Set inherited default values for some ROAM_* properties
       (add-to-list 'org-global-properties '("ROAM_TYPE" . "source collection pointer"))
       (add-to-list 'org-use-property-inheritance "ROAM_BOX"))))
+
+;;;;; Org-ql
+(setup org-ql
+  (:package org-ql))
+
+;; Copy Ihor's (https://github.com/yantar92/emacs-config) usage of
+;; org-ql to define functions supplied to `org-agenda-skip-function'
+;; to construct his org-agenda views
+(setup org-ql
+  (defvar prev-query nil)
+  (defvar prev-buffer nil)
+  (defvar prev-match-cdr nil)
+
+  (define-advice org-agenda (:before (&rest _) reset-skip-cache)
+    "Reset cache for `krisb-org-agenda-skip-org-ql'."
+    (setq prev-query nil
+          prev-buffer nil
+          prev-match-cdr nil))
+
+  (advice-add 'org-agenda-get-day-entries :before #'org-agenda@reset-skip-cache)
+  (advice-add 'org-agenda-get-deadlines :before #'org-agenda@reset-skip-cache)
+  (advice-add 'org-agenda-get-scheduled :before #'org-agenda@reset-skip-cache)
+  (advice-add 'org-agenda-get-progress :before #'org-agenda@reset-skip-cache)
+  (advice-add 'org-agenda-get-timestamps :before #'org-agenda@reset-skip-cache)
+  (advice-add 'org-agenda-get-sexps :before #'org-agenda@reset-skip-cache)
+  (advice-add 'org-agenda-get-blocks :before #'org-agenda@reset-skip-cache)
+  (advice-add 'org-agenda-get-todos :before #'org-agenda@reset-skip-cache)
+
+  (use-package org-ql
+    :demand t
+    :config
+    (defun krisb-org-agenda-skip-org-ql (query &optional force)
+      "Construct skip function using org-ql QUERY.
+Do not use cache when FORCE is non-nil."
+      (let ((match-list
+             (if (and (cdr prev-match-cdr)
+                      (equal query prev-query)
+                      (equal prev-buffer (current-buffer))
+                      (not force))
+                 prev-match-cdr
+               (sort (org-ql-select (list (current-buffer))
+                       query
+                       :narrow t
+                       :action (lambda (&optional el)
+                                 (if el
+                                     (org-element-property :begin (org-element-lineage el '(headline inlinetask) t))
+				   (org-element-property :begin (org-element-lineage (org-element-at-point) '(headline inlinetask) t)))))
+                     #'<)))
+            (cur-point (save-excursion
+                         (org-back-to-heading t)
+                         (point))))
+        (if (not match-list)
+            (point-max)
+	  (catch :exit
+            (unless (eq prev-match-cdr match-list)
+              (setq prev-match-cdr match-list
+                    prev-query query
+                    prev-buffer (current-buffer)))
+            (while prev-match-cdr
+              (when (= cur-point (car prev-match-cdr))
+                (throw :exit nil))
+              (when (< cur-point (car prev-match-cdr))
+                (throw :exit (car prev-match-cdr)))
+              (setq prev-match-cdr (cdr prev-match-cdr)))
+            (point-max))))))
+
+  (defun krisb-skip-non-archivable-tasks ()
+    "Skip trees that are not available for archiving."
+    (krisb-org-agenda-skip-org-ql
+     `(and (done)
+           (not (todo "FROZEN"))
+           (not (tags "INBOX"))
+           (not (tags-inherited "ARCHIVEALL"))
+           (or (not (tags "NOARCHIVE"))
+               (and (not (tags-local "NOARCHIVE"))
+                    (org-inlinetask-at-task-p)))))))
 
 ;;;; Bespoke extensions
 ;; Log changes to certain properties.
