@@ -222,7 +222,18 @@ that.  Otherwise, remove it from `minor-mode-alist'."
   ;; https://www.emacswiki.org/emacs/SetupEl#h5o-8.
   (setup-define :quit
     #'setup-quit
-    :documentation "Unconditionally abort the evaluation of the current body."))
+    :documentation "Unconditionally abort the evaluation of the current body.")
+
+  ;; Macro for adding to `package-pinned-packages'.  To use properly,
+  ;; make sure this is placed before any calls to `package-install'
+  ;; (e.g., via :package) for every pinned package.
+  (setup-define :pin
+    (lambda (package archive)
+      `(add-to-list 'package-pinned-packages '(,package ,archive)))
+    :documentation "Pin PACKAGE to ARCHIVE.
+PACKAGE is a symbol representing a package.  ARCHIVE is a string
+representing an archive (it should be the car of an element in
+package-archives, e.g. \"gnu\")."))
 
 ;; Add setup entries to imenu.  Modified from
 ;; https://www.emacswiki.org/emacs/SetupEl#h5o-31.
