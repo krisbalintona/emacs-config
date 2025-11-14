@@ -847,14 +847,11 @@ to if called with ARG, or any prefix argument."
              :spacer #(" " 0 1 (cursor t)))))
 
 ;;;; Dabbrev
-;; 2025-10-23 TODO: Document these:
-;; - `dabbrev-case-distinction'
-;; - `dabbrev-case-fold-search'
 (setup dabbrev
   (with-eval-after-load 'dabbrev
     (setopt dabbrev-abbrev-char-regexp "\\sw\\|\\s_" ; Look for symbols
             dabbrev-abbrev-skip-leading-regexp "[$*/=~']"
-            dabbrev-case-fold-search nil ; Case is significant
+            dabbrev-case-fold-search nil ; Case is significant; see also `dabbrev-case-distinction'
             dabbrev-upcase-means-case-search t)
 
     (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
