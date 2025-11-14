@@ -3602,7 +3602,8 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
 ;; TODO 2025-10-28: Document:
 ;; - `org-mime-debug'
 (setup org-mime
-  (:package org-mime)
+  (:package (org-mime :url "https://github.com/krisbalintona/org-mime.git"
+                      :branch "merge"))
 
   (with-eval-after-load 'message
     (autoload 'org-mime-edit-mail-in-org-mode "org-mime")
