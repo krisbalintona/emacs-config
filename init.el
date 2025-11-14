@@ -2720,6 +2720,12 @@ PROP is the name of the property.  See
     (cl-nsubstitute '(eat-project "EAT") '(project-shell "Shell")
                     project-switch-commands :test #'equal)))
 
+;; Integration with vc.el
+(setup eat
+  (with-eval-after-load 'vc
+    ;; NOTE 2025-11-13: I've created an issue to get this into
+    ;; upstream: https://codeberg.org/akib/emacs-eat/issues/241
+    (add-to-list 'vc-deduce-backend-nonvc-modes 'eat-mode)))
 
 ;; Unbind M-<NUMBER> keybinds because I use them for switching betweeb
 ;; tab-bar tabs
