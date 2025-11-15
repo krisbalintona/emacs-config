@@ -1358,15 +1358,21 @@ call `diff-buffer-with-file’ instead."
   (setopt org-imenu-depth 7))      ; Show more than just 2 levels...
 
 ;;; Isearch
+;; TODO 2025-11-15: Document:
+;; - `lazy-highlight-initial-delay'
+;; - `lazy-highlight-interval'
 ;; Incremental search
 (setup isearch
 
-  (setopt isearch-repeat-on-direction-change t
-          isearch-allow-scroll 'unlimited
-          isearch-allow-motion t
-          isearch-lazy-count t
-          isearch-wrap-pause 'no-ding)
+  (with-eval-after-load 'isearch
+    (setopt isearch-repeat-on-direction-change t
+            isearch-allow-scroll 'unlimited
+            isearch-allow-motion t
+            isearch-wrap-pause 'no-ding)
 
+    (setopt isearch-lazy-count t
+            lazy-highlight-no-delay-length 5))
+  
   ;; Treatment of whitespace.  Also be aware of the
   ;; `isearch-toggle-lax-whitespace' command during isearch searches
   (setopt isearch-lax-whitespace t
