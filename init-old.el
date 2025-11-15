@@ -640,30 +640,6 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
         (forward-line 2))
       (rename-buffer (concat "*Scratch for " mode "*") t))))
 
-;;;; Info
-;; TODO 2025-06-16: Document:
-;; - `Info-hide-note-references’
-;; More easily distinguish between paragraphs and function signatures
-;; in Info documentation manuals.
-(use-package info
-  :ensure nil
-  :hook
-  (Info-selection-hook . mixed-pitch-mode)
-  (Info-selection-hook . krisb-info-font-resize)
-  :custom
-  (Info-isearch-search nil)         ; Limit isearch to the node we see
-  :config
-  (defun krisb-info-font-resize ()
-    "Increase the font size of text in Info buffers."
-    (face-remap-set-base 'default `(:height 1.2)))
-
-  ;; TODO 2025-05-26: Place this in :custom-face?
-  ;; Increase font size of title faces
-  (set-face-attribute 'info-title-1 nil :height 1.4)
-  (set-face-attribute 'info-title-2 nil :height 1.3)
-  (set-face-attribute 'info-title-3 nil :height 1.2)
-  (set-face-attribute 'info-title-4 nil :height 1.1))
-
 ;;;; Hippie-expand
 (use-package hippie-exp
   :ensure nil

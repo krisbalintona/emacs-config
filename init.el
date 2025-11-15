@@ -4100,6 +4100,40 @@ completion at point function."
     (add-to-list 'project-switch-commands '(project-compile "Compile"))
     (add-to-list 'project-switch-commands '(project-recompile "Recompile"))))
 
+;;; Info
+;; TODO 2025-06-16: Document:
+;; - `Info-hide-note-references’
+(setup info
+  
+  (with-eval-after-load 'info
+    (setup mixed-pitch-mode
+      (:if-package mixed-pitch-mode)
+      ;; TODO 2025-11-15: Revisit whether I want `mixed-pitch-mode'
+      ;; enabled
+      (:quit)
+      
+      (add-hook 'Info-selection-hook #'mixed-pitch-mode)))
+  
+  (with-eval-after-load 'info
+    (setopt Info-isearch-search nil))
+  
+  ;; Adjust font sizes
+  (with-eval-after-load 'info
+    (defun krisb-info-font-resize ()
+      "Increase the font size of text in Info buffers."
+      (when (bound-and-true-p mixed-pitch-mode)
+        (face-remap-set-base 'default '(:height 1.2))))
+    (add-hook 'Info-selection-hook #'krisb-info-font-resize)
+
+    (set-face-attribute 'info-title-1 nil :height 1.4)
+    (set-face-attribute 'info-title-2 nil :height 1.3)
+    (set-face-attribute 'info-title-3 nil :height 1.2)
+    (set-face-attribute 'info-title-4 nil :height 1.1)))
+
+;;; Fish-mode
+(setup fish-mode
+  (:package fish-mode))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()
