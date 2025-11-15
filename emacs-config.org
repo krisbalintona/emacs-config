@@ -4305,6 +4305,16 @@ Mode line indicator for notmuch emails:
                   (apply args))))
 #+end_src
 
+I have several patches awaiting review or application. They are:
++ [[https://www.mail-archive.com/notmuch@notmuchmail.org/msg54639.html][Re: Obey message-cite-reply-position from Emacs' message.el]]
++ [[https://www.mail-archive.com/notmuch@notmuchmail.org/msg54969.html][[PATCH] emacs: emacs: fix `notmuch-*-filter-by-tag' query strings]]
+#+begin_src emacs-lisp :noweb-ref link-monkeypatches :noweb-sep "\n\n"
+  ;; I have several patches awaiting review or application.
+  (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/notmuch/emacs/notmuch.el")
+  (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/notmuch/emacs/notmuch-mua.el")
+  (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/notmuch/emacs/notmuch-tree.el")
+#+end_src
+
 ***** Notmuch-addr:
 
 #+name: notmuch-addr
@@ -4997,6 +5007,7 @@ Log when the value of certain properties are changed:
                :empty-lines 1))))
 #+end_src
 
+I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/html/emacs-orgmode/2025-05/msg00212.html][Re: [PATCH] Accept nil outline path for file+olp+datetree org-capture-te]]. I use my bespoke version instead, for now.
 #+begin_src emacs-lisp :noweb-ref link-monkeypatches :noweb-sep "\n\n"
   ;; Load my bespoke version before org's version of org-capture
   (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/org-mode/lisp/org-capture.el")

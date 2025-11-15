@@ -43,6 +43,11 @@ nothing."
 ;; load that file
 (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/emacs-vtable-ship-mints/lisp/emacs-lisp/vtable.el")
 
+;; I have several patches awaiting review or application.
+(krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/notmuch/emacs/notmuch.el")
+(krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/notmuch/emacs/notmuch-mua.el")
+(krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/notmuch/emacs/notmuch-tree.el")
+
 ;; Load my bespoke version before org's version of org-capture
 (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/org-mode/lisp/org-capture.el")
 
