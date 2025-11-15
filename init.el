@@ -1,5 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 
+(setq force-load-messages t)
+
 (setopt user-full-name "Kristoffer Balintona"
         user-mail-address "krisbalintona@gmail.com")
 

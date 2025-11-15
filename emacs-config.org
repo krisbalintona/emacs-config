@@ -30,6 +30,14 @@ See also the useful command ~org-babel-goto-named-src-block~ and other useful co
   (setopt load-prefer-newer t)
 #+end_src
 
+** Be verbose: message when any file is loaded
+
+For the sake of debugging my config file and ensuring a reasonable startup speed, I make sure a message is printed every time a package is loaded.
+#+name: load-messages
+#+begin_src emacs-lisp
+  (setq force-load-messages t)
+#+end_src
+
 ** Add my WIP "monkey patches" directory to ~load-path~
 
 #+name: wip
@@ -4999,6 +5007,8 @@ Log when the value of certain properties are changed:
 
 #+begin_src emacs-lisp :tangle "init.el"
   ;; -*- lexical-binding: t; -*-
+
+  <<load-messages>>
 
   <<bio>>
 
