@@ -341,6 +341,11 @@ package-archives, e.g. \"gnu\")."))
   ;; Disable the ring-bell (it's annoying)
   (setopt ring-bell-function #'ignore)
   
+  ;; Hide `buffer-face-mode' minor-mode lighter
+  (setup face-remap
+    
+    (:hide-mode buffer-face-mode))
+  
   ;; Follow symlinks when opening files
   (setopt find-file-visit-truename t)
   

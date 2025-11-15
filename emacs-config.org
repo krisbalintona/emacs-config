@@ -1113,6 +1113,15 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
 #+end_src
 See also ~(elisp) Beeping~.
 
+** Hide "BufFace" minor-mode lighter
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Hide `buffer-face-mode' minor-mode lighter
+  (setup face-remap
+    
+    (:hide-mode buffer-face-mode))
+#+end_src
+
 * General file handling
 
 ** Follow symlinks when opening files
@@ -5332,4 +5341,4 @@ Log when the value of certain properties are changed:
 #  LocalWords:  noweb org's Linters Balintona Kristoffer LocalWords Elpaca el Runtime PDFs Ef elisp
 #  LocalWords:  Minibuffer Vertico Fontaine Theming Savehist minibuffer facto de Minibuffers pdf El
 #  LocalWords:  minibuffers Autorevert WIP EmacsWiki TODO GCMH Imenu Isearch Newcomment VCS VC jj
-#  LocalWords:  jujutsu JJ Hotfuzz hotfuzz emacs
+#  LocalWords:  jujutsu JJ Hotfuzz hotfuzz emacs BufFace
