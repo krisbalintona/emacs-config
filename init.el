@@ -1500,7 +1500,8 @@ call `diff-buffer-with-file’ instead."
 
     ;; Tags
     (setopt org-tags-column 0
-            org-tags-exclude-from-inheritance '("__journal" "__log" "__top_of_mind"))
+            org-tags-exclude-from-inheritance
+            '("PROJECT" "__journal" "__log" "__top_of_mind"))
 
     ;; Properties
     (setopt org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
@@ -1562,6 +1563,86 @@ call `diff-buffer-with-file’ instead."
                    (preserve-size . (nil . t))
                    (window-parameters . ((mode-line-format . none)))
                    (post-command-select-window . t)))))
+
+(with-eval-after-load 'org-agenda
+  ;; `org-agenda-skip-function' functions constructed by
+  ;; `krisb-org-agenda-skip-org-ql', which uses org-ql.  These
+  ;; functions, effectively, let me query org todos instead of with the
+  ;; typical syntax.
+  (defun krisb-org-agenda-skip-demand ()
+    "Filter tasks for demand agenda."
+    (krisb-org-agenda-skip-org-ql
+     '(and (not (done))
+           (not (deadline))
+           (not (scheduled))
+           (not (tags-local "PROJECT" "INBOX"))
+           (or (priority "A")))))
+  
+  (defun krisb-org-agenda-skip-focus ()
+    "Filter tasks for focus agenda."
+    (krisb-org-agenda-skip-org-ql
+     '(and (not (done))
+           (not (tags-local "PROJECT" "INBOX"))
+           (or (scheduled :to today)
+               (deadline :to today)))))
+  
+  (defun krisb-org-agenda-skip-routine ()
+    "Filter tasks for routine agenda."
+    (krisb-org-agenda-skip-org-ql
+     '(and (not (done))
+           (not (tags-local "PROJECT" "INBOX"))
+           (or (and (or (habit)
+                        (path "recurring\\.org"))
+                    (ts-active :to today))))))
+  
+  (defun krisb-org-agenda-skip-radar ()
+    "Filter tasks for radar agenda."
+    (krisb-org-agenda-skip-org-ql
+     '(and (not (done))
+           (not (tags-local "PROJECT" "INBOX"))
+           (or (and (todo "NEXT")
+                    (not (or (scheduled)
+                             (deadline))))))))
+  
+  (defun krisb-org-agenda-skip-review ()
+    "Filter tasks for review agenda."
+    (krisb-org-agenda-skip-org-ql
+     '(and (not (done))
+           (or (todo "MAYBE")
+               (tags-local "REVIEW")))))
+  
+  (defun krisb-org-agenda-skip-inbox ()
+    "Filter tasks for inbox agenda."
+    (krisb-org-agenda-skip-org-ql
+     '(and (not (done))
+           (tags-local "INBOX"))))
+  
+  (setopt org-agenda-custom-commands
+          '(("n" "Agenda and all TODOs"
+             ((agenda "")
+              (alltodo "")))
+            ("d" "Demand"
+             ((alltodo ""
+                       ((org-agenda-overriding-header "Demand")
+                        (org-agenda-skip-function 'krisb-org-agenda-skip-demand)))))
+            ("f" "Focus"
+             ((alltodo ""
+                      ((org-agenda-overriding-header "Focus")
+                       (org-agenda-skip-function 'krisb-org-agenda-skip-focus)))))
+            ("r" "Radar"
+             ((alltodo ""
+                       ((org-agenda-overriding-header "Radar")
+                        (org-agenda-skip-function 'krisb-org-agenda-skip-radar)))
+              (alltodo ""
+                       ((org-agenda-overriding-header "Routine")
+                        (org-agenda-skip-function 'krisb-org-agenda-skip-routine)))))
+            ("R" "Review"
+             ((alltodo ""
+                       ((org-agenda-overriding-header "Review")
+                        (org-agenda-skip-function 'krisb-org-agenda-skip-review)))
+              (alltodo ""
+                       ((org-agenda-overriding-header "Inbox")
+                        (org-agenda-skip-function 'krisb-org-agenda-skip-inbox))))))))
 
 ;;;;; Org-clock
 ;; TODO 2025-05-24: Document:
@@ -2402,28 +2483,26 @@ a random date within the next DAYS days."
 ;; org-ql to define functions supplied to `org-agenda-skip-function'
 ;; to construct his org-agenda views
 (setup org-ql
-  (defvar prev-query nil)
-  (defvar prev-buffer nil)
-  (defvar prev-match-cdr nil)
+  (with-eval-after-load 'org-agenda
+    (defvar prev-query nil)
+    (defvar prev-buffer nil)
+    (defvar prev-match-cdr nil)
+    
+    (define-advice org-agenda (:before (&rest _) reset-skip-cache)
+      "Reset cache for `krisb-org-agenda-skip-org-ql'."
+      (setq prev-query nil
+            prev-buffer nil
+            prev-match-cdr nil))
 
-  (define-advice org-agenda (:before (&rest _) reset-skip-cache)
-    "Reset cache for `krisb-org-agenda-skip-org-ql'."
-    (setq prev-query nil
-          prev-buffer nil
-          prev-match-cdr nil))
+    (advice-add 'org-agenda-get-day-entries :before #'org-agenda@reset-skip-cache)
+    (advice-add 'org-agenda-get-deadlines :before #'org-agenda@reset-skip-cache)
+    (advice-add 'org-agenda-get-scheduled :before #'org-agenda@reset-skip-cache)
+    (advice-add 'org-agenda-get-progress :before #'org-agenda@reset-skip-cache)
+    (advice-add 'org-agenda-get-timestamps :before #'org-agenda@reset-skip-cache)
+    (advice-add 'org-agenda-get-sexps :before #'org-agenda@reset-skip-cache)
+    (advice-add 'org-agenda-get-blocks :before #'org-agenda@reset-skip-cache)
+    (advice-add 'org-agenda-get-todos :before #'org-agenda@reset-skip-cache)
 
-  (advice-add 'org-agenda-get-day-entries :before #'org-agenda@reset-skip-cache)
-  (advice-add 'org-agenda-get-deadlines :before #'org-agenda@reset-skip-cache)
-  (advice-add 'org-agenda-get-scheduled :before #'org-agenda@reset-skip-cache)
-  (advice-add 'org-agenda-get-progress :before #'org-agenda@reset-skip-cache)
-  (advice-add 'org-agenda-get-timestamps :before #'org-agenda@reset-skip-cache)
-  (advice-add 'org-agenda-get-sexps :before #'org-agenda@reset-skip-cache)
-  (advice-add 'org-agenda-get-blocks :before #'org-agenda@reset-skip-cache)
-  (advice-add 'org-agenda-get-todos :before #'org-agenda@reset-skip-cache)
-
-  (use-package org-ql
-    :demand t
-    :config
     (defun krisb-org-agenda-skip-org-ql (query &optional force)
       "Construct skip function using org-ql QUERY.
 Do not use cache when FORCE is non-nil."
@@ -2457,18 +2536,7 @@ Do not use cache when FORCE is non-nil."
               (when (< cur-point (car prev-match-cdr))
                 (throw :exit (car prev-match-cdr)))
               (setq prev-match-cdr (cdr prev-match-cdr)))
-            (point-max))))))
-
-  (defun krisb-skip-non-archivable-tasks ()
-    "Skip trees that are not available for archiving."
-    (krisb-org-agenda-skip-org-ql
-     `(and (done)
-           (not (todo "FROZEN"))
-           (not (tags "INBOX"))
-           (not (tags-inherited "ARCHIVEALL"))
-           (or (not (tags "NOARCHIVE"))
-               (and (not (tags-local "NOARCHIVE"))
-                    (org-inlinetask-at-task-p)))))))
+            (point-max)))))))
 
 ;;;; Bespoke extensions
 ;; Log changes to certain properties.
