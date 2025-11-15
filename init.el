@@ -4153,6 +4153,70 @@ completion at point function."
 (setup fish-mode
   (:package fish-mode))
 
+;;; Backup
+;; TODO 2025-05-22: Document:
+;; - `dired-kept-versions’
+;; - `dired-backup-overwrite'
+;; Backup files: "Emacs makes a backup for a file only the first time
+;; the file is saved from the buffer that visits it."
+(setup files
+  
+  (setopt make-backup-files t   ; See docstring for useful information
+          backup-by-copying t) ; Always copy; see (info "(emacs) Backup Copying")
+  (setup vc
+    (setopt vc-make-backup-files t))
+  
+  ;; Numbering backups
+  (setopt version-control t
+          ;; Be generous: file space is cheap
+          kept-new-versions 10
+          kept-old-versions 3
+          delete-old-versions t)
+  
+  ;; REVIEW 2025-11-15: Consider not hashing file names, instead
+  ;; having a directory-tree structure (with a non-hashed file name)
+  ;; instead the backup directory (corresponding with the current
+  ;; file).  This is what Ihor does in his config, setting
+  ;; `make-backup-file-name-function' instead of advising
+  ;; `make-backup-file-name-1':
+  ;; https://github.com/yantar92/emacs-config.  Doing so in a way that
+  ;; respects `backup-directory-alist' and other built-in
+  ;; functionality is complicated though I think... see see
+  ;; `make-backup-file-name-1' and the usage of
+  ;; ``make-backup-file-name-1' in `find-backup-file-name'.
+  ;; 
+  ;; REVIEW 2025-11-15: Does this work with `file-name-sans-versions',
+  ;; as the docstring of `make-backup-file-name-function' instructs it
+  ;; should?
+  ;; 
+  ;; Modified from Doom Emacs.  Backup files have names that are
+  ;; hashed.
+  (defun krisb-backup-file-name-hash (fn file)
+    "Hash the backup file name.
+Takes any FILE and return a hashed version.
+
+This is necessary when the user has very long file names since some
+systems, including Linux, have a maximum for the number of bytes a file
+name occupies.  With this method, we ensure backup file names are an
+acceptable length while still being unique.  The only potential downside
+is that outside of Emacs, the backup file name alone does not indicate
+which file on the system it backs up."
+    (let ((alist backup-directory-alist)
+          backup-directory)
+      (while alist
+        (let ((elt (car alist)))
+          (if (string-match (car elt) file)
+              (setq backup-directory (cdr elt)
+                    alist nil)
+            (setq alist (cdr alist)))))
+      (let ((file (funcall fn file)))
+        (if (or (null backup-directory)
+                (not (file-name-absolute-p backup-directory)))
+            file
+          (expand-file-name (sha1 (file-name-nondirectory file))
+                            (file-name-directory file))))))
+  (advice-add 'make-backup-file-name-1 :around #'krisb-backup-file-name-hash))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

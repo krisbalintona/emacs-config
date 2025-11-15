@@ -941,53 +941,6 @@ command."
     ("l" . dired-hist-go-back)
     ("r" . dired-hist-go-forward)))
 
-;;;; Backups
-;; Backup files. "Emacs makes a backup for a file only the first time
-;; the file is saved from the buffer that visits it."
-;; TODO 2025-05-22: Document:
-;; - `make-backup-files’
-;; - `dired-kept-versions’
-;; - `kept-old-versions’
-;; - `dired-backup-overwrite'
-(use-package files
-  :ensure nil
-  :custom
-  (backup-by-copying t)          ; See (info "(emacs) Backup Copying")
-  (vc-make-backup-files t)
-  ;; Numbering backups
-  (version-control t)
-  (kept-new-versions 4)
-  (delete-old-versions t)
-  :config
-  ;; TODO 2025-05-23: Mention no-littering's
-  ;; `no-littering-theme-backups'.
-  ;; Modified from Doom Emacs.  Backup files have names that are hashed.
-  (defun krisb-backup-file-name-hash (fn file)
-    "Hash the backup file name.
-Takes any FILE and return a hashed version.
-
-This is necessary when the user has very long file names since some
-systems, including Linux, have a maximum for the number of bytes a file
-name occupies.  With this method, we ensure backup file names are an
-acceptable length while still being unique.  The only potential downside
-is that outside of Emacs, the backup file name alone does not indicate
-which file on the system it backs up."
-    (let ((alist backup-directory-alist)
-          backup-directory)
-      (while alist
-        (let ((elt (car alist)))
-          (if (string-match (car elt) file)
-              (setq backup-directory (cdr elt)
-                    alist nil)
-            (setq alist (cdr alist)))))
-      (let ((file (funcall fn file)))
-        (if (or (null backup-directory)
-                (not (file-name-absolute-p backup-directory)))
-            file
-          (expand-file-name (sha1 (file-name-nondirectory file))
-                            (file-name-directory file))))))
-  (advice-add 'make-backup-file-name-1 :around #'krisb-backup-file-name-hash))
-
 ;;;; Hide-mode-line
 (use-package hide-mode-line
   :ensure t
