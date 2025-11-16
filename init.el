@@ -1097,19 +1097,19 @@ Then apply ARGS."
 ;; faithful to the Emacs infrastructure
 (setup corfu
   (:package corfu)
-  (:require)
-
+  
   (:bind-keys
    ;; TODO 2025-05-20: Revisit this.
    ;; ("M-i" . completion-at-point) ; For harmony with "M-i" in `completion-preview-active-mode-map'
    :map corfu-map
    ("M-d" . corfu-info-documentation))
 
-  (setopt corfu-count 14
-          corfu-scroll-margin 3
-          ;; Always have the same width
-          corfu-min-width 75
-          corfu-max-width corfu-min-width)
+  (with-eval-after-load 'corfu
+    (setopt corfu-count 14
+            corfu-scroll-margin 3
+            ;; Always have the same width
+            corfu-min-width 75
+            corfu-max-width corfu-min-width))
 
   ;; Allow spaces and don't quit on boundary to leverage orderless's
   ;; space-separated components
@@ -1127,28 +1127,29 @@ Then apply ARGS."
 
 ;; Extras
 (setup corfu
-  ;; Enable corfu in minibuffer if `vertico-mode' is disabled.  From
-  ;; https://github.com/minad/corfu#completing-with-corfu-in-the-minibuffer
-  (defun krisb-corfu-enable-in-minibuffer-conditionally ()
-    "Enable Corfu in the minibuffer if vertico is not active."
-    (when (and global-corfu-mode (not (bound-and-true-p vertico-mode)))
-      (setq-local corfu-auto nil) ; Ensure auto completion is disabled
-      (corfu-mode 1)))
-  (add-hook 'minibuffer-setup-hook #'krisb-corfu-enable-in-minibuffer-conditionally)
+  (with-eval-after-load 'corfu
+    ;; Enable corfu in minibuffer if `vertico-mode' is disabled.  From
+    ;; https://github.com/minad/corfu#completing-with-corfu-in-the-minibuffer
+    (defun krisb-corfu-enable-in-minibuffer-conditionally ()
+      "Enable Corfu in the minibuffer if vertico is not active."
+      (when (and global-corfu-mode (not (bound-and-true-p vertico-mode)))
+        (setq-local corfu-auto nil) ; Ensure auto completion is disabled
+        (corfu-mode 1)))
+    (add-hook 'minibuffer-setup-hook #'krisb-corfu-enable-in-minibuffer-conditionally)
 
-  (with-eval-after-load 'consult
-    ;; Transfer completion of corfu to the minibuffer.  Taken from
-    ;; https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-minibuffer.
-    (defun krisb-corfu-move-to-minibuffer ()
-      "Transfer corfu completion to the minibuffer."
-      (interactive)
-      (pcase completion-in-region--data
-        (`(,beg ,end ,table ,pred ,extras)
-         (let ((completion-extra-properties extras)
-               completion-cycle-threshold completion-cycling)
-           (consult-completion-in-region beg end table pred)))))
-    (:bind-keys :map corfu-map ("M-m" . krisb-corfu-move-to-minibuffer))
-    (add-to-list 'corfu-continue-commands #'krisb-corfu-move-to-minibuffer)))
+    (with-eval-after-load 'consult
+      ;; Transfer completion of corfu to the minibuffer.  Taken from
+      ;; https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-minibuffer.
+      (defun krisb-corfu-move-to-minibuffer ()
+        "Transfer corfu completion to the minibuffer."
+        (interactive)
+        (pcase completion-in-region--data
+          (`(,beg ,end ,table ,pred ,extras)
+           (let ((completion-extra-properties extras)
+                 completion-cycle-threshold completion-cycling)
+             (consult-completion-in-region beg end table pred)))))
+      (:bind-keys :map corfu-map ("M-m" . krisb-corfu-move-to-minibuffer))
+      (add-to-list 'corfu-continue-commands #'krisb-corfu-move-to-minibuffer))))
 
 ;; Extension that comes with corfu.  Popup documentation window for
 ;; corfu candidates
@@ -1157,18 +1158,19 @@ Then apply ARGS."
 
   (add-hook 'corfu-mode-hook #'corfu-popupinfo-mode)
 
-  (:bind-keys :map corfu-map
-              ([remap corfu-info-documentation] . corfu-popupinfo-toggle)
-              ("M-l" . corfu-popupinfo-location))
+  (bind-keys :map corfu-map
+             ([remap corfu-info-documentation] . corfu-popupinfo-toggle)
+             ("M-l" . corfu-popupinfo-location))
 
-  (setopt corfu-popupinfo-delay '(nil . 0.4)  ; Don't display initially
-          corfu-popupinfo-direction '(right left vertical)
-          corfu-popupinfo-hide t
-          corfu-popupinfo-resize t
-          corfu-popupinfo-max-height 70
-          corfu-popupinfo-max-width 80
-          corfu-popupinfo-min-height 1
-          corfu-popupinfo-min-width 25))
+  (with-eval-after-load 'corfu-popupinfo
+    (setopt corfu-popupinfo-delay '(nil . 0.4) ; Don't display initially
+            corfu-popupinfo-direction '(right left vertical)
+            corfu-popupinfo-hide t
+            corfu-popupinfo-resize t
+            corfu-popupinfo-max-height 70
+            corfu-popupinfo-max-width 80
+            corfu-popupinfo-min-height 1
+            corfu-popupinfo-min-width 25)))
 
 ;;; Electric
 ;; TODO 2025-05-20: Document the user options below in the literate
