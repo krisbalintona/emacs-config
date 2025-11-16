@@ -3950,6 +3950,8 @@ instead."
               (expand-file-name (format "enchant/%s.dic" ispell-dictionary) (xdg-config-home))))))
 
 ;;; Flyspell
+;; TODO 2025-11-16: Document:
+;; - `flyspell-check-changes'
 (setup flyspell
   
   (add-hook 'text-mode-hook #'flyspell-mode)
@@ -3962,7 +3964,6 @@ instead."
     (setopt flyspell-issue-welcome-flag nil
             flyspell-issue-message-flag nil ; Greatly increase `flyspell-buffer' speed
             flyspell-abbrev-p t
-            flyspell-check-changes t
             flyspell-delay-use-timer t)) ; Emacs 31.1
             
   (:bind-keys :map flyspell-mode-map
