@@ -1424,7 +1424,7 @@ call `diff-buffer-with-file’ instead."
     ;; - `org-use-fast-todo-selection'
     ;; Todos
     (setopt org-todo-keywords
-            '((sequence "TODO(t)" "NEXT(n)" "HOLD(h@/!)" "MAYBE(m)" "|"
+            '((sequence "TODO(t)" "DOING(o)" "NEXT(n)" "HOLD(h@/!)" "MAYBE(m)" "|"
                         "DONE(d!/@)" "CANCELED(c@/!)"))
             org-todo-keyword-faces
             '(("NEXT" . (bold success))
@@ -1576,31 +1576,26 @@ call `diff-buffer-with-file’ instead."
   ;; `krisb-org-agenda-skip-org-ql', which uses org-ql.  These
   ;; functions, effectively, let me query org todos instead of with the
   ;; typical syntax.
-  (defun krisb-org-agenda-skip-demand ()
-    "Filter tasks for demand agenda."
-    (krisb-org-agenda-skip-org-ql
-     '(and (not (done))
-           (not (deadline))
-           (not (scheduled))
-           (not (tags-local "PROJECT" "INBOX"))
-           (or (priority "A")))))
-  
   (defun krisb-org-agenda-skip-focus ()
     "Filter tasks for focus agenda."
     (krisb-org-agenda-skip-org-ql
      '(and (not (done))
            (not (tags-local "PROJECT" "INBOX"))
-           (or (scheduled :to today)
-               (deadline :to today)))))
+           (or (todo "DOING")
+               (and (priority "A")
+                    (not (or (scheduled :to today)
+                             (deadline :to auto))))))))
   
   (defun krisb-org-agenda-skip-routine ()
     "Filter tasks for routine agenda."
     (krisb-org-agenda-skip-org-ql
      '(and (not (done))
            (not (tags-local "PROJECT" "INBOX"))
+           (not (todo "DOING"))
            (or (and (or (habit)
                         (path "recurring\\.org"))
-                    (ts-active :to today))))))
+                    (or (scheduled :to today)
+                        (deadline :to auto)))))))
   
   (defun krisb-org-agenda-skip-radar ()
     "Filter tasks for radar agenda."
@@ -1628,10 +1623,6 @@ call `diff-buffer-with-file’ instead."
           '(("n" "Agenda and all TODOs"
              ((agenda "")
               (alltodo "")))
-            ("d" "Demand"
-             ((alltodo ""
-                       ((org-agenda-overriding-header "Demand")
-                        (org-agenda-skip-function 'krisb-org-agenda-skip-demand)))))
             ("f" "Focus"
              ((alltodo ""
                       ((org-agenda-overriding-header "Focus")
