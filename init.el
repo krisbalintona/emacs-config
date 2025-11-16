@@ -3636,21 +3636,7 @@ from a `notmuch-search-mode' buffer.")
   
   (bind-keys ("M-*" . tempel-insert))
   
-  (dolist (hook '(prog-mode-hook text-mode-hook))
-    (add-hook hook #'krisb-tempel-setup-capf))
-  
-  ;; Applies to `tempel-expand' and `tempel-complete'.  We prefer
-  ;; non-pair characters to avoid inserting an extra pair from
-  ;; `electric-pair-mode'.  If set, it should be an unused (or at
-  ;; least very rarely used) comment delimiter to avoid indenting the
-  ;; line when pressing the TAB key and with `tab-always-indent' set
-  ;; to \\='complete.  If this is set to nil, then template names
-  ;; should not be ambiguous, otherwise trying to complete other
-  ;; symbol names will get hijacked by completing for tempel templates
-  ;; (assuming the tempel `completion-at-point’ functions are set).
-  (setopt tempel-trigger-prefix nil)
-  
-  ;; Element that expands other templates by name.  E.g., (i header)
+  ;; Element that expands other templates by name, e.g., (i header)
   ;; expands the template named "header."
   (with-eval-after-load 'tempel
     (defun krisb-tempel-include (elt)
@@ -3660,7 +3646,7 @@ from a `notmuch-search-mode' buffer.")
           (message "Template %s not found" (cadr elt))
           nil)))
     (add-to-list 'tempel-user-elements #'krisb-tempel-include))
-
+  
   ;; Set up with `completion-at-point-functions'
   (defun krisb-tempel-setup-capf ()
     "Add `tempel-expand' to the beginning of local `completion-at-point-functions'.
@@ -3669,9 +3655,8 @@ We also add `tempel-expand' to the beginning of the global value for
 `tempel-expand' to be the first `completion-at-point' function for the
 buffers in which this function is run."
     (add-hook 'completion-at-point-functions 'tempel-expand -90 t))
-  ;; Place `tempel-complete' at the beginning of the fallback (global
-  ;; value) `completion-at-point-functions'
-  (add-hook 'completion-at-point-functions #'tempel-complete -90))
+  (dolist (hook '(prog-mode-hook text-mode-hook))
+    (add-hook hook #'krisb-tempel-setup-capf)))
 
 ;;; Jinx
 ;; JIT spell checker that uses Enchant.  The executable is enchant-2.
@@ -4068,21 +4053,19 @@ instead."
 
 ;; Add cape functions to `completion-at-point-functions'
 (setup cape
+  (defun krisb-cape--dict-dabbrev ()
+    "Super-capf of `cape-dict' and `cape-dabbrev'."
+    (cape-wrap-super 'cape-dict 'cape-dabbrev))
   ;; For Emacs >30, disable the ispell capf automatically added to
   ;; text-mode buffers.  Recommended in
   ;; https://github.com/minad/corfu?tab=readme-ov-file#configuration.
-  ;; We use `cape-dict' as an alternative, adding it where needed
-  ;; (below).
+  ;; We use `cape-dict' as an alternative, adding it where needed.
   (setopt text-mode-ispell-word-completion nil)
-  
-  (defun krisb-cape-super-capf--dict-dabbrev ()
-    "Super-capf of `cape-dict' and `cape-dabbrev'."
-    (cape-wrap-super 'cape-dict :with 'cape-dabbrev))
 
   ;; Capfs added to the end of the global value of
   ;; `completion-at-point-functions'.  Consequently, they act as
   ;; fallback backends.
-  (dolist (capf (reverse '(cape-elisp-symbol krisb-cape-super-capf--dict-dabbrev)))
+  (dolist (capf (reverse '(cape-elisp-symbol krisb-cape--dict-dabbrev)))
     (add-hook 'completion-at-point-functions capf 100))
   
   ;; Macro to help adding capfs via major mode hooks
