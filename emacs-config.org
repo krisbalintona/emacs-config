@@ -1843,7 +1843,7 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
     ;; Capfs added to the end of the global value of
     ;; `completion-at-point-functions'.  Consequently, they act as
     ;; fallback backends.
-    (dolist (capf (reverse '(krisb-cape-super-capf--dict-dabbrev)))
+    (dolist (capf (reverse '(cape-elisp-symbol krisb-cape-super-capf--dict-dabbrev)))
       (add-hook 'completion-at-point-functions capf 100))
     
     ;; Macro to help adding capfs via major mode hooks
