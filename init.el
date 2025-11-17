@@ -1685,7 +1685,7 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
   (setopt org-capture-templates
           '(("t" "Todo" entry
              (file krisb-org-agenda-main-file)
-             "* TODO %? :inbox:%^g\n"
+             "* TODO %? :INBOX:%^g\n"
              :empty-lines 1)
             ("T" "Todo (without processing)" entry
              (file krisb-org-agenda-main-file)
@@ -3612,7 +3612,7 @@ send from."
     (add-to-list 'org-capture-templates
                  `("n" "Review newsletter/subscription email" entry
                    (file ,krisb-org-agenda-main-file)
-                   "* TODO [#E] Review subscription/newsletter email: [[%L][\"%:subject\"]] %? :email:inbox:%^g\n\nFrom %:from\nTo: %:to\n"
+                   "* TODO [#E] Review subscription/newsletter email: [[%L][\"%:subject\"]] %? :email:INBOX:%^g\n\nFrom %:from\nTo: %:to\n"
                    :immediate-finish t
                    :empty-lines 1)
                  'append)
