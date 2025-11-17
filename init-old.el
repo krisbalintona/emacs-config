@@ -1797,48 +1797,6 @@ The context buffer is the buffer that shows annotation contents in
   (notmuch-transient-prefix "C-d")
   (notmuch-transient-add-bindings t))
 
-;;;; MUA (mail transfer agent)
-
-;;;;; Sendmail
-;; Use `sendmail' program to send emails?  If yes, set the value of
-;; `send-mail-function' to `sendmail-send-it'
-(use-package sendmail
-  :ensure nil
-  :after message
-  :demand t
-  :custom
-  (mail-default-directory krisb-email-drafts-directory)
-  ;; The following options make sure that emails are sent from the
-  ;; email address specified in the "from" header field!  Taken from
-  ;; https://jonathanchu.is/posts/emacs-notmuch-isync-msmtp-setup/
-  (mail-specify-envelope-from t)
-  (message-sendmail-envelope-from 'header)
-  (mail-envelope-from 'header))
-
-;;;;; Smtpmail
-;; Use `msmtp' program to send emails?  If yes, set the value of
-;; `send-mail-function' to `smtpmail-send-it'
-(use-package smtpmail
-  :ensure nil
-  ;; For AUR:
-  ;; :ensure-system-package msmtp
-  :after message
-  :demand t
-  :custom
-  (smtpmail-queue-mail nil)
-  ;; Below are settings for Gmail.  See
-  ;; https://support.google.com/mail/answer/7126229?hl=en#zippy=%2Cstep-change-smtp-other-settings-in-your-email-client
-  (smtpmail-default-smtp-server "smtp.gmail.com")
-  (smtpmail-smtp-server "smtp.gmail.com")
-  (smtpmail-smtp-service 587)
-  (smtpmail-stream-type 'starttls)
-  (smtpmail-servers-requiring-authorization "gmail") ; NOTE 2024-08-25: Fixes Gmail's 530 error on sending
-  ;; Make sure email details that are used are not the current (when
-  ;; flushing) variables, but the variables used when writing the
-  ;; email
-  (smtpmail-store-queue-variables t)
-  (smtpmail-queue-dir (expand-file-name ".smtp-queue" krisb-email-drafts-directory)))
-
 ;;;; Shr
 ;; TODO 2025-06-11: Document these:
 ;; - `shr-cookie-policy’

@@ -3440,10 +3440,43 @@ send from."
   ;; `krisb-notmuch-set-sendmail-args'.  Read
   ;; https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer.
   (with-eval-after-load 'sendmail
-    (setopt sendmail-program (if (executable-find "gmi") "gmi" "sendmail")
+    (setopt sendmail-program (or (executable-find "gmi") "sendmail")
             send-mail-function 'sendmail-send-it))
-  (setopt notmuch-fcc-dirs nil) ; Gmail already copies sent emails, so don't move them elsewhere locally
-
+  
+  ;; GMail already copies sent emails, so don't move them elsewhere
+  ;; locally after sending.  (Using gmi to send emails also
+  ;; automatically does this for us locally.)
+  (with-eval-after-load 'notmuch
+    (setopt notmuch-fcc-dirs nil))
+  
+  ;; Set sendmail args appropriate to using lieer as `sendmail-program'
+  (defun krisb-notmuch-set-sendmail-args ()
+    "Modify `message-sendmail-extra-arguments' to send emails via gmi.
+  Set `message-sendmail-extra-arguments' such that, when
+  `sendmail-program' is the path to a gmi executable, the arguments passed
+  to `sendmail-program' are modified buffer-locally.  They are modified
+  such that gmi sends the email and stores the sent email in the
+  appropriate mail directory."
+    (when (and (stringp sendmail-program) (string-match-p "gmi" sendmail-program))
+      (let* ((from (downcase (message-fetch-field "from")))
+             (root-maildir krisb-email-directory)
+             ;; These maildirs are according to the structure in my
+             ;; local filesystem
+             (personal-maildir (expand-file-name "personal" root-maildir))
+             (uni-maildir (expand-file-name "uni" root-maildir)))
+        ;; See `message-send-mail-with-sendmail' for the relation
+        ;; between `sendmail-program' and
+        ;; `message-sendmail-extra-arguments'
+        (setq-local message-sendmail-extra-arguments
+                    (list "send" "--quiet" "-t" "-C"
+                          (cond
+                           ((string-match-p "krisbalintona@gmail\\.com" from)
+                            personal-maildir)
+                           ((string-match-p "kristoffer_balintona@alumni\\.brown\\.edu" from)
+                            uni-maildir)))))))
+  (with-eval-after-load 'message
+    (add-hook 'message-send-mail-hook #'krisb-notmuch-set-sendmail-args))
+  
   ;; TODO 2025-05-23: Revisit this.
   ;; (krisb-modus-themes-setup-faces
   ;;  "notmuch"
@@ -3469,30 +3502,7 @@ send from."
   ;; a high value doesn't work, so I put it here
   (setq notmuch-wash-citation-lines-prefix most-positive-fixnum
         notmuch-wash-citation-lines-suffix most-positive-fixnum)
-
-  ;; Set sendmail args appropriate to using lieer as
-  ;; `sendmail-program'
-  (defun krisb-notmuch-set-sendmail-args ()
-    "Set `message-sendmail-extra-arguments' arguments.
-Set `message-sendmail-extra-arguments' accordingly (changing the
-maildir) such that lieer can properly send the email. (This assumes
-`sendmail-program' is set to the gmi executable.) Instruction from
-https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer."
-    (when (and (stringp sendmail-program) (string-match-p "gmi" sendmail-program))
-      (let* ((from (downcase (message-fetch-field "from")))
-             (root-maildir krisb-email-directory)
-             ;; These maildirs are according to the structure in my
-             ;; local filesystem
-             (personal-maildir (expand-file-name "personal" root-maildir))
-             (uni-maildir (expand-file-name "uni" root-maildir)))
-        (cond
-         ((string-match-p (rx (literal "krisbalintona@gmail.com")) from)
-          (setq-local message-sendmail-extra-arguments `("send" "--quiet" "-t" "-C" ,personal-maildir)))
-         ((string-match-p (rx (literal "kristoffer_balintona@alumni.brown.edu")) from)
-          (setq-local message-sendmail-extra-arguments `("send" "--quiet" "-t" "-C" ,uni-maildir)))))))
-  (with-eval-after-load 'message
-    (add-hook 'message-send-mail-hook #'krisb-notmuch-set-sendmail-args))
-
+  
   ;; TODO 2025-05-23: Revisit this.
   ;; REVIEW 2024-09-26: Prot's lin package apparently makes disabling
   ;; this better?
@@ -4387,6 +4397,45 @@ which file on the system it backs up."
   (:package (package-upgrade-guard :url "https://github.com/kn66/package-upgrade-guard.el.git"))
   
   (package-upgrade-guard-mode 1))
+
+;;; Sendmail
+;; Use the `sendmail' program to send emails?  If yes, set the value
+;; of `send-mail-function' to `sendmail-send-it'
+(setup sendmail
+
+  ;; Make sure that emails are sent from the email address specified
+  ;; in the "From" header field.  Is sufficient when
+  ;; `message-sendmail-envelope-from' is 'obey-mail-envelope-from
+  ;; (default).  Alternatively, we can set
+  ;; `message-sendmail-envelope-from' to 'header.  (I prefer the
+  ;; latter approach, since specifies behavior specific to sending
+  ;; emails.)
+  (setopt mail-specify-envelope-from t
+          mail-envelope-from 'header))
+
+;;; Smtpmail
+;; Use `msmtp' program to send emails?  If yes, set the value of
+;; `send-mail-function' to `smtpmail-send-it'
+(setup smtpmail
+  ;; For AUR:
+  ;; :ensure-system-package msmtp
+  
+  ;; Queuing emails
+  (setopt smtpmail-queue-mail nil)
+  ;; Make sure email details that are used are not the current
+  ;; variables (the variables set when sending queued emails), but the
+  ;; variables used when writing the email
+  (setopt smtpmail-store-queue-variables t
+          smtpmail-queue-dir (expand-file-name "smtp-queue/" krisb-email-drafts-directory))
+  
+  ;; Below are the settings associated with GMail.  See
+  ;; https://support.google.com/mail/answer/7126229?hl=en#zippy=%2Cstep-change-smtp-other-settings-in-your-email-client
+  (setopt smtpmail-default-smtp-server "smtp.gmail.com"
+          smtpmail-smtp-server "smtp.gmail.com"
+          smtpmail-smtp-service 587
+          smtpmail-stream-type 'starttls
+          ;; 2024-08-25: Fixes Gmail's 530 error on sending
+          smtpmail-servers-requiring-authorization "gmail"))
 
 ;;; Startup time
 ;; Message for total init time after startup
