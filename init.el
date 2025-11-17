@@ -3809,7 +3809,7 @@ If SAVE is non-nil save, otherwise format candidate given action KEY."
     (add-hook 'message-send-hook #'org-mime-confirm-when-no-multipart))
 
   (with-eval-after-load 'org-mime
-    (setopt ;; org-mime-export-ascii 'utf-8
+    (setopt org-mime-export-ascii 'utf-8
             org-mime-preserve-breaks nil
             org-mime-export-options '( :with-latex imagemagick
                                        :section-numbers nil
