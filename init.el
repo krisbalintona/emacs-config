@@ -3273,6 +3273,7 @@ send from."
   ;; :ensure-system-package (notmuch
   ;;                         (gmi . lieer-git))
 
+  (autoload 'notmuch-mua-new-mail "notmuch-mua")
   (bind-keys ([remap compose-mail] . notmuch-mua-new-mail)
              :map krisb-open-keymap
              ("n" . notmuch))
