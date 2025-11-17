@@ -4339,6 +4339,12 @@ which file on the system it backs up."
                   (propertize (format-mode-line (flymake--mode-line-counters))
                               'face '(:inherit (bold mode-line-inactive)))))))
 
+;;; Flymake-vale
+(setup flymake-vale
+  (:package (flymake-vale :url "https://github.com/tpeacock19/flymake-vale.git"))
+  
+  (add-hook 'text-mode-hook #'flymake-vale-load))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

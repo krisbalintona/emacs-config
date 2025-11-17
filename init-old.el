@@ -1604,12 +1604,6 @@ Meant to be used as around advice for `org-archive--compute-location'."
   (org-appear-autokeywords t)
   (org-appear-inside-latex t))
 
-;;;; Flymake-vale
-(use-package flymake-vale
-  :ensure (:repo "https://github.com/tpeacock19/flymake-vale.git")
-  :defer t
-  :hook (text-mode-hook . flymake-vale-load))
-
 ;;;; Markdown-mode
 (use-package markdown-mode
   :ensure t

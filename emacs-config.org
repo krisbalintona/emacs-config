@@ -3231,6 +3231,16 @@ Consequently, the elisp backend is used if there is no other local backend to us
 
 **** Grammar checking
 
+***** Flymake-vale
+
+#+name: flymake-vale
+#+begin_src emacs-lisp
+  (setup flymake-vale
+    (:package (flymake-vale :url "https://github.com/tpeacock19/flymake-vale.git"))
+    
+    (add-hook 'text-mode-hook #'flymake-vale-load))
+#+end_src
+
 **** Org-mode: The de facto major mode for writing
 
 This section is for the major mode
@@ -5571,6 +5581,9 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
 
   ;;; Flymake
   <<flymake>>
+
+  ;;; Flymake-vale
+  <<flymake-vale>>
 
   ;;; Startup time
   <<startup-time>>
