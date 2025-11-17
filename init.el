@@ -4314,6 +4314,9 @@ which file on the system it backs up."
   ;; (text-mode-hook . (lambda ()
   ;;                     (setq-local flymake-indicator-type nil)
   ;;                     (flymake-mode 1)))
+
+  (add-hook 'prog-mode-hook #'flymake-mode)
+  (add-hook 'text-mode-hook #'flymake-mode)
   
   (setopt flymake-wrap-around nil)
   
