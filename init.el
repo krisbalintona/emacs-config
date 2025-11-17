@@ -1915,6 +1915,41 @@ inserted with e.g. `org-insert-last-stored-link' or
   (with-eval-after-load 'oc
     (require 'oc-biblatex)))
 
+;;;;; Org-refile
+;; TODO 2025-06-25: Document:
+;; - `org-refile-use-cache'
+(setup org-refile
+  (:if-package org)
+  
+  (setopt org-refile-targets
+          '((org-agenda-files . (:tag . "PROJECT"))
+            (org-agenda-files . (:level . 0))
+            (nil . (:maxlevel . 4)))
+          ;; TODO 2024-10-07: Think about whether I actually want this.  What
+          ;; if I want to refile to a non-todo heading in the current file?
+          ;; (org-refile-target-verify-function ; Only let not done todos be refile targets
+          ;;  (lambda () (if (org-entry-is-todo-p) (not (org-entry-is-done-p)))))
+          org-refile-target-verify-function nil
+          org-refile-allow-creating-parent-nodes 'confirm))
+
+(setup org-refile
+  (with-eval-after-load 'vertico
+    ;; Workaround for vertico issue with `org-refile'.  See
+    ;; https://github.com/minad/vertico#org-refile
+    (setopt org-refile-use-outline-path 'file
+            org-outline-path-complete-in-steps t)
+    (defun krisb-vertico-enforce-basic-completion (&rest args)
+      (minibuffer-with-setup-hook
+          (:append
+           (lambda ()
+             (let ((map (make-sparse-keymap)))
+               (define-key map [tab] #'minibuffer-complete)
+               (use-local-map (make-composed-keymap (list map) (current-local-map))))
+             (setq-local completion-styles (cons 'basic completion-styles)
+                         vertico-preselect 'prompt)))
+        (apply args)))
+    (advice-add #'org-olpath-completing-read :around #'krisb-vertico-enforce-basic-completion)))
+
 ;;;; Other org packages
 ;;;;; Org-contrib
 ;; Collection of org packages

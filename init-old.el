@@ -2464,35 +2464,6 @@ duration."
                                           (time-convert offset 'list))))
       (setf (hammy-current-interval-start-time hammy) new-start-time))))
 
-;;;; Org-refile
-;; TODO 2025-06-25: Document:
-;; - `org-refile-use-cache'
-(use-package org-refile
-  :ensure nil
-  :after org
-  :custom
-  (org-refile-targets
-   '((org-agenda-files . (:tag . "project"))
-     (org-agenda-files . (:level . 0))
-     (nil . (:maxlevel . 4))))
-  ;; TODO 2024-10-07: Think about whether I actually want this.  What
-  ;; if I want to refile to a non-todo heading in the current file?
-  ;; (org-refile-target-verify-function ; Only let not done todos be refile targets
-  ;;  (lambda () (if (org-entry-is-todo-p) (not (org-entry-is-done-p)))))
-  (org-refile-target-verify-function nil)
-  (org-refile-allow-creating-parent-nodes 'confirm)
-  :config
-  ;; Workaround for vertico issue with `org-refile'.  See
-  ;; https://github.com/minad/vertico#org-refile
-  (setopt org-refile-use-outline-path 'file
-          org-outline-path-complete-in-steps nil)
-  (when (bound-and-true-p vertico-mode)
-    (advice-add #'org-olpath-completing-read :around
-                (lambda (&rest args)
-                  (minibuffer-with-setup-hook
-                      (lambda () (setq-local completion-styles '(basic)))
-                    (apply args))))))
-
 ;;; Guix-management
 
 ;;;; Guix
