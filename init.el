@@ -3258,9 +3258,10 @@ send from."
 
   (:hide-mode)
 
+  (setopt footnote-prefix [(control ?c) ?f])
   (with-eval-after-load 'footnote
-    (setopt footnote-mode-line-string "FN"
-            footnote-spaced-footnotes nil
+    (setopt footnote-spaced-footnotes nil
+            footnote-mode-line-string "FN"
             footnote-prompt-before-deletion nil)))
 
 ;;; Notmuch
