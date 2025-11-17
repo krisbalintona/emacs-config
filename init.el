@@ -1582,9 +1582,9 @@ call `diff-buffer-with-file’ instead."
      '(and (not (done))
            (not (tags-local "PROJECT" "INBOX"))
            (or (todo "DOING")
-               (and (priority "A")
-                    (not (or (scheduled :to today)
-                             (deadline :to auto))))))))
+               (priority "A")
+               (scheduled :to today)
+               (deadline auto)))))
   
   (defun krisb-org-agenda-skip-routine ()
     "Filter tasks for routine agenda."
@@ -1610,17 +1610,16 @@ call `diff-buffer-with-file’ instead."
     "Filter tasks for review agenda."
     (krisb-org-agenda-skip-org-ql
      '(and (not (done))
-           (not (tags-local "PROJECT" "INBOX"))
-           (or (todo "MAYBE")
-               (toreview)
+           (not (tags-local "INBOX"))
+           (or (toreview)
                (tags-local "REVIEW")))))
   
   (defun krisb-org-agenda-skip-inbox ()
     "Filter tasks for inbox agenda."
     (krisb-org-agenda-skip-org-ql
      '(and (not (done))
-           (or (not (toreview))
-               (tags-local "INBOX")))))
+           (toreview)
+           (or (tags-local "INBOX")))))
   
   (setopt org-agenda-custom-commands
           '(("n" "Agenda and all TODOs"
