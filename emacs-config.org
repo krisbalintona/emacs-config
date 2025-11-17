@@ -114,6 +114,17 @@ I also relativize the packages that package.el installs by Emacs version, since 
     (:package try))
 #+end_src
 
+*** Package-guard-upgrade
+
+See a diff of files before upgrading a package through package.el's tarballs:
+#+name: package-guard-upgrade
+#+begin_src emacs-lisp
+  (setup package-upgrade-guard
+    (:package (package-upgrade-guard :url "https://github.com/kn66/package-upgrade-guard.el.git"))
+    
+    (package-upgrade-guard-mode 1))
+#+end_src
+
 ** Elpaca
 
 #+name: elpaca
@@ -5584,6 +5595,9 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
 
   ;;; Flymake-vale
   <<flymake-vale>>
+
+  ;;; Package-guard-upgrade
+  <<package-guard-upgrade>>
 
   ;;; Startup time
   <<startup-time>>

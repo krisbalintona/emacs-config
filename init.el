@@ -4345,6 +4345,12 @@ which file on the system it backs up."
   
   (add-hook 'text-mode-hook #'flymake-vale-load))
 
+;;; Package-guard-upgrade
+(setup package-upgrade-guard
+  (:package (package-upgrade-guard :url "https://github.com/kn66/package-upgrade-guard.el.git"))
+  
+  (package-upgrade-guard-mode 1))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()
