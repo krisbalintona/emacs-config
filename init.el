@@ -4291,6 +4291,14 @@ which file on the system it backs up."
                             (file-name-directory file))))))
   (advice-add 'make-backup-file-name-1 :around #'krisb-backup-file-name-hash))
 
+;;; Word-wrap-mode
+;; Instead of wrapping lines on whitespace, as is the default, also
+;; wrap lines on the characters denoted by
+;; `word-wrap-whitespace-characters’, e.g., em-dashes and en-dashes.
+(setup word-wrap-mode
+  
+  (global-word-wrap-whitespace-mode 1))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()
