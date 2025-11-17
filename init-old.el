@@ -646,44 +646,6 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   :bind
   ([remap dabbrev-expand] . hippie-expand))
 
-;;;; Flymake
-;; TODO 2025-05-24: Document:
-;; - `elisp-flymake-byte-compile-load-path’
-;; - `flymake-suppress-zero-counters’
-(use-package flymake
-  :ensure nil
-  :hook
-  ;; TODO 2025-05-24: Revisit this.
-  ;; (prog-mode-hook . (lambda ()
-  ;;                     (setq-local flymake-indicator-type nil
-  ;;                                 flymake-show-diagnostics-at-end-of-line 'fancy) ; Emacs 31 value
-  ;;                     (flymake-mode 1)))
-  (text-mode-hook . (lambda ()
-                      (setq-local flymake-indicator-type nil)
-                      (flymake-mode 1)))
-  :custom
-  (flymake-wrap-around nil)
-  (flymake-mode-line-format
-   '(" " flymake-mode-line-title flymake-mode-line-exception flymake-mode-line-counters))
-  (flymake-mode-line-counter-format
-   '("["
-     flymake-mode-line-error-counter
-     flymake-mode-line-warning-counter
-     flymake-mode-line-note-counter
-     "]"))
-
-  ;; Indicators
-  (flymake-indicator-type nil)
-  (flymake-fringe-indicator-position nil) ; Position for fringe position type
-  (flymake-margin-indicator-position 'right-margin) ; Position for margin position type
-  (flymake-show-diagnostics-at-end-of-line nil)
-  :config
-  (setq flymake-mode-line-counters
-        '(:eval (if (mode-line-window-selected-p)
-                    (flymake--mode-line-counters)
-                  (propertize (format-mode-line (flymake--mode-line-counters))
-                              'face '(:inherit (bold mode-line-inactive)))))))
-
 ;;;; Bufferlo
 (use-package bufferlo
   :disabled t   ; 2025-06-02: Performance issues with both minor modes

@@ -4299,6 +4299,46 @@ which file on the system it backs up."
   
   (global-word-wrap-whitespace-mode 1))
 
+;;; Flymake
+;; TODO 2025-05-24: Document:
+;; - `elisp-flymake-byte-compile-load-path’
+;; - `flymake-suppress-zero-counters’
+(setup flymake
+  
+  ;; TODO 2025-05-24: Revisit this.
+  ;; (prog-mode-hook . (lambda ()
+  ;;                     (setq-local flymake-indicator-type nil
+  ;;                                 flymake-show-diagnostics-at-end-of-line 'fancy) ; Emacs 31 value
+  ;;                     (flymake-mode 1)))
+  ;; TODO 2025-11-17: Revisit this.
+  ;; (text-mode-hook . (lambda ()
+  ;;                     (setq-local flymake-indicator-type nil)
+  ;;                     (flymake-mode 1)))
+  
+  (setopt flymake-wrap-around nil)
+  
+  ;; TODO 2025-11-17: Revisit this.
+  ;; ;; Indicators
+  ;; (setopt flymake-indicator-type nil
+  ;;         flymake-fringe-indicator-position nil ; Position for fringe position type
+  ;;         flymake-margin-indicator-position 'right-margin ; Position for margin position type
+  ;;         flymake-show-diagnostics-at-end-of-line nil)
+
+  ;; Mode line
+  (setopt flymake-mode-line-format
+          '(" " flymake-mode-line-title flymake-mode-line-exception flymake-mode-line-counters)
+          flymake-mode-line-counter-format
+          '("["
+            flymake-mode-line-error-counter
+            flymake-mode-line-warning-counter
+            flymake-mode-line-note-counter
+            "]"))
+  (setq flymake-mode-line-counters
+        '(:eval (if (mode-line-window-selected-p)
+                    (flymake--mode-line-counters)
+                  (propertize (format-mode-line (flymake--mode-line-counters))
+                              'face '(:inherit (bold mode-line-inactive)))))))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()
