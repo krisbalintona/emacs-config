@@ -4461,6 +4461,20 @@ which file on the system it backs up."
   (with-eval-after-load 'work-timer
     (work-timer-with-org-clock-mode 1)))
 
+;;; Foldout
+(setup foldout
+
+  ;; FIXME 2025-11-18: This is a defvar when it should be defcustom.
+  ;; Create a patch upstream or submit a bug report?
+  (setq foldout-inhibit-key-bindings t)
+  (:bind-keys :map outline-mode-map
+              ("C-c C-z" . foldout-zoom-subtree)
+              ("C-c C-x" . foldout-exit-fold)
+              ("C-c C-w" . foldout-widen-to-current-fold))
+  
+  (with-eval-after-load 'outline
+    (:require)))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

@@ -2853,6 +2853,32 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
             outline-blank-line t))
 #+end_src
 
+***** Foldout: Return to a narrowed subtree
+
+As far as I understand, foldout is meant as a companion to outline.el. It provides the three commands below alongside several mouse commands:
++ ~foldout-zoom-subtree~ :: Basically ~outline-show-subtree~
++ ~foldout-exit-fold~ :: Basically ~widen~
++ ~foldout-widen-to-current-fold~ :: Unique to foldout; restore to narrowing of fold created by the previous ~foldout-zoom-subtree~ call.
+So, in sum, foldout commands let you have a "current" fold (narrowed state) and return to that fold later, irrespective of how you change the narrowed state in between. For example, you may widen then narrow to another subtree, then call ~foldout-widen-to-current-fold~ and return to the fold you had with ~foldout-zoom-subtree~.
+
+Additionally, since ~outline-regexp~ is correctly set in org-mode buffers, the foldout commands and behavior work in org buffers too.
+
+#+name: foldout
+#+begin_src emacs-lisp
+  (setup foldout
+
+    ;; FIXME 2025-11-18: This is a defvar when it should be defcustom.
+    ;; Create a patch upstream or submit a bug report?
+    (setq foldout-inhibit-key-bindings t)
+    (:bind-keys :map outline-mode-map
+                ("C-c C-z" . foldout-zoom-subtree)
+                ("C-c C-x" . foldout-exit-fold)
+                ("C-c C-w" . foldout-widen-to-current-fold))
+    
+    (with-eval-after-load 'outline
+      (:require)))
+#+end_src
+
 ***** Outli.el
 
 #+name: outli.el
@@ -5765,6 +5791,9 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
   ;;; Work-timer
   <<work-timer>>
 
+  ;;; Foldout
+  <<foldout>>
+
   ;;; Startup time
   <<startup-time>>
 #+end_src
@@ -5784,4 +5813,4 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
 #  LocalWords:  noweb org's Linters Balintona Kristoffer LocalWords Elpaca el Runtime PDFs Ef elisp
 #  LocalWords:  Minibuffer Vertico Fontaine Theming Savehist minibuffer facto de Minibuffers pdf El
 #  LocalWords:  minibuffers Autorevert WIP EmacsWiki TODO GCMH Imenu Isearch Newcomment VCS VC jj
-#  LocalWords:  jujutsu JJ Hotfuzz hotfuzz emacs BufFace
+#  LocalWords:  jujutsu JJ Hotfuzz hotfuzz emacs BufFace subtree
