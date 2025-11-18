@@ -1428,7 +1428,8 @@ call `diff-buffer-with-file’ instead."
             '((sequence "TODO(t)" "DOING(o)" "NEXT(n)" "HOLD(h@/!)" "MAYBE(m)" "|"
                         "DONE(d!/@)" "CANCELED(c@/!)"))
             org-todo-keyword-faces
-            '(("NEXT" . (bold success))
+            '(("DOING" . (bold success))
+              ("NEXT" . (bold success))
               ("TODO" . org-todo)
               ("HOLD" . (shadow error))
               ("MAYBE" . (shadow org-todo))
@@ -1987,7 +1988,8 @@ inserted with e.g. `org-insert-last-stored-link' or
   (setopt org-modern-todo t
           ;; See my value for `org-todo-keyword-faces'
           org-modern-todo-faces
-          '(("NEXT" :inherit (bold success org-modern-todo))
+          '(("DOING" :inherit (bold success org-modern-todo))
+            ("NEXT" :inherit (bold success org-modern-todo))
             ("TODO" :inherit (org-todo org-modern-todo))
             ("HOLD" :inherit (shadow error org-modern-todo))
             ("MAYBE" :inherit (shadow org-todo org-modern-todo))

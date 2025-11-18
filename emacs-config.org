@@ -899,7 +899,8 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
     (setopt org-modern-todo t
             ;; See my value for `org-todo-keyword-faces'
             org-modern-todo-faces
-            '(("NEXT" :inherit (bold success org-modern-todo))
+            '(("DOING" :inherit (bold success org-modern-todo))
+              ("NEXT" :inherit (bold success org-modern-todo))
               ("TODO" :inherit (org-todo org-modern-todo))
               ("HOLD" :inherit (shadow error org-modern-todo))
               ("MAYBE" :inherit (shadow org-todo org-modern-todo))
@@ -3323,7 +3324,8 @@ This section is for the major mode
               '((sequence "TODO(t)" "DOING(o)" "NEXT(n)" "HOLD(h@/!)" "MAYBE(m)" "|"
                           "DONE(d!/@)" "CANCELED(c@/!)"))
               org-todo-keyword-faces
-              '(("NEXT" . (bold success))
+              '(("DOING" . (bold success))
+                ("NEXT" . (bold success))
                 ("TODO" . org-todo)
                 ("HOLD" . (shadow error))
                 ("MAYBE" . (shadow org-todo))
