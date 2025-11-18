@@ -3148,43 +3148,44 @@ PROP is the name of the property.  See
   ;; Citations. See e.g. `message-cite-style-gmail' for the options
   ;; relevant to citations.  Importantly, I can set these options
   ;; buffer locally.
-  (setopt message-cite-function 'message-cite-original-without-signature
-          message-citation-line-function 'message-insert-formatted-citation-line
-          message-citation-line-format "On %a, %b %d %Y, %N wrote:\n"
-          message-cite-reply-position 'below)
+  (with-eval-after-load 'message
+    (setopt message-cite-function 'message-cite-original-without-signature
+            message-citation-line-function 'message-insert-formatted-citation-line
+            message-citation-line-format "On %a, %b %d %Y, %N wrote:\n"
+            message-cite-reply-position 'below)
 
-  ;; Composition
-  (setopt message-hidden-headers nil   ; Show all headers
-          ;; Generates all headers in the variables
-          ;; `message-required-headers’,
-          ;; `message-required-news-headers', and
-          ;; `message-required-mail-headers'.  Otherwise, unless
-          ;; another package manually adds headers (e.g. mu4e), those
-          ;; headers won't be inserted into a message draft buffer.  I
-          ;; enable this to make sure that the date header is inserted
-          ;; in a draft.  (No date header means the date is set to
-          ;; time 0, which is annoying for querying emails via their
-          ;; date using e.g. notmuch.)
-          message-generate-headers-first t
-          message-wide-reply-confirm-recipients t
-          message-elide-ellipsis "> [... %l lines elided]\n"
-          message-signature-insert-empty-line t
-          message-signature "Kind regards,\nKristoffer\n"
-          message-signature-separator "^-- *$")
-  ;; REVIEW 2025-05-23: `message-auto-save-directory’ should be set
-  ;; relative to `message-directory’, but based on the order of
-  ;; evaluation, it never does so correctly when we set
-  ;; `message-directory’ via :custom.  Submit a patch upstream?
-  (setopt message-auto-save-directory krisb-email-drafts-directory ; Directory where drafts are saved
-          message-subject-trailing-was-query 'ask
-          message-kill-buffer-on-exit t
-          mml-dnd-attach-options t)
+    ;; Composition
+    (setopt message-hidden-headers nil   ; Show all headers
+            ;; Generates all headers in the variables
+            ;; `message-required-headers’,
+            ;; `message-required-news-headers', and
+            ;; `message-required-mail-headers'.  Otherwise, unless
+            ;; another package manually adds headers (e.g. mu4e), those
+            ;; headers won't be inserted into a message draft buffer.  I
+            ;; enable this to make sure that the date header is inserted
+            ;; in a draft.  (No date header means the date is set to
+            ;; time 0, which is annoying for querying emails via their
+            ;; date using e.g. notmuch.)
+            message-generate-headers-first t
+            message-wide-reply-confirm-recipients t
+            message-elide-ellipsis "> [... %l lines elided]\n"
+            message-signature-insert-empty-line t
+            message-signature "Kind regards,\nKristoffer\n"
+            message-signature-separator "^-- *$")
+    ;; REVIEW 2025-05-23: `message-auto-save-directory’ should be set
+    ;; relative to `message-directory’, but based on the order of
+    ;; evaluation, it never does so correctly when we set
+    ;; `message-directory’ via :custom.  Submit a patch upstream?
+    (setopt message-auto-save-directory krisb-email-drafts-directory ; Directory where drafts are saved
+            message-subject-trailing-was-query 'ask
+            message-kill-buffer-on-exit t
+            mml-dnd-attach-options t)
 
-  ;; Forwarding
-  (setopt message-forward-as-mime t          ; NOTE 2024-09-27: Experimental
-          ;; TODO 2025-05-23: Change value per-email depending on
-          ;; `message-cite-reply-position'?
-          message-forward-before-signature nil)
+    ;; Forwarding
+    (setopt message-forward-as-mime t          ; NOTE 2024-09-27: Experimental
+            ;; TODO 2025-05-23: Change value per-email depending on
+            ;; `message-cite-reply-position'?
+            message-forward-before-signature nil))
 
   ;; TODO 2025-05-23: Revisit this.
   ;; (krisb-modus-themes-setup-faces
