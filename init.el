@@ -4439,6 +4439,18 @@ which file on the system it backs up."
           ;; 2024-08-25: Fixes Gmail's 530 error on sending
           smtpmail-servers-requiring-authorization "gmail"))
 
+;;; Work-timer
+(setup work-timer
+  (:package (work-timer :url "git@github.com:krisbalintona/work-timer.git"))
+
+  (with-eval-after-load 'work-timer
+    (setopt work-timer-work-duration-function 'work-timer-work-duration-fractional
+            work-timer-break-duration-function 'work-timer-break-duration-fractional
+            work-timer-fractional-break-duration-fraction 0.35))
+
+  (with-eval-after-load 'work-timer
+    (work-timer-with-org-clock-mode 1)))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

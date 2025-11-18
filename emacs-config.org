@@ -5351,6 +5351,22 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
                         (lambda () (list (krisb-org-review--select-day)))))))
 #+end_src
 
+*** Work-timer: Bespoke productivity-timer solution
+
+#+name: work-timer
+#+begin_src emacs-lisp
+  (setup work-timer
+    (:package (work-timer :url "git@github.com:krisbalintona/work-timer.git"))
+
+    (with-eval-after-load 'work-timer
+      (setopt work-timer-work-duration-function 'work-timer-work-duration-fractional
+              work-timer-break-duration-function 'work-timer-break-duration-fractional
+              work-timer-fractional-break-duration-fraction 0.35))
+
+    (with-eval-after-load 'work-timer
+      (work-timer-with-org-clock-mode 1)))
+#+end_src
+
 * Deployments
 
 ** PC
@@ -5733,6 +5749,9 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
 
   ;;; Smtpmail
   <<smtpmail>>
+
+  ;;; Work-timer
+  <<work-timer>>
 
   ;;; Startup time
   <<startup-time>>
