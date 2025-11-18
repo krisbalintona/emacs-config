@@ -2841,6 +2841,10 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
 
 ***** Outline.el
 
+Outline.el lets one denote headings of whatever level and change narrowing, mark heading contents, and so on based on these headings.
+
+Instead of adding ~outline-minor-mode~ directly to major mode hooks, I utilize outli.el instead (see [[#h:20251118T171202.636238][Outli.el]]) and add ~outli-mode~ to major mode hooks.[fn:1]
+
 #+name: outline.el
 #+begin_src emacs-lisp
   (setup outline
@@ -2852,6 +2856,8 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
             outline-minor-mode-highlight 'append
             outline-blank-line t))
 #+end_src
+
+[fn:1] The reason we cannot add ~outline-minor-mode~ to major mode hooks then call ~outli-mode~ through ~outline-minor-mode-hook~ is because ~outli-mode~ internally calls ~outline-minor-mode~, meaning the above method creates an infinite recursion loop.
 
 ***** Foldout: Return to a narrowed subtree
 
@@ -2879,7 +2885,12 @@ Additionally, since ~outline-regexp~ is correctly set in org-mode buffers, the f
       (:require)))
 #+end_src
 
-***** Outli.el
+***** Outli.el: A modern wrapper around outline.el
+:PROPERTIES:
+:CUSTOM_ID: h:20251118T171202.636238
+:END:
+
+Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to provide "modern" convenience to outline.el.
 
 #+name: outli.el
 #+begin_src emacs-lisp
@@ -2891,6 +2902,10 @@ Additionally, since ~outline-regexp~ is correctly set in org-mode buffers, the f
     ;; Elpaca: :ensure (:repo "https://github.com/jdtsmith/outli")
     (:package outli)
 
+    (add-hook 'text-mode-hook #'outli-mode)
+    (add-hook 'prog-mode-hook #'outli-mode)
+    (add-hook 'conf-mode-hook #'outli-mode)
+    
     (with-eval-after-load 'outli
       (require 'outline)
       (bind-keys :map outline-minor-mode-map
@@ -2902,10 +2917,7 @@ Additionally, since ~outline-regexp~ is correctly set in org-mode buffers, the f
 
     (setopt outli-allow-indented-headlines t
             outli-default-nobar nil       ; Show a horizontal rule?
-            outli-blend nil)
-
-    (add-hook 'prog-mode-hook #'outli-mode)
-    (add-hook 'text-mode-hook #'outli-mode))
+            outli-blend nil))
 
   ;; Add "Heading" (which outli headings are categorized as) imenu
   ;; group.  Taken from
@@ -4104,7 +4116,7 @@ Using Emacs for emails involves various packages that fulfill certain roles. For
 :CUSTOM_ID: h:20251117T171828.614236
 :END:
 
-The most common method to send emails is using the =msmtp= program, which smtpmail.el interfaces with. In my setup, however, I use Lieer (the =gmi= executable) to send (and receive) emails, so I do not need smtpmail.[fn:1]
+The most common method to send emails is using the =msmtp= program, which smtpmail.el interfaces with. In my setup, however, I use Lieer (the =gmi= executable) to send (and receive) emails, so I do not need smtpmail.[fn:2]
 
 #+name: smtpmail
 #+begin_src emacs-lisp
@@ -4132,7 +4144,7 @@ The most common method to send emails is using the =msmtp= program, which smtpma
             smtpmail-servers-requiring-authorization "gmail"))
 #+end_src
 
-[fn:1] See [[#h:20251117T172940.524114][my Lieer-specific configuration to send emails]].
+[fn:2] See [[#h:20251117T172940.524114][my Lieer-specific configuration to send emails]].
  
 ***** Lieer-specific configuration to send emails with notmuch
 :PROPERTIES:

@@ -1329,6 +1329,10 @@ call `diff-buffer-with-file’ instead."
   ;; Elpaca: :ensure (:repo "https://github.com/jdtsmith/outli")
   (:package outli)
 
+  (add-hook 'text-mode-hook #'outli-mode)
+  (add-hook 'prog-mode-hook #'outli-mode)
+  (add-hook 'conf-mode-hook #'outli-mode)
+  
   (with-eval-after-load 'outli
     (require 'outline)
     (bind-keys :map outline-minor-mode-map
@@ -1340,10 +1344,7 @@ call `diff-buffer-with-file’ instead."
 
   (setopt outli-allow-indented-headlines t
           outli-default-nobar nil       ; Show a horizontal rule?
-          outli-blend nil)
-
-  (add-hook 'prog-mode-hook #'outli-mode)
-  (add-hook 'text-mode-hook #'outli-mode))
+          outli-blend nil))
 
 ;; Add "Heading" (which outli headings are categorized as) imenu
 ;; group.  Taken from
