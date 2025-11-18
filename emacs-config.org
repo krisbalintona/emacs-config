@@ -3905,6 +3905,8 @@ My org-roam-folgezettel uses a yet-upstreamed version of vtable.el:
 
 *** Email
 
+Using Emacs for emails involves various packages that fulfill certain roles. For a brief overview of the parts that compose receiving, reading, composing, and sending email, see =(smtpmail) How Mail Works=.
+
 **** Email composition
 
 ***** Message.el: Emacs's message composition major mode
@@ -4126,8 +4128,9 @@ Below are settings sufficient to get Emacs---with the sendmail library, in parti
             send-mail-function 'sendmail-send-it))
 
   ;; GMail already copies sent emails, so don't move them elsewhere
-  ;; locally after sending.  (Using gmi to send emails also
-  ;; automatically does this for us locally.)
+  ;; locally after sending; see (emacs) Mail Headers for an explanation
+  ;; of the FCC header.  (Using gmi to send emails also automatically
+  ;; does this for us locally.)
   (with-eval-after-load 'notmuch
     (setopt notmuch-fcc-dirs nil))
 
@@ -4172,9 +4175,7 @@ Below are settings sufficient to get Emacs---with the sendmail library, in parti
     ;; :ensure-system-package (notmuch
     ;;                         (gmi . lieer-git))
 
-    (autoload 'notmuch-mua-new-mail "notmuch-mua")
-    (bind-keys ([remap compose-mail] . notmuch-mua-new-mail)
-               :map krisb-open-keymap
+    (bind-keys :map krisb-open-keymap
                ("n" . notmuch))
     (:bind-keys :map notmuch-search-mode-map
                 ("a" . nil)           ; The default is too easy to hit accidentally
@@ -4319,6 +4320,7 @@ Below are settings sufficient to get Emacs---with the sendmail library, in parti
       (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check)) ; See also `notmuch-mua-attachment-regexp'
     (setopt notmuch-mua-compose-in 'current-window
             notmuch-mua-hidden-headers nil
+            notmuch-address-use-company nil
             notmuch-address-command 'internal
             notmuch-address-internal-completion '(sent nil)
             notmuch-always-prompt-for-sender t  ; See also the `notmuch-mua-prompt-for-sender' function

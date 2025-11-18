@@ -3274,9 +3274,7 @@ send from."
   ;; :ensure-system-package (notmuch
   ;;                         (gmi . lieer-git))
 
-  (autoload 'notmuch-mua-new-mail "notmuch-mua")
-  (bind-keys ([remap compose-mail] . notmuch-mua-new-mail)
-             :map krisb-open-keymap
+  (bind-keys :map krisb-open-keymap
              ("n" . notmuch))
   (:bind-keys :map notmuch-search-mode-map
               ("a" . nil)           ; The default is too easy to hit accidentally
@@ -3421,6 +3419,7 @@ send from."
     (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check)) ; See also `notmuch-mua-attachment-regexp'
   (setopt notmuch-mua-compose-in 'current-window
           notmuch-mua-hidden-headers nil
+          notmuch-address-use-company nil
           notmuch-address-command 'internal
           notmuch-address-internal-completion '(sent nil)
           notmuch-always-prompt-for-sender t  ; See also the `notmuch-mua-prompt-for-sender' function
@@ -3447,8 +3446,9 @@ send from."
             send-mail-function 'sendmail-send-it))
   
   ;; GMail already copies sent emails, so don't move them elsewhere
-  ;; locally after sending.  (Using gmi to send emails also
-  ;; automatically does this for us locally.)
+  ;; locally after sending; see (emacs) Mail Headers for an explanation
+  ;; of the FCC header.  (Using gmi to send emails also automatically
+  ;; does this for us locally.)
   (with-eval-after-load 'notmuch
     (setopt notmuch-fcc-dirs nil))
   
