@@ -4476,6 +4476,102 @@ which file on the system it backs up."
   (with-eval-after-load 'outline
     (:require)))
 
+;;; Citar
+;; TODO 2025-11-18: Document:
+;; - `citar-open-entry-function'
+(setup citar
+  (:package citar)
+  
+  (:bind-keys ("C-c b o" . citar-open)
+              ("C-c b f" . citar-open-files)
+              ("C-c b n" . citar-open-notes))
+  
+  (with-eval-after-load 'citar
+    (setopt citar-bibliography krisb-bibliography-files
+            citar-notes-paths (list krisb-notes-directory)
+            citar-default-action #'citar-open-files))
+
+  ;; TODO 2025-11-18: Revisit this.
+  ;; ;; Fancy UI.
+  ;; (setopt citar-templates
+  ;;         ;; See also citar-format.el for more information on what
+  ;;         ;; happens with the templates.
+  ;;         '((main . "${author editor:30%sn}     ${date year issued:4}     ${title:48}") ; Candidate
+  ;;           (suffix . "          ${=key= id:15}    ${=type=:12}    ${tags keywords keywords:*}") ; Candidate annotation
+  ;;           (preview . "${author editor:%etal} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n") ; Formatted reference
+  ;;           (note . "${title} by ${author}"))) ; New note title
+  ;; (with-eval-after-load 'all-the-icons
+  ;;   ;; Taken from https://github.com/emacs-citar/citar/wiki/Indicators
+  ;;   (defvar citar-indicator-files-icons
+  ;;     (citar-indicator-create
+  ;;      :symbol (all-the-icons-faicon
+  ;;               "file-o"
+  ;;               :face 'all-the-icons-green
+  ;;               :v-adjust -0.1)
+  ;;      :function #'citar-has-files
+  ;;      :padding "  " ; Need this because the default padding is too low for these icons
+  ;;      :tag "has:files"))
+  ;;   (defvar citar-indicator-links-icons
+  ;;     (citar-indicator-create
+  ;;      :symbol (all-the-icons-octicon
+  ;;               "link"
+  ;;               :face 'all-the-icons-orange
+  ;;               :v-adjust 0.01)
+  ;;      :function #'citar-has-links
+  ;;      :padding "  "
+  ;;      :tag "has:links"))
+  ;;   (defvar citar-indicator-notes-icons
+  ;;     (citar-indicator-create
+  ;;      :symbol (all-the-icons-material
+  ;;               "speaker_notes"
+  ;;               :face 'all-the-icons-blue
+  ;;               :v-adjust -0.3)
+  ;;      :function #'citar-has-notes
+  ;;      :padding "  "
+  ;;      :tag "has:notes"))
+  ;;   (defvar citar-indicator-cited-icons
+  ;;     (citar-indicator-create
+  ;;      :symbol (all-the-icons-faicon
+  ;;               "circle-o"
+  ;;               :face 'all-the-icon-green)
+  ;;      :function #'citar-is-cited
+  ;;      :padding "  "
+  ;;      :tag "is:cited"))
+  ;;   (setq citar-indicators
+  ;;         (list citar-indicator-files-icons
+  ;;               citar-indicator-links-icons
+  ;;               citar-indicator-notes-icons
+  ;;               citar-indicator-cited-icons)))
+  )
+
+;; Integrate citar with org and org-cite
+(setup citar-org
+  (:if-feature citar)
+  (:load-after citar)
+
+  (setopt org-cite-insert-processor 'citar
+          org-cite-follow-processor 'citar
+          org-cite-activate-processor 'citar
+          citar-org-styles-format 'long)
+
+  (with-eval-after-load 'org
+    (:bind-keys :map org-mode-map
+                ([remap org-cite-insert] . citar-insert-citation))))
+
+;;; Citar-org-node
+(setup citar-org-node
+  (:package (citar-org-node :url "https://github.com/krisbalintona/citar-org-node.git"))
+  (:if-feature citar)
+  (:if-feature org-node)
+  
+  (bind-keys :map krisb-note-keymap
+             ("b a" . citar-org-node-add-refs)
+             ("b o" . citar-org-node-open-resource))
+  
+  (with-eval-after-load 'citar
+    (citar-org-node-mode 1))
+  (:hide-mode citar-org-node-mode))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

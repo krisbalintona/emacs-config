@@ -5,23 +5,24 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(arei astute bind-key bui cape citeproc cl-generic cl-lib cond-star
-          consult corfu eat edit-indirect editorconfig ef-themes eglot
-          el-patch eldoc elisp-demos erc exec-path-from-shell
-          external-completion faceup fish-mode flymake flymake-vale
-          fontaine gcmh geiser-guile highlight-function-calls hotfuzz
-          jinx jsonrpc let-alist lin magit-popup map mixed-pitch
-          nadvice no-littering notmuch-addr ntlm ol-notmuch olivetti
-          on orderless org org-contrib org-hide-drawers org-mime
-          org-modern org-node org-ql org-review org-roam-folgezettel
+   '(arei astute bui cape citar-org-node cl-generic cond-star consult
+          corfu eat edit-indirect editorconfig ef-themes eglot
+          el-patch elisp-demos erc exec-path-from-shell faceup
+          fish-mode flymake-vale fontaine gcmh geiser-guile
+          highlight-function-calls hotfuzz jinx lin magit-popup
+          mixed-pitch no-littering notmuch-addr ntlm ol-notmuch
+          olivetti on orderless org-contrib org-hide-drawers org-mime
+          org-modern org-ql org-review org-roam-folgezettel
           org-web-tools orgmdb outli package-upgrade-guard paren-face
-          peg powerthesaurus project pulsar puni python seq sesman
-          setup smart-mark so-long soap-client svg tablist tempel
-          timeout track-changes tramp try use-package vc-jj
-          verilog-mode vertico which-key window-tool-bar wombag
-          work-timer xref))
+          powerthesaurus pulsar puni python setup smart-mark so-long
+          soap-client svg tablist tempel timeout track-changes tramp
+          try use-package vc-jj verilog-mode vertico which-key
+          window-tool-bar wombag work-timer))
  '(package-vc-selected-packages
-   '((package-upgrade-guard :url
+   '((citar-org-node :url
+                     "https://github.com/krisbalintona/citar-org-node.git")
+     (persid :url "https://github.com/rougier/persid.git")
+     (package-upgrade-guard :url
                             "https://github.com/kn66/package-upgrade-guard.el.git")
      (flymake-vale :url
                    "https://github.com/tpeacock19/flymake-vale.git")
