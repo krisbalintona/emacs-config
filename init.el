@@ -1586,6 +1586,12 @@ call `diff-buffer-with-file’ instead."
                (scheduled :to today)
                (deadline auto)))))
   
+  (defun krisb-org-agenda-skip-pushed ()
+    "Filter tasks for push agenda."
+    (krisb-org-agenda-skip-org-ql
+     '(and (not (done))
+           (tags "PUSHED"))))
+  
   (defun krisb-org-agenda-skip-routine ()
     "Filter tasks for routine agenda."
     (krisb-org-agenda-skip-org-ql
@@ -1628,7 +1634,10 @@ call `diff-buffer-with-file’ instead."
             ("f" "Focus"
              ((alltodo ""
                       ((org-agenda-overriding-header "Focus")
-                       (org-agenda-skip-function 'krisb-org-agenda-skip-focus)))))
+                       (org-agenda-skip-function 'krisb-org-agenda-skip-focus)))
+              (alltodo ""
+                      ((org-agenda-overriding-header "Pushed to the front")
+                       (org-agenda-skip-function 'krisb-org-agenda-skip-pushed)))))
             ("r" "Radar"
              ((alltodo ""
                        ((org-agenda-overriding-header "Radar")
