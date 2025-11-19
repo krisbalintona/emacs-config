@@ -4540,6 +4540,10 @@ which file on the system it backs up."
             bibtex-autokey-titlewords-stretch 0
             bibtex-autokey-titleword-length 'infty)))
 
+;;; Persid
+(setup persid
+  (:package (persid :url "https://github.com/rougier/persid.git")))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

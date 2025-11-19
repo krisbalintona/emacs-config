@@ -3968,7 +3968,7 @@ My org-roam-folgezettel uses a yet-upstreamed version of vtable.el:
 
 **** Bibtex: Built-in mode for =.bib= files
 
-Bibtex.el is the built-in library for parsing =.bib= files---these are BibTex files and biblatex files.[fn:2] It provides its own major mode and various helpful commands and helper functions.
+Bibtex.el is the built-in library for parsing =.bib= files---these are BibTex files and biblatex files.[fn:2] It provides its own major mode and various helpful commands and helper functions. (See also [[#h:20251119T003610.792256][Persid: Compact library for creating bibtex entries from bibliographic information]].)
 
 #+name: bibtex
 #+begin_src emacs-lisp
@@ -3997,6 +3997,27 @@ Bibtex.el is the built-in library for parsing =.bib= files---these are BibTex fi
 #+end_src
 
 [fn:2] Both Bibtex and biblatex use the =.bib= extension; to tell bibtex.el which dialect to use for a given file, use ~bibtex-set-dialect~. You can also customize ~bibtex-dialect~ to change the global/default dialect.
+
+**** Persid: Compact library for creating bibtex entries from bibliographic information
+:PROPERTIES:
+:CUSTOM_ID: h:20251119T003610.792256
+:END:
+
+Persid is a small but effective library for creating bibtex entries from retrieved bibliographic information. It has a single entry point: ~persid-insert-bibtex~.
+
+Persid knows how to retrieve information from the following formats:
++ [[https://isbn.org][International Standard Book Number]] (ISBN)
++[[https://www.issn.org][International Standard Serial Number]] (ISSN)
++ [[https://www.doi.org][Digital Object identifier]] (DOI)
++ [[https://pubmed.ncbi.nlm.nih.gov][PubMed]] (PMID)
++ [[https://www.ncbi.nlm.nih.gov/pmc][PubMed Central]] (PMCID)
++ [[https://arxiv.org][Cornell University]] (arxiv)
+
+#+name: persid
+#+begin_src emacs-lisp
+  (setup persid
+    (:package (persid :url "https://github.com/rougier/persid.git")))
+#+end_src
 
 **** Citar: Manage bibliographic data
 
@@ -5991,6 +6012,9 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
 
   ;;; Bibtex
   <<bibtex>>
+
+  ;;; Persid
+  <<persid>>
 
   ;;; Startup time
   <<startup-time>>

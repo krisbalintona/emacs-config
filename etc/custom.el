@@ -14,14 +14,14 @@
           olivetti on orderless org-contrib org-hide-drawers org-mime
           org-modern org-ql org-review org-roam-folgezettel
           org-web-tools orgmdb outli package-upgrade-guard paren-face
-          powerthesaurus pulsar puni python setup smart-mark so-long
-          soap-client svg tablist tempel timeout track-changes tramp
-          try use-package vc-jj verilog-mode vertico which-key
+          persid powerthesaurus pulsar puni python setup smart-mark
+          so-long soap-client svg tablist tempel timeout track-changes
+          tramp try use-package vc-jj verilog-mode vertico which-key
           window-tool-bar wombag work-timer))
  '(package-vc-selected-packages
-   '((citar-org-node :url
+   '((persid :url "https://github.com/rougier/persid.git")
+     (citar-org-node :url
                      "https://github.com/krisbalintona/citar-org-node.git")
-     (persid :url "https://github.com/rougier/persid.git")
      (package-upgrade-guard :url
                             "https://github.com/kn66/package-upgrade-guard.el.git")
      (flymake-vale :url
