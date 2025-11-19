@@ -1593,7 +1593,7 @@ call `diff-buffer-with-file’ instead."
     "Filter tasks for focus agenda."
     (krisb-org-agenda-skip-org-ql
      '(and (not (done))
-           (not (tags-local "PROJECT" "INBOX"))
+           (not (tags-local "PROJECT"))
            (or (todo "DOING")
                (priority "A")
                (scheduled :to today)
@@ -1610,6 +1610,7 @@ call `diff-buffer-with-file’ instead."
     (krisb-org-agenda-skip-org-ql
      '(and (not (done))
            (not (tags-local "PROJECT" "INBOX"))
+           (not (toreview))
            (or (and (or (habit)
                         (path "recurring\\.org"))
                     (or (scheduled :to today)
@@ -1623,14 +1624,18 @@ call `diff-buffer-with-file’ instead."
            (or (and (todo "NEXT" "TODO")
                     (not (or (scheduled)
                              (deadline)))
-                    (not (toreview)))))))
+                    (not (toreview)))
+               (and (todo "HOLD")
+                    (toreview))))))
   
   (defun krisb-org-agenda-skip-review ()
     "Filter tasks for review agenda."
     (krisb-org-agenda-skip-org-ql
      '(and (not (done))
-           (not (tags-local "INBOX"))
-           (or (toreview)
+           (or (and (not (tags-local "INBOX"))
+                    (toreview))
+               (and (todo "HOLD")
+                    (not (hasreview)))
                (tags-local "REVIEW")))))
   
   (defun krisb-org-agenda-skip-inbox ()
@@ -1945,7 +1950,7 @@ inserted with e.g. `org-insert-last-stored-link' or
   
   (setopt org-refile-targets
           '((org-agenda-files . (:tag . "PROJECT"))
-            (org-agenda-files . (:level . 0))
+            (org-agenda-files . (:level . 1))
             (nil . (:maxlevel . 4)))
           ;; TODO 2024-10-07: Think about whether I actually want this.  What
           ;; if I want to refile to a non-todo heading in the current file?
@@ -2619,9 +2624,14 @@ Do not use cache when FORCE is non-nil."
 (setup org-review
   (with-eval-after-load 'org-ql
     (:require)
+    
     (org-ql-defpred toreview ()
       "Match headings where `org-review-toreview-p' is non-nil."
-      :body (org-review-toreview-p))))
+      :body (org-review-toreview-p))
+
+    (org-ql-defpred hasreview ()
+      "Match headings where `org-review-next-review-prop' is non-nil."
+      :body (org-review-next-review-prop))))
 
 ;;;; Bespoke extensions
 ;; Log changes to certain properties.
