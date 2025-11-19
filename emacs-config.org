@@ -2624,7 +2624,12 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
                 (expand-file-name (format "enchant/%s.dic" ispell-dictionary) (xdg-config-home))))))
 #+end_src
 
-**** Flyspell
+**** Flyspell: Highlight spelling errors on-the-fly
+:PROPERTIES:
+:CUSTOM_ID: h:20251118T184517.526538
+:END:
+
+*NOTE 2025-11-10:* Although historically I have used jinx instead of flyspell (see [[#h:20251118T184509.484886][Jinx: Fast and painless spell checker]]), I have recently decided to try to try out flyspell for an extended period of time. I am motivated by the desire to contribute patches upstream or stimulate conversation in the emacs-devel mailing list regarding improving flyspell.
 
 #+name: flyspell
 #+begin_src emacs-lisp
@@ -2650,7 +2655,14 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
                 ("C-M-i" . nil)))
 #+end_src
 
-**** Jinx: Fast and painless spell checker
+**** COMMENT Jinx: Fast and painless spell checker
+:PROPERTIES:
+:CUSTOM_ID: h:20251118T184509.484886
+:END:
+
+*NOTE 2025-11-10:* I have disabled jinx in favor of trying out the built-in flyspell + ispell. See [[#h:20251118T184517.526538][Flyspell: Highlight spelling errors on-the-fly]] for a brief explanation.
+
+Jinx is an alternative to the built-in flyspell (see [[#h:20251118T184517.526538][Flyspell: Highlight spelling errors]]). It is more performant and does not come with the historic cruft of flyspell. It, however, requires an Emacs compiled with dynamic module support (see [[https://github.com/minad/jinx?tab=readme-ov-file#installation][the Installation section in Jinx's README]]).
 
 #+name: jinx
 #+begin_src emacs-lisp
@@ -2659,9 +2671,6 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
   ;; spell-checker's features and using it:
   ;; https://abiword.github.io/enchant/src/enchant.html.
   (setup jinx
-    ;; NOTE 2025-11-10: Disable for now. Trying out ispell + flyspell
-    (:quit)
-    
     ;; Installed via Guix because it needs to compile a C module
     ;; For AUR:
     ;; :ensure-system-package ((enchant-2 . enchant)
