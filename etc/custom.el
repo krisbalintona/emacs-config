@@ -19,7 +19,9 @@
           tramp try use-package vc-jj verilog-mode vertico which-key
           window-tool-bar wombag work-timer))
  '(package-vc-selected-packages
-   '((persid :url "https://github.com/rougier/persid.git")
+   '((org-mime :url "https://github.com/krisbalintona/org-mime.git"
+               :branch "merge")
+     (persid :url "https://github.com/rougier/persid.git")
      (citar-org-node :url
                      "https://github.com/krisbalintona/citar-org-node.git")
      (package-upgrade-guard :url
@@ -29,8 +31,6 @@
      (work-timer :url "git@github.com:krisbalintona/work-timer.git")
      (wombag :url "https://github.com/krisbalintona/wombag.git"
              :branch "merge")
-     (org-mime :url "https://github.com/krisbalintona/org-mime.git"
-               :branch "merge")
      (org-roam-folgezettel :url
                            "https://github.com/krisbalintona/org-roam-folgezettel.git"
                            :branch "vtable-unstable")
