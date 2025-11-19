@@ -3964,7 +3964,39 @@ My org-roam-folgezettel uses a yet-upstreamed version of vtable.el:
   (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/emacs-vtable-ship-mints/lisp/emacs-lisp/vtable.el")
 #+end_src
 
-*** Bibliographic sources
+*** Bibliographic sources management
+
+**** Bibtex: Built-in mode for =.bib= files
+
+Bibtex.el is the built-in library for parsing =.bib= files---these are BibTex files and biblatex files.[fn:2] It provides its own major mode and various helpful commands and helper functions.
+
+#+name: bibtex
+#+begin_src emacs-lisp
+  (setup bibtex
+    
+    (with-eval-after-load 'bibtex
+      (setopt bibtex-dialect 'biblatex)
+      
+      ;; Create Zotero-like cite keys with `bibtex-generate-autokey'.
+      ;; The chief difference is that my Zotero orders them in
+      ;; name-title-year form while `bibtex-generate-autokey', with the
+      ;; settings below, will order keys into name-year-title form.  The
+      ;; order of these elements is not currently (2025-11-19)
+      ;; configurable.
+      (setopt bibtex-autokey-names 1
+              bibtex-autokey-names-stretch 2
+              bibtex-autokey-name-case-convert-function 'identity
+              bibtex-autokey-name-year-separator ""
+              bibtex-autokey-year-title-separator ""
+              bibtex-autokey-year-length 4
+              bibtex-autokey-titleword-separator ""
+              bibtex-autokey-titleword-case-convert-function 'capitalize
+              bibtex-autokey-titlewords 3
+              bibtex-autokey-titlewords-stretch 0
+              bibtex-autokey-titleword-length 'infty)))
+#+end_src
+
+[fn:2] Both Bibtex and biblatex use the =.bib= extension; to tell bibtex.el which dialect to use for a given file, use ~bibtex-set-dialect~. You can also customize ~bibtex-dialect~ to change the global/default dialect.
 
 **** Citar: Manage bibliographic data
 
@@ -4245,7 +4277,7 @@ Using Emacs for emails involves various packages that fulfill certain roles. For
 :CUSTOM_ID: h:20251117T171828.614236
 :END:
 
-The most common method to send emails is using the =msmtp= program, which smtpmail.el interfaces with. In my setup, however, I use Lieer (the =gmi= executable) to send (and receive) emails, so I do not need smtpmail.[fn:2]
+The most common method to send emails is using the =msmtp= program, which smtpmail.el interfaces with. In my setup, however, I use Lieer (the =gmi= executable) to send (and receive) emails, so I do not need smtpmail.[fn:3]
 
 #+name: smtpmail
 #+begin_src emacs-lisp
@@ -4273,7 +4305,7 @@ The most common method to send emails is using the =msmtp= program, which smtpma
             smtpmail-servers-requiring-authorization "gmail"))
 #+end_src
 
-[fn:2] See [[#h:20251117T172940.524114][my Lieer-specific configuration to send emails]].
+[fn:3] See [[#h:20251117T172940.524114][my Lieer-specific configuration to send emails]].
  
 ***** Lieer-specific configuration to send emails with notmuch
 :PROPERTIES:
@@ -5956,6 +5988,9 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
 
   ;;; Citar-org-node
   <<citar-org-node>>
+
+  ;;; Bibtex
+  <<bibtex>>
 
   ;;; Startup time
   <<startup-time>>

@@ -4516,6 +4516,30 @@ which file on the system it backs up."
     (citar-org-node-mode 1))
   (:hide-mode citar-org-node-mode))
 
+;;; Bibtex
+(setup bibtex
+  
+  (with-eval-after-load 'bibtex
+    (setopt bibtex-dialect 'biblatex)
+    
+    ;; Create Zotero-like cite keys with `bibtex-generate-autokey'.
+    ;; The chief difference is that my Zotero orders them in
+    ;; name-title-year form while `bibtex-generate-autokey', with the
+    ;; settings below, will order keys into name-year-title form.  The
+    ;; order of these elements is not currently (2025-11-19)
+    ;; configurable.
+    (setopt bibtex-autokey-names 1
+            bibtex-autokey-names-stretch 2
+            bibtex-autokey-name-case-convert-function 'identity
+            bibtex-autokey-name-year-separator ""
+            bibtex-autokey-year-title-separator ""
+            bibtex-autokey-year-length 4
+            bibtex-autokey-titleword-separator ""
+            bibtex-autokey-titleword-case-convert-function 'capitalize
+            bibtex-autokey-titlewords 3
+            bibtex-autokey-titlewords-stretch 0
+            bibtex-autokey-titleword-length 'infty)))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()
