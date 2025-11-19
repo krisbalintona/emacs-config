@@ -686,12 +686,10 @@ to if called with ARG, or any prefix argument."
   ;; point is on a completion candidate:
   ;;  (completion-metadata-get (completion-metadata (minibuffer-contents) minibuffer-completion-table minibuffer-completion-predicate) 'category)
   ;;
-  ;; TODO 2025-10-15: Revisit these:
-  ;; (setopt completion-category-defaults
-  ;;         '((calendar-month (display-sort-function . identity)))
-  ;;         completion-category-overrides
-  ;;         '((file (styles . (partial-completion flex)))))
-                                        ;  Include `partial-completion' to enable wildcards and partial paths.
+  (setopt completion-category-defaults
+          '((calendar-month (display-sort-function . identity)))
+          completion-category-overrides
+          '((file (styles . (partial-completion flex))))) ;  Include `partial-completion' to enable wildcards and partial paths.
 
   ;; How do we want to treat case for varioust types of completion?
   (setopt completion-ignore-case t
