@@ -1436,7 +1436,18 @@ call `diff-buffer-with-file’ instead."
               ("DONE" . (bold org-done))
               ("CANCELED" . error))
             org-enforce-todo-dependencies t
-            org-agenda-dim-blocked-tasks t)
+            org-agenda-dim-blocked-tasks t
+            ;; See also `org-trigger-hook'
+            org-todo-state-tags-triggers
+            '((todo)
+              ("DOING" ("WAITING"))
+              ("NEXT" ("WAITING"))
+              ("TODO" ("WAITING"))
+              ("HOLD")
+              ("MAYBE" ("WAITING"))
+              (done ("WAITING"))
+              ("DONE")
+              ("CANCELED")))
     
     ;; TODO 2025-05-22: Document:
     ;; - `org-special-ctrl-k'
