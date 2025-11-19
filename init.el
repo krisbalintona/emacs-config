@@ -2285,6 +2285,12 @@ headline."
   (:if-package org)
   (:package org-review)
   
+  (with-eval-after-load 'org-review
+    (setopt org-review-delay "+8d"
+            org-review-last-timestamp-format 'inactive
+            org-review-next-timestamp-format 'inactive
+            org-review-sets-next-date t))
+  
   (with-eval-after-load 'org
     (bind-keys :map org-mode-map
                ("C-c r s" . org-review-insert-next-review)
@@ -2292,13 +2298,7 @@ headline."
   (with-eval-after-load 'org-agenda
     (bind-keys :map org-agenda-mode-map
                ("C-c r s" . org-review-insert-next-review)
-               ("C-c r l" . org-review-insert-last-review)))
-  
-  (with-eval-after-load 'org-review
-    (setopt org-review-delay "+8d"
-            org-review-last-timestamp-format 'inactive
-            org-review-next-timestamp-format 'inactive
-            org-review-sets-next-date t)))
+               ("C-c r l" . org-review-insert-last-review))))
 
 ;; Personal extensions to org-review
 (setup org-review
