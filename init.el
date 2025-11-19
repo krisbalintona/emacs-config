@@ -4428,9 +4428,9 @@ which file on the system it backs up."
 (setup citar
   (:package citar)
   
-  (:bind-keys ("C-c b o" . citar-open)
-              ("C-c b f" . citar-open-files)
-              ("C-c b n" . citar-open-notes))
+  (bind-keys ("C-c b o" . citar-open)
+             ("C-c b f" . citar-open-files)
+             ("C-c b n" . citar-open-notes))
   
   (with-eval-after-load 'citar
     (setopt citar-bibliography krisb-bibliography-files
