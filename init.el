@@ -2272,10 +2272,13 @@ headline."
 ;;;;; Org-expiry
 (setup org-expiry
   (:if-package org-contrib)
-  (:load-after org)
   
   (with-eval-after-load 'org-expiry
-    (setopt org-expiry-inactive-timestamps t)))
+    (setopt org-expiry-inactive-timestamps t))
+  
+  (autoload 'org-expiry-insert-created "org-expiry")
+  (with-eval-after-load 'org-capture
+    (add-hook 'org-capture-before-finalize-hook 'org-expiry-insert-created)))
 
 ;;;;; Org-review
 (setup org-review

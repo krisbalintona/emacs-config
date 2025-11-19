@@ -5406,14 +5406,20 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
 
 *** Org-expiry
 
+# TODO 2025-11-18: Implement org-expiry-insert-created for myself then remove this dependency since
+# that is the only purpose of this dependency.
+
 #+name: org-expiry
 #+begin_src emacs-lisp
   (setup org-expiry
     (:if-package org-contrib)
-    (:load-after org)
     
     (with-eval-after-load 'org-expiry
-      (setopt org-expiry-inactive-timestamps t)))
+      (setopt org-expiry-inactive-timestamps t))
+    
+    (autoload 'org-expiry-insert-created "org-expiry")
+    (with-eval-after-load 'org-capture
+      (add-hook 'org-capture-before-finalize-hook 'org-expiry-insert-created)))
 #+end_src
 
 *** Org-review
