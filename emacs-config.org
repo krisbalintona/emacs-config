@@ -4058,8 +4058,8 @@ My org-roam-folgezettel uses a yet-upstreamed version of vtable.el:
 #+begin_src emacs-lisp
   (setup citar-org-node
     (:package (citar-org-node :url "https://github.com/krisbalintona/citar-org-node.git"))
-    (:if-feature citar)
-    (:if-feature org-node)
+    (:if-package citar)
+    (:if-package org-node)
     
     (bind-keys :map krisb-note-keymap
                ("b a" . citar-org-node-add-refs)

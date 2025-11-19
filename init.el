@@ -4505,8 +4505,8 @@ which file on the system it backs up."
 ;;; Citar-org-node
 (setup citar-org-node
   (:package (citar-org-node :url "https://github.com/krisbalintona/citar-org-node.git"))
-  (:if-feature citar)
-  (:if-feature org-node)
+  (:if-package citar)
+  (:if-package org-node)
   
   (bind-keys :map krisb-note-keymap
              ("b a" . citar-org-node-add-refs)
