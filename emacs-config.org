@@ -882,65 +882,68 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
   (setup org-modern
     (:package org-modern)
 
-    (add-hook 'org-mode-hook #'org-modern-mode)
-    (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
+    (with-eval-after-load 'org
+      (add-hook 'org-mode-hook #'org-modern-mode))
+    (with-eval-after-load 'org-agenda
+      (add-hook 'org-agenda-finalize-hook #'org-modern-agenda))
 
-    ;; Keywords
-    (setopt org-modern-keyword nil)
+    (with-eval-after-load 'org-modern
+      ;; Keywords
+      (setopt org-modern-keyword nil)
 
-    ;; TODO 2025-05-23: Also document:
-    ;; - `org-modern-fold-stars’
-    ;; Headlines
-    (setopt org-modern-hide-stars "· " ; Is affected by the value of `org-hide-leading-stars'
-            org-modern-star 'replace
-            org-modern-replace-stars "✦⦾‣⬢")
+      ;; TODO 2025-05-23: Also document:
+      ;; - `org-modern-fold-stars’
+      ;; Headlines
+      (setopt org-modern-hide-stars "· " ; Is affected by the value of `org-hide-leading-stars'
+              org-modern-star 'replace
+              org-modern-replace-stars "✦⦾‣⬢")
 
-    ;; Todos
-    (setopt org-modern-todo t
-            ;; See my value for `org-todo-keyword-faces'
-            org-modern-todo-faces
-            '(("DOING" :inherit (bold success org-modern-todo))
-              ("NEXT" :inherit (bold success org-modern-todo))
-              ("TODO" :inherit (org-todo org-modern-todo))
-              ("HOLD" :inherit (shadow error org-modern-todo))
-              ("MAYBE" :inherit (shadow org-todo org-modern-todo))
-              ("DONE" :inherit (bold org-done org-modern-todo))
-              ("CANCELED" :inherit (error org-modern-todo))))
+      ;; Todos
+      (setopt org-modern-todo t
+              ;; See my value for `org-todo-keyword-faces'
+              org-modern-todo-faces
+              '(("DOING" :inherit (bold success org-modern-todo))
+                ("NEXT" :inherit (bold success org-modern-todo))
+                ("TODO" :inherit (org-todo org-modern-todo))
+                ("HOLD" :inherit (shadow error org-modern-todo))
+                ("MAYBE" :inherit (shadow org-todo org-modern-todo))
+                ("DONE" :inherit (bold org-done org-modern-todo))
+                ("CANCELED" :inherit (error org-modern-todo))))
 
-    ;; Priorities
-    (setopt org-modern-priority t
-            ;; See my value for `org-priority-faces'
-            org-modern-priority-faces
-            '((?A :inverse-video t :inherit (bold org-priority))
-              (?B :inverse-video t :inherit (bold org-priority))
-              (?C :inverse-video t :inherit org-priority)
-              (?D :inverse-video t :inherit org-priority)
-              (?E :inverse-video t :inherit (shadow org-priority))
-              (?F :inverse-video t :inherit (shadow org-priority))))
+      ;; Priorities
+      (setopt org-modern-priority t
+              ;; See my value for `org-priority-faces'
+              org-modern-priority-faces
+              '((?A :inverse-video t :inherit (bold org-priority))
+                (?B :inverse-video t :inherit (bold org-priority))
+                (?C :inverse-video t :inherit org-priority)
+                (?D :inverse-video t :inherit org-priority)
+                (?E :inverse-video t :inherit (shadow org-priority))
+                (?F :inverse-video t :inherit (shadow org-priority))))
 
-    ;; Tags
-    (setopt org-modern-label-border 3
-            org-modern-tag t)
+      ;; Tags
+      (setopt org-modern-label-border 3
+              org-modern-tag t)
 
-    ;; Org blocks
-    (setopt org-modern-block-fringe nil ; Doesn't work well with `olivetti-style' set to 'fancy
-            org-modern-block-name '("⌜" . "⌞"))
+      ;; Org blocks
+      (setopt org-modern-block-fringe nil ; Doesn't work well with `olivetti-style' set to 'fancy
+              org-modern-block-name '("⌜" . "⌞"))
 
-    ;; Footnotes
-    (setopt org-modern-footnote '(nil (raise 0.15) (height 0.9)))
+      ;; Footnotes
+      (setopt org-modern-footnote '(nil (raise 0.15) (height 0.9)))
 
-    ;; Lists
-    (setopt org-modern-list '((?+ . "◦")
-                              (?- . "–")
-                              (?* . "•")))
+      ;; Lists
+      (setopt org-modern-list '((?+ . "◦")
+                                (?- . "–")
+                                (?* . "•")))
 
-    ;; Timestamps
-    (setopt org-modern-timestamp t)
+      ;; Timestamps
+      (setopt org-modern-timestamp t)
 
-    ;; Tables
-    (setopt org-modern-table t
-            org-modern-table-vertical 3
-            org-modern-table-horizontal 0.1)
+      ;; Tables
+      (setopt org-modern-table t
+              org-modern-table-vertical 3
+              org-modern-table-horizontal 0.1))
 
     ;; TODO 2025-05-23: Revisit this.
     ;; (krisb-modus-themes-setup-faces
