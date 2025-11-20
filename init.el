@@ -4549,6 +4549,20 @@ which file on the system it backs up."
 (setup persid
   (:package (persid :url "https://github.com/rougier/persid.git")))
 
+;;; Fancy-compilation
+;; Document:
+;; - `fancy-compilation-term'
+;; Make compilation outputs in compilation buffers more pleasant to
+;; see.
+(setup fancy-compilation
+  (:package fancy-compilation)
+  
+  (setopt fancy-compilation-override-colors nil
+          fancy-compilation-quiet-prelude nil
+          fancy-compilation-quiet-prolog nil)
+  
+  (fancy-compilation-mode 1))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

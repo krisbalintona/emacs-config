@@ -8,16 +8,17 @@
    '(arei astute bui cape citar-org-node cl-generic cond-star consult
           corfu eat edit-indirect editorconfig ef-themes eglot
           el-patch elisp-demos erc exec-path-from-shell faceup
-          fish-mode flymake-vale fontaine gcmh geiser-guile
-          highlight-function-calls hotfuzz jinx lin magit-popup
-          mixed-pitch no-littering notmuch-addr ntlm ol-notmuch
-          olivetti on orderless org-contrib org-hide-drawers org-mime
-          org-modern org-ql org-review org-roam-folgezettel
-          org-web-tools orgmdb outli package-upgrade-guard paren-face
-          persid powerthesaurus pulsar puni python setup smart-mark
-          so-long soap-client svg tablist tempel timeout track-changes
-          tramp try use-package vc-jj verilog-mode vertico which-key
-          window-tool-bar wombag work-timer))
+          fancy-compilation fish-mode flymake-vale fontaine gcmh
+          geiser-guile highlight-function-calls hotfuzz jinx lin
+          magit-popup mixed-pitch no-littering notmuch-addr ntlm
+          ol-notmuch olivetti on orderless org-contrib
+          org-hide-drawers org-mime org-modern org-ql org-review
+          org-roam-folgezettel org-web-tools orgmdb outli
+          package-upgrade-guard paren-face persid powerthesaurus
+          pulsar puni python setup smart-mark so-long soap-client svg
+          tablist tempel timeout track-changes tramp try use-package
+          vc-jj verilog-mode vertico which-key window-tool-bar wombag
+          work-timer))
  '(package-vc-selected-packages
    '((org-mime :url "https://github.com/krisbalintona/org-mime.git"
                :branch "merge")

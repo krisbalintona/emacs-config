@@ -1239,22 +1239,6 @@ For N, see the docstring of `open-line’."
   (ediff-split-window-function #'split-window-horizontally)
   (ediff-highlight-all-diffs nil)) ; Only highlight currently selected diff
 
-;;;; Fancy-compilation
-;; Make compilation outputs in compilation buffers more pleasant to
-;; see.
-(use-package fancy-compilation
-  :ensure t
-  :demand t
-  :custom
-  ;; The TERM environment variable to use (set to an empty string to
-  ;; leave unset).  Set to \"ansi-term\" for the default of ansi-term
-  (fancy-compilation-term "eterm-color")
-  (fancy-compilation-override-colors nil)
-  (fancy-compilation-quiet-prelude nil)
-  (fancy-compilation-quiet-prolog nil)
-  :config
-  (fancy-compilation-mode 1))
-
 ;;;; Compile
 ;; TODO 2025-07-03: Document:
 ;; - `compilation-auto-jump-to-first-error'

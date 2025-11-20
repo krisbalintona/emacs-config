@@ -3050,7 +3050,7 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
       (set-face-attribute 'info-title-4 nil :height 1.1)))
 #+end_src
 
-**** Shells
+**** Shells and compilation
 
 ***** EAT: Best terminal emulator
 
@@ -3136,6 +3136,26 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
 #+begin_src emacs-lisp
   (setup fish-mode
     (:package fish-mode))
+#+end_src
+
+***** Fancy-compilation: Make =compilation-mode= prettier
+
+# TODO 2025-11-21: Can I get away with removing this package by tweaking the built-in options?
+
+#+name: fancy-compilation
+#+begin_src emacs-lisp
+  ;; Document:
+  ;; - `fancy-compilation-term'
+  ;; Make compilation outputs in compilation buffers more pleasant to
+  ;; see.
+  (setup fancy-compilation
+    (:package fancy-compilation)
+    
+    (setopt fancy-compilation-override-colors nil
+            fancy-compilation-quiet-prelude nil
+            fancy-compilation-quiet-prolog nil)
+    
+    (fancy-compilation-mode 1))
 #+end_src
 
 **** Emacs-lisp
@@ -6020,6 +6040,9 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
 
   ;;; Persid
   <<persid>>
+
+  ;;; Fancy-compilation
+  <<fancy-compilation>>
 
   ;;; Startup time
   <<startup-time>>
