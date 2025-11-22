@@ -4134,6 +4134,7 @@ Below are bespoke commands for standardizing the location of file attachments fo
 
 When ~krisb-bibtex-standardize~ is called, it will move all the attachments of the bibtex entry at point to a subdirectory in the current directory whose name is the entry's cite key. All non-PDFs will be moved there but all PDFs will be renamed according to a specific format based on the entry's authors, date, and title.
 #+begin_src emacs-lisp
+  ;;; Helper functions
   (defun krisb-bibtex-rename-file-uniquely (from-path to-path &optional show-progress)
     "Rename FROM-PATH to TO-PATH.
   FROM-PATH and TO-PATH are both non-directory file paths.  If TO-PATH
@@ -4165,6 +4166,44 @@ When ~krisb-bibtex-standardize~ is called, it will move all the attachments of t
       (rename-file from-path uniq-path)
       uniq-path))
 
+  (defun krisb-bibtex-field-text (field)
+    "Return the text of FIELD.
+  The returned field text excludes field delimiters.
+
+  When FIELD does not exist in the bibtex entry at point, error."
+    (require 'dash)
+    (save-excursion
+      (bibtex-beginning-of-entry)
+      (let ((bounds (bibtex-search-forward-field field t)))
+        (unless bounds (error "Field named \"%s\" not found" field))
+        (let* ((field-text
+                (buffer-substring (bibtex-start-of-text-in-field bounds)
+                                  (bibtex-end-of-text-in-field bounds)))
+               (left-delim
+                (if (eq bibtex-field-delimiters 'braces) "{" "\""))
+               (right-delim
+                (if (eq bibtex-field-delimiters 'braces) "}" "\"")))
+          (->> field-text
+               (string-remove-suffix right-delim)
+               (string-remove-prefix left-delim))))))
+
+  (defun krisb-bibtex-replace-field (field new-text)
+    "Replace the text of bibtex entry FIELD with NEW-TEXT.
+
+  When FIELD does not exist in the bibtex entry at point, error."
+    (save-excursion
+      (bibtex-beginning-of-entry)
+      (let* ((bounds (bibtex-search-forward-field field t)))
+        (unless bounds (error "Field named \"%s\" not found" field))
+        (goto-char (bibtex-start-of-text-in-field bounds))
+        (delete-region (point) (bibtex-end-of-text-in-field bounds))
+        (if (string-match-p "^[[:digit:]]+$" new-text)
+            (insert new-text)
+          (insert (bibtex-field-left-delimiter)
+                  new-text
+                  (bibtex-field-right-delimiter))))))
+
+  ;;; Commands
   (defun krisb-bibtex-standardize (&optional show-progress debug)
     "Standardize the attachment locations of the bibtex entry at point.
   For the bibtex entry at point, move its attachments into a directory
@@ -4195,26 +4234,26 @@ When ~krisb-bibtex-standardize~ is called, it will move all the attachments of t
                                       ;; will mess up the path names
                                       (append bibtex-autokey-titleword-change-strings
                                               '(("/" . "-slash-")))))
+           ;; NOTE 2025-11-20: Zotero exports filenames separated by
+           ;; semi-colons.  It isn't standardized, but I adopt it here.
+           ;; (The biblatex manual does not specify the format the file
+           ;; field should take.)
+           (file-sep ";")
+           (attachments-raw
+            (string-split (bibtex-autokey-get-field "file")
+                          file-sep t))
+           ;; FIXME 2025-11-20: The regexp is taken from
+           ;; `bibtex-autokey-transcriptions'.  It considers inserted
+           ;; whitespace due to reformatting from `bibtex-reformat'.
+           ;; However, there remains an edge case: when there are
+           ;; multiple continuous whitespaces in the actual title, the
+           ;; regexp below squashes them.  I don't think there's a way
+           ;; around this; so during these edge cases, we manually
+           ;; rename the files we skip.
            (attachments
-            (string-split (bibtex-autokey-get-field
-                           "file"
-                           ;; FIXME 2025-11-20: The regexp is taken from
-                           ;; `bibtex-autokey-transcriptions'.  It
-                           ;; considers inserted whitespace due to
-                           ;; reformatting from `bibtex-reformat'.
-                           ;; However, there remains an edge case: when
-                           ;; there are multiple continuous whitespaces
-                           ;; in the actual title, the regexp below
-                           ;; squashes them.  I don't think there's a
-                           ;; way around this; so during these edge
-                           ;; cases, we manually rename the files we
-                           ;; skip.
-                           '(("[\s\t\n]*\\(?:\\\\\\)?[\s\t\n]+" . " ")))
-                          ;; REVIEW 2025-11-20: Zotero exports filenames
-                          ;; separated by semi-colons.  I'm not sure if
-                          ;; this is canonical with the bibtex or
-                          ;; biblatex format though.
-                          ";" t))
+            (mapcar (lambda (file)
+                      (string-replace "[\s\t\n]*\\(?:\\\\\\)?[\s\t\n]+" " " file))
+                    attachments-raw))
            nonexistent-attachments      ; Attachments that don't exist
            target-attachments           ; Attachments to rename
            renamed-attachments)         ; Cons of OLD-PATH and DEST-PATH
@@ -4242,49 +4281,66 @@ When ~krisb-bibtex-standardize~ is called, it will move all the attachments of t
       
       ;; Rename attachments
       (dolist (old-path target-attachments)
-        ;; Rename based on file extensions
-        (pcase (downcase (file-name-extension old-path))
-          ;; PDFs
-          ("pdf"
-           (let* ((bibtex-autokey-name-case-convert-function 'identity)
-                  (bibtex-autokey-names 1)
-                  (bibtex-autokey-names-stretch 0)
-                  (bibtex-autokey-year-length 4)
-                  (bibtex-autokey-titleword-length 'infty)
-                  (filename (file-name-nondirectory old-path))
-                  (new-filename
-                   (file-name-with-extension
-                    (concat (bibtex-autokey-get-names) " - "
-                            ;; Some entries may not have a year/date
-                            (unless (string-empty-p (bibtex-autokey-get-field '("date" "year")))
-                              (concat (bibtex-autokey-get-year) " - "))
-                            title)
-                    "pdf"))
-                  (dest-path (expand-file-name new-filename dest-dir)))
-             ;; Only rename if NEW-FILENAME is different than FILENAME
-             (unless (string= old-path dest-path)
+        (let (dest-path)
+          ;; Rename based on file extensions
+          (pcase (downcase (file-name-extension old-path))
+            ;; PDFs
+            ("pdf"
+             (let* ((bibtex-autokey-name-case-convert-function 'identity)
+                    (bibtex-autokey-names 1)
+                    (bibtex-autokey-names-stretch 0)
+                    (bibtex-autokey-year-length 4)
+                    (bibtex-autokey-titleword-length 'infty)
+                    (filename (file-name-nondirectory old-path))
+                    (new-filename
+                     (file-name-with-extension
+                      (concat (bibtex-autokey-get-names) " - "
+                              ;; Some entries may not have a year/date
+                              (unless (string-empty-p (bibtex-autokey-get-field '("date" "year")))
+                                (concat (bibtex-autokey-get-year) " - "))
+                              title)
+                      "pdf")))
+               (setq dest-path (expand-file-name new-filename dest-dir))
+               ;; Only rename if NEW-FILENAME is different than FILENAME
+               (unless (file-equal-p old-path dest-path)
+                 (krisb-bibtex-rename-file-uniquely old-path dest-path show-progress)
+                 (push (cons old-path dest-path) renamed-attachments))))
+            ;; Non-PDFs
+            (_
+             (setq dest-path (expand-file-name (file-name-nondirectory old-path) dest-dir))
+             (unless (file-equal-p old-path dest-path)
                (krisb-bibtex-rename-file-uniquely old-path dest-path show-progress)
                (push (cons old-path dest-path) renamed-attachments))))
-          ;; Non-PDFs
-          (_
-           (let ((dest-path (expand-file-name (file-name-nondirectory old-path) dest-dir)))
-             (unless (string= old-path dest-path)
-               (krisb-bibtex-rename-file-uniquely old-path dest-path show-progress)
-               (push (cons old-path dest-path) renamed-attachments)))))
-        
-        ;; Cleanup: after renaming OLD-PATH, delete its parent directory
-        ;; if it is now empty
-        (let ((old-dir (file-name-directory old-path)))
-          (when (directory-empty-p old-dir)
-            (when show-progress
-              (message "[krisb-bibtex-standardize] Deleting directory \"%s\" because it is now empty"
-                       (file-relative-name old-dir)))
-            (delete-directory old-dir))))
-      
+
+          ;; Update file field of entry
+          (when dest-path
+            (krisb-bibtex-replace-field "file"
+                                        (mapconcat (lambda (attachment)
+                                                     (if (string= old-path attachment)
+                                                         (file-relative-name dest-path)
+                                                       attachment))
+                                                   attachments-raw file-sep)))
+          
+          ;; Cleanup: after renaming OLD-PATH, delete its parent directory
+          ;; if it is now empty
+          (let ((old-dir (file-name-directory old-path)))
+            (when (directory-empty-p old-dir)
+              (when show-progress
+                (message "[krisb-bibtex-standardize] Deleting directory \"%s\" because it is now empty"
+                         (file-relative-name old-dir)))
+              (delete-directory old-dir)))))
+
+      ;; REVIEW 2025-11-22: Is this doing too much?  Just want to make
+      ;; sure the text is filled afterwards, since it might've been
+      ;; filled prior to modification of the file field
+      ;; When all done making potential changes to the entry text, fill the entry
+      (save-excursion (bibtex-fill-entry))
+
       ;; Summary messages
-      (let* ((pdf-attachments (seq-filter (lambda (f) (string= "pdf" (file-name-extension f)))
-                                          target-attachments))
-             (nonpdf-attachments (seq-difference target-attachments pdf-attachments)))
+      (let* ((pdf-attachments (seq-filter (lambda (old-and-new)
+                                            (string= "pdf" (file-name-extension (car old-and-new))))
+                                          renamed-attachments))
+             (nonpdf-attachments (seq-difference renamed-attachments pdf-attachments)))
         (when debug
           (message "[krisb-bibtex-standardize] all renamed: %s" renamed-attachments)
           (message "[krisb-bibtex-standardize] pdf renamed: %s" pdf-attachments)
