@@ -379,10 +379,6 @@ package-archives, e.g. \"gnu\")."))
   ;; Show context menu from right-click
   (when (display-graphic-p) (context-menu-mode 1))
   
-  ;; Enable `delete-selection-mode'.  When selecting text, if typing new
-  ;; text, replace the selected text with the new text
-  (delete-selection-mode t)
-  
   ;; Insert spaces instead of tab characters.  The below disables
   ;; `indent-tabs-mode' globally
   (setopt indent-tabs-mode nil)
@@ -4675,6 +4671,17 @@ which file on the system it backs up."
           fancy-compilation-quiet-prolog nil)
   
   (fancy-compilation-mode 1))
+
+;;; Paren
+(setup paren
+  
+  (with-eval-after-load 'paren
+    (setopt show-paren-not-in-comments-or-strings 'on-mismatch)))
+
+;;; Delsel
+(setup delsel
+  
+  (delete-selection-mode t))
 
 ;;; Startup time
 ;; Message for total init time after startup

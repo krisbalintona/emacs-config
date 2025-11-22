@@ -2497,12 +2497,23 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
     (electric-indent-mode 1))
 #+end_src
 
-*** Delete-selection-mode
+*** Paren: Highlight matching parentheses
 
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Enable `delete-selection-mode'.  When selecting text, if typing new
-  ;; text, replace the selected text with the new text
-  (delete-selection-mode t)
+#+name: paren
+#+begin_src emacs-lisp
+  (setup paren
+    
+    (with-eval-after-load 'paren
+      (setopt show-paren-not-in-comments-or-strings 'on-mismatch)))
+#+end_src
+
+*** Delsel: Delete region when yanking
+
+#+name: delsel
+#+begin_src emacs-lisp
+  (setup delsel
+    
+    (delete-selection-mode t))
 #+end_src
 
 *** Whitespace: Visualize whitespace
@@ -6442,6 +6453,12 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
   ;;; Fancy-compilation
   <<fancy-compilation>>
 
+  ;;; Paren
+  <<paren>>
+
+  ;;; Delsel
+  <<delsel>>
+
   ;;; Startup time
   <<startup-time>>
 #+end_src
@@ -6461,4 +6478,4 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
 #  LocalWords:  noweb org's Linters Balintona Kristoffer LocalWords Elpaca el Runtime PDFs Ef elisp
 #  LocalWords:  Minibuffer Vertico Fontaine Theming Savehist minibuffer facto de Minibuffers pdf El
 #  LocalWords:  minibuffers Autorevert WIP EmacsWiki TODO GCMH Imenu Isearch Newcomment VCS VC jj
-#  LocalWords:  jujutsu JJ Hotfuzz hotfuzz emacs BufFace subtree
+#  LocalWords:  jujutsu JJ Hotfuzz hotfuzz emacs BufFace subtree Paren
