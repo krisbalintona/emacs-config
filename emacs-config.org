@@ -4127,29 +4127,29 @@ Bibtex.el is the built-in library for parsing =.bib= files---these are BibTex fi
       ;; `bibtex-entry-format').
       (add-hook 'bibtex-mode-hook (lambda () (setq-local fill-column most-positive-fixnum)))
       
-      ;; Create Zotero-like cite keys with `bibtex-generate-autokey'
-      (defun krisb-bibtex-autokey-rearrange-parts (key)
-        "Rearrange the parts of KEY to be in name-title-year order.q"
-        (let* ((parts (split-string key ":::"))
-               (author (nth 0 parts))
-               (year (nth 1 parts))
-               (title (nth 2 parts)))
-          (concat author title year)))
+      ;; Create Better BibTeX-like cite keys with
+      ;; `bibtex-generate-autokey'
       (setopt bibtex-autokey-edit-before-use nil ; Trust `bibtex-generate-autokey'
               bibtex-autokey-names 1
-              bibtex-autokey-names-stretch 2
-              bibtex-autokey-name-case-convert-function 'downcase
+              bibtex-autokey-names-stretch 1
+              bibtex-autokey-name-case-convert-function 'identity
               bibtex-autokey-year-length 4
               bibtex-autokey-titleword-case-convert-function 'capitalize
               bibtex-autokey-title-terminators (rx unmatchable)
               bibtex-autokey-titlewords 3
               bibtex-autokey-titlewords-stretch 0
               bibtex-autokey-titleword-length 'infty
-              bibtex-autokey-titleword-separator ""
-              
-              bibtex-autokey-name-year-separator ":::"
+              bibtex-autokey-titleword-separator "")
+      (defun krisb-bibtex-autokey-finalize (key)
+        "Rearrange the parts of KEY to be in name-title-year order.q"
+        (let* ((parts (split-string key ":::"))
+               (authors (nth 0 parts))
+               (year (nth 1 parts))
+               (title (nth 2 parts)))
+          (concat authors title year)))
+      (setopt bibtex-autokey-name-year-separator ":::"
               bibtex-autokey-year-title-separator ":::"
-              bibtex-autokey-before-presentation-function #'krisb-bibtex-autokey-rearrange-parts))
+              bibtex-autokey-before-presentation-function #'krisb-bibtex-autokey-finalize))
 
     (add-hook 'bibtex-mode-hook 'visual-line-mode))
 #+end_src
@@ -4181,13 +4181,13 @@ When ~krisb-bibtex-standardize~ is called, it will move all the attachments of t
           (counter 1))
       ;; Append a numeric to the file base until the file name is unique
       (while (file-exists-p uniq-path)
-        (setq uniq-path (file-name-concat (file-name-directory to-path) 
+        (setq uniq-path (file-name-concat (file-name-directory to-path)
                                           (format "%s-%s.%s"
                                                   (file-name-base to-path)
                                                   counter
                                                   (file-name-extension to-path)))
               counter (1+ counter)))
-      
+
       (when show-progress
         (message "[krisb-bibtex-rename-file-uniquely] Moving file \"%s\" to \"%s\"..."
                  (file-relative-name from-path) (file-relative-name uniq-path)))
@@ -4231,16 +4231,91 @@ When ~krisb-bibtex-standardize~ is called, it will move all the attachments of t
                   new-text
                   (bibtex-field-right-delimiter))))))
 
+  (defun krisb-bibtex-summary-string (data)
+    "Given DATA, return a string summarizing the standardization operation.
+  DATA has the form of the return value of `krisb-bibtex-standardize'.
+  See its docstring for details."
+    (let* ((regen-failures (plist-get data :regen-fail))
+           (attachments (plist-get data :attachments))
+           (nonexistent-attachments (plist-get data :nonexistent-attachments))
+           (target-attachments (plist-get data :target-attachments))
+           (renamed-attachments (plist-get data :renamed-attachments))
+           (renamed-pdf-attachments (seq-filter (lambda (old-and-new)
+                                                  (string= "pdf" (file-name-extension (car old-and-new))))
+                                                renamed-attachments))
+           (renamed-nonpdf-attachments (seq-difference renamed-attachments renamed-pdf-attachments))
+           ;; Counts
+           (gen-key-failures-counts (length regen-failures))
+           (attachments-count (length attachments))
+           (nonexistent-count (length nonexistent-attachments))
+           (renamed-count (length renamed-attachments))
+           (renamed-pdf-count (length renamed-pdf-attachments))
+           (renamed-nonpdf-count (length renamed-nonpdf-attachments))
+           (skipped-count (- (length target-attachments) (length renamed-attachments))))
+      (format "Summary:
+  Failed to regenerate %s,
+  Found %s,
+  Renamed %s (%s PDF, %s non-PDF),
+  Left %s,
+  And skipped %s"
+              (ngettext "1 key" (format "%s keys" gen-key-failures-counts) gen-key-failures-counts)
+              (ngettext "1 attachment" (format "a total %s of attachments" attachments-count) attachments-count)
+              (ngettext "1 attachment" (format "%s attachments" renamed-count) renamed-count)
+              renamed-pdf-count
+              renamed-nonpdf-count
+              (format "%s nonexistent %s"
+                      nonexistent-count
+                      (ngettext "attachment untouched" "attachments untouched" nonexistent-count))
+              (format "%s %s" skipped-count (ngettext "attachment" "attachments" skipped-count)))))
+
+  (defun krisb-bibtex-plist-merge-lists (plists)
+    "Merge PLISTS by combining values for matching keys.
+  PLISTS is a list of plists.  Take PLISTS and return a single plist that
+  contains every key appearing in every plist in PLISTS.  For each key,
+  the corresponding value is a list concatenating all values of that
+  property in every list in PLIST.
+
+  For example:
+
+    (krisb-bibtex-plist-merge-lists
+      '(:a (1 2) :b (3))
+      '(:a (4)   :b (5 6))
+      '(:a (7 8) :c (9)))
+
+  evaluates to:
+
+      (:a (1 2 4 7 8)
+       :b (3 5 6)
+       :c (9))"
+    (let (result)
+      (dolist (pl plists result)
+        (while pl
+          (let ((key (pop pl))
+                (val (pop pl)))
+            (setq result
+                  (plist-put result key (append (plist-get result key) val))))))))
+
   ;;; Commands
   (defun krisb-bibtex-standardize (&optional show-progress debug)
-    "Standardize the attachment locations of the bibtex entry at point.
-  For the bibtex entry at point, move its attachments into a directory
-  whose name is the cite key of the entry.  Also rename attached PDF files
+    "Regenerate key and standardize attachment paths of entry at point.
+  For the bibtex entry at point, regenerate its key with
+  `bibtex-generate-autokey' and move its attachments into a directory
+  whose name is the cite key of the entry.  Also rename attached files
   such that they are standardized based on the information in the entry.
 
-  Return a list of the newly named or moved attachments.  Each element of
-  this list is a cons whose car is the old file path and whose cdr is the
-  new file path.
+  Return a plist whose properties are:
+  - :attachments
+      All attachment file paths.
+  - :regen-fail
+      The key if it failed to regenerate due to missing required fields.
+  - :nonexistent-attachments
+      Attachment file paths that did not exist on-disk.
+  - :target-attachments
+      Attachment file paths that did exist on-disk.
+  - :renamed-attachments
+      Attachments that were renamed.  Each element of this list is a
+      cons whose car is the old file path and whose cdr is the new file
+      path.
 
   When SHOW-PROGRESS is non-nil, then print progress messages.  When
   called interactively, SHOW-PROGRESS is non-nil.  When called with a
@@ -4250,152 +4325,245 @@ When ~krisb-bibtex-standardize~ is called, it will move all the attachments of t
   When DEBUG is non-nil, also print debug messages.  When called
   interactively, DEBUG is nil."
     (interactive (list (not current-prefix-arg) nil) bibtex-mode)
-    (let* ((entry (save-excursion (bibtex-beginning-of-entry) (bibtex-parse-entry)))
-           (key (cdr (assoc "=key=" entry)))
-           ;; TODO 2025-11-21: In the future maybe I could let DEST-DIR
-           ;; be calculated dynamically per-attachment and passed as an
-           ;; argument?
-           (dest-dir (expand-file-name (file-name-as-directory key)))
-           (title
-            (bibtex-autokey-get-field "title"
-                                      ;; Don't let "/" sneak by; they
-                                      ;; will mess up the path names
-                                      (append bibtex-autokey-titleword-change-strings
-                                              '(("/" . "-slash-")))))
-           ;; NOTE 2025-11-20: Zotero exports filenames separated by
-           ;; semi-colons.  It isn't standardized, but I adopt it here.
-           ;; (The biblatex manual does not specify the format the file
-           ;; field should take.)
-           (file-sep ";")
-           (attachments-raw
-            (string-split (bibtex-autokey-get-field "file")
-                          file-sep t))
-           ;; FIXME 2025-11-20: The regexp is taken from
-           ;; `bibtex-autokey-transcriptions'.  It considers inserted
-           ;; whitespace due to reformatting from `bibtex-reformat'.
-           ;; However, there remains an edge case: when there are
-           ;; multiple continuous whitespaces in the actual title, the
-           ;; regexp below squashes them.  I don't think there's a way
-           ;; around this; so during these edge cases, we manually
-           ;; rename the files we skip.
-           (attachments
-            (mapcar (lambda (file)
-                      (string-replace "[\s\t\n]*\\(?:\\\\\\)?[\s\t\n]+" " " file))
-                    attachments-raw))
-           nonexistent-attachments      ; Attachments that don't exist
-           target-attachments           ; Attachments to rename
-           renamed-attachments)         ; Cons of OLD-PATH and DEST-PATH
-      (dolist (path attachments)
-        (if (file-exists-p path)
-            (push path target-attachments)
-          (push path nonexistent-attachments)))
-      
-      ;; Starting messages
-      (when show-progress
-        (message "[krisb-bibtex-standardize] Standardizing attachments of %s" key))
-      (when debug
-        (message "[krisb-bibtex-standardize] all attachments: %s" attachments)
-        (message "[krisb-bibtex-standardize] nonexistent: %s" nonexistent-attachments)
-        (message "[krisb-bibtex-standardize] targets: %s" target-attachments))
-
-      ;; Make DEST-DIR and its parent directories if it doesn't already
-      ;; exist and there are attachments to be renamed
-      ;; (`target-attachments' is non-nil)
-      (when (and target-attachments (not (file-exists-p dest-dir)))
-        (when show-progress
-          (message "[krisb-bibtex-standardize] Making directory \"%s\""
-                   (file-relative-name dest-dir)))
-        (make-directory dest-dir t))
-      
-      ;; Rename attachments
-      (dolist (old-path target-attachments)
-        (let (dest-path)
-          ;; Rename based on file extensions
-          (pcase (downcase (file-name-extension old-path))
-            ;; PDFs
-            ("pdf"
-             (let* ((bibtex-autokey-name-case-convert-function 'identity)
-                    (bibtex-autokey-names 1)
-                    (bibtex-autokey-names-stretch 0)
-                    (bibtex-autokey-year-length 4)
-                    (bibtex-autokey-titleword-length 'infty)
-                    (filename (file-name-nondirectory old-path))
-                    (new-filename
-                     (file-name-with-extension
-                      (concat (bibtex-autokey-get-names) " - "
-                              ;; Some entries may not have a year/date
-                              (unless (string-empty-p (bibtex-autokey-get-field '("date" "year")))
-                                (concat (bibtex-autokey-get-year) " - "))
-                              title)
-                      "pdf")))
-               (setq dest-path (expand-file-name new-filename dest-dir))
-               ;; Only rename if NEW-FILENAME is different than FILENAME
-               (unless (file-equal-p old-path dest-path)
-                 (krisb-bibtex-rename-file-uniquely old-path dest-path show-progress)
-                 (push (cons old-path dest-path) renamed-attachments))))
-            ;; Non-PDFs
-            (_
-             (setq dest-path (expand-file-name (file-name-nondirectory old-path) dest-dir))
-             (unless (file-equal-p old-path dest-path)
-               (krisb-bibtex-rename-file-uniquely old-path dest-path show-progress)
-               (push (cons old-path dest-path) renamed-attachments))))
-
-          ;; Update file field of entry
-          (when dest-path
-            (krisb-bibtex-replace-field "file"
-                                        (mapconcat (lambda (attachment)
-                                                     (if (string= old-path attachment)
-                                                         (file-relative-name dest-path)
-                                                       attachment))
-                                                   attachments-raw file-sep)))
-          
-          ;; Cleanup: after renaming OLD-PATH, delete its parent directory
-          ;; if it is now empty
-          (let ((old-dir (file-name-directory old-path)))
-            (when (directory-empty-p old-dir)
+    (save-excursion
+      (bibtex-beginning-of-entry)
+      (let* ((entry (save-excursion (bibtex-parse-entry)))
+             (fields (mapcar #'car entry))
+             (type (cdr (assoc "=type=" entry)))
+             (key (cdr (assoc "=key=" entry)))
+             (regen-autokey-fail-p nil))
+        ;; First, regenerate cite key, respecting the user options
+        ;; relevant to `bibtex-generate-autokey'
+        (cl-flet
+            ((diacritics-remover (old-func)
+               (lambda (s)
+                 ;; NOTE 2025-11-24: The normalization via
+                 ;; `ucs-normalize-NFD-string' requires one's system
+                 ;; locale to be set and be appropriately used in Emacs
+                 ;; (see `current-locale-environment' and
+                 ;; `set-locale-environment'.  I do not know what
+                 ;; locales do and do not work with the code below; my
+                 ;; locale is "en_US.UTF-8".
+                 ;;
+                 ;; As a test, the following should evaluate to non-nil:
+                 ;;
+                 ;;   (string= "Zizek"
+                 ;;            (replace-regexp-in-string (rx (or (category upper-diacritical-mark)
+                 ;;                                              (category tone-mark)
+                 ;;                                              (category vowel-modifying-diacritical-mark)
+                 ;;                                              (category combining-diacritic)))
+                 ;;                                      "" (ucs-normalize-NFD-string "Žižek")))
+                 (require 'ucs-normalize)
+                 (->> s
+                      (funcall old-func)
+                      ;; This makes sure diacritics are separated into their
+                      ;; own characters (though visually, those characters
+                      ;; may occupy the same graphical space as their base
+                      ;; character)
+                      (ucs-normalize-NFD-string)
+                      ;; Then remove just the diacritical marks, leaving
+                      ;; only the base characters
+                      (replace-regexp-in-string (rx (or (category upper-diacritical-mark)
+                                                        (category tone-mark)
+                                                        (category vowel-modifying-diacritical-mark)
+                                                        (category combining-diacritic)))
+                                                "")))))
+          (let* (;; Set to nil, otherwise entries may be reordered as we
+                 ;; go through them (because `bibtex-clean-entry' may
+                 ;; move an entry if it changes its cite key), possibly
+                 ;; leading to infinite loops
+                 (bibtex-maintain-sorted-entries nil)
+                 ;; We use the bibtex-*-case-convert-function functions
+                 ;; instead of modifying the bibtex-*-change-strings
+                 ;; options because we need the strings to be passed
+                 ;; through `ucs-normalize-NFD-string' in order for
+                 ;; regexps to match the marks alone.  Modifying the
+                 ;; latter means that we can only pass
+                 ;; `ucs-normalize-NFD-string' after
+                 ;; `replace-regexp-in-string'.  So, instead, we do
+                 ;; everything inside the conversion functions.
+                 (old-name-convert-function bibtex-autokey-name-case-convert-function)
+                 (bibtex-autokey-name-case-convert-function
+                  (diacritics-remover old-name-convert-function))
+                 (old-titleword-convert-function bibtex-autokey-titleword-case-convert-function)
+                 (bibtex-autokey-titleword-case-convert-function
+                  (diacritics-remover old-titleword-convert-function))
+                 new-key)
+            ;; Check if there is a title, author, and either a date or
+            ;; year field.  The presence of these fields are needed by
+            ;; `bibtex-generate-autokey'
+            (if (and (member "title" fields)
+                     (member "author" fields)
+                     (or (member "date" fields)
+                         (member "year" fields)))
+                (progn
+                  (setq new-key (bibtex-generate-autokey))
+                  ;; Only replace the key if KEY differs from NEW-KEY
+                  (unless (string= key new-key)
+                    (save-excursion
+                      (re-search-forward (if (eq (save-excursion (bibtex-beginning-of-entry)
+                                                                 (bibtex-type-in-head))
+                                                 'string)
+                                             bibtex-string-maybe-empty-head
+                                           bibtex-entry-maybe-empty-head)))
+                    (replace-region-contents (match-beginning bibtex-key-in-head)
+                                             (match-end bibtex-key-in-head)
+                                             new-key)
+                    (setq key new-key)
+                    (message "Regenerated cite key for %s (new: \"%s\")" key new-key)))
+              (setq regen-autokey-fail-p t)
               (when show-progress
-                (message "[krisb-bibtex-standardize] Deleting directory \"%s\" because it is now empty"
-                         (file-relative-name old-dir)))
-              (delete-directory old-dir)))))
+                (message "[krisb-bibtex-standardize] Couldn't generate new cite key for \"%s\".  Using existing key..." key)))))
 
-      ;; REVIEW 2025-11-22: Is this doing too much?  Just want to make
-      ;; sure the text is filled afterwards, since it might've been
-      ;; filled prior to modification of the file field
-      ;; When all done making potential changes to the entry text, fill the entry
-      (save-excursion (bibtex-fill-entry))
+        ;; Then standardize the attachments
+        (let* ((dest-dir (expand-file-name (file-name-as-directory key)))
+               (title
+                (bibtex-autokey-get-field "title"
+                                          ;; Don't let "/" sneak by;
+                                          ;; they will mess up the path
+                                          ;; names
+                                          (append bibtex-autokey-titleword-change-strings
+                                                  '(("/" . "-slash-")))))
+               ;; NOTE 2025-11-20: Zotero exports filenames separated by
+               ;; semi-colons.  It isn't standardized, but I adopt it
+               ;; here.  (The biblatex manual does not specify the
+               ;; format the file field should take.)
+               (file-sep ";")
+               (attachments-raw
+                (string-split (bibtex-autokey-get-field "file")
+                              file-sep t))
+               ;; FIXME 2025-11-20: The regexp is taken from
+               ;; `bibtex-autokey-transcriptions'.  It considers
+               ;; inserted whitespace due to reformatting from
+               ;; `bibtex-reformat'.  However, there remains an edge
+               ;; case: when there are multiple continuous whitespaces
+               ;; in the actual title, the regexp below squashes them.
+               ;; I don't think there's a way around this; so during
+               ;; these edge cases, we manually rename the files we
+               ;; skip.
+               (attachments
+                (mapcar (lambda (file)
+                          (string-replace "[\s\t\n]*\\(?:\\\\\\)?[\s\t\n]+" " " file))
+                        attachments-raw))
+               nonexistent-attachments  ; Attachments that don't exist
+               target-attachments       ; Attachments to rename
+               renamed-attachments      ; Cons of OLD-PATH and DEST-PATH
+               return-value)
+          (dolist (path attachments)
+            (if (file-exists-p path)
+                (push path target-attachments)
+              (push path nonexistent-attachments)))
 
-      ;; Summary messages
-      (let* ((pdf-attachments (seq-filter (lambda (old-and-new)
-                                            (string= "pdf" (file-name-extension (car old-and-new))))
-                                          renamed-attachments))
-             (nonpdf-attachments (seq-difference renamed-attachments pdf-attachments)))
-        (when debug
-          (message "[krisb-bibtex-standardize] all renamed: %s" renamed-attachments)
-          (message "[krisb-bibtex-standardize] pdf renamed: %s" pdf-attachments)
-          (message "[krisb-bibtex-standardize] non-pdf renamed: %s" nonpdf-attachments))
-        (when show-progress
-          (let ((nonexistent-count (length nonexistent-attachments))
-                (pdf-count (length pdf-attachments))
-                (nonpdf-count (length nonpdf-attachments))
-                (renamed-count (length renamed-attachments)))
-            (message (format "[krisb-bibtex-standardize] Done with %s!  Renamed %s (%s PDF, %s non-PDF) and found %s"
-                             key
-                             (format "%s %s" renamed-count (ngettext "attachment" "attachments" renamed-count))
-                             pdf-count
-                             nonpdf-count
-                             (format "%s nonexistent %s" nonexistent-count
-                                     (ngettext "attachment" "attachments" nonexistent-count)))))))
+          ;; Starting messages
+          (when show-progress
+            (message "[krisb-bibtex-standardize] Standardizing attachments of %s" key))
+          (when debug
+            (message "[krisb-bibtex-standardize] all attachments: %s" attachments)
+            (message "[krisb-bibtex-standardize] nonexistent: %s" nonexistent-attachments)
+            (message "[krisb-bibtex-standardize] targets: %s" target-attachments))
 
-      ;; Return value
-      renamed-attachments))
+          ;; Make DEST-DIR and its parent directories if it doesn't
+          ;; already exist and there are attachments to be renamed
+          ;; (`target-attachments' is non-nil)
+          (when (and target-attachments (not (file-exists-p dest-dir)))
+            (when show-progress
+              (message "[krisb-bibtex-standardize] Making directory \"%s\""
+                       (file-relative-name dest-dir)))
+            (make-directory dest-dir t))
+
+          ;; Rename attachments
+          (dolist (old-path target-attachments)
+            (let (dest-path)
+              ;; Rename based on file extensions
+              (pcase (downcase (file-name-extension old-path))
+                ;; PDFs
+                ("pdf"
+                 (let* ((bibtex-autokey-name-case-convert-function 'identity)
+                        (bibtex-autokey-names 1)
+                        (bibtex-autokey-names-stretch 0)
+                        (bibtex-autokey-year-length 4)
+                        (bibtex-autokey-titleword-length 'infty)
+                        (filename (file-name-nondirectory old-path))
+                        (new-filename
+                         ;; FIXME 2025-11-24: Address the possibility of
+                         ;; some of the fields below not being present.
+                         ;; (Already above when we regenerate the key we
+                         ;; have a check for the author, title, and
+                         ;; year/date, but it doesn't stop execution.)
+                         ;; This is especially the case when if I turn
+                         ;; this into a package and give users options
+                         ;; to customize the format of their
+                         ;; attachments' filenames.
+                         (file-name-with-extension
+                          (concat (bibtex-autokey-get-names) " - "
+                                  ;; Some entries may not have a year/date
+                                  (unless (string-empty-p (bibtex-autokey-get-field '("date" "year")))
+                                    (concat (bibtex-autokey-get-year) " - "))
+                                  title)
+                          "pdf")))
+                   (setq dest-path (expand-file-name new-filename dest-dir))
+                   ;; Only rename if OLD-PATH is different from
+                   ;; DEST-PATH
+                   (unless (file-equal-p old-path dest-path)
+                     (krisb-bibtex-rename-file-uniquely old-path dest-path show-progress)
+                     (push (cons old-path dest-path) renamed-attachments))))
+                ;; Non-PDFs
+                (_
+                 (setq dest-path (expand-file-name (file-name-nondirectory old-path) dest-dir))
+                 (unless (file-equal-p old-path dest-path)
+                   (krisb-bibtex-rename-file-uniquely old-path dest-path show-progress)
+                   (push (cons old-path dest-path) renamed-attachments))))
+
+              ;; Update file field of entry if DEST-PATH is a different
+              ;; file from OLD-PATH
+              (unless (file-equal-p dest-path old-path)
+                (krisb-bibtex-replace-field "file"
+                                            (mapconcat (lambda (attachment)
+                                                         (if (string= old-path attachment)
+                                                             (file-relative-name dest-path)
+                                                           attachment))
+                                                       attachments-raw file-sep)))
+
+              ;; Cleanup: after renaming OLD-PATH, delete its parent
+              ;; directory if it is now empty
+              (let ((old-dir (file-name-directory old-path)))
+                (when (directory-empty-p old-dir)
+                  (when show-progress
+                    (message "[krisb-bibtex-standardize] Deleting directory \"%s\" because it is now empty"
+                             (file-relative-name old-dir)))
+                  (delete-directory old-dir)))))
+
+          ;; Assemble return value
+          (setq return-value (list :attachments attachments
+                                   :regen-fail (when regen-autokey-fail-p (list key))
+                                   :nonexistent-attachments nonexistent-attachments
+                                   :target-attachments target-attachments
+                                   :renamed-attachments renamed-attachments))
+
+          ;; Summary messages
+          (let* ((pdf-attachments (seq-filter (lambda (old-and-new)
+                                                (string= "pdf" (file-name-extension (car old-and-new))))
+                                              renamed-attachments))
+                 (nonpdf-attachments (seq-difference renamed-attachments pdf-attachments)))
+            (when debug
+              (message "[krisb-bibtex-standardize] all renamed: %s" renamed-attachments)
+              (message "[krisb-bibtex-standardize] pdf renamed: %s" pdf-attachments)
+              (message "[krisb-bibtex-standardize] non-pdf renamed: %s" nonpdf-attachments))
+            (prog1
+                return-value
+              (when show-progress
+                (message (format "[krisb-bibtex-standardize] Done with \"%s\".  %s"
+                                 (if regen-autokey-fail-p
+                                     (format "%s (failed to regenerate key: missing fields)" key)
+                                   key)
+                                 (krisb-bibtex-summary-string return-value))))))))))
 
   (defun krisb-bibtex-standardize-buffer (&optional show-progress)
     "Standardize every bibtex entry in this buffer.
   Call `krisb-bibtex-standardize' on every bibtex entry in the buffer.
 
-  Return a list of the renamed attachments (see the docstring of
-  `krisb-bibtex-standardize' for a description of the contents of this
-  list).
+  Return a plist whose form matches that of the plist returned by
+  `krisb-bibtex-standardize'.
 
   When SHOW-PROGRESS is non-nil, show progress messages.  When called
   interactively, SHOW-PROGRESS is non-nil.  When called with a prefix
@@ -4404,19 +4572,19 @@ When ~krisb-bibtex-standardize~ is called, it will move all the attachments of t
     (interactive (list (not current-prefix-arg)) bibtex-mode)
     (message "Standardizing all bibtex entries in buffer...")
     (save-excursion
-      (let ((entry-count 0)
-            renamed-attachments)
-        (goto-char (point-min))
+      (goto-char (point-min))
+      (let ((return-plists (list (krisb-bibtex-standardize show-progress)))
+            combined-plist)
         (while (bibtex-next-entry)
-          (setq renamed-attachments (append renamed-attachments (krisb-bibtex-standardize show-progress))
-                entry-count (1+ entry-count)))
-        (when show-progress
-          (message "Processed %s.  Renamed or moved %s"
-                   (ngettext "1 entry" (format "%s entries" entry-count) entry-count)
-                   (ngettext "only 1 attachment"
-                             (format "a total of %s attachments" (length renamed-attachments))
-                             (length renamed-attachments))))
-        renamed-attachments)))
+          (setq return-plists (push (krisb-bibtex-standardize show-progress) return-plists)))
+        (prog1
+            (setq combined-plist (krisb-bibtex-plist-merge-lists return-plists))
+          ;; Summary message
+          (when show-progress
+            (message (format "Processed %s.  %s"
+                             (ngettext "1 entry" (format "%s entries" (length return-plists))
+                                       (length return-plists))
+                             (krisb-bibtex-summary-string combined-plist))))))))
 #+end_src
 
 [fn:3] Ultimately, I wish to move entirely away from Zotero. This is one step towards that end.

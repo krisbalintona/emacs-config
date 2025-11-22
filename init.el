@@ -4625,29 +4625,29 @@ which file on the system it backs up."
     ;; `bibtex-entry-format').
     (add-hook 'bibtex-mode-hook (lambda () (setq-local fill-column most-positive-fixnum)))
     
-    ;; Create Zotero-like cite keys with `bibtex-generate-autokey'
-    (defun krisb-bibtex-autokey-rearrange-parts (key)
-      "Rearrange the parts of KEY to be in name-title-year order.q"
-      (let* ((parts (split-string key ":::"))
-             (author (nth 0 parts))
-             (year (nth 1 parts))
-             (title (nth 2 parts)))
-        (concat author title year)))
+    ;; Create Better BibTeX-like cite keys with
+    ;; `bibtex-generate-autokey'
     (setopt bibtex-autokey-edit-before-use nil ; Trust `bibtex-generate-autokey'
             bibtex-autokey-names 1
-            bibtex-autokey-names-stretch 2
-            bibtex-autokey-name-case-convert-function 'downcase
+            bibtex-autokey-names-stretch 1
+            bibtex-autokey-name-case-convert-function 'identity
             bibtex-autokey-year-length 4
             bibtex-autokey-titleword-case-convert-function 'capitalize
             bibtex-autokey-title-terminators (rx unmatchable)
             bibtex-autokey-titlewords 3
             bibtex-autokey-titlewords-stretch 0
             bibtex-autokey-titleword-length 'infty
-            bibtex-autokey-titleword-separator ""
-            
-            bibtex-autokey-name-year-separator ":::"
+            bibtex-autokey-titleword-separator "")
+    (defun krisb-bibtex-autokey-finalize (key)
+      "Rearrange the parts of KEY to be in name-title-year order.q"
+      (let* ((parts (split-string key ":::"))
+             (authors (nth 0 parts))
+             (year (nth 1 parts))
+             (title (nth 2 parts)))
+        (concat authors title year)))
+    (setopt bibtex-autokey-name-year-separator ":::"
             bibtex-autokey-year-title-separator ":::"
-            bibtex-autokey-before-presentation-function #'krisb-bibtex-autokey-rearrange-parts))
+            bibtex-autokey-before-presentation-function #'krisb-bibtex-autokey-finalize))
 
   (add-hook 'bibtex-mode-hook 'visual-line-mode))
 
