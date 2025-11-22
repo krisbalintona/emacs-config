@@ -3160,6 +3160,16 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
 
 **** Emacs-lisp
 
+***** Elisp-mode: The emacs-lisp major-mode
+
+#+name: elisp-mode
+#+begin_src emacs-lisp
+  (setup elisp-mode
+    
+    (with-eval-after-load 'elisp-mode
+      (setopt elisp-fontify-semantically t))) ; Emacs 31
+#+end_src
+
 ***** Help.el: Emacs's self-documentation
 
 #+name: help.el
@@ -3226,17 +3236,24 @@ Additionally, all apropos commands will expand the subset of symbols they search
 
 ***** Highlight-function-calls: Highlight function calls!
 
+# TODO 2025-11-22: Write commentary on this package's interaction with the new
+# elisp-fontify-semantically
+
 #+name: highlight-function-calls
 #+begin_src emacs-lisp
   (setup highlight-function-calls
     (:package highlight-function-calls)
 
     (dolist (hook '(emacs-lisp-mode-hook lisp-interaction-mode-hook))
-      (add-hook hook #'highlight-function-calls-mode))
+      (add-hook hook (lambda ()
+                       (unless (and (boundp 'elisp-fontify-semantically)
+                                    (buffer-local-value 'elisp-fontify-semantically (current-buffer)))
+                         (highlight-function-calls-mode 1)))))
 
-    (setopt highlight-function-calls-not t
-            highlight-function-calls-macro-calls t
-            highlight-function-calls-special-forms t)
+    (with-eval-after-load 'highlight-function-calls
+      (setopt highlight-function-calls-not t
+              highlight-function-calls-macro-calls t
+              highlight-function-calls-special-forms t))
 
     (:face highlight-function-calls-face ((t (:underline nil :inherit font-lock-function-call-face)))))
 #+end_src
@@ -6160,6 +6177,9 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
 
   ;;; Messages buffer
   <<messages-buffer>>
+
+  ;;; Elisp-mode
+  <<elisp-mode>>
 
   ;;; Elisp-demos
   <<elisp-demos>>

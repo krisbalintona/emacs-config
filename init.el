@@ -1053,6 +1053,12 @@ Then apply ARGS."
                (slot . 1)
                (post-command-select-window . t)))
 
+;;; Elisp-mode
+(setup elisp-mode
+  
+  (with-eval-after-load 'elisp-mode
+    (setopt elisp-fontify-semantically t))) ; Emacs 31
+
 ;;; Elisp-demos
 ;; Add example code snippets to some of the help windows
 (setup elisp-demos
@@ -2894,11 +2900,15 @@ PROP is the name of the property.  See
   (:package highlight-function-calls)
 
   (dolist (hook '(emacs-lisp-mode-hook lisp-interaction-mode-hook))
-    (add-hook hook #'highlight-function-calls-mode))
+    (add-hook hook (lambda ()
+                     (unless (and (boundp 'elisp-fontify-semantically)
+                                  (buffer-local-value 'elisp-fontify-semantically (current-buffer)))
+                       (highlight-function-calls-mode 1)))))
 
-  (setopt highlight-function-calls-not t
-          highlight-function-calls-macro-calls t
-          highlight-function-calls-special-forms t)
+  (with-eval-after-load 'highlight-function-calls
+    (setopt highlight-function-calls-not t
+            highlight-function-calls-macro-calls t
+            highlight-function-calls-special-forms t))
 
   (:face highlight-function-calls-face ((t (:underline nil :inherit font-lock-function-call-face)))))
 
