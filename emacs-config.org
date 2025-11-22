@@ -4092,6 +4092,12 @@ Bibtex.el is the built-in library for parsing =.bib= files---these are BibTex fi
                  braces
                  strings
                  sort-fields))
+      ;; NOTE 2025-11-22: I make the `fill-column' as large as possible
+      ;; to avoid field values from being filled.  This effects
+      ;; `bibtex-fill-field-bounds', and therefore `bibtex-fill-field'
+      ;; and `bibtex-reformat' (when 'realign is in
+      ;; `bibtex-entry-format').
+      (add-hook 'bibtex-mode-hook (lambda () (setq-local fill-column most-positive-fixnum)))
       
       ;; Create Zotero-like cite keys with `bibtex-generate-autokey'
       (defun krisb-bibtex-autokey-rearrange-parts (key)
@@ -4115,8 +4121,9 @@ Bibtex.el is the built-in library for parsing =.bib= files---these are BibTex fi
               
               bibtex-autokey-name-year-separator ":::"
               bibtex-autokey-year-title-separator ":::"
-              bibtex-autokey-before-presentation-function #'krisb-bibtex-autokey-rearrange-parts)))
+              bibtex-autokey-before-presentation-function #'krisb-bibtex-autokey-rearrange-parts))
 
+    (add-hook 'bibtex-mode-hook 'visual-line-mode))
 #+end_src
 
 [fn:2] Both Bibtex and biblatex use the =.bib= extension; to tell bibtex.el which dialect to use for a given file, use ~bibtex-set-dialect~. You can also customize ~bibtex-dialect~ to change the global/default dialect.

@@ -4612,6 +4612,12 @@ which file on the system it backs up."
                braces
                strings
                sort-fields))
+    ;; NOTE 2025-11-22: I make the `fill-column' as large as possible
+    ;; to avoid field values from being filled.  This effects
+    ;; `bibtex-fill-field-bounds', and therefore `bibtex-fill-field'
+    ;; and `bibtex-reformat' (when 'realign is in
+    ;; `bibtex-entry-format').
+    (add-hook 'bibtex-mode-hook (lambda () (setq-local fill-column most-positive-fixnum)))
     
     ;; Create Zotero-like cite keys with `bibtex-generate-autokey'
     (defun krisb-bibtex-autokey-rearrange-parts (key)
@@ -4635,8 +4641,9 @@ which file on the system it backs up."
             
             bibtex-autokey-name-year-separator ":::"
             bibtex-autokey-year-title-separator ":::"
-            bibtex-autokey-before-presentation-function #'krisb-bibtex-autokey-rearrange-parts)))
+            bibtex-autokey-before-presentation-function #'krisb-bibtex-autokey-rearrange-parts))
 
+  (add-hook 'bibtex-mode-hook 'visual-line-mode))
 
 ;;; Persid
 (setup persid
