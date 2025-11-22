@@ -4355,7 +4355,10 @@ Persid knows how to retrieve information from the following formats:
 #+name: persid
 #+begin_src emacs-lisp
   (setup persid
-    (:package (persid :url "https://github.com/rougier/persid.git")))
+    (:package (persid :url "https://github.com/rougier/persid.git"))
+
+    (with-eval-after-load 'persid
+      (setopt persid-isbn-generate-citekey 'user)))
 #+end_src
 
 **** Citar: Manage bibliographic data

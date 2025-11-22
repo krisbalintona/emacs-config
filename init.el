@@ -4647,7 +4647,10 @@ which file on the system it backs up."
 
 ;;; Persid
 (setup persid
-  (:package (persid :url "https://github.com/rougier/persid.git")))
+  (:package (persid :url "https://github.com/rougier/persid.git"))
+
+  (with-eval-after-load 'persid
+    (setopt persid-isbn-generate-citekey 'user)))
 
 ;;; Fancy-compilation
 ;; Document:
