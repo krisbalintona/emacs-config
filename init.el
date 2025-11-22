@@ -379,16 +379,6 @@ package-archives, e.g. \"gnu\")."))
   ;; Show context menu from right-click
   (when (display-graphic-p) (context-menu-mode 1))
   
-  ;; Don’t wait until yanking to put clipboard text into `kill-ring’
-  (setopt save-interprogram-paste-before-kill t)
-  
-  ;; Wayland compatibility
-  (when (krisb-wayland-p)
-    (setopt interprogram-cut-function
-            (lambda (text)
-              (start-process "wl-copy" nil "wl-copy"
-                             "--trim-newline" "--type" "text/plain;charset=utf-8" text))))
-  
   ;; Enable `delete-selection-mode'.  When selecting text, if typing new
   ;; text, replace the selected text with the new text
   (delete-selection-mode t)

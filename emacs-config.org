@@ -2238,7 +2238,7 @@ Vertico provides several extensions:
                  (post-command-select-window . t)))
 #+end_src
 
-* Clipboard
+* COMMENT Clipboard
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   ;; Don’t wait until yanking to put clipboard text into `kill-ring’
