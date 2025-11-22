@@ -4515,8 +4515,103 @@ which file on the system it backs up."
 (setup bibtex
   
   (with-eval-after-load 'bibtex
+    ;; Biblatex entries and fields.  See the biblatex manual for all
+    ;; the information possible about about biblatex types, fields,
+    ;; and so on:
+    ;; https://mirror.clarkson.edu/ctan/macros/latex/contrib/biblatex/doc/biblatex.pdf
     (setopt bibtex-dialect 'biblatex
-            bibtex-autokey-edit-before-use nil) ; Trust `bibtex-generate-autokey'
+            bibtex-biblatex-aux-entry-alist
+            ;; NOTE: The order of fields in an entry matters: they are
+            ;; the order that fields are sorted in when calling
+            ;; `bibtex-reformat' with `bibtex-entry-format' including
+            ;; 'sort-fields
+            '(("Review" "Review of some other work" "Article")
+              ("Movie" "A motion picture"
+               (("title")
+                ("date" nil nil 1)
+                ("year" nil nil -1))
+               nil
+               (("titleaddon" "An annex to the title, to be printed in a different font")
+                ("subtitle")
+                ;; Credits
+                ("author" nil nil 2)
+                ("director" nil nil -2)
+                ("producer")
+                ("writer" "Writer of the screenplay")
+                ("scriptwriter")
+                ("editor")
+                ("editortype")
+                ("editora")
+                ("editoratype")
+                ("editorb")
+                ("editorbtype")
+                ("editorc")
+                ("editorctype")
+                ;; Event
+                ("eventtitle")
+                ("eventdate")
+                ;; Local attachments
+                ("file")
+                ;; Indexing
+                ("keywords")
+                ("abstract")))
+              ("Video" "An audiovisual recording"
+               (("title")
+                ("date" nil nil 1)
+                ("year" nil nil -1))
+               nil
+               (("author" nil nil 2)
+                ("organization" nil nil -2)
+                ("publisher" nil nil -2)
+                ("institution" nil nil -2)
+                ("editor")
+                ("editortype")
+                ("editora")
+                ("editoratype")
+                ("editorb")
+                ("editorbtype")
+                ("editorc")
+                ("editorctype")
+                ;; Platform/medium
+                ("howpublished" nil nil 3)
+                ("type" nil nil -3)
+                ;; Attachments
+                ("file")
+                ;; Indexing
+                ("keywords")
+                ("abstract"))))
+            bibtex-biblatex-aux-opt-alist
+            '(("entrysubtype" "Subtype of an entry type")))
+    
+    ;; Standardize entries' formatting and order
+    (setopt bibtex-sort-entry-class
+            ;; I use the biblatex dialect (see `bibtex-dialect'), so
+            ;; see `bibtex-biblatex-entry-alist' and
+            ;; `bibtex-biblatex-aux-entry-alist'
+            '(("String")
+              ("Unpublished" "PhdThesis")
+              ("Article" "Proceedings" "InProceedings")
+              ("Booklet" "Book")
+              ("InCollection" "InBook")
+              ("Online" "Video" "Movie")
+              (catch-all))
+            bibtex-maintain-sorted-entries 'entry-class
+            bibtex-align-at-equal-sign t
+            bibtex-unify-case-function 'downcase
+            bibtex-entry-format
+            '( opts-or-alts
+               required-fields
+               numerical-fields
+               ;; page-dashes
+               whitespace
+               inherit-booktitle
+               realign
+               last-comma
+               delimiters
+               unify-case
+               braces
+               strings
+               sort-fields))
     
     ;; Create Zotero-like cite keys with `bibtex-generate-autokey'
     (defun krisb-bibtex-autokey-rearrange-parts (key)
@@ -4526,7 +4621,8 @@ which file on the system it backs up."
              (year (nth 1 parts))
              (title (nth 2 parts)))
         (concat author title year)))
-    (setopt bibtex-autokey-names 1
+    (setopt bibtex-autokey-edit-before-use nil ; Trust `bibtex-generate-autokey'
+            bibtex-autokey-names 1
             bibtex-autokey-names-stretch 2
             bibtex-autokey-name-case-convert-function 'downcase
             bibtex-autokey-year-length 4
@@ -4540,6 +4636,7 @@ which file on the system it backs up."
             bibtex-autokey-name-year-separator ":::"
             bibtex-autokey-year-title-separator ":::"
             bibtex-autokey-before-presentation-function #'krisb-bibtex-autokey-rearrange-parts)))
+
 
 ;;; Persid
 (setup persid
