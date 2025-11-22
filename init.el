@@ -4515,25 +4515,31 @@ which file on the system it backs up."
 (setup bibtex
   
   (with-eval-after-load 'bibtex
-    (setopt bibtex-dialect 'biblatex)
+    (setopt bibtex-dialect 'biblatex
+            bibtex-autokey-edit-before-use nil) ; Trust `bibtex-generate-autokey'
     
-    ;; Create Zotero-like cite keys with `bibtex-generate-autokey'.
-    ;; The chief difference is that my Zotero orders them in
-    ;; name-title-year form while `bibtex-generate-autokey', with the
-    ;; settings below, will order keys into name-year-title form.  The
-    ;; order of these elements is not currently (2025-11-19)
-    ;; configurable.
+    ;; Create Zotero-like cite keys with `bibtex-generate-autokey'
+    (defun krisb-bibtex-autokey-rearrange-parts (key)
+      "Rearrange the parts of KEY to be in name-title-year order.q"
+      (let* ((parts (split-string key ":::"))
+             (author (nth 0 parts))
+             (year (nth 1 parts))
+             (title (nth 2 parts)))
+        (concat author title year)))
     (setopt bibtex-autokey-names 1
             bibtex-autokey-names-stretch 2
-            bibtex-autokey-name-case-convert-function 'identity
-            bibtex-autokey-name-year-separator ""
-            bibtex-autokey-year-title-separator ""
+            bibtex-autokey-name-case-convert-function 'downcase
             bibtex-autokey-year-length 4
-            bibtex-autokey-titleword-separator ""
             bibtex-autokey-titleword-case-convert-function 'capitalize
+            bibtex-autokey-title-terminators (rx unmatchable)
             bibtex-autokey-titlewords 3
             bibtex-autokey-titlewords-stretch 0
-            bibtex-autokey-titleword-length 'infty)))
+            bibtex-autokey-titleword-length 'infty
+            bibtex-autokey-titleword-separator ""
+            
+            bibtex-autokey-name-year-separator ":::"
+            bibtex-autokey-year-title-separator ":::"
+            bibtex-autokey-before-presentation-function #'krisb-bibtex-autokey-rearrange-parts)))
 
 ;;; Persid
 (setup persid
