@@ -3812,7 +3812,7 @@ buffers in which this function is run."
     (add-hook 'message-send-hook #'org-mime-confirm-when-no-multipart))
 
   (with-eval-after-load 'org-mime
-    (setopt org-mime-export-ascii 'utf-8
+    (setopt org-mime-export-ascii 'ascii
             org-mime-preserve-breaks nil
             org-mime-export-options '( :with-latex imagemagick
                                        :section-numbers nil
@@ -3836,7 +3836,19 @@ Taken from
 https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization."
       (org-mime-change-element-style
        "blockquote" "border-left: 2px solid gray; padding-left: 4px;"))
-    (add-hook 'org-mime-html-hook #'krisb-org-mime-setup)))
+    (add-hook 'org-mime-html-hook #'krisb-org-mime-setup))
+
+  (add-to-list 'display-buffer-alist
+               '((or "OrgMimeMailBody"
+                     ;; The major mode for org-mime org buffers is
+                     ;; `org-mode' with the `org-mime-src-mode' minor
+                     ;; mode enabled
+                     (and (major-mode . org-mode)
+                          (lambda (buffer-or-name &rest _args)
+                            (when (fboundp 'org-mime-src-mode)
+                              (buffer-local-value 'org-mime-src-mode
+                                                  (get-buffer buffer-or-name))))))
+                 (display-buffer-same-window))))
 
 ;;; Astute
 ;; Display punctuation typographically (e.g., em-dashes as "—" and
