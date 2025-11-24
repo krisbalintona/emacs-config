@@ -1191,7 +1191,8 @@ Then apply ARGS."
 
   (:hide-mode auto-revert-mode)
 
-  (setopt auto-revert-interval 3))
+  (setopt auto-revert-interval 3
+          global-auto-revert-non-file-buffers t))
 
 ;;; Newcomment
 ;; TODO 2025-05-20: Document the user options below in the literate

@@ -1315,7 +1315,8 @@ See also ~(elisp) Beeping~.
 
     (:hide-mode auto-revert-mode)
 
-    (setopt auto-revert-interval 3))
+    (setopt auto-revert-interval 3
+            global-auto-revert-non-file-buffers t))
 #+end_src
 
 ** Disable lock files
