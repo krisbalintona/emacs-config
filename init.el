@@ -1430,12 +1430,12 @@ call `diff-buffer-with-file’ instead."
             ;; See also `org-trigger-hook'
             org-todo-state-tags-triggers
             '((todo)
-              ("DOING" ("WAITING"))
-              ("NEXT" ("WAITING"))
-              ("TODO" ("WAITING"))
+              ("DOING" ("WAITING" . nil) ("PUSHED" . nil))
+              ("NEXT" ("WAITING" . nil))
+              ("TODO" ("WAITING" . nil))
               ("HOLD")
-              ("MAYBE" ("WAITING"))
-              (done ("WAITING"))
+              ("MAYBE" ("WAITING" . nil))
+              (done ("WAITING" . nil))
               ("DONE")
               ("CANCELED")))
     
@@ -1584,6 +1584,10 @@ call `diff-buffer-with-file’ instead."
     (krisb-org-agenda-skip-org-ql
      '(and (not (done))
            (not (tags-local "PROJECT"))
+           (if (hasreview)
+               (toreview)
+             t)
+           (not (tags "PUSHED"))
            (or (todo "DOING")
                (priority "A")
                (scheduled :to today)
@@ -1614,7 +1618,9 @@ call `diff-buffer-with-file’ instead."
            (or (and (todo "NEXT" "TODO")
                     (not (or (scheduled)
                              (deadline)))
-                    (not (toreview)))
+                    (if (hasreview)
+                        (toreview)
+                      t))
                (and (todo "HOLD")
                     (toreview))))))
   
