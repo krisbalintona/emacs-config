@@ -2378,12 +2378,6 @@ is to produce the opposite effect of both `fill-paragraph' and
 (setopt tab-always-indent 'complete
         tab-first-completion 'word)
 
-;; Keep the cursor out of the read-only portions of the minibuffer
-(setopt minibuffer-prompt-properties
-        '( read-only t
-           cursor-intangible t
-           face minibuffer-prompt))
-
 ;; Recenter upon `next-error'
 (setopt next-error-recenter '(4))
 

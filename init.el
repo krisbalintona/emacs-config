@@ -79,6 +79,12 @@ nothing."
 (defvar krisb-bibliography-files (list (expand-file-name "master-lib.bib" krisb-folio-directory))
   "A list of my bibliography (.bib) files.")
 
+(defcustom krisb-completion-paradigm 'completion-list
+  "Choose our completion paradigm."
+  :type '(choice :tag "Completions user interface"
+                 (const :tag "Default Completions list UI" built-in)
+                 (const :tag "Use `vertico'" vertico)))
+
 ;;;;; Directories
 (defvar krisb-blog-manuscripts-directory (expand-file-name "manuscripts/blog" krisb-notes-directory)
   "The directory for my pre-export blog files.")
@@ -658,8 +664,12 @@ to if called with ARG, or any prefix argument."
 ;; https://github.com/minad/vertico#completing-read-multiple.
 (setup minibuffer
   
+  ;; Completion styles.  `completion-styles' is set initially here but
+  ;; may be modified elsewhere later (e.g., when loading the orderless
+  ;; package, I add to `completion-styles')
   (setopt completion-styles '(substring initials flex)
-          ;; TODO 2025-10-17: Revisit this
+          ;; Emacs 31.  Treat words like the substring completion
+          ;; style does.  Read its docstring for details
           completion-pcm-leading-wildcard t) ; Emacs 31
 
   ;; A non-exhaustive list of known completion categories:
@@ -670,17 +680,36 @@ to if called with ARG, or any prefix argument."
   ;; - `color'
   ;; - `command' (e.g. `M-x')
   ;;
-  ;; You can find out the category of the completion canddiate at
-  ;; point by evaluating the form below in the minibuffer when the
-  ;; point is on a completion candidate:
+  ;; During completion, you can find out the category of the
+  ;; completion canddiate at point by evaluating the form below in the
+  ;; minibuffer when the point is on a completion candidate (note:
+  ;; users can only do so when `enable-recursive-minibuffers' is
+  ;; non-nil):
+  ;; 
   ;;  (completion-metadata-get (completion-metadata (minibuffer-contents) minibuffer-completion-table minibuffer-completion-predicate) 'category)
   ;;
-  (setopt completion-category-defaults
-          '((calendar-month (display-sort-function . identity)))
-          completion-category-overrides
-          '((file (styles . (partial-completion flex))))) ;  Include `partial-completion' to enable wildcards and partial paths.
-
-  ;; How do we want to treat case for varioust types of completion?
+  (setq completion-category-defaults nil) ; This is a defvar, although setopt would still set it
+  (setopt completion-category-overrides
+          ;; NOTE: The eager-display and eager-update properties only
+          ;; have an effect on the completion list system, not
+          ;; minibuffer completion systems (like vertico)
+          '((calendar-month (display-sort-function . identity))
+            ;; We include `partial-completion' to enable wildcards and
+            ;; partial paths (when `completion-pcm-leading-wildcard'
+            ;; is non-nil)
+            (file (styles . (basic partial-completion orderless))
+                  (eager-display . t)
+                  (eager-update . t))
+            (imenu (eager-display . t)
+                   (eager-update . t))
+            (kill-ring (styles . (orderless-literal-and-prefixes)))
+            (consult-outline (styles . (orderless-literal-and-prefixes)))
+            (consult-location (eager-display . t)
+                              (eager-update . t))
+            (org-heading (eager-display . t) ; For `consult-org-heading'
+                         (eager-update . t))))
+  
+  ;; How do we want to treat case in completion?
   (setopt completion-ignore-case t
           read-file-name-completion-ignore-case t
           read-buffer-completion-ignore-case t))
@@ -711,6 +740,50 @@ to if called with ARG, or any prefix argument."
              '("\\*Completions\\*"
                nil
                (window-parameters (mode-line-format . none))))
+
+;;;; Completion-list (*Completions* buffer)
+;; TODO 2025-05-20: Document the following options below in the
+;; literate configuration:
+;; - `completion-cycle-threshold'
+;; - `completion-flex-nospace’
+(setup minibuffer
+
+  ;; Display of the Completions buffer
+  (setopt completion-eager-display 'auto
+          completion-eager-update 'auto)
+
+  ;; Selection of the Completions buffer from the minibuffer
+  (setopt completion-auto-help 'lazy
+          completion-auto-select t   ; Select Completions on first tab
+          completion-auto-deselect nil)
+  
+  ;; Completions format
+  (setopt completion-show-help nil
+          completions-max-height 10 ; Otherwise the completions buffer can grow to fill the entire frame
+          completions-format 'vertical
+          completions-group t           ; Emacs 28
+          completions-detailed t ; Show annotations for candidates (like marginalia.el)
+          completions-sort 'historical)) ; Emacs 30.1
+
+;; Bespoke extensions
+(setup minibuffer
+  ;; Change the behavior of `C-g' in the Completions buffer.  (I
+  ;; noticed that a similar command is `mct-keyboard-quit-dwim' from
+  ;; mct.)
+  (defun krisb-keyboard-quit ()
+    "Change the behavior of `C-g' in the Completions buffer.
+Make `C-g' in in the Completions buffer behave like
+`minibuffer-keyboard-quit'.
+
+In the Completions buffer, if the region is active, deactivate the
+region.  If the region is not active, then call `abort-recursive-edit',
+ending the minibuffer session. (This is equivalent to the behavior of
+`minibuffer-keyboard-quit' in the minibuffer.)"
+    (interactive nil completion-list-mode)
+    (if (and delete-selection-mode (region-active-p))
+        (deactivate-mark)
+      (abort-recursive-edit)))
+  (bind-key [remap keyboard-quit] 'krisb-keyboard-quit 'completion-list-mode-map))
 
 ;;;; Hotfuzz
 ;; Hotfuzz is a fuzzy completion style that also can be used with its
@@ -751,48 +824,39 @@ to if called with ARG, or any prefix argument."
 ;;;; Orderless
 (setup orderless
   (:package orderless)
+  (:require)
+
+  (setopt completion-styles '(orderless flex))
+
+  ;; TODO 2025-05-20: Revisit this.
+  ;; ;; Eglot forces `flex' by default.
+  ;; (add-to-list 'completion-category-overrides '(eglot (styles . (orderless flex))))
 
   (with-eval-after-load 'orderless
-    (setopt orderless-matching-styles
+    (setopt orderless-component-separator 'orderless-escapable-split-on-space
+            orderless-matching-styles
             '(orderless-regexp
               orderless-prefixes
               orderless-initialism
               ;; orderless-literal
               ;; orderless-literal-prefix
               ;; orderless-flex
-              )
-            orderless-component-separator 'orderless-escapable-split-on-space))
+              )))
+  ;; Our orderless components are split by spaces (see
+  ;; `orderless-component-separator') so, for convenience, make SPC
+  ;; insert space
+  (:bind-keys :map minibuffer-local-completion-map
+              ("SPC" . self-insert-command))
 
-  (add-to-list 'completion-styles 'orderless :append)
-
-  ;; TODO 2025-05-20: Revisit this.
-  ;; ;; Eglot forces `flex' by default.
-  ;; (add-to-list 'completion-category-overrides '(eglot (styles . (orderless flex))))
-  )
-
-;;;; Completions buffer
-;; TODO 2025-05-20: Document the following options below in the
-;; literate configuration:
-;; - `completion-cycle-threshold'
-;; - `completion-flex-nospace’
-(setup minibuffer
-
-  ;; Display of the Completions buffer
-  (setopt completion-eager-display 'auto
-          completion-eager-update t)
-
-  ;; Selection of the Completions buffer from the minibuffer
-  (setopt completion-auto-help t
-          completion-auto-select t   ; Select Completions on first tab
-          completion-auto-deselect nil)
-  
-  ;; Completion format
-  (setopt completion-show-help nil
-          completions-max-height 10 ; Otherwise the completions buffer can grow to fill the entire frame
-          completions-format 'vertical
-          completions-group t           ; Emacs 28
-          completions-detailed t ; Show annotations for candidates (like marginalia.el)
-          completions-sort 'historical)) ; Emacs 30.1
+  ;; Define my own completion styles that bundle sets of orderless
+  ;; matching styles
+  (orderless-define-completion-style orderless-literal-and-prefixes
+    "Combine the literal and prefixes orderless matching styles.
+This is useful for when I need something like the built-in substring or
+partial-completion styles but want orderless's order-less component
+matching."
+    (orderless-matching-styles '(orderless-literal
+                                 orderless-prefixes))))
 
 ;;;; Vertico and extensions
 (setup vertico
@@ -1120,19 +1184,26 @@ Then apply ARGS."
 (setup corfu
   (:package corfu)
   
+  (global-corfu-mode 1)
+  
   (:bind-keys
    ;; TODO 2025-05-20: Revisit this.
    ;; ("M-i" . completion-at-point) ; For harmony with "M-i" in `completion-preview-active-mode-map'
    :map corfu-map
    ("M-d" . corfu-info-documentation))
 
+  ;; Always use a fixed-pitched font for corfu; variable pitch fonts
+  ;; (which will be adopted in a variable pitch buffer) have
+  ;; inconsistent spacing
+  (:face corfu-default ((t (:inherit 'default))))
+  
   (with-eval-after-load 'corfu
     (setopt corfu-count 14
             corfu-scroll-margin 3
             ;; Always have the same width
             corfu-min-width 75
             corfu-max-width corfu-min-width))
-
+  
   ;; Allow spaces and don't quit on boundary to leverage orderless's
   ;; space-separated components
   (with-eval-after-load 'orderless
@@ -1140,27 +1211,24 @@ Then apply ARGS."
             corfu-separator ?\s         ; Use space
             corfu-quit-no-match 'separator)) ; Don't quit if there is `corfu-separator' inserted
 
-  ;; Always use a fixed-pitched font for corfu; variable pitch fonts
-  ;; (which will be adopted in a variable pitch buffer) have
-  ;; inconsistent spacing
-  (:face corfu-default ((t (:inherit 'default))))
-
-  (global-corfu-mode 1))
+  ;; Corfu in the minibuffer only conditionally.  Based on
+  ;; https://github.com/minad/corfu?tab=readme-ov-file#completing-in-the-minibuffer
+  (setopt global-corfu-minibuffer
+          (lambda ()
+            ;; Enable in minibuffer unless...
+            (not (or
+                  ;; Using the default Completions buffer
+                  (eq krisb-completion-paradigm 'completion-list)
+                  ;; Showing completions in the minibuffer from either
+                  ;; MCT or vertico
+                  (bound-and-true-p mct--active)
+                  (bound-and-true-p vertico--input)
+                  ;; Inputting password
+                  (eq (current-local-map) read-passwd-map))))))
 
 ;; Extras
 (setup corfu
   (with-eval-after-load 'corfu
-    (with-eval-after-load 'vertico
-      ;; Enable corfu in minibuffer if `vertico-mode' is disabled.
-      ;; From
-      ;; https://github.com/minad/corfu#completing-with-corfu-in-the-minibuffer
-      (defun krisb-corfu-enable-in-minibuffer-conditionally ()
-        "Enable Corfu in the minibuffer if vertico is not active."
-        (when (and global-corfu-mode (not (bound-and-true-p vertico-mode)))
-          (setq-local corfu-auto nil) ; Ensure auto completion is disabled
-          (corfu-mode 1)))
-      (add-hook 'minibuffer-setup-hook #'krisb-corfu-enable-in-minibuffer-conditionally))
-
     (with-eval-after-load 'consult
       ;; Transfer completion of corfu to the minibuffer.  Taken from
       ;; https://github.com/minad/corfu?tab=readme-ov-file#transfer-completion-to-the-minibuffer.
