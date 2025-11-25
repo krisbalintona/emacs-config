@@ -1546,7 +1546,8 @@ call `diff-buffer-with-file’ instead."
     ;; Tags
     (setopt org-tags-column 0
             org-tags-exclude-from-inheritance
-            '("PROJECT" "__journal" "__log" "__top_of_mind"))
+            '("PROJECT" "email"
+              "__journal" "__log" "__top_of_mind"))
 
     ;; Properties
     (setopt org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
@@ -1639,7 +1640,9 @@ call `diff-buffer-with-file’ instead."
     (krisb-org-agenda-skip-org-ql
      '(and (not (done))
            (not (tags-local "PROJECT" "INBOX"))
-           (not (toreview))
+           (if (hasreview)
+               (toreview)
+             t)
            (or (and (or (habit)
                         (path "recurring\\.org"))
                     (or (scheduled :to today)
@@ -1650,21 +1653,25 @@ call `diff-buffer-with-file’ instead."
     (krisb-org-agenda-skip-org-ql
      '(and (not (done))
            (not (tags-local "PROJECT" "INBOX"))
+           (if (hasreview)
+               (toreview)
+             t)
            (or (and (todo "NEXT" "TODO")
                     (not (or (scheduled)
                              (deadline)))
                     (if (hasreview)
                         (toreview)
                       t))
-               (and (todo "HOLD")
-                    (toreview))))))
+               (todo "HOLD")))))
   
   (defun krisb-org-agenda-skip-review ()
     "Filter tasks for review agenda."
     (krisb-org-agenda-skip-org-ql
      '(and (not (done))
            (or (and (not (tags-local "INBOX"))
-                    (toreview))
+                    (if (hasreview)
+                        (toreview)
+                      t))
                (and (todo "HOLD")
                     (not (hasreview)))
                (tags-local "REVIEW")))))
@@ -1673,7 +1680,9 @@ call `diff-buffer-with-file’ instead."
     "Filter tasks for inbox agenda."
     (krisb-org-agenda-skip-org-ql
      '(and (not (done))
-           (toreview)
+           (if (hasreview)
+               (toreview)
+             t)
            (or (tags-local "INBOX")))))
   
   (setopt org-agenda-custom-commands
