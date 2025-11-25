@@ -4100,7 +4100,7 @@ instead."
   ;; Capfs added to the end of the global value of
   ;; `completion-at-point-functions'.  Consequently, they act as
   ;; fallback backends.
-  (dolist (capf (reverse '(cape-elisp-symbol krisb-cape--dict-dabbrev)))
+  (dolist (capf (reverse '(krisb-cape--dict-dabbrev cape-elisp-symbol)))
     (add-hook 'completion-at-point-functions capf 100))
   
   ;; Macro to help adding capfs via major mode hooks
