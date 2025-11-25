@@ -3321,6 +3321,18 @@ Additionally, all apropos commands will expand the subset of symbols they search
       (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)))
 #+end_src
 
+***** Inspector: Provide a UI for showing prettified elisp objects
+
+#+name: inspector
+#+begin_src emacs-lisp
+  ;; Introspect list expressions.  This is similar in role to CEDET's
+  ;; data-debug.el.  Also integrates with the debugging backtrace and
+  ;; edebug (see
+  ;; https://github.com/mmontone/emacs-inspector?tab=readme-ov-file#from-the-emacs-debugger).
+  (setup inspector
+    (:package inspector))
+#+end_src
+
 ***** Package authorship
 
 ***** Highlight-function-calls: Highlight function calls!
@@ -6740,6 +6752,9 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
 
   ;;; Activities
   <<activities>>
+
+  ;;; Inspector
+  <<inspector>>
 
   ;;; Startup time
   <<startup-time>>

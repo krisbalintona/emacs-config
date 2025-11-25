@@ -1210,14 +1210,6 @@ An example of a return value for this function is: \"9 minutes ago\"."
   :custom
   (eros-eval-result-prefix "⟹  "))
 
-;;;; Inspector
-;; Introspect list expressions.  This is similar in role to CEDET's
-;; data-debug.el.  Also integrates with the debugging backtrace and edebug (see
-;; https://github.com/mmontone/emacs-inspector?tab=readme-ov-file#from-the-emacs-debugger).
-(use-package inspector
-  :ensure t
-  :defer t)
-
 ;;;; Enhancements to basic text editing
 ;; Open line indents too
 (defun krisb-open-line (n)

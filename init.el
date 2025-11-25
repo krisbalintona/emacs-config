@@ -4786,6 +4786,14 @@ which file on the system it backs up."
             activities-bookmark-warnings t
             activities-mode-idle-frequency 7)))
 
+;;; Inspector
+;; Introspect list expressions.  This is similar in role to CEDET's
+;; data-debug.el.  Also integrates with the debugging backtrace and
+;; edebug (see
+;; https://github.com/mmontone/emacs-inspector?tab=readme-ov-file#from-the-emacs-debugger).
+(setup inspector
+  (:package inspector))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()
