@@ -4463,6 +4463,7 @@ which file on the system it backs up."
 ;; - `citar-open-entry-function'
 (setup citar
   (:package citar)
+  (:load-after oc)
   
   (bind-keys ("C-c b o" . citar-open)
              ("C-c b f" . citar-open-files)
