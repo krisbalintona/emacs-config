@@ -379,6 +379,9 @@ package-archives, e.g. \"gnu\")."))
   ;; Show context menu from right-click
   (when (display-graphic-p) (context-menu-mode 1))
   
+  ;; Exclude from M-x commands definitely irrelevant to the current
+  ;; major mode
+  (setopt read-extended-command-predicate #'command-completion-default-include-p)
   ;; Insert spaces instead of tab characters.  The below disables
   ;; `indent-tabs-mode' globally
   (setopt indent-tabs-mode nil)
@@ -654,7 +657,7 @@ to if called with ARG, or any prefix argument."
 ;; `completing-read-multiple' separator on Emacs versions below 31:
 ;; https://github.com/minad/vertico#completing-read-multiple.
 (setup minibuffer
-
+  
   (setopt completion-styles '(substring initials flex)
           ;; TODO 2025-10-17: Revisit this
           completion-pcm-leading-wildcard t) ; Emacs 31
@@ -683,17 +686,31 @@ to if called with ARG, or any prefix argument."
           read-buffer-completion-ignore-case t))
 
 (setup minibuffer
+  
+  ;; Minibuffer movement
+  (setopt minibuffer-beginning-of-buffer-movement t)
+
+  ;; Let a minibuffer be created from within a minibuffer
+  (setopt enable-recursive-minibuffers t)
+  ;; And indicate the current recursion level in the minibuffer prompt
+  (minibuffer-depth-indicate-mode 1)
 
   ;; TODO 2025-10-14: Document:
   ;; `history-delete-duplicates'
   (setopt history-length 1000)
 
-  ;; Enable recursive minibuffers
-  (setopt enable-recursive-minibuffers t)
-
   ;; Minibuffer prompts
   (setopt minibuffer-default-prompt-format " [%s]")
-  (minibuffer-electric-default-mode 1))  ; Show default value
+  (minibuffer-electric-default-mode 1)  ; Show default value
+  (setopt minibuffer-prompt-properties
+          ;; Don't let point enter the minibuffer prompt
+          '(read-only t cursor-intangible t face minibuffer-prompt)))
+
+;; Hide mode line of Completions buffer
+(add-to-list 'display-buffer-alist
+             '("\\*Completions\\*"
+               nil
+               (window-parameters (mode-line-format . none))))
 
 ;;;; Hotfuzz
 ;; Hotfuzz is a fuzzy completion style that also can be used with its
@@ -759,88 +776,103 @@ to if called with ARG, or any prefix argument."
 ;; - `completion-cycle-threshold'
 ;; - `completion-flex-nospace’
 (setup minibuffer
-  ;; Completions buffer
-  (setopt completions-max-height 20 ; Otherwise the completions buffer can grow to fill the entire frame
-          completion-auto-help 'visible
-          completion-lazy-hilit t ; Lazy highlighting for drastic performance increase; added Emacs 30.1
-          completion-auto-select 'second-tab
-          completions-format 'one-column
-          completions-detailed t ; Show annotations for candidates (like `marginalia')
-          completions-group t    ; Emacs 28
+
+  ;; Display of the Completions buffer
+  (setopt completion-eager-display 'auto
+          completion-eager-update t)
+
+  ;; Selection of the Completions buffer from the minibuffer
+  (setopt completion-auto-help t
+          completion-auto-select t   ; Select Completions on first tab
+          completion-auto-deselect nil)
+  
+  ;; Completion format
+  (setopt completion-show-help nil
+          completions-max-height 10 ; Otherwise the completions buffer can grow to fill the entire frame
+          completions-format 'vertical
+          completions-group t           ; Emacs 28
+          completions-detailed t ; Show annotations for candidates (like marginalia.el)
           completions-sort 'historical)) ; Emacs 30.1
 
 ;;;; Vertico and extensions
 (setup vertico
   (:package vertico)
+  ;; NOTE 2025-11-25: Trying out the built-in Completions buffer for a
+  ;; while
+  (:quit)
+  
+  (vertico-mode 1)
+  
+  (:bind-keys :filter vertico-mode ("C-c v r" . vertico-repeat)
+              :map vertico-map
+              :filter vertico-mode ("C-c v s" . vertico-suspend))
 
-  (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
-
-  (:bind-keys
-   ("C-c v r" . vertico-repeat)
-   :map vertico-map
-   ("C-c v s" . vertico-suspend))
-
-  (vertico-mode 1))
+  (with-eval-after-load 'vertico
+    (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)))
 
 ;; More convenient path modification commands
 (setup vertico-directory
   (:load-after vertico)
 
-  (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy))
+  (with-eval-after-load 'vertico-directory
+    (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)))
 
 ;; On-demand change the type of UI
 (setup vertico-multiform
   (:load-after vertico)
-  (vertico-multiform-mode 1)
+  
+  (with-eval-after-load 'vertico-multiform
+    (vertico-multiform-mode 1)
 
-  (setopt vertico-multiform-categories
-          '((buffer flat (vertico-sort-function . nil))
-            (project-buffer flat (vertico-sort-function . nil))
-            (file grid (:keymap . vertico-directory-map))
-            (project-file grid)                ; For `project-find-file'
-            (command flat (vertico-flat-annotate . nil))
-            (symbol-help flat)
-            (kill-ring (vertico-sort-function . nil))
-            (color (vertico-sort-function . vertico-sort-history-length-alpha))
-            (jinx grid
-                  (vertico-grid-annotate . 20)
-                  (vertico-grid-max-columns . 12)
-                  (vertico-grid-separator
-                   . #("    |    " 4 5 (display (space :width (1)) face (:inherit shadow :inverse-video t))))))
-          vertico-multiform-commands
-          `((pdf-view-goto-label
-             (vertico-sort-function . nil))
-            (".+-history" (vertico-sort-function . nil))
-            (,(rx bol (or (seq "recentf" (* (any alnum))) "consult-recent-file"))
-             (vertico-sort-function . nil))
-            (,(rx bol (literal "customize-"))
-             flat)
-            (,(rx bol (or (seq (zero-or-one (literal "krisb-")) (literal "find-library"))
-                          (literal "load-library")))
-             flat)
-            (,(rx bol (literal "consult-history"))
-             (vertico-sort-function . nil))
-            ;; NOTE 2025-06-18: Should these commands have a category like
-            ;; e.g. `descibe-function' and `describe-keymap' do?  If so,
-            ;; perhaps I can propose a patch for it.
-            (,(rx (or "find-function"
-                      "find-library"
-                      "find-variable"))
-             flat))))
+    (setopt vertico-multiform-categories
+            '((buffer flat (vertico-sort-function . nil))
+              (project-buffer flat (vertico-sort-function . nil))
+              (file grid (:keymap . vertico-directory-map))
+              (project-file grid)                ; For `project-find-file'
+              (command flat (vertico-flat-annotate . nil))
+              (symbol-help flat)
+              (kill-ring (vertico-sort-function . nil))
+              (color (vertico-sort-function . vertico-sort-history-length-alpha))
+              (jinx grid
+                    (vertico-grid-annotate . 20)
+                    (vertico-grid-max-columns . 12)
+                    (vertico-grid-separator
+                     . #("    |    " 4 5 (display (space :width (1)) face (:inherit shadow :inverse-video t))))))
+            vertico-multiform-commands
+            `((pdf-view-goto-label
+               (vertico-sort-function . nil))
+              (".+-history" (vertico-sort-function . nil))
+              (,(rx bol (or (seq "recentf" (* (any alnum))) "consult-recent-file"))
+               (vertico-sort-function . nil))
+              (,(rx bol (literal "customize-"))
+               flat)
+              (,(rx bol (or (seq (zero-or-one (literal "krisb-")) (literal "find-library"))
+                            (literal "load-library")))
+               flat)
+              (,(rx bol (literal "consult-history"))
+               (vertico-sort-function . nil))
+              ;; NOTE 2025-06-18: Should these commands have a category like
+              ;; e.g. `descibe-function' and `describe-keymap' do?  If so,
+              ;; perhaps I can propose a patch for it.
+              (,(rx (or "find-function"
+                        "find-library"
+                        "find-variable"))
+               flat)))))
 
 ;; A minimal, Ido-like UI
 (setup vertico-flat
   (:load-after vertico)
 
-  (setopt vertico-flat-annotate t
-          vertico-flat-format
-          `( :multiple #("\n{%s}" 0 2 (face minibuffer-prompt) 4 5 (face minibuffer-prompt))
-             :single #("\n[%s]" 0 2 (face minibuffer-prompt) 2 4 (face success) 4 5 (face minibuffer-prompt))
-             :prompt #("(%s)" 0 1 (face minibuffer-prompt) 3 4 (face minibuffer-prompt))
-             :separator #("  |  " 0 5 (face minibuffer-prompt))
-             :ellipsis ,(propertize "…" 'face 'minibuffer-prompt)
-             :no-match ,(propertize "\n[No match]" 'face 'shadow)
-             :spacer #(" " 0 1 (cursor t)))))
+  (with-eval-after-load 'vertico-flat
+    (setopt vertico-flat-annotate t
+            vertico-flat-format
+            `( :multiple #("\n{%s}" 0 2 (face minibuffer-prompt) 4 5 (face minibuffer-prompt))
+               :single #("\n[%s]" 0 2 (face minibuffer-prompt) 2 4 (face success) 4 5 (face minibuffer-prompt))
+               :prompt #("(%s)" 0 1 (face minibuffer-prompt) 3 4 (face minibuffer-prompt))
+               :separator #("  |  " 0 5 (face minibuffer-prompt))
+               :ellipsis ,(propertize "…" 'face 'minibuffer-prompt)
+               :no-match ,(propertize "\n[No match]" 'face 'shadow)
+               :spacer #(" " 0 1 (cursor t))))))
 
 ;;;; Dabbrev
 (setup dabbrev
@@ -1118,14 +1150,16 @@ Then apply ARGS."
 ;; Extras
 (setup corfu
   (with-eval-after-load 'corfu
-    ;; Enable corfu in minibuffer if `vertico-mode' is disabled.  From
-    ;; https://github.com/minad/corfu#completing-with-corfu-in-the-minibuffer
-    (defun krisb-corfu-enable-in-minibuffer-conditionally ()
-      "Enable Corfu in the minibuffer if vertico is not active."
-      (when (and global-corfu-mode (not (bound-and-true-p vertico-mode)))
-        (setq-local corfu-auto nil) ; Ensure auto completion is disabled
-        (corfu-mode 1)))
-    (add-hook 'minibuffer-setup-hook #'krisb-corfu-enable-in-minibuffer-conditionally)
+    (with-eval-after-load 'vertico
+      ;; Enable corfu in minibuffer if `vertico-mode' is disabled.
+      ;; From
+      ;; https://github.com/minad/corfu#completing-with-corfu-in-the-minibuffer
+      (defun krisb-corfu-enable-in-minibuffer-conditionally ()
+        "Enable Corfu in the minibuffer if vertico is not active."
+        (when (and global-corfu-mode (not (bound-and-true-p vertico-mode)))
+          (setq-local corfu-auto nil) ; Ensure auto completion is disabled
+          (corfu-mode 1)))
+      (add-hook 'minibuffer-setup-hook #'krisb-corfu-enable-in-minibuffer-conditionally))
 
     (with-eval-after-load 'consult
       ;; Transfer completion of corfu to the minibuffer.  Taken from
@@ -1138,7 +1172,7 @@ Then apply ARGS."
            (let ((completion-extra-properties extras)
                  completion-cycle-threshold completion-cycling)
              (consult-completion-in-region beg end table pred)))))
-      (:bind-keys :map corfu-map ("M-m" . krisb-corfu-move-to-minibuffer))
+      (:bind-keys :map corfu-map ("M-j" . krisb-corfu-move-to-minibuffer))
       (add-to-list 'corfu-continue-commands #'krisb-corfu-move-to-minibuffer))))
 
 ;; Extension that comes with corfu.  Popup documentation window for
