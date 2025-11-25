@@ -2773,10 +2773,11 @@ PROP is the name of the property.  See
            " --line-number --hidden"))
 
   ;; `consult-bookmark-narrow'
-  (with-eval-after-load 'activities
-    (add-to-list 'consult-bookmark-narrow '(?a "Activities" activities-bookmark-handler)))
-  (with-eval-after-load 'pdf-tools
-    (add-to-list 'consult-bookmark-narrow '(?p "PDFs" pdf-view-bookmark-jump-handler)))
+  (with-eval-after-load 'consult
+    (with-eval-after-load 'activities
+      (add-to-list 'consult-bookmark-narrow '(?a "Activities" activities-bookmark-handler)))
+    (with-eval-after-load 'pdf-tools
+      (add-to-list 'consult-bookmark-narrow '(?p "PDFs" pdf-view-bookmark-jump-handler))))
 
   ;; Add log-edit histories to `consult-mode-histories'
   (with-eval-after-load 'consult
