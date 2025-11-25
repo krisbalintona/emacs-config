@@ -4702,6 +4702,28 @@ which file on the system it backs up."
   
   (delete-selection-mode t))
 
+;;; Activities
+(setup activities
+  (:package activities)
+
+  (activities-mode 1)
+  (activities-tabs-mode 1)
+
+  (bind-keys ("C-c a n" . activities-new)
+             ("C-c a d" . activities-define)
+             ("C-c a a" . activities-resume)
+             ("C-c a s" . activities-suspend)
+             ("C-c a k" . activities-kill)
+             ("C-c a RET" . activities-switch)
+             ("C-c a b" . activities-switch-buffer)
+             ("C-c a g" . activities-revert)
+             ("C-c a l" . activities-list))
+  
+  (with-eval-after-load 'activities
+    (setopt activities-set-frame-name nil
+            activities-bookmark-warnings t
+            activities-mode-idle-frequency 7)))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

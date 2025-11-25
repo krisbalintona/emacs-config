@@ -2387,6 +2387,32 @@ Wayland specific:
     (advice-add 'desktop-restore-file-buffer :after #'krisb-desktop--restore-narrowing))
 #+end_src
 
+** TODO Activities: Bookmarks for window configurations
+
+#+name: activities
+#+begin_src emacs-lisp
+  (setup activities
+    (:package activities)
+
+    (activities-mode 1)
+    (activities-tabs-mode 1)
+
+    (bind-keys ("C-c a n" . activities-new)
+               ("C-c a d" . activities-define)
+               ("C-c a a" . activities-resume)
+               ("C-c a s" . activities-suspend)
+               ("C-c a k" . activities-kill)
+               ("C-c a RET" . activities-switch)
+               ("C-c a b" . activities-switch-buffer)
+               ("C-c a g" . activities-revert)
+               ("C-c a l" . activities-list))
+    
+    (with-eval-after-load 'activities
+      (setopt activities-set-frame-name nil
+              activities-bookmark-warnings t
+              activities-mode-idle-frequency 7)))
+#+end_src
+
 * Window control and management
 
 #+name: window.el
@@ -6650,6 +6676,9 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
 
   ;;; Delsel
   <<delsel>>
+
+  ;;; Activities
+  <<activities>>
 
   ;;; Startup time
   <<startup-time>>
