@@ -4183,27 +4183,44 @@ completion at point function."
 ;;; Project
 ;; TODO 2025-05-22: Document:
 ;; - `project-vc-extra-root-markers’
+;; - `project-kill-buffer-conditions'
 (setup project
 
   (with-eval-after-load 'project
-    (setopt project-file-history-behavior 'relativize
-            ;; The commands in `project-switch-commands' must be found
-            ;; in `project-prefix-map'
-            project-switch-commands
-            `((project-find-file "Find file")
-              (project-switch-to-buffer "Switch to buffer")
-              (project-find-regexp "Find regexp")
-              (project-find-dir "Find directory")
-              (project-vc-dir "VC-Dir")
-              (project-eshell "Eshell")
-              (project-shell "Shell")
-              (project-any-command "Other"))
+    (setopt project-prompter 'project-prompt-project-name ; Emacs 31
+            project-file-history-behavior 'relativize
+            ;; FIXME 2025-11-23: I have to use `file-relative-name'
+            ;; since `project-root' returns abbreviated file paths.
+            ;; Create a bug report/patch to have file paths be
+            ;; expanded?
+            project-list-exclude (list (file-relative-name package-user-dir user-emacs-directory))
+            ;; project-list-exclude nil
             project-compilation-buffer-name-function 'project-prefixed-buffer-name
-            project-vc-merge-submodules nil ; Respect subprojects as their own projects
-            project-mode-line t
+            project-vc-merge-submodules nil)) ; Respect subprojects as their own projects
+  
+  ;; Killing projects
+  (with-eval-after-load 'project
+    (setopt project-kill-buffers-display-buffer-list t))
+
+  ;; Mode line
+  (with-eval-after-load 'project
+    (setopt project-mode-line t
             project-mode-line-face 'italic))
 
+  ;; Keybindings
   (with-eval-after-load 'project
+    ;; The commands in `project-switch-commands' must be found in
+    ;; `project-prefix-map'
+    (setopt  project-switch-commands
+             `((project-find-file "Find file")
+               (project-switch-to-buffer "Switch to buffer")
+               (project-find-regexp "Find regexp")
+               (project-find-dir "Find directory")
+               (project-vc-dir "VC-Dir")
+               (project-eshell "Eshell")
+               (project-shell "Shell")
+               (project-any-command "Other")))
+    
     (bind-keys :map project-prefix-map
                ("e" . project-eshell)
                ("C" . project-recompile))
