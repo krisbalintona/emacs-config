@@ -861,8 +861,8 @@ ending the minibuffer session. (This is equivalent to the behavior of
   ;; Our orderless components are split by spaces (see
   ;; `orderless-component-separator') so, for convenience, make SPC
   ;; insert space
-  (:bind-keys :map minibuffer-local-completion-map
-              ("SPC" . self-insert-command))
+  (with-eval-after-load 'orderless
+    (unbind-key "SPC" minibuffer-local-completion-map))
 
   ;; Define my own completion styles that bundle sets of orderless
   ;; matching styles
