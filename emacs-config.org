@@ -1147,6 +1147,14 @@ See also ~(elisp) Beeping~.
     (:hide-mode buffer-face-mode))
 #+end_src
 
+** Don't let the window manager stop Emacs from resizing its frames when fullscreen
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Don't let the window manager stop Emacs from resizing its frames
+  ;; when fullscreen
+  (setopt alter-fullscreen-frames t)      ; Emacs 31
+#+end_src
+
 * General file handling
 
 ** Follow symlinks when opening files

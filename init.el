@@ -359,6 +359,10 @@ package-archives, e.g. \"gnu\")."))
     
     (:hide-mode buffer-face-mode))
   
+  ;; Don't let the window manager stop Emacs from resizing its frames
+  ;; when fullscreen
+  (setopt alter-fullscreen-frames t)      ; Emacs 31
+  
   ;; Follow symlinks when opening files
   (setopt find-file-visit-truename t)
   
