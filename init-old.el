@@ -2373,11 +2373,6 @@ is to produce the opposite effect of both `fill-paragraph' and
  ("C-M-S-p" . scroll-down-line)
  ("C-M-S-n" . scroll-up-line))
 
-;; `indent-for-tab-command' functionality: what happens when you press
-;; TAB?
-(setopt tab-always-indent 'complete
-        tab-first-completion 'word)
-
 ;; Recenter upon `next-error'
 (setopt next-error-recenter '(4))
 

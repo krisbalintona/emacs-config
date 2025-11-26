@@ -1794,6 +1794,15 @@ Settings for the filtering of completion candidates, regardless of the completio
             read-buffer-completion-ignore-case t))
 #+end_src
 
+** Behavior of =TAB= outside the minibuffer buffers
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc  :noweb-sep "\n\n"
+  ;; `indent-for-tab-command' functionality: what happens when you press
+  ;; TAB in a regular buffer?
+  (setopt tab-always-indent 'complete
+          tab-first-completion 'word)
+#+end_src
+
 ** Built-in completions: ~completion-list-mode~
 
 #+name: completion-list

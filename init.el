@@ -386,6 +386,11 @@ package-archives, e.g. \"gnu\")."))
   ;; `duplicate-region-final-position' user options
   (bind-key "C-x ;" #'duplicate-dwim)
   
+  ;; `indent-for-tab-command' functionality: what happens when you press
+  ;; TAB in a regular buffer?
+  (setopt tab-always-indent 'complete
+          tab-first-completion 'word)
+  
   ;; Show context menu from right-click
   (when (display-graphic-p) (context-menu-mode 1))
   
