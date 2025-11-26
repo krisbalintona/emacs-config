@@ -2889,7 +2889,7 @@ PROP is the name of the property.  See
     (bind-key [remap consult-outline] #'consult-org-heading org-mode-map))
 
   (:bind-keys :map consult-narrow-map
-              ("?" . consult-narrow-help)) ; Show available narrow keys
+              ("/" . consult-narrow-help)) ; Show available narrow keys
 
   (setopt consult-preview-key "C-M-;"
           consult-ripgrep-args
