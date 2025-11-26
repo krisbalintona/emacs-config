@@ -389,6 +389,9 @@ package-archives, e.g. \"gnu\")."))
   ;; Show context menu from right-click
   (when (display-graphic-p) (context-menu-mode 1))
   
+  ;; See (emacs) Minibuffer Edit for an explanation
+  (setopt resize-mini-windows t)
+  
   ;; Exclude from M-x commands definitely irrelevant to the current
   ;; major mode
   (setopt read-extended-command-predicate #'command-completion-default-include-p)

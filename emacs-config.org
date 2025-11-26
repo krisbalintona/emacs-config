@@ -2063,6 +2063,14 @@ A right-click menu:
 
 ** Minibuffer UI
 
+*** Let the minibuffer shrink
+
+The default behavior is to allow the minibuffer to increase in height if necessary, but not to decrease its height. The setting below allows shrinkage when necessary.
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; See (emacs) Minibuffer Edit for an explanation
+  (setopt resize-mini-windows t)
+#+end_src
+
 *** Minibuffer.el
 
 #+name: minibuffer
