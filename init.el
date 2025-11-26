@@ -4841,6 +4841,7 @@ which file on the system it backs up."
 
   (bind-keys ("C-c a n" . activities-new)
              ("C-c a d" . activities-define)
+             ("C-c a r" . activities-rename)
              ("C-c a a" . activities-resume)
              ("C-c a s" . activities-suspend)
              ("C-c a k" . activities-kill)
