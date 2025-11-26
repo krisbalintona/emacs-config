@@ -707,11 +707,14 @@ to if called with ARG, or any prefix argument."
             (imenu (eager-display . t)
                    (eager-update . t))
             (kill-ring (styles . (orderless-literal-and-prefixes)))
+            ;; Consult-specific category overrides
             (consult-outline (styles . (orderless-literal-and-prefixes)))
             (consult-location (eager-display . t)
                               (eager-update . t))
-            (org-heading (eager-display . t) ; For `consult-org-heading'
-                         (eager-update . t))))
+            (org-heading (eager-display . t)        ; For `consult-org-heading'
+                         (eager-update . t))
+            ;; For tempel `citar-at-point-function's and commands
+            (tempel (eager-display . t))))
   
   ;; How do we want to treat case in completion?
   (setopt completion-ignore-case t
@@ -752,7 +755,8 @@ to if called with ARG, or any prefix argument."
 ;; - `completion-flex-nospace’
 (setup minibuffer
 
-  ;; Display of the Completions buffer
+  ;; Automatic ("eager") display and updating of the Completions
+  ;; buffer: control with `completion-category-overrides'
   (setopt completion-eager-display 'auto
           completion-eager-update 'auto)
 

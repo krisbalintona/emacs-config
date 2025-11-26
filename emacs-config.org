@@ -1530,6 +1530,16 @@ See also ~(elisp) Beeping~.
       (add-hook 'consult-after-jump-hook #'pulsar-reveal-entry)))
 #+end_src
 
+Consult-specific completion category overrides:
+#+begin_src emacs-lisp :noweb-ref completion-category-overrides
+  ;; Consult-specific category overrides
+  (consult-outline (styles . (orderless-literal-and-prefixes)))
+  (consult-location (eager-display . t)
+                    (eager-update . t))
+  (org-heading (eager-display . t)        ; For `consult-org-heading'
+               (eager-update . t))
+#+end_src
+
 ** Smart-mark: =C-g= restores point when marking
 
 #+name: smart-mark
@@ -1776,11 +1786,7 @@ Settings for the filtering of completion candidates, regardless of the completio
               (imenu (eager-display . t)
                      (eager-update . t))
               (kill-ring (styles . (orderless-literal-and-prefixes)))
-              (consult-outline (styles . (orderless-literal-and-prefixes)))
-              (consult-location (eager-display . t)
-                                (eager-update . t))
-              (org-heading (eager-display . t) ; For `consult-org-heading'
-                           (eager-update . t))))
+              <<completion-category-overrides>>))
     
     ;; How do we want to treat case in completion?
     (setopt completion-ignore-case t
@@ -1798,7 +1804,8 @@ Settings for the filtering of completion candidates, regardless of the completio
   ;; - `completion-flex-nospace’
   (setup minibuffer
 
-    ;; Display of the Completions buffer
+    ;; Automatic ("eager") display and updating of the Completions
+    ;; buffer: control with `completion-category-overrides'
     (setopt completion-eager-display 'auto
             completion-eager-update 'auto)
 
@@ -3003,6 +3010,12 @@ Jinx is an alternative to the built-in flyspell (see [[#h:20251118T184517.526538
       (add-hook 'completion-at-point-functions 'tempel-expand -90 t))
     (dolist (hook '(prog-mode-hook text-mode-hook))
       (add-hook hook #'krisb-tempel-setup-capf)))
+#+end_src
+
+Tempel-specific completion category overrides:
+#+begin_src emacs-lisp :noweb-ref completion-category-overrides
+  ;; For tempel `citar-at-point-function's and commands
+  (tempel (eager-display . t))
 #+end_src
 
 *** Programming
