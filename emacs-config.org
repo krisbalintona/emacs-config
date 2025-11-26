@@ -1338,6 +1338,13 @@ See also ~(elisp) Beeping~.
 
 * General buffer movement and editing
 
+** Cycle-spacing behavior
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Behavior for `cycle-spacing-actions'
+  (setopt cycle-spacing-actions '(just-one-space (delete-all-space -) restore))
+#+end_src
+
 ** Bespoke editing commands
 
 #+name: bespoke-editing

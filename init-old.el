@@ -2397,10 +2397,6 @@ is to produce the opposite effect of both `fill-paragraph' and
 ;; Strategy for uniquifying buffer names
 (setopt uniquify-buffer-name-style 'forward)
 
-;; Behavior for `cycle-spacing-actions'.  Read the docstring for an
-;; explanation (or try it out!)
-(setopt cycle-spacing-actions '(just-one-space (delete-all-space -) restore))
-
 ;; Prefer UTF-8 file and selection encoding
 (prefer-coding-system 'utf-8)
 ;; The clipboard on Windows is often a wider encoding (UTF-16), so

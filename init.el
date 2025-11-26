@@ -382,6 +382,9 @@ package-archives, e.g. \"gnu\")."))
   ;; Don't create lock files
   (setopt create-lockfiles nil)
   
+  ;; Behavior for `cycle-spacing-actions'
+  (setopt cycle-spacing-actions '(just-one-space (delete-all-space -) restore))
+  
   ;; TODO 2025-05-22: Document the `duplicate-line-final-position'and
   ;; `duplicate-region-final-position' user options
   (bind-key "C-x ;" #'duplicate-dwim)
