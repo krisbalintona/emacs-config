@@ -368,7 +368,7 @@ package-archives, e.g. \"gnu\")."))
   
   ;; Move files into trash directory
   (setopt trash-directory (no-littering-expand-var-file-name "trash")
-          delete-by-moving-to-trash t)
+          delete-by-moving-to-trash t) ; See also `remote-file-name-inhibit-delete-by-moving-to-trash'
   
   (defun krisb-empty-trash ()
     "Empty the trash directory."
@@ -379,7 +379,8 @@ package-archives, e.g. \"gnu\")."))
             (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory "/*")))))
       (message "delete-by-moving-to-trash is nil; not emptying trash")))
   
-  ;; Don't create lock files
+  ;; Don't create lock files.  See also `remote-file-name-inhibit-locks'
+  ;; for remote files
   (setopt create-lockfiles nil)
   
   ;; Behavior for `cycle-spacing-actions'
@@ -1310,6 +1311,22 @@ Then apply ARGS."
   (electric-pair-mode 1)
   (electric-indent-mode 1))
 
+;;; Files
+;; TODO 2025-11-28: Document these:
+;; - For auto-save-visited: `remote-file-name-inhibit-auto-save-visited'
+;; - For trash: `remote-file-name-inhibit-delete-by-moving-to-trash'
+;; - For auto-save: `remote-file-name-inhibit-auto-save'
+(setup files
+  
+  (with-eval-after-load 'files
+    (setopt remote-file-name-inhibit-locks t ; Don't create lock files in remotes
+            ;; Disables aggressive caching that slows Dired/Magit;
+            ;; test and toggle if needed.
+            remote-file-name-inhibit-cache nil
+            ;; Set a timeout to prevent the failure to access files to
+            ;; indefinitely bloc Emacs
+            remote-file-name-access-timeout 10)))
+
 ;;; Autorevert
 ;; Automatically update buffers as files are externally modified
 ;; TODO 2025-05-22: Document:
@@ -1371,6 +1388,12 @@ call `diff-buffer-with-file’ instead."
         (diff-buffer-with-file (current-buffer))
       (vc-diff)))
   (:bind-keys ([remap vc-diff] . krisb-vc-diff-dwim)))
+
+;; Don't do VC operations inside remote files
+(with-eval-after-load 'vc
+  (setopt vc-ignore-dir-regexp
+          (rx (or (group (regexp vc-ignore-dir-regexp))
+                  (group (regexp tramp-file-name-regexp))))))
 
 ;;;; Vc-git
 ;; TODO 2025-07-10: Document:
@@ -2857,6 +2880,64 @@ PROP is the name of the property.  See
     (when (string= prop "PLATFORM")
       '("Netflix" "Hulu" "Disney+" "Tubi" ":ETC")))
   (add-to-list 'org-property-allowed-value-functions #'krisb-org-property-allowed-platform))
+
+;;; TRAMP
+;; TODO 2025-11-28: Document this:
+;; - `tramp-verbose'
+;; - `tramp-syntax' - See (info "(tramp) Change file name syntax")
+(setup tramp
+
+  ;; Tip: for a list of general ways to speed up TRAMP, see (info
+  ;; "(tramp) Frequently Asked Questions").  Many/most of the
+  ;; selections below were taken from there.
+  (with-eval-after-load 'tramp
+    ;; Only see warnings and errors.  I change this on-the-fly if I
+    ;; need to debug
+    (setopt tramp-verbose 2
+            tramp-default-remote-shell "/bin/bash")
+    
+    ;; SSH-relevant settings.  See (info "(tramp) Ssh setup") for more
+    ;; information
+    (setopt tramp-use-connection-share t
+            ;; Most significant speedup for TRAMP, since it opens many
+            ;; SSH connections
+            tramp-ssh-controlmaster-options ; Only when `tramp-use-connection-share' is t
+            (concat "-o ControlMaster=auto "
+                    "-o ControlPersist=30m "
+                    ;; See the ssh_config(5) man page for a list of
+                    ;; the possible tokens.  NOTE: %% is encoded as %
+                    "-o ControlPath=/tmp/tramp-cm-%%r@%%h:%%p")
+            ;; Only effects copying between two remote hosts: when
+            ;; non-nil, to copy a file from remote1 to remote 2,
+            ;; instead of copying to the local machine then copying
+            ;; again to remote 2, we copy directly from remote1 and
+            ;; remote2.
+            ;; 
+            ;; Assumes we have password-less authentication into
+            ;; host. For more details see section "4.19.4 Configure
+            ;; direct copying between two remote servers" in (info
+            ;; "(tramp) Ssh setup")
+            tramp-use-scp-direct-remote-copying t
+            remote-file-name-inhibit-cache nil)
+
+    ;; Don't show symlinks, since that requires the expensive
+    ;; `file-truename'.  Taken from (info "(tramp) Frequently Asked
+    ;; Questions")
+    (connection-local-set-profile-variables
+     'dired-no-symlink
+     '((dired-check-symlinks . nil)))
+    (connection-local-set-profiles
+     '(:application tramp :machine "epoche")
+     'dired-no-symlink)))
+
+;;; Tramp-theme
+;; NOTE: I learned about this package from (info "(tramp) Frequently
+;; Asked Questions").
+(setup tramp-theme
+  (:package tramp-theme)
+
+  (with-eval-after-load 'tramp
+    (load-theme 'tramp)))
 
 ;;; Paren-face
 ;; Creates a face just for parentheses.  Useful for lispy languages
@@ -4411,7 +4492,13 @@ completion at point function."
           backup-by-copying t) ; Always copy; see (info "(emacs) Backup Copying")
   (setup vc
     (setopt vc-make-backup-files t))
-  
+
+  ;; Tramp has its own backup-directory-alist
+  ;; (`tramp-backup-directory-alist'); use `backup-directory-alist'
+  ;; instead
+  (with-eval-after-load 'tramp
+    (setopt tramp-backup-directory-alist backup-directory-alist))
+
   ;; Numbering backups
   (setopt version-control t
           ;; Be generous: file space is cheap
