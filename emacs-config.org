@@ -2314,6 +2314,14 @@ Vertico provides several extensions:
               corfu-popupinfo-max-width 80
               corfu-popupinfo-min-height 1
               corfu-popupinfo-min-width 25)))
+
+  ;; History of selections of corfu candidates for better completion
+  ;; sorting
+  (setup corfu-history
+    (:load-after corfu)
+    
+    ;; See also `corfu-history-duplicate' and `corfu-history-decay'
+    (corfu-history-mode 1))
 #+end_src
 
 ** Customize

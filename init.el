@@ -1283,6 +1283,14 @@ Then apply ARGS."
             corfu-popupinfo-min-height 1
             corfu-popupinfo-min-width 25)))
 
+;; History of selections of corfu candidates for better completion
+;; sorting
+(setup corfu-history
+  (:load-after corfu)
+  
+  ;; See also `corfu-history-duplicate' and `corfu-history-decay'
+  (corfu-history-mode 1))
+
 ;;; Electric
 ;; TODO 2025-05-20: Document the user options below in the literate
 ;; config:
