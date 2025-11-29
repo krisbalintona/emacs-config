@@ -752,13 +752,11 @@ to if called with ARG, or any prefix argument."
   (minibuffer-electric-default-mode 1)  ; Show default value
   (setopt minibuffer-prompt-properties
           ;; Don't let point enter the minibuffer prompt
-          '(read-only t cursor-intangible t face minibuffer-prompt)))
+          '(read-only t cursor-intangible t face minibuffer-prompt))
 
-;; Hide mode line of Completions buffer
-(add-to-list 'display-buffer-alist
-             '("\\*Completions\\*"
-               nil
-               (window-parameters (mode-line-format . none))))
+  ;; Don't show mode line
+  (add-hook 'completion-list-mode-hook
+            (lambda () (setq-local mode-line-format nil))))
 
 ;;;; Completion-list (*Completions* buffer)
 ;; TODO 2025-05-20: Document the following options below in the
