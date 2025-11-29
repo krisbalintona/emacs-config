@@ -5645,7 +5645,7 @@ I have several patches awaiting review or application. They are:
       (notmuch-addr-setup)))
 #+end_src
 
-***** Ol-notmuch: Integration between notmuch and org links
+***** Ol-notmuch: Glue between notmuch and org links
 
 #+name: ol-notmuch
 #+begin_src emacs-lisp
@@ -5729,6 +5729,17 @@ I have several patches awaiting review or application. They are:
                 (org-link-add-props :description (org-link-email-description)))
               (kill-buffer buf)
               org-store-link-plist)))))))
+#+end_src
+
+***** Notmuch-bookmarks: Glue between notmuch and bookmarks
+
+#+name: notmuch-bookmarks
+#+begin_src emacs-lisp
+  (setup notmuch-bookmarks
+    (:package notmuch-bookmarks)
+
+    (with-eval-after-load 'bookmark
+      (notmuch-bookmarks-mode)))
 #+end_src
 
 **** Org-mime: HTML multiparts for emails
@@ -6914,6 +6925,9 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
 
   ;;; Ol-notmuch
   <<ol-notmuch>>
+
+  ;;; Notmuch-bookmarks
+  <<notmuch-bookmarks>>
 
   ;;; Abbrev
   <<abbrev>>

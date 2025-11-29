@@ -1649,14 +1649,6 @@ The context buffer is the buffer that shows annotation contents in
 (require 'krisb-org-publish)
 
 ;;; Emails
-;;;; Notmuch-bookmarks
-(use-package notmuch-bookmarks
-  :ensure t
-  :after notmuch
-  :demand t
-  :config
-  (notmuch-bookmarks-mode))
-
 ;;;; Notmuch-transient
 (use-package notmuch-transient
   :disabled t                     ; 2025-09-07: Cool but not essential

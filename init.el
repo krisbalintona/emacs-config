@@ -3954,6 +3954,13 @@ from a `notmuch-search-mode' buffer.")
             (kill-buffer buf)
             org-store-link-plist)))))))
 
+;;; Notmuch-bookmarks
+(setup notmuch-bookmarks
+  (:package notmuch-bookmarks)
+
+  (with-eval-after-load 'bookmark
+    (notmuch-bookmarks-mode)))
+
 ;;; Abbrev
 ;; Automatically correct typed strings (e.g. words).  Most useful for
 ;; correcting spelling mistakes as they are made.
