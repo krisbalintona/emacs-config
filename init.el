@@ -4313,7 +4313,7 @@ instead."
 
 ;; Add cape functions to `completion-at-point-functions'
 (setup cape
-  (defun krisb-cape--dict-dabbrev ()
+  (defun krisb-cape-dict-dabbrev ()
     "Super-capf of `cape-dict' and `cape-dabbrev'."
     (cape-wrap-super 'cape-dict 'cape-dabbrev))
   ;; For Emacs >30, disable the ispell capf automatically added to
@@ -4325,8 +4325,8 @@ instead."
   ;; Capfs added to the end of the global value of
   ;; `completion-at-point-functions'.  Consequently, they act as
   ;; fallback backends.
-  (dolist (capf (reverse '(krisb-cape--dict-dabbrev cape-elisp-symbol)))
-    (add-hook 'completion-at-point-functions capf 100))
+  (dolist (capf (reverse '(cape-file cape-elisp-symbol krisb-cape-dict-dabbrev)))
+    (add-hook 'completion-at-point-functions capf))
   
   ;; Macro to help adding capfs via major mode hooks
   (defmacro krisb-cape-setup-capfs (label hooks capfs)
