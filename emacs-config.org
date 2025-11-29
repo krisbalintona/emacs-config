@@ -3172,6 +3172,20 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
             (plist-get (cdr (assoc 'emacs-lisp-mode consult-imenu-config)) :types))))
 #+end_src
 
+***** Hideshow: Selectively hide regions of code
+
+#+name:hideshow
+#+begin_src emacs-lisp
+  (setup hideshow
+
+    (add-hook 'prog-mode-hook #'hs-minor-mode)
+    (add-hook 'conf-mode-hook #'hs-minor-mode)
+    
+    ;; See also `hs-hide-block-behavior' and `hs-display-lines-hidden'
+    (with-eval-after-load 'hideshow
+      (setopt hs-isearch-open t)))
+#+end_src
+
 **** Org-src: Programming in org-mode
 
 #+name: org-src
@@ -6781,6 +6795,9 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
 
   ;;; Outline.el
   <<outline.el>>
+
+  ;;; Hideshow
+  <<hideshow>>
 
   ;;; Outli.el
   <<outli.el>>

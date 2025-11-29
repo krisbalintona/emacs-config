@@ -1462,6 +1462,16 @@ call `diff-buffer-with-file’ instead."
           outline-minor-mode-highlight 'append
           outline-blank-line t))
 
+;;; Hideshow
+(setup hideshow
+
+  (add-hook 'prog-mode-hook #'hs-minor-mode)
+  (add-hook 'conf-mode-hook #'hs-minor-mode)
+  
+  ;; See also `hs-hide-block-behavior' and `hs-display-lines-hidden'
+  (with-eval-after-load 'hideshow
+    (setopt hs-isearch-open t)))
+
 ;;; Outli.el
 ;; TODO 2025-05-20: Document that I prefer this over the heavier,
 ;; less-compatible outshine.el as well as outline-indent.
