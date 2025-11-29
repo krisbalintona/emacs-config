@@ -3206,22 +3206,6 @@ PROP is the name of the property.  See
   (add-hook 'eshell-load-hook #'eat-eshell-mode)
   (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode))
 
-;; Integration with project.el
-(setup eat
-  (bind-keys :map project-prefix-map
-             ("s" . eat-project))       ; Overshadow `project-shell’
-  ;; Replace `project-shell’ with `eat-project’ in
-  ;; `project-switch-commands’ anytime its value is changed
-  (add-variable-watcher 'project-switch-commands
-                        (lambda (_symbol newval operation where)
-                          (when (equal operation 'set)
-                            (setq project-switch-commands
-                                  (mapcar (lambda (e)
-                                            (if (equal e '(project-shell "Shell"))
-                                                '(eat-project "EAT")
-                                              e))
-                                          project-switch-commands))))))
-
 ;; Integration with vc.el
 (setup eat
   (with-eval-after-load 'vc
@@ -4466,7 +4450,13 @@ completion at point function."
                ("e" . project-eshell)
                ("C" . project-recompile))
     (add-to-list 'project-switch-commands '(project-compile "Compile"))
-    (add-to-list 'project-switch-commands '(project-recompile "Recompile"))))
+    (add-to-list 'project-switch-commands '(project-recompile "Recompile"))
+
+    ;; Overshadow `project-shell’ in keybindings with `eat-project'
+    (bind-keys :map project-prefix-map
+               ("s" . eat-project))
+    (cl-nsubstitute '(eat-project "EAT") 'project-shell project-switch-commands
+                    :key #'car)))
 
 ;;; Info
 ;; TODO 2025-06-16: Document:
