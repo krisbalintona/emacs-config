@@ -906,6 +906,7 @@ matching."
   (with-eval-after-load 'vertico-multiform
     (vertico-multiform-mode 1)
 
+    ;; See related, `completion-category-overrides'
     (setopt vertico-multiform-categories
             '((buffer flat (vertico-sort-function . nil))
               (project-buffer flat (vertico-sort-function . nil))
