@@ -3294,6 +3294,16 @@ PROP is the name of the property.  See
   ;; (add-hook 'olivetti-mode-hook #'krisb-olivetti-set-bookmark-face)
   )
 
+;;; Bookmark
+;; TODO 2025-11-28: Document:
+;; - `bookmark-use-annotations'
+;; - `bookmark-version-control'
+(setup bookmark
+  
+  (with-eval-after-load 'bookmark
+    (setopt bookmark-save-flag 1
+            bookmark-sort-flag 'last-modified)))
+
 ;;; Desktop
 ;; TODO 2025-05-20: Document in literate configuration prose.
 ;; See also `desktop-locals-to-save'
