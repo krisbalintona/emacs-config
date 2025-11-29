@@ -4218,6 +4218,12 @@ This section is for the major mode
       (bind-keys :map org-mode-map
                  ("C-c u" . org-web-tools-insert-link-for-url)))
 
+    (with-eval-after-load 'org-web-tools
+      (setopt org-web-tools-pandoc-replacements
+              (add-to-list 'org-web-tools-pandoc-replacements
+                           ;; Middle dot, specified in unicode
+                           '("\u00b7" . "|"))))
+
     ;; Open then go into `view-mode'
     (with-eval-after-load 'org-web-tools
       (advice-add 'org-web-tools-read-url-as-org :after #'view-mode))
