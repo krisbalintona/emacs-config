@@ -4055,7 +4055,9 @@ buffers in which this function is run."
                 (goto-char start)
                 (if (search-forward "<#secure method=pgpmime mode=sign>" nil t)
                     (1+ (point))
-                  start))))
+                  start)))
+            org-mime-instructions-hint "# org-mime hint: Press C-c C-c to commit change.\n"
+            org-mime-obey-display-buffer-p t)
 
     (defun krisb-org-mime-setup ()
       "Nicely offset block quotes in email bodies.
