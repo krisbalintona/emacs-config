@@ -2915,6 +2915,10 @@ PROP is the name of the property.  See
     ;; need to debug
     (setopt tramp-verbose 2
             tramp-default-remote-shell "/bin/bash")
+
+    ;; FIXME 2025-11-30: Not sure why this "davs"is causing problems
+    ;; for me... disable it for now.
+    (setopt tramp-gvfs-methods (cl-remove "davs" tramp-gvfs-methods :test #'string=))
     
     ;; SSH-relevant settings.  See (info "(tramp) Ssh setup") for more
     ;; information
