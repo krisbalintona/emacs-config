@@ -1603,7 +1603,7 @@ call `diff-buffer-with-file’ instead."
               ("DOING" ("WAITING" . nil) ("PUSHED" . nil))
               ("NEXT" ("WAITING" . nil))
               ("TODO" ("WAITING" . nil))
-              ("HOLD")
+              ("HOLD" ("PUSHED" . nil))
               ("MAYBE" ("WAITING" . nil))
               (done ("WAITING" . nil))
               ("DONE")

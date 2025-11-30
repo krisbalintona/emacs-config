@@ -3757,7 +3757,7 @@ This section is for the major mode
                 ("DOING" ("WAITING" . nil) ("PUSHED" . nil))
                 ("NEXT" ("WAITING" . nil))
                 ("TODO" ("WAITING" . nil))
-                ("HOLD")
+                ("HOLD" ("PUSHED" . nil))
                 ("MAYBE" ("WAITING" . nil))
                 (done ("WAITING" . nil))
                 ("DONE")
