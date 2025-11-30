@@ -3552,6 +3552,8 @@ send from."
               ("R" . notmuch-search-reply-to-thread-sender)
               :map notmuch-tree-mode-map
               ("S-SPC" . notmuch-tree-scroll-message-window-back)
+              ("r" . notmuch-tree-reply)
+              ("R" . notmuch-tree-reply-sender)
               :map notmuch-show-mode-map
               ("S-SPC" . notmuch-show-rewind)
               ("a" . nil)
