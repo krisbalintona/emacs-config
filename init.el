@@ -834,7 +834,8 @@ ending the minibuffer session. (This is equivalent to the behavior of
   ;; Replace the flex completion style with the hotfuzz style after
   ;; I've set `completion-styles'
   (with-eval-after-load 'minibuffer
-    (cl-nsubstitute 'hotfuzz 'flex completion-styles))
+    (add-hook 'on-first-input-hook
+              (lambda () (cl-nsubstitute 'hotfuzz 'flex completion-styles))))
 
   ;; We have to change some internal variables consult uses if the
   ;; dynamic module is compiled.  See
