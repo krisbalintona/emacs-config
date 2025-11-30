@@ -345,7 +345,13 @@ package-archives, e.g. \"gnu\")."))
                     git-commit-setup-hook
                     log-edit-mode-hook
                     message-mode-hook))
-      (add-hook hook #'krisb-set-cursor-prose)))
+      (add-hook hook #'krisb-set-cursor-prose))
+  
+    (defun krisb-set-cursor-completions-list ()
+      "Set cursor settings in *Completions* buffer."
+      (when (eq krisb-completion-paradigm 'completion-list)
+        (setq-local cursor-in-non-selected-windows 'hbar)))
+    (add-hook 'completion-list-mode-hook #'krisb-set-cursor-completions-list))
   
   ;; Word wrapping.  Continue wrapped lines at whitespace rather than
   ;; breaking in the middle of a word.
