@@ -4160,29 +4160,7 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
             dictionary-read-dictionary-function 'dictionary-completing-read-dictionary)
 
     (when (package-installed-p 'hide-mode-line)
-      (add-hook 'dictionary-mode-hook #'hide-mode-line-mode)))
-  
-  (defun krisb-dictionary-dwim (promptp)
-    "Show dictionary definition for word at point.
-If region is active, use the region's contents instead.
-
-If PROMPTP is non-nil, prompt for a word to find the definition of
-instead."
-    (interactive "P")
-    (if-let ((word (cond
-                    (promptp (read-string "Define: "))
-                    ((use-region-p)
-                     (buffer-substring-no-properties (region-beginning) (region-end)))
-                    (t (thing-at-point 'word :no-properties)))))
-        (dictionary-search word)
-      (message "No word or region selected.")))
-  (bind-keys ("C-h =" . krisb-dictionary-dwim)))
-
-(setup embark
-  (:bind-keys :map embark-region-map
-              ("=" . krisb-dictionary-dwim)
-              :map embark-identifier-map
-              ("=" . krisb-dictionary-dwim)))
+      (add-hook 'dictionary-mode-hook #'hide-mode-line-mode))))
 
 ;;; Powerthesaurus
 ;; Search for synonyms using an online thesaurus.
@@ -5033,6 +5011,15 @@ which file on the system it backs up."
 ;; https://github.com/mmontone/emacs-inspector?tab=readme-ov-file#from-the-emacs-debugger).
 (setup inspector
   (:package inspector))
+
+;;; Do-at-point
+(setup do-at-point
+  (:package do-at-point)
+  
+  (bind-key "C-;" #'do-at-point)
+
+  (add-to-list 'do-at-point-user-actions
+               '(word (?T "Thesaurus" powerthesaurus-lookup-synonyms-dwim))))
 
 ;;; Startup time
 ;; Message for total init time after startup

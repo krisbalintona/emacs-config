@@ -2713,6 +2713,18 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
       <<eat-project-switch-commands>>))
 #+end_src
 
+* Do-at-point: Do things to the things at point
+
+#+name: do-at-point
+#+begin_src emacs-lisp
+  (setup do-at-point
+    (:package do-at-point)
+    
+    (bind-key "C-;" #'do-at-point)
+
+    <<do-at-point-user-actions>>)
+#+end_src
+
 * Domains
 
 ** Composition
@@ -3913,29 +3925,7 @@ This section is for the major mode
               dictionary-read-dictionary-function 'dictionary-completing-read-dictionary)
 
       (when (package-installed-p 'hide-mode-line)
-        (add-hook 'dictionary-mode-hook #'hide-mode-line-mode)))
-    
-    (defun krisb-dictionary-dwim (promptp)
-      "Show dictionary definition for word at point.
-  If region is active, use the region's contents instead.
-
-  If PROMPTP is non-nil, prompt for a word to find the definition of
-  instead."
-      (interactive "P")
-      (if-let ((word (cond
-                      (promptp (read-string "Define: "))
-                      ((use-region-p)
-                       (buffer-substring-no-properties (region-beginning) (region-end)))
-                      (t (thing-at-point 'word :no-properties)))))
-          (dictionary-search word)
-        (message "No word or region selected.")))
-    (bind-keys ("C-h =" . krisb-dictionary-dwim)))
-
-  (setup embark
-    (:bind-keys :map embark-region-map
-                ("=" . krisb-dictionary-dwim)
-                :map embark-identifier-map
-                ("=" . krisb-dictionary-dwim)))
+        (add-hook 'dictionary-mode-hook #'hide-mode-line-mode))))
 #+end_src
 
 **** Powerthesaurus: Preferred thesaurus
@@ -3953,6 +3943,11 @@ This section is for the major mode
                  :map embark-identifier-map
                  ("t" . powerthesaurus-lookup-synonyms-dwim)
                  ("T" . powerthesaurus-lookup-dwim))))
+#+end_src
+
+#+begin_src emacs-lisp :noweb-ref do-at-point-user-actions
+  (add-to-list 'do-at-point-user-actions
+               '(word (?T "Thesaurus" powerthesaurus-lookup-synonyms-dwim)))
 #+end_src
 
 ** Media management
@@ -7083,6 +7078,9 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
 
   ;;; Inspector
   <<inspector>>
+
+  ;;; Do-at-point
+  <<do-at-point>>
 
   ;;; Startup time
   <<startup-time>>
