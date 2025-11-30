@@ -1452,6 +1452,23 @@ See also ~(elisp) Beeping~.
             search-whitespace-regexp ".*?"))
 #+end_src
 
+** Occur: A grep for your buffer
+
+#+name: occur
+#+begin_src emacs-lisp
+  (setup occur
+
+    <<occur-display-buffer-alist>>)
+#+end_src
+
+#+name: occur-display-buffer-alist
+#+begin_src emacs-lisp
+  (add-to-list 'display-buffer-alist
+               '((major-mode . occur-mode)
+                 nil
+                 (post-command-select-window . t)))
+#+end_src
+
 ** Newcomment: Emacs' commenting suite
 
 #+name: newcomment
@@ -6832,6 +6849,9 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
 
   ;;; Imenu
   <<imenu>>
+
+  ;;; Occur
+  <<occur>>
 
   ;;; Isearch
   <<isearch>>

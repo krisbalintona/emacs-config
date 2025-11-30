@@ -1546,6 +1546,14 @@ call `diff-buffer-with-file’ instead."
 (setup org
   (setopt org-imenu-depth 7))      ; Show more than just 2 levels...
 
+;;; Occur
+(setup occur
+
+  (add-to-list 'display-buffer-alist
+               '((major-mode . occur-mode)
+                 nil
+                 (post-command-select-window . t))))
+
 ;;; Isearch
 ;; TODO 2025-11-15: Document:
 ;; - `lazy-highlight-initial-delay'
