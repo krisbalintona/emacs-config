@@ -2597,13 +2597,15 @@ Wayland specific:
   (setup window
 
     (:bind-keys ("M-o" . other-window))
+    (with-eval-after-load 'diff
+      (unbind-key "o" diff-mode-shared-map))
+    (with-eval-after-load 'eat
+      (unbind-key "M-o" eat-semi-char-mode-map))
 
     (setopt switch-to-buffer-obey-display-actions t
             window-resize-pixelwise t
             quit-restore-window-no-switch t ; Emacs 31
-            ;; TODO 2025-10-17: Revisit this
-            ;; kill-buffer-quit-windows t    ; Emacs 31
-            ))
+            kill-buffer-quit-windows t))    ; Emacs 31
 #+end_src
 
 Below are other modifications to ~display-buffer-alist~ found elsewhere in this configuration:
@@ -7081,4 +7083,4 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
 #  LocalWords:  noweb org's Linters Balintona Kristoffer LocalWords Elpaca el Runtime PDFs Ef elisp
 #  LocalWords:  Minibuffer Vertico Fontaine Theming Savehist minibuffer facto de Minibuffers pdf El
 #  LocalWords:  minibuffers Autorevert WIP EmacsWiki TODO GCMH Imenu Isearch Newcomment VCS VC jj
-#  LocalWords:  jujutsu JJ Hotfuzz hotfuzz emacs BufFace subtree Paren
+#  LocalWords:  jujutsu JJ Hotfuzz hotfuzz emacs BufFace subtree Paren Hideshow

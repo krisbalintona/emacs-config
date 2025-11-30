@@ -1190,13 +1190,15 @@ Then apply ARGS."
 (setup window
 
   (:bind-keys ("M-o" . other-window))
+  (with-eval-after-load 'diff
+    (unbind-key "o" diff-mode-shared-map))
+  (with-eval-after-load 'eat
+    (unbind-key "M-o" eat-semi-char-mode-map))
 
   (setopt switch-to-buffer-obey-display-actions t
           window-resize-pixelwise t
           quit-restore-window-no-switch t ; Emacs 31
-          ;; TODO 2025-10-17: Revisit this
-          ;; kill-buffer-quit-windows t    ; Emacs 31
-          ))
+          kill-buffer-quit-windows t))    ; Emacs 31
 
 ;;; Corfu
 ;; TODO 2025-05-20: Document the user options below in the literate
