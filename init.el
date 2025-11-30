@@ -719,18 +719,20 @@ to if called with ARG, or any prefix argument."
             ;; We include `partial-completion' to enable wildcards and
             ;; partial paths (when `completion-pcm-leading-wildcard'
             ;; is non-nil)
-            (file (styles . (basic partial-completion orderless))
-                  (eager-display . t)
-                  (eager-update . t))
-            (imenu (eager-display . t)
-                   (eager-update . t))
+            (file (styles . (substring partial-completion))
+                  (eager-display . t))
+            (recentf (eager-display . t))
+            (imenu (eager-display . t))
             (kill-ring (styles . (orderless-literal-and-prefixes)))
+            (project-file (eager-display . t))
             ;; Consult-specific category overrides
             (consult-outline (styles . (orderless-literal-and-prefixes)))
-            (consult-location (eager-display . t)
-                              (eager-update . t))
-            (org-heading (eager-display . t)        ; For `consult-org-heading'
-                         (eager-update . t))
+            (consult-location (eager-update . t))
+            (org-heading (eager-update . t))        ; For `consult-org-heading'
+            (consult-grep (eager-display . nil)
+                          (eager-update . t))
+            (consult-info (eager-display . nil)
+                          (eager-update . t))
             ;; For tempel `citar-at-point-function's and commands
             (tempel (eager-display . t))))
   
@@ -741,9 +743,10 @@ to if called with ARG, or any prefix argument."
 
 (setup minibuffer
   
-  ;; Minibuffer movement
+  ;; Minibuffer movement.  See also `minibuffer-visible-completions'
+  ;; and the commands bound to `minibuffer-visible-completions-map'
   (setopt minibuffer-beginning-of-buffer-movement t)
-
+  
   ;; Let a minibuffer be created from within a minibuffer
   (setopt enable-recursive-minibuffers t)
   ;; And indicate the current recursion level in the minibuffer prompt
@@ -766,27 +769,43 @@ to if called with ARG, or any prefix argument."
 ;;;; Completion-list (*Completions* buffer)
 ;; TODO 2025-05-20: Document the following options below in the
 ;; literate configuration:
-;; - `completion-cycle-threshold'
+;; - `completion-cycle-threshold' - Cycling = repeated completion
+;;   attempts insert the next completion candidate into the minibuffer
 ;; - `completion-flex-nospace’
 (setup minibuffer
 
-  ;; Automatic ("eager") display and updating of the Completions
-  ;; buffer: control with `completion-category-overrides'
-  (setopt completion-eager-display 'auto
-          completion-eager-update 'auto)
-
-  ;; Selection of the Completions buffer from the minibuffer
-  (setopt completion-auto-help 'lazy
-          completion-auto-select t   ; Select Completions on first tab
-          completion-auto-deselect nil)
-  
   ;; Completions format
   (setopt completion-show-help nil
           completions-max-height 10 ; Otherwise the completions buffer can grow to fill the entire frame
           completions-format 'vertical
           completions-group t           ; Emacs 28
           completions-detailed t ; Show annotations for candidates (like marginalia.el)
-          completions-sort 'historical)) ; Emacs 30.1
+          completions-sort 'historical) ; Emacs 30.1
+
+  ;; Automatic ("eager") display and updating of the *Completions*
+  ;; buffer: control with `completion-category-overrides'
+  (setopt completion-eager-display 'auto
+          completion-eager-update t)
+
+  ;; Selection of the Completions buffer from the minibuffer
+  (setopt completion-auto-help 'visible
+          completion-auto-select 'second-tab ; When, if ever, to select *Completions* on TAB press
+          completion-auto-deselect nil)
+
+  ;; *Completion* buffer keybindings
+  (bind-keys :map completion-list-mode-map
+             ;; TODO 2025-11-30: Suggest these bindings to upstream
+             ("b" . previous-column-completion)
+             ("f" . next-column-completion))
+  ;; Emacs 30.1: Navigate in the *Completions* buffer from the
+  ;; minibuffer.  (Fans of vertico might like this)
+  (setopt minibuffer-visible-completions t)
+  (define-key minibuffer-visible-completions-map
+              (kbd "C-n")
+              (minibuffer-visible-completions--bind #'minibuffer-next-line-completion))
+  (define-key minibuffer-visible-completions-map
+              (kbd "C-p")
+              (minibuffer-visible-completions--bind #'minibuffer-previous-line-completion)))
 
 ;; Bespoke extensions
 (setup minibuffer
