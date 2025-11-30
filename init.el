@@ -761,8 +761,7 @@ to if called with ARG, or any prefix argument."
           '(read-only t cursor-intangible t face minibuffer-prompt))
 
   ;; Don't show mode line
-  (add-hook 'completion-list-mode-hook
-            (lambda () (setq-local mode-line-format nil))))
+  (add-hook 'completion-list-mode-hook #'mode-line-invisible-mode)) ; Emacs 31.1
 
 ;;;; Completion-list (*Completions* buffer)
 ;; TODO 2025-05-20: Document the following options below in the

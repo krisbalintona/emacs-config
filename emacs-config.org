@@ -2124,8 +2124,7 @@ The default behavior is to allow the minibuffer to increase in height if necessa
             '(read-only t cursor-intangible t face minibuffer-prompt))
 
     ;; Don't show mode line
-    (add-hook 'completion-list-mode-hook
-              (lambda () (setq-local mode-line-format nil))))
+    (add-hook 'completion-list-mode-hook #'mode-line-invisible-mode)) ; Emacs 31.1
 #+end_src
 
 *** Filter out commands irrelevant to the current major mode from the ~execute-extended-command~
