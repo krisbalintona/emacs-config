@@ -2739,7 +2739,8 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
     
     (bind-key "C-;" #'do-at-point)
 
-    <<do-at-point-user-actions>>)
+    (with-eval-after-load 'do-at-point
+      <<do-at-point-user-actions>>))
 #+end_src
 
 * Domains

@@ -5026,8 +5026,9 @@ which file on the system it backs up."
   
   (bind-key "C-;" #'do-at-point)
 
-  (add-to-list 'do-at-point-user-actions
-               '(word (?T "Thesaurus" powerthesaurus-lookup-synonyms-dwim))))
+  (with-eval-after-load 'do-at-point
+    (add-to-list 'do-at-point-user-actions
+                 '(word (?T "Thesaurus" powerthesaurus-lookup-synonyms-dwim)))))
 
 ;;; Startup time
 ;; Message for total init time after startup
