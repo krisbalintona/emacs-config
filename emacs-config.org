@@ -1423,6 +1423,10 @@ See also ~(elisp) Beeping~.
     (setopt org-imenu-depth 7))      ; Show more than just 2 levels...
 #+end_src
 
+#+begin_src emacs-lisp :noweb-ref completion-category-overrides
+  (imenu (eager-display . t))
+#+end_src
+
 ** Isearch
 
 #+name: isearch
@@ -1567,7 +1571,8 @@ Consult-specific completion category overrides:
 #+begin_src emacs-lisp :noweb-ref completion-category-overrides
   ;; Consult-specific category overrides
   (consult-outline (styles . (orderless-literal-and-prefixes)))
-  (consult-location (eager-update . t))
+  (consult-location (eager-display . t)
+                    (eager-update . t))
   (org-heading (eager-update . t))        ; For `consult-org-heading'
   (consult-grep (eager-display . nil)
                 (eager-update . t))
@@ -1819,10 +1824,7 @@ Settings for the filtering of completion candidates, regardless of the completio
               ;; is non-nil)
               (file (styles . (substring partial-completion))
                     (eager-display . t))
-              (recentf (eager-display . t))
-              (imenu (eager-display . t))
               (kill-ring (styles . (orderless-literal-and-prefixes)))
-              (project-file (eager-display . t))
               <<completion-category-overrides>>))
     
     ;; How do we want to treat case in completion?
@@ -1856,16 +1858,52 @@ Settings for the filtering of completion candidates, regardless of the completio
             completions-max-height 10 ; Otherwise the completions buffer can grow to fill the entire frame
             completions-format 'vertical
             completions-group t           ; Emacs 28
-            completions-detailed t ; Show annotations for candidates (like marginalia.el)
-            completions-sort 'historical) ; Emacs 30.1
+            completions-detailed t) ; Show annotations for candidates (like marginalia.el)
 
+    ;; Custom sorting function.  Copied from Ihor's dotemacs.  Based on
+    ;; Emacs 31's `minibuffer-sort-by-history' (the 'historical value
+    ;; for `completions-sort')
+    (defun krisb-minibuffer-sort-by-history-then-distance (completions)
+      "Sort COMPLETIONS by Levenshtein distance to input, then put recent on top.
+  This function is like `minibuffer-sort-by-history', but sorts by string
+  distance + `string-lessp' first rather than using only `string-lessp'."
+      (let* ((minibuffer-input (when (minibufferp) (minibuffer-contents)))
+             (to-complete-string
+              (when minibuffer-input
+                (substring minibuffer-input
+                           (car (completion-boundaries
+                                 minibuffer-input
+                                 minibuffer-completion-table nil "")))))
+             (pre-sorted
+              (sort completions
+                    :lessp
+                    (if to-complete-string
+                        (lambda (a b)
+                          (let ((distance-a (string-distance to-complete-string a))
+                                (distance-b (string-distance to-complete-string b)))
+                            (or (< distance-a distance-b)
+                                (and (= distance-a distance-b)
+                                     (string-lessp a b)))))
+                      #'string-lessp))))
+        ;; The following code is copied from
+        ;; `minibuffer-sort-by-history'.
+        ;;
+        ;; Only use history when it's specific to these completions.
+        (if (eq minibuffer-history-variable
+                (default-value minibuffer-history-variable))
+            pre-sorted
+          (minibuffer--sort-by-position
+           (minibuffer--sort-preprocess-history minibuffer-completion-base)
+           pre-sorted))))
+    (setopt completions-sort #'krisb-minibuffer-sort-by-history-then-distance)
+    
     ;; Automatic ("eager") display and updating of the *Completions*
     ;; buffer: control with `completion-category-overrides'
     (setopt completion-eager-display 'auto
             completion-eager-update t)
 
     ;; Selection of the Completions buffer from the minibuffer
-    (setopt completion-auto-help 'visible
+    (setopt completion-auto-help 'always
             completion-auto-select 'second-tab ; When, if ever, to select *Completions* on TAB press
             completion-auto-deselect nil)
 
@@ -1877,6 +1915,10 @@ Settings for the filtering of completion candidates, regardless of the completio
     ;; Emacs 30.1: Navigate in the *Completions* buffer from the
     ;; minibuffer.  (Fans of vertico might like this)
     (setopt minibuffer-visible-completions t)
+    (define-key minibuffer-visible-completions-map
+                (kbd "C-v")
+                (minibuffer-visible-completions--bind #'minibuffer-hide-completions))
+    (unbind-key "C-g" minibuffer-visible-completions-map)
     (define-key minibuffer-visible-completions-map
                 (kbd "C-n")
                 (minibuffer-visible-completions--bind #'minibuffer-next-line-completion))
@@ -2506,6 +2548,10 @@ Wayland specific:
     (add-hook 'on-first-file-hook #'recentf-mode))
 #+end_src
 
+#+begin_src emacs-lisp :noweb-ref completion-category-overrides
+  (recentf (eager-display . t))
+#+end_src
+
 ** Bookmark
 
 #+name: bookmark
@@ -2598,7 +2644,7 @@ Wayland specific:
     (advice-add 'desktop-restore-file-buffer :after #'krisb-desktop--restore-narrowing))
 #+end_src
 
-** TODO Activities: Bookmarks for window configurations
+** Activities: Bookmarks for window configurations
 
 #+name: activities
 #+begin_src emacs-lisp
@@ -2728,6 +2774,10 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
       (add-to-list 'project-switch-commands '(project-recompile "Recompile"))
 
       <<eat-project-switch-commands>>))
+#+end_src
+
+#+begin_src emacs-lisp :noweb-ref completion-category-overrides
+  (project-file (eager-display . t))
 #+end_src
 
 * Do-at-point: Do things to the things at point
@@ -3352,6 +3402,10 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
       (set-face-attribute 'info-title-2 nil :height 1.3)
       (set-face-attribute 'info-title-3 nil :height 1.2)
       (set-face-attribute 'info-title-4 nil :height 1.1)))
+#+end_src
+
+#+begin_src emacs-lisp :noweb-ref completion-category-overrides
+  (info-menu (eager-display t))
 #+end_src
 
 **** Shells and compilation

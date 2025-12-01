@@ -721,20 +721,22 @@ to if called with ARG, or any prefix argument."
             ;; is non-nil)
             (file (styles . (substring partial-completion))
                   (eager-display . t))
-            (recentf (eager-display . t))
-            (imenu (eager-display . t))
             (kill-ring (styles . (orderless-literal-and-prefixes)))
-            (project-file (eager-display . t))
+            (imenu (eager-display . t))
             ;; Consult-specific category overrides
             (consult-outline (styles . (orderless-literal-and-prefixes)))
-            (consult-location (eager-update . t))
+            (consult-location (eager-display . t)
+                              (eager-update . t))
             (org-heading (eager-update . t))        ; For `consult-org-heading'
             (consult-grep (eager-display . nil)
                           (eager-update . t))
             (consult-info (eager-display . nil)
                           (eager-update . t))
+            (recentf (eager-display . t))
+            (project-file (eager-display . t))
             ;; For tempel `citar-at-point-function's and commands
-            (tempel (eager-display . t))))
+            (tempel (eager-display . t))
+            (info-menu (eager-display t))))
   
   ;; How do we want to treat case in completion?
   (setopt completion-ignore-case t
@@ -779,16 +781,52 @@ to if called with ARG, or any prefix argument."
           completions-max-height 10 ; Otherwise the completions buffer can grow to fill the entire frame
           completions-format 'vertical
           completions-group t           ; Emacs 28
-          completions-detailed t ; Show annotations for candidates (like marginalia.el)
-          completions-sort 'historical) ; Emacs 30.1
+          completions-detailed t) ; Show annotations for candidates (like marginalia.el)
 
+  ;; Custom sorting function.  Copied from Ihor's dotemacs.  Based on
+  ;; Emacs 31's `minibuffer-sort-by-history' (the 'historical value
+  ;; for `completions-sort')
+  (defun krisb-minibuffer-sort-by-history-then-distance (completions)
+    "Sort COMPLETIONS by Levenshtein distance to input, then put recent on top.
+This function is like `minibuffer-sort-by-history', but sorts by string
+distance + `string-lessp' first rather than using only `string-lessp'."
+    (let* ((minibuffer-input (when (minibufferp) (minibuffer-contents)))
+           (to-complete-string
+            (when minibuffer-input
+              (substring minibuffer-input
+                         (car (completion-boundaries
+                               minibuffer-input
+                               minibuffer-completion-table nil "")))))
+           (pre-sorted
+            (sort completions
+                  :lessp
+                  (if to-complete-string
+                      (lambda (a b)
+                        (let ((distance-a (string-distance to-complete-string a))
+                              (distance-b (string-distance to-complete-string b)))
+                          (or (< distance-a distance-b)
+                              (and (= distance-a distance-b)
+                                   (string-lessp a b)))))
+                    #'string-lessp))))
+      ;; The following code is copied from
+      ;; `minibuffer-sort-by-history'.
+      ;;
+      ;; Only use history when it's specific to these completions.
+      (if (eq minibuffer-history-variable
+              (default-value minibuffer-history-variable))
+          pre-sorted
+        (minibuffer--sort-by-position
+         (minibuffer--sort-preprocess-history minibuffer-completion-base)
+         pre-sorted))))
+  (setopt completions-sort #'krisb-minibuffer-sort-by-history-then-distance)
+  
   ;; Automatic ("eager") display and updating of the *Completions*
   ;; buffer: control with `completion-category-overrides'
   (setopt completion-eager-display 'auto
           completion-eager-update t)
 
   ;; Selection of the Completions buffer from the minibuffer
-  (setopt completion-auto-help 'visible
+  (setopt completion-auto-help 'always
           completion-auto-select 'second-tab ; When, if ever, to select *Completions* on TAB press
           completion-auto-deselect nil)
 
@@ -800,6 +838,10 @@ to if called with ARG, or any prefix argument."
   ;; Emacs 30.1: Navigate in the *Completions* buffer from the
   ;; minibuffer.  (Fans of vertico might like this)
   (setopt minibuffer-visible-completions t)
+  (define-key minibuffer-visible-completions-map
+              (kbd "C-v")
+              (minibuffer-visible-completions--bind #'minibuffer-hide-completions))
+  (unbind-key "C-g" minibuffer-visible-completions-map)
   (define-key minibuffer-visible-completions-map
               (kbd "C-n")
               (minibuffer-visible-completions--bind #'minibuffer-next-line-completion))
