@@ -4402,7 +4402,7 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
     (add-hook 'completion-at-point-functions capf))
   
   ;; Macro to help adding capfs via major mode hooks
-  (defmacro krisb-cape-setup-capfs (label hooks capfs)
+  (defmacro krisb-cape-setup-capfs (label hooks capfs &rest body)
     "Set up `completion-at-point-functions' for HOOKS.
 CAPFS are a list of `completion-at-point-functions'. Adds CAPFS when a
 hook in HOOKS is run. These effects are added by a defined function with
@@ -4415,13 +4415,21 @@ element in CAPFS will be the first element in
 
 This macro does not affect capfs already in
 `completion-at-point-functions' nor how later capfs are added to
-`completion-at-point-functions'."
+`completion-at-point-functions'.
+
+Finally, when BODY is non-nil, evaluate these forms.  This argument is
+intended to evaluate forms relevant to `completion-at-point' and related
+functionality."
     (declare (indent 0))
-    `(dolist (hook ,hooks)
-       (add-hook hook
-                 (defun ,(intern (concat "krisb-cape-setup-capfs-" label)) ()
-                   (dolist (capf (reverse ,capfs))
-                     (add-hook 'completion-at-point-functions capf -50 t))))))
+    (let ((func (intern (concat "krisb-cape-setup-capfs-" label))))
+      `(progn
+         (defun ,func ()
+           "Modifies `completion-at-point-functions' buffer-locally."
+           (dolist (capf (reverse ,capfs))
+             (add-hook 'completion-at-point-functions capf -50 t))
+           ,@body)
+         (dolist (hook ,hooks)
+           (add-hook hook #',func)))))
 
   ;; Add capfs by major-mode
   (krisb-cape-setup-capfs
@@ -4432,7 +4440,20 @@ This macro does not affect capfs already in
   (krisb-cape-setup-capfs
     "commit"
     '(git-commit-setup-hook log-edit-mode-hook)
-    (list #'cape-elisp-symbol))
+    (list #'cape-elisp-symbol)
+    ;; Also change the delimiters inserted by `cape-elisp-symbol'
+    ;; depending on the project I'm in
+    ;; todo 2025-11-30: Figure out which directories I want to do what
+    ;; and program that behavior accordingly
+    (let ((new (pcase (expand-file-name (project-root (project-current)))
+                 ((pred (string-match-p "emacs-repos/packages/emacs/"))
+                  '(log-edit-mode ?' ?'))
+                 (_
+                  '(log-edit-mode ?` ?`)))))
+      (setq-local cape-elisp-symbol-wrapper
+                  (cl-substitute new 'log-edit-mode
+                                 cape-elisp-symbol-wrapper
+                                 :key #'car :test #'equal))))
 
   (krisb-cape-setup-capfs
     "shells"
