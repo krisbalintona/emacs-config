@@ -1674,7 +1674,7 @@ call `diff-buffer-with-file’ instead."
               ("TODO" ("WAITING" . nil))
               ("HOLD" ("PUSHED" . nil))
               ("MAYBE" ("WAITING" . nil))
-              (done ("WAITING" . nil))
+              (done ("WAITING" . nil) ("PUSHED" . nil))
               ("DONE")
               ("CANCELED")))
     
