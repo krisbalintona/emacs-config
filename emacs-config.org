@@ -2326,7 +2326,9 @@ Vertico provides several extensions:
                  :spacer #(" " 0 1 (cursor t))))))
 #+end_src
 
-** Corfu: Inline completion interface
+** In-line completion
+
+*** Corfu: In-line completion interface
 
 #+name: corfu
 #+begin_src emacs-lisp
@@ -2426,6 +2428,27 @@ Vertico provides several extensions:
     
     ;; See also `corfu-history-duplicate' and `corfu-history-decay'
     (corfu-history-mode 1))
+#+end_src
+
+*** Completion-preview: Show just the next completion candidate
+
+Note that =completion-preview= is prefix-only:
+#+name: completion-preview
+#+begin_src emacs-lisp
+  (setup completion-preview
+    
+    ;; See also `global-completion-previews'
+    (global-completion-preview-mode 1)
+
+    (:bind-keys :map completion-preview-active-mode-map
+                ("M-p" . completion-preview-prev-candidate)
+                ("M-n" . completion-preview-next-candidate)
+                ("M-i" . completion-preview-insert-word)
+                ("C-M-i" . completion-preview-complete))
+    
+    (with-eval-after-load 'completion-preview
+      (setopt completion-preview-sort-function
+              #'krisb-minibuffer-sort-by-history-then-distance)))
 #+end_src
 
 ** Customize
@@ -6889,6 +6912,9 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
 
   ;;; Corfu
   <<corfu>>
+
+  ;;; Completion-preview
+  <<completion-preview>>
 
   ;;; Electric
   <<electric>>

@@ -1360,6 +1360,22 @@ Then apply ARGS."
   ;; See also `corfu-history-duplicate' and `corfu-history-decay'
   (corfu-history-mode 1))
 
+;;; Completion-preview
+(setup completion-preview
+  
+  ;; See also `global-completion-previews'
+  (global-completion-preview-mode 1)
+
+  (:bind-keys :map completion-preview-active-mode-map
+              ("M-p" . completion-preview-prev-candidate)
+              ("M-n" . completion-preview-next-candidate)
+              ("M-i" . completion-preview-insert-word)
+              ("C-M-i" . completion-preview-complete))
+  
+  (with-eval-after-load 'completion-preview
+    (setopt completion-preview-sort-function
+            #'krisb-minibuffer-sort-by-history-then-distance)))
+
 ;;; Electric
 ;; TODO 2025-05-20: Document the user options below in the literate
 ;; config:
