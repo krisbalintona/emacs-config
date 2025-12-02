@@ -4062,6 +4062,8 @@ This section is for the major mode
 #+begin_src emacs-lisp :noweb-ref do-at-point-user-actions
   (add-to-list 'do-at-point-user-actions
                '(word (?T "Thesaurus" powerthesaurus-lookup-synonyms-dwim)))
+  (add-to-list 'do-at-point-user-actions
+               '(region (?T "Thesaurus" powerthesaurus-lookup-synonyms-dwim)))
 #+end_src
 
 ** Media management

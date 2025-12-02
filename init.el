@@ -5105,7 +5105,9 @@ which file on the system it backs up."
 
   (with-eval-after-load 'do-at-point
     (add-to-list 'do-at-point-user-actions
-                 '(word (?T "Thesaurus" powerthesaurus-lookup-synonyms-dwim)))))
+                 '(word (?T "Thesaurus" powerthesaurus-lookup-synonyms-dwim)))
+    (add-to-list 'do-at-point-user-actions
+                 '(region (?T "Thesaurus" powerthesaurus-lookup-synonyms-dwim)))))
 
 ;;; Startup time
 ;; Message for total init time after startup
