@@ -4402,9 +4402,7 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
 
 ;; Add cape functions to `completion-at-point-functions'
 (setup cape
-  (defun krisb-cape-dict-dabbrev ()
-    "Super-capf of `cape-dict' and `cape-dabbrev'."
-    (cape-wrap-super 'cape-dict 'cape-dabbrev))
+  
   ;; For Emacs >30, disable the ispell capf automatically added to
   ;; text-mode buffers.  Recommended in
   ;; https://github.com/minad/corfu?tab=readme-ov-file#configuration.
@@ -4414,7 +4412,7 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
   ;; Capfs added to the end of the global value of
   ;; `completion-at-point-functions'.  Consequently, they act as
   ;; fallback backends.
-  (dolist (capf (reverse '(cape-file cape-elisp-symbol krisb-cape-dict-dabbrev)))
+  (dolist (capf (reverse '(cape-file cape-elisp-symbol cape-dict)))
     (add-hook 'completion-at-point-functions capf))
   
   ;; Macro to help adding capfs via major mode hooks
