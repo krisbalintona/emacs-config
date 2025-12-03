@@ -3458,6 +3458,20 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
   (info-menu (eager-display t))
 #+end_src
 
+**** Which-func: Indicator for which function I'm in
+
+#+name: which-func
+#+begin_src emacs-lisp
+  ;; TODO 2025-12-03: Document:
+  ;; - `which-func-display'
+  (setup which-func
+    
+    (setopt which-func-modes '(emacs-lisp-mode diff-mode)
+            which-func-update-delay 1)
+
+    (which-function-mode 1))
+#+end_src
+
 **** Shells and compilation
 
 ***** EAT: Best terminal emulator
@@ -7362,6 +7376,9 @@ Integration with org-ql:
 
   ;;; Do-at-point
   <<do-at-point>>
+
+  ;;; Which-func
+  <<which-func>>
 
   ;;; Startup time
   <<startup-time>>

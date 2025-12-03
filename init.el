@@ -5237,6 +5237,16 @@ which file on the system it backs up."
     (add-to-list 'do-at-point-user-actions
                  '(region (?T "Thesaurus" powerthesaurus-lookup-synonyms-dwim)))))
 
+;;; Which-func
+;; TODO 2025-12-03: Document:
+;; - `which-func-display'
+(setup which-func
+  
+  (setopt which-func-modes '(emacs-lisp-mode diff-mode)
+          which-func-update-delay 1)
+
+  (which-function-mode 1))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()
