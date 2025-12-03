@@ -5222,27 +5222,20 @@ which file on the system it backs up."
   (delete-selection-mode t))
 
 ;;; Activities
-(setup activities
-  (:package activities)
 
-  (activities-mode 1)
-  (activities-tabs-mode 1)
 
-  (bind-keys ("C-c a n" . activities-new)
-             ("C-c a d" . activities-define)
-             ("C-c a r" . activities-rename)
-             ("C-c a a" . activities-resume)
-             ("C-c a s" . activities-suspend)
-             ("C-c a k" . activities-kill)
-             ("C-c a RET" . activities-switch)
-             ("C-c a b" . activities-switch-buffer)
-             ("C-c a g" . activities-revert)
-             ("C-c a l" . activities-list))
-  
-  (with-eval-after-load 'activities
-    (setopt activities-set-frame-name nil
-            activities-bookmark-warnings t
-            activities-mode-idle-frequency 7)))
+;;; Tab-bookmark
+(setup tab-bookmark
+  (:package (tab-bookmark :url "https://github.com/minad/tab-bookmark.git"))
+
+  (bind-keys ("C-c m m" . tab-bookmark)
+             ("C-c m s" . tab-bookmark-save)
+             ("C-c m r" . tab-bookmark-rename)
+             ("C-c m D" . tab-bookmark-delete)
+             ("C-c m b" . tab-bookmark-open)
+             ("C-c m o" . tab-bookmark-open)
+             ("C-c m p" . tab-bookmark-push)
+             ("C-c m P" . tab-bookmark-pop)))
 
 ;;; Inspector
 ;; Introspect list expressions.  This is similar in role to CEDET's

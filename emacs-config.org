@@ -2701,7 +2701,10 @@ Wayland specific:
     (advice-add 'desktop-restore-file-buffer :after #'krisb-desktop--restore-narrowing))
 #+end_src
 
-** Activities: Bookmarks for window configurations
+
+** COMMENT Activities: Bookmarks for window configurations
+
+*Note 2025-12-03:* I've discovered =tab-bookmarks= and now favor its simpler solution (I realized that bookmarking window configurations/tabs was all I wanted). See [[#h:20251203T041255.447488][Tab-bookmark: Bookmarks for tabs!]].
 
 #+name: activities
 #+begin_src emacs-lisp
@@ -2726,6 +2729,26 @@ Wayland specific:
       (setopt activities-set-frame-name nil
               activities-bookmark-warnings t
               activities-mode-idle-frequency 7)))
+#+end_src
+
+** Tab-bookmark: Bookmarks for tabs!
+:PROPERTIES:
+:CUSTOM_ID: h:20251203T041255.447488
+:END:
+
+#+name: tab-bookmark
+#+begin_src emacs-lisp
+  (setup tab-bookmark
+    (:package (tab-bookmark :url "https://github.com/minad/tab-bookmark.git"))
+
+    (bind-keys ("C-c m m" . tab-bookmark)
+               ("C-c m s" . tab-bookmark-save)
+               ("C-c m r" . tab-bookmark-rename)
+               ("C-c m D" . tab-bookmark-delete)
+               ("C-c m b" . tab-bookmark-open)
+               ("C-c m o" . tab-bookmark-open)
+               ("C-c m p" . tab-bookmark-push)
+               ("C-c m P" . tab-bookmark-pop)))
 #+end_src
 
 * Window control and management
@@ -7428,6 +7451,9 @@ Integration with org-ql:
 
   ;;; Activities
   <<activities>>
+
+  ;;; Tab-bookmark
+  <<tab-bookmark>>
 
   ;;; Inspector
   <<inspector>>
