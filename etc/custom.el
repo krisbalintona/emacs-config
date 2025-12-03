@@ -14,13 +14,13 @@
                 magit-popup mixed-pitch no-littering notmuch-addr
                 notmuch-bookmarks ntlm ol-notmuch olivetti on
                 orderless org-contrib org-hide-drawers org-mime
-                org-modern org-ql org-review org-roam-folgezettel
-                org-web-tools orgmdb outli package-upgrade-guard
-                paren-face persid powerthesaurus pulsar puni python
-                setup smart-mark so-long soap-client svg tablist
-                tempel timeout track-changes tramp tramp-theme try
-                use-package vc-jj verilog-mode vertico which-key
-                window-tool-bar wombag work-timer))
+                org-modern org-ql org-repeat-by-cron org-review
+                org-roam-folgezettel org-web-tools orgmdb outli
+                package-upgrade-guard paren-face persid powerthesaurus
+                pulsar puni python setup smart-mark so-long
+                soap-client svg tablist tempel timeout track-changes
+                tramp tramp-theme try use-package vc-jj verilog-mode
+                vertico which-key window-tool-bar wombag work-timer))
  '(package-vc-selected-packages
    '((org-mime :url "https://github.com/krisbalintona/org-mime.git"
                :branch "merge")
@@ -52,7 +52,8 @@
                   :branch "org-capture" :main-file
                   "lisp/org-capture.el")))
  '(safe-local-variable-directories
-   '("/home/krisbalintona/Documents/org-database/notes/notebooks/buoy/"
+   '("/home/krisbalintona/repos/hako-Testament/"
+     "/home/krisbalintona/Documents/org-database/notes/notebooks/buoy/"
      "/home/krisbalintona/Documents/org-database/notes/notebooks/"
      "/home/krisbalintona/Documents/org-database/notes/media/"
      "/home/krisbalintona/repos/guix/"
@@ -70,13 +71,14 @@
      "/home/krisbalintona/.config/guix/current/share/guile/site/3.0/"
      "/home/krisbalintona/nix-config/"))
  '(safe-local-variable-values
-   '((eval add-hook 'org-insert-heading-hook 'org-expiry-insert-created
-           nil t)
+   '((eval add-hook 'org-insert-heading-hook
+           'org-expiry-insert-created nil t)
      (eval add-hook 'before-save-hook 'org-make-toc)
      (org-use-tag-inheritance . t) (org-review-delay . "+3d")
      (eval add-hook 'org-insert-heading-hook
            'org-expiry-insert-created 99 t)
-     (org-use-tag-inheritance))))
+     (org-use-tag-inheritance)))
+ '(tramp-term-host-shells '(("epoche" . bash))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
