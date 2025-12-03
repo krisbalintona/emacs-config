@@ -1383,17 +1383,20 @@ Then apply ARGS."
 ;; - `electric-quote-string'
 ;; - `electric-quote-inhibit-functions'
 ;; - `electric-pair-delete-adjacent-pairs'
+;; - `electric-pair-pairs'
+;; - `electric-pair-text-pairs'
 ;; NOTE: 2025-05-22: For some reason lisp-mode sets these buffer
 ;; locally.  See `lisp-mode-variables'.
 ;; - `electric-pair-skip-whitespace'
 ;; - `electric-pair-open-newline-between-pairs'
 (setup electric
-
-  (setopt electric-quote-context-sensitive t
-          electric-quote-replace-double t)
-
+  
   (electric-pair-mode 1)
-  (electric-indent-mode 1))
+  (electric-indent-mode 1)
+
+  (with-eval-after-load 'electric
+    (setopt electric-quote-context-sensitive t
+            electric-quote-replace-double t)))
 
 ;;; Files
 ;; TODO 2025-11-28: Document these:
@@ -1528,6 +1531,8 @@ call `diff-buffer-with-file’ instead."
 ;; - `log-edit-setup-add-author'
 (setup log-edit
 
+  (:face log-edit-summary ((t (:family ,(face-attribute 'variable-pitch :family)))))
+  
   ;; Evaluate after log-edit defines `log-edit-hook' first, since the
   ;; hook already has several functions.  (Otherwise, we are adding to
   ;; an empty hook.)
@@ -1535,7 +1540,12 @@ call `diff-buffer-with-file’ instead."
     (add-hook 'log-edit-hook #'auto-fill-mode)
     (add-hook 'log-edit-hook #'log-edit-maybe-show-diff))
 
-  (:face log-edit-summary ((t (:family ,(face-attribute 'variable-pitch :family))))))
+  (with-eval-after-load 'log-edit
+    (defun krisb-electric-setup-log-edit ()
+      "Add to `electric-pair-text-pairs'."
+      (make-local-variable 'electric-pair-pairs)
+      (cl-pushnew '(?` . ?`) electric-pair-pairs :test #'equal))
+    (add-hook 'log-edit-mode-hook 'krisb-electric-setup-log-edit)))
 
 ;;; Outline.el
 (setup outline
