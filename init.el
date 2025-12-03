@@ -1690,9 +1690,9 @@ call `diff-buffer-with-file’ instead."
               ("DONE" . (bold org-done))
               ("CANCELED" . error))
             org-enforce-todo-dependencies t
-            org-agenda-dim-blocked-tasks t
-            ;; See also `org-trigger-hook'
-            org-todo-state-tags-triggers
+            org-agenda-dim-blocked-tasks t)
+    ;; See also `org-trigger-hook'
+    (setopt org-todo-state-tags-triggers
             '((todo)
               ("DOING" ("WAITING" . nil) ("PUSHED" . nil))
               ("NEXT" ("WAITING" . nil))
@@ -1776,7 +1776,66 @@ call `diff-buffer-with-file’ instead."
     (setopt org-tags-column 0
             org-tags-exclude-from-inheritance
             '("PROJECT" "email"
-              "__journal" "__log" "__top_of_mind"))
+              "__journal" "__log" "__top_of_mind")
+            org-use-fast-tag-selection 'auto
+            org-fast-tag-selection-single-key t)
+    ;; See also `org-todo-state-tags-triggers'
+    ;; TODO 2025-12-02: Send a patch upstream sometime
+    (el-patch-defun org-set-tags (tags)
+      "Set the tags of the current entry to TAGS, replacing current tags.
+    
+    TAGS may be a tags string like \":aa:bb:cc:\", or a list of tags.
+    If TAGS is nil or the empty string, all tags are removed.
+    
+    This function assumes point is on a headline."
+      (org-with-wide-buffer
+       (org-fold-core-ignore-modifications
+         (let ((tags (pcase tags
+                       ((pred listp) tags)
+                       ((pred stringp) (split-string (org-trim tags) ":" t))
+                       (_ (error "Invalid tag specification: %S" tags))))
+               (old-tags (org-get-tags nil t))
+               (tags-change? nil))
+           (when org-tags-sort-function
+             (setq tags (sort tags #'org-tags-sort)))
+           (setq tags-change? (not (equal tags old-tags)))
+           (when tags-change?
+             ;; Delete previous tags and any trailing white space.
+             (goto-char (if (org-match-line org-tag-line-re) (match-beginning 1)
+                          (line-end-position)))
+             (skip-chars-backward " \t")
+             (delete-region (point) (line-end-position))
+             ;; Deleting white spaces may break an otherwise empty headline.
+             ;; Re-introduce one space in this case.
+             (unless (org-at-heading-p) (insert " "))
+             (when tags
+               (save-excursion (insert-and-inherit " " (org-make-tag-string tags)))
+               ;; When text is being inserted on an invisible region
+               ;; boundary, it can be inadvertently sucked into
+               ;; invisibility.
+               (unless (org-invisible-p (line-beginning-position))
+                 (org-fold-region (point) (line-end-position) nil 'outline))))
+           ;; Align tags, if any.
+           (when (and tags org-auto-align-tags) (org-align-tags))
+           (when tags-change?
+             (el-patch-swap
+               (run-hooks 'org-after-tags-change-hook)
+               (run-hook-with-args 'org-after-tags-change-hook old-tags tags)))))))
+    
+    (defun kribs-org-inbox-tag (before-tags after-tags)
+      "Prompt to remove the NEXT_VISIBLE property when adding or removing the INBOX tag.
+    BEFORE-TAGS are the tags before the headline\\='s tags were updated and
+    AFTER-TAGS are the tags after the headline was updated.
+    
+    Meant to be added to `org-after-tags-change-hook'."
+      (let ((prop-name "NEXT_VISIBLE")
+            (inbox-tag-p (member "INBOX" (seq-union after-tags before-tags))))
+        (when (and inbox-tag-p
+                   (org-entry-get (point) prop-name)
+                   (y-or-n-p (format "Remove %s property?" prop-name)))
+          (org-entry-delete (point) prop-name)
+          (message "Removed the \"%s\" property from todo" prop-name))))
+    (add-hook 'org-after-tags-change-hook #'kribs-org-inbox-tag)
 
     ;; Properties
     (setopt org-use-property-inheritance '("CATEGORY" "ARCHIVE"))
@@ -1844,24 +1903,31 @@ call `diff-buffer-with-file’ instead."
   ;; `krisb-org-agenda-skip-org-ql', which uses org-ql.  These
   ;; functions, effectively, let me query org todos instead of with the
   ;; typical syntax.
+  (defun krisb-org-agenda-skip-timely ()
+    "Filter tasks for timely agenda."
+    (krisb-org-agenda-skip-org-ql
+     '(and (not (done))
+           (or (scheduled :to today)
+               (deadline auto)))))
+  
   (defun krisb-org-agenda-skip-focus ()
     "Filter tasks for focus agenda."
     (krisb-org-agenda-skip-org-ql
      '(and (not (done))
            (not (tags-local "PROJECT"))
-           (if (hasreview)
-               (toreview)
-             t)
+           (tosee)
            (not (tags "PUSHED"))
+           (not  (scheduled :to today))
+           (not (deadline auto))
+           (not (tags-local "REVIEW"))
            (or (todo "DOING")
-               (priority "A")
-               (scheduled :to today)
-               (deadline auto)))))
+               (priority "A")))))
   
   (defun krisb-org-agenda-skip-pushed ()
     "Filter tasks for push agenda."
     (krisb-org-agenda-skip-org-ql
      '(and (not (done))
+           (tosee)
            (tags "PUSHED"))))
   
   (defun krisb-org-agenda-skip-routine ()
@@ -1869,9 +1935,7 @@ call `diff-buffer-with-file’ instead."
     (krisb-org-agenda-skip-org-ql
      '(and (not (done))
            (not (tags-local "PROJECT" "INBOX"))
-           (if (hasreview)
-               (toreview)
-             t)
+           (tosee)
            (or (and (or (habit)
                         (path "recurring\\.org"))
                     (or (scheduled :to today)
@@ -1882,36 +1946,26 @@ call `diff-buffer-with-file’ instead."
     (krisb-org-agenda-skip-org-ql
      '(and (not (done))
            (not (tags-local "PROJECT" "INBOX"))
-           (if (hasreview)
-               (toreview)
-             t)
+           (tosee)
+           (not (tags-local "REVIEW"))
            (or (and (todo "NEXT" "TODO")
                     (not (or (scheduled)
-                             (deadline)))
-                    (if (hasreview)
-                        (toreview)
-                      t))
-               (todo "HOLD")))))
+                             (deadline))))
+               (todo "HOLD" "MAYBE")))))
   
   (defun krisb-org-agenda-skip-review ()
     "Filter tasks for review agenda."
     (krisb-org-agenda-skip-org-ql
      '(and (not (done))
-           (or (and (not (tags-local "INBOX"))
-                    (if (hasreview)
-                        (toreview)
-                      t))
-               (and (todo "HOLD")
-                    (not (hasreview)))
+           (tosee)
+           (or (toreview)
                (tags-local "REVIEW")))))
   
   (defun krisb-org-agenda-skip-inbox ()
     "Filter tasks for inbox agenda."
     (krisb-org-agenda-skip-org-ql
      '(and (not (done))
-           (if (hasreview)
-               (toreview)
-             t)
+           (tosee)
            (or (tags-local "INBOX")))))
   
   (setopt org-agenda-custom-commands
@@ -1919,12 +1973,24 @@ call `diff-buffer-with-file’ instead."
              ((agenda "")
               (alltodo "")))
             ("f" "Focus"
-             ((alltodo ""
-                      ((org-agenda-overriding-header "Focus")
-                       (org-agenda-skip-function 'krisb-org-agenda-skip-focus)))
+             ((agenda ""
+                      ((org-agenda-overriding-header "Scheduled and deadlines")
+                       (org-agenda-skip-function 'krisb-org-agenda-skip-timely)
+                       (org-agenda-span 2)
+                       (org-agenda-show-future-repeats nil)))
               (alltodo ""
-                      ((org-agenda-overriding-header "Pushed to the front")
-                       (org-agenda-skip-function 'krisb-org-agenda-skip-pushed)))))
+                       ((org-agenda-overriding-header "Focus")
+                        (org-agenda-skip-function 'krisb-org-agenda-skip-focus)))
+              (alltodo ""
+                       ((org-agenda-overriding-header "Waiting and Pings")
+                        (org-agenda-skip-function (lambda ()
+                                                    (krisb-org-agenda-skip-org-ql
+                                                     '(and (not (done))
+                                                           (tosee)
+                                                           (tags-local "WAITING")))))))
+              (alltodo ""
+                       ((org-agenda-overriding-header "Pushed to the front")
+                        (org-agenda-skip-function 'krisb-org-agenda-skip-pushed)))))
             ("r" "Radar"
              ((alltodo ""
                        ((org-agenda-overriding-header "Radar")
@@ -2566,7 +2632,7 @@ headline."
   (:package org-review)
   
   (with-eval-after-load 'org-review
-    (setopt org-review-delay "+8d"
+    (setopt org-review-delay "+1m"
             org-review-last-timestamp-format 'inactive
             org-review-next-timestamp-format 'inactive
             org-review-sets-next-date t))
@@ -2579,6 +2645,19 @@ headline."
     (bind-keys :map org-agenda-mode-map
                ("C-c r s" . org-review-insert-next-review)
                ("C-c r l" . org-review-insert-last-review))))
+
+;; Custom predicate for org-review
+(setup org-review
+  (with-eval-after-load 'org-ql
+    (:require)
+    
+    (org-ql-defpred toreview ()
+      "Match headings where `org-review-toreview-p' is non-nil."
+      :body (org-review-toreview-p))
+
+    (org-ql-defpred hasreview ()
+      "Match headings where `org-review-next-review-prop' is non-nil."
+      :body (org-review-next-review-prop))))
 
 ;; Personal extensions to org-review
 (setup org-review
@@ -2895,18 +2974,31 @@ Do not use cache when FORCE is non-nil."
               (setq prev-match-cdr (cdr prev-match-cdr)))
             (point-max)))))))
 
-;; Custom predicate for org-review
-(setup org-review
-  (with-eval-after-load 'org-ql
-    (:require)
-    
-    (org-ql-defpred toreview ()
-      "Match headings where `org-review-toreview-p' is non-nil."
-      :body (org-review-toreview-p))
+;; Custom predicates.  Inspired by org-review
+(with-eval-after-load 'org-ql
+  (let ((prop-name "NEXT_VISIBLE"))
+    (defun krisb-org-review-insert-next-visible ()
+      "Prompt the user for the date of the next review, and insert
+it as a property of the headline."
+      (interactive nil org-mode org-agenda-mode)
+      (let ((ts (format-time-string (car org-time-stamp-formats) (org-read-date nil t))))
+        (org-review-insert-date prop-name
+                                'inactive ts)))
 
-    (org-ql-defpred hasreview ()
-      "Match headings where `org-review-next-review-prop' is non-nil."
-      :body (org-review-next-review-prop))))
+    (org-ql-defpred tosee ()
+      "Match headings I should see now."
+      :body
+      (let* ((prop-val (org-entry-get (point) prop-name))
+             (next (and prop-val (org-read-date nil t prop-val))))
+        (or (not next)
+            (time-less-p next (current-time)))))
+
+    (with-eval-after-load 'org
+      (bind-keys :map org-mode-map
+                 ("C-c r v" . krisb-org-review-insert-next-visible)))
+    (with-eval-after-load 'org-agenda
+      (bind-keys :map org-agenda-mode-map
+                 ("C-c r v" . krisb-org-review-insert-next-visible)))))
 
 ;;;; Bespoke extensions
 ;; Log changes to certain properties.
