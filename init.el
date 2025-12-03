@@ -663,19 +663,20 @@ to if called with ARG, or any prefix argument."
               ("<left>" . tab-bar-history-back)
               ("<right>" . tab-bar-history-forward))
 
-  (setopt tab-bar-close-button-show nil
-          tab-bar-close-last-tab-choice 'delete-frame
-          tab-bar-new-tab-choice 'clone
-          tab-bar-select-tab-modifiers '(meta)
-          tab-bar-tab-hints t
-          tab-bar-show t
-          tab-bar-separator " "
-          tab-bar-show-inactive-group-tabs t
-          tab-bar-format
-          '(tab-bar-format-tabs-groups
-            tab-bar-separator
-            tab-bar-format-align-right
-            tab-bar-format-global))
+  (with-eval-after-load 'tab-bar
+    (setopt tab-bar-close-button-show nil
+            tab-bar-close-last-tab-choice 'delete-frame
+            tab-bar-new-tab-choice 'window
+            tab-bar-select-tab-modifiers '(meta)
+            tab-bar-tab-hints t
+            tab-bar-show t
+            tab-bar-separator " "
+            tab-bar-show-inactive-group-tabs t
+            tab-bar-format
+            '(tab-bar-format-tabs-groups
+              tab-bar-separator
+              tab-bar-format-align-right
+              tab-bar-format-global)))
 
   (tab-bar-mode 1)
   (tab-bar-history-mode 1))
@@ -1450,16 +1451,22 @@ Then apply ARGS."
 ;; - `vc-revert-show-diff'
 (setup vc
 
-  (setopt vc-follow-symlinks t
-          vc-allow-rewriting-published-history 'ask ; Emacs 31
-          vc-async-checkin t
-          vc-allow-async-diff t         ; Emacs 31
-          vc-revert-show-diff t
-          vc-find-revision-no-save t           ; Emacs 31
-          vc-dir-hide-up-to-date-on-revert t   ; Emacs 31
-          vc-dir-save-some-buffers-on-revert t ; Emacs 31
-          vc-use-incoming-outgoing-prefixes t) ; Emacs 31
+  (with-eval-after-load 'vc
+    (setopt vc-follow-symlinks t
+            vc-allow-rewriting-published-history 'ask ; Emacs 31
+            vc-async-checkin t
+            vc-allow-async-diff t       ; Emacs 31
+            vc-revert-show-diff t
+            vc-find-revision-no-save t            ; Emacs 31
+            vc-dir-hide-up-to-date-on-revert t    ; Emacs 31
+            vc-dir-save-some-buffers-on-revert t  ; Emacs 31
+            vc-use-incoming-outgoing-prefixes t)) ; Emacs 31
 
+  ;; I dislike this default
+  (with-eval-after-load 'vc
+    (remove-hook 'vc-log-finish-functions 'vc-shrink-buffer-window))
+  
+  ;; Revert version-controlled buffers
   (if (fboundp 'vc-auto-revert-mode)
       (vc-auto-revert-mode 1)           ; Emacs 31
     (global-auto-revert-mode 1))
