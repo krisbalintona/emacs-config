@@ -2742,6 +2742,33 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
   <<display-buffer-alist>>
 #+end_src
 
+* Buffer list management
+
+** Buff-menu: Simplest UI for listing buffers
+
+#+name: buff-menu
+#+begin_src emacs-lisp
+  ;; TODO 2025-12-03: Document:
+  ;; - `Buffer-menu-use-frame-buffer-list'
+  ;; - `Buffer-menu-group-sort-by'
+  (setup buff-menu
+
+    (with-eval-after-load 'buff-menu
+      (setopt Buffer-menu-human-readable-sizes t
+              Buffer-menu-group-by
+              '(Buffer-menu-group-by-root Buffer-menu-group-by-mode)))
+
+    ;; Addition to `display-buffer-alist'
+    <<buff-menu-display-buffer-alist>>)
+#+end_src
+
+#+name: buff-menu-display-buffer-alist
+#+begin_src emacs-lisp :noweb-ref display-buffer-alist
+  (add-to-list 'display-buffer-alist
+               '((major-mode . Buffer-menu-mode)
+                 (display-buffer-in-new-tab)))
+#+end_src
+
 * Mode line
 
 ** Time: Display time
@@ -7383,6 +7410,9 @@ Integration with org-ql:
 
   ;;; Which-func
   <<which-func>>
+
+  ;;; Buff-menu
+  <<buff-menu>>
 
   ;;; Startup time
   <<startup-time>>

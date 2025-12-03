@@ -5252,6 +5252,22 @@ which file on the system it backs up."
 
   (which-function-mode 1))
 
+;;; Buff-menu
+;; TODO 2025-12-03: Document:
+;; - `Buffer-menu-use-frame-buffer-list'
+;; - `Buffer-menu-group-sort-by'
+(setup buff-menu
+
+  (with-eval-after-load 'buff-menu
+    (setopt Buffer-menu-human-readable-sizes t
+            Buffer-menu-group-by
+            '(Buffer-menu-group-by-root Buffer-menu-group-by-mode)))
+
+  ;; Addition to `display-buffer-alist'
+  (add-to-list 'display-buffer-alist
+               '((major-mode . Buffer-menu-mode)
+                 (display-buffer-in-new-tab))))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()
