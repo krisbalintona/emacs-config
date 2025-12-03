@@ -2781,11 +2781,11 @@ a random date within the next DAYS days."
                       (lambda () (list (krisb-org-review--select-day)))))))
 
 ;; Adjacent to org-review: NEXT_VISIBLE
-(autoload 'krisb-org-review-insert-next-visible "org-review")
 (defun krisb-org-review-insert-next-visible ()
   "Prompt the user for the date of the next review, and insert
 it as a property of the headline."
   (interactive nil org-mode org-agenda-mode)
+  (require 'org-review)
   (let ((ts (format-time-string (car org-time-stamp-formats) (org-read-date nil t))))
     (org-review-insert-date "NEXT_VISIBLE"
                             'inactive ts)))
