@@ -3545,8 +3545,13 @@ PROP is the name of the property.  See
             bookmark-sort-flag 'last-modified)))
 
 (add-to-list 'display-buffer-alist
-             '((major-mode . bookmark-bmenu-mode)
-               (display-buffer-in-tab)))
+             ;; NOTE 2025-12-03: We also match the default buffer name
+             ;; since only matching against the major mode only works
+             ;; after bookmark.el has been loaded, for some reason.
+             ;; (Maybe related to how `derived-mode-p' works?)
+             '((or "\\*Bookmark List\\*"
+                   (major-mode . bookmark-bmenu-mode))
+               (display-buffer-in-new-tab)))
 
 ;;; Desktop
 ;; TODO 2025-05-20: Document in literate configuration prose.

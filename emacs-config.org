@@ -2626,8 +2626,13 @@ Wayland specific:
 #+name: bookmark-display-buffer-alist
 #+begin_src emacs-lisp :noweb-ref display-buffer-alist
   (add-to-list 'display-buffer-alist
-               '((major-mode . bookmark-bmenu-mode)
-                 (display-buffer-in-tab)))
+               ;; NOTE 2025-12-03: We also match the default buffer name
+               ;; since only matching against the major mode only works
+               ;; after bookmark.el has been loaded, for some reason.
+               ;; (Maybe related to how `derived-mode-p' works?)
+               '((or "\\*Bookmark List\\*"
+                     (major-mode . bookmark-bmenu-mode))
+                 (display-buffer-in-new-tab)))
 #+end_src
 
 ** Desktop: Reopen buffers
