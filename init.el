@@ -719,7 +719,7 @@ to if called with ARG, or any prefix argument."
             ;; We include `partial-completion' to enable wildcards and
             ;; partial paths (when `completion-pcm-leading-wildcard'
             ;; is non-nil)
-            (file (styles . (substring partial-completion))
+            (file (styles . (partial-completion))
                   (eager-display . t))
             (kill-ring (styles . (orderless-literal-and-prefixes)))
             (imenu (eager-display . t))
@@ -923,7 +923,7 @@ ending the minibuffer session. (This is equivalent to the behavior of
             '(orderless-regexp
               orderless-prefixes
               orderless-initialism
-              ;; orderless-literal
+              orderless-literal
               ;; orderless-literal-prefix
               ;; orderless-flex
               )))

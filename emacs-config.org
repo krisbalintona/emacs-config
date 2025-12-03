@@ -1829,7 +1829,7 @@ Settings for the filtering of completion candidates, regardless of the completio
               ;; We include `partial-completion' to enable wildcards and
               ;; partial paths (when `completion-pcm-leading-wildcard'
               ;; is non-nil)
-              (file (styles . (substring partial-completion))
+              (file (styles . (partial-completion))
                     (eager-display . t))
               (kill-ring (styles . (orderless-literal-and-prefixes)))
               <<completion-category-overrides>>))
@@ -2017,7 +2017,7 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
               '(orderless-regexp
                 orderless-prefixes
                 orderless-initialism
-                ;; orderless-literal
+                orderless-literal
                 ;; orderless-literal-prefix
                 ;; orderless-flex
                 )))
