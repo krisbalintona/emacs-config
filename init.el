@@ -1665,6 +1665,7 @@ call `diff-buffer-with-file’ instead."
   (with-eval-after-load 'org
     (add-hook 'org-mode-hook #'variable-pitch-mode)
     (add-hook 'org-mode-hook #'visual-line-mode)
+    (add-hook 'org-mode-hook #'visual-wrap-prefix-mode)
     (add-hook 'org-mode-hook (lambda ()
                                (setq-local line-spacing 0.2
                                            fill-column 100))))
