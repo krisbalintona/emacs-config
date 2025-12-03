@@ -1210,8 +1210,7 @@ Then apply ARGS."
   (with-eval-after-load 'help
     (add-to-list 'display-buffer-alist
                  '((major-mode . help-mode)
-                   (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
-                   (window-height . shrink-window-if-larger-than-buffer)))))
+                   (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)))))
 
 ;;; Apropos
 (setup apropos

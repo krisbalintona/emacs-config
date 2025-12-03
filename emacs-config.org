@@ -3718,8 +3718,7 @@ Tell ~display-buffer-alist~ where to show help buffers:
 #+begin_src emacs-lisp :noweb-ref display-buffer-alist
   (add-to-list 'display-buffer-alist
                '((major-mode . help-mode)
-                 (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)
-                 (window-height . shrink-window-if-larger-than-buffer)))
+                 (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)))
 #+end_src
 
 ***** Apropos: Discover meaningful lisp symbols
