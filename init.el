@@ -2284,9 +2284,11 @@ inserted with e.g. `org-insert-last-stored-link' or
   (:if-package org)
   
   (setopt org-refile-targets
-          '((org-agenda-files . (:tag . "PROJECT"))
-            (org-agenda-files . (:level . 1))
+          '((org-agenda-files . (:maxlevel . 3))
+            (org-agenda-files . (:tag . "PROJECT"))
             (nil . (:maxlevel . 4)))
+          org-outline-path-complete-in-steps nil
+          org-refile-use-outline-path 'title
           ;; TODO 2024-10-07: Think about whether I actually want this.  What
           ;; if I want to refile to a non-todo heading in the current file?
           ;; (org-refile-target-verify-function ; Only let not done todos be refile targets
