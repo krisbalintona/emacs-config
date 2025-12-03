@@ -1239,8 +1239,11 @@ Then apply ARGS."
     ;; Trust content from my Emacs directory and the Guix store (where
     ;; Guix installs Emacs source files).  (Directory paths must end
     ;; in "/".)
-    (add-to-list 'trusted-content user-emacs-directory)
     (add-to-list 'trusted-content "/gnu/store/")
+    ;; TODO 2025-12-03: Looks like the file names in this option must
+    ;; be abbreviated (look at `trusted-content-p').  Send a bug
+    ;; report
+    (add-to-list 'trusted-content (abbreviate-file-name user-emacs-directory))
     (add-to-list 'trusted-content "~/emacs-repos/")))
 
 ;;; Elisp-demos
