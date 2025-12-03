@@ -1362,9 +1362,6 @@ Then apply ARGS."
 ;;; Completion-preview
 (setup completion-preview
   
-  ;; See also `global-completion-previews'
-  (global-completion-preview-mode 1)
-
   (:bind-keys :map completion-preview-active-mode-map
               ("M-p" . completion-preview-prev-candidate)
               ("M-n" . completion-preview-next-candidate)
