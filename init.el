@@ -1233,8 +1233,15 @@ Then apply ARGS."
 ;;; Elisp-mode
 (setup elisp-mode
   
+  ;; Emacs 31: semantic highlighting
   (with-eval-after-load 'elisp-mode
-    (setopt elisp-fontify-semantically t))) ; Emacs 31
+    (setopt elisp-fontify-semantically t)
+    ;; Trust content from my Emacs directory and the Guix store (where
+    ;; Guix installs Emacs source files).  (Directory paths must end
+    ;; in "/".)
+    (add-to-list 'trusted-content user-emacs-directory)
+    (add-to-list 'trusted-content "/gnu/store/")
+    (add-to-list 'trusted-content "~/emacs-repos/")))
 
 ;;; Elisp-demos
 ;; Add example code snippets to some of the help windows
@@ -4648,6 +4655,18 @@ completion at point function."
   (with-eval-after-load 'project
     (setopt project-mode-line t
             project-mode-line-face 'italic))
+  ;; TODO 2025-12-03: Try to get this fixed upstream?
+  ;; Set `project-mode-line' specially in Guix store directories
+  (defun krisb-guix-project-mode-line ()
+    "Set `project-mode-line' to nil inside Guix store.
+  When `project-mode-line' is non-nil and the user is inside the Guix
+  store (/gnu/store/), project.el continuously attempts to find the
+  project the file belongs to.  This calculation is expensive in deep file
+  paths, since `locate-dominating-file', an expensive function, is called
+  many times.  So we set that setting to nil in such buffers."
+    (when (and (buffer-file-name) (string-match-p "^/gnu/store/" (buffer-file-name)))
+      (setq-local project-mode-line nil)))
+  (add-hook 'find-file-hook #'krisb-guix-project-mode-line)
 
   ;; Keybindings
   (with-eval-after-load 'project
