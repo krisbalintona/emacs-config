@@ -2610,6 +2610,15 @@ Wayland specific:
     (with-eval-after-load 'bookmark
       (setopt bookmark-save-flag 1
               bookmark-sort-flag 'last-modified)))
+
+  <<bookmark-display-buffer-alist>>
+#+end_src
+
+#+name: bookmark-display-buffer-alist
+#+begin_src emacs-lisp :noweb-ref display-buffer-alist
+  (add-to-list 'display-buffer-alist
+               '((major-mode . bookmark-bmenu-mode)
+                 (display-buffer-in-tab)))
 #+end_src
 
 ** Desktop: Reopen buffers

@@ -3521,6 +3521,10 @@ PROP is the name of the property.  See
     (setopt bookmark-save-flag 1
             bookmark-sort-flag 'last-modified)))
 
+(add-to-list 'display-buffer-alist
+             '((major-mode . bookmark-bmenu-mode)
+               (display-buffer-in-tab)))
+
 ;;; Desktop
 ;; TODO 2025-05-20: Document in literate configuration prose.
 ;; See also `desktop-locals-to-save'
