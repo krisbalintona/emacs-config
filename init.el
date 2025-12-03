@@ -5294,6 +5294,30 @@ which file on the system it backs up."
                '((major-mode . Buffer-menu-mode)
                  (display-buffer-in-new-tab))))
 
+;;; `mode-line-format'
+;; TODO 2025-12-03: Document also:
+;; - `mode-line-compact'
+;; - `mode-line-percent-position'
+;; - `mode-line-percent-position'
+;; - `mode-line-position-line-format'
+;; - `mode-line-position-column-line-format'
+(setopt mode-line-right-align-edge 'right-fringe
+        ;; TODO 2025-07-10: Ask on emacs-devel why this isn't a
+        ;; defcustom.
+        mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis)
+        mode-line-format
+        '("%e" mode-line-front-space
+          ("" mode-line-mule-info mode-line-client mode-line-modified mode-line-remote mode-line-window-dedicated)
+          mode-line-frame-identification
+          mode-line-buffer-identification "   "
+          mode-line-position
+          mode-line-format-right-align
+          (project-mode-line project-mode-line-format)
+          (vc-mode vc-mode) "  "
+          mode-line-modes
+          mode-line-misc-info
+          mode-line-end-spaces))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

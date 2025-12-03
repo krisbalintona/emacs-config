@@ -533,11 +533,6 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
   :demand t
   :ensure (:repo "https://github.com/rougier/mode-line-maker")
   :custom
-  (mode-line-compact 'long) ; Emacs 28
-  (mode-line-right-align-edge 'right-fringe)
-  (mode-line-percent-position '(-3 "%p")) ; Don't show percentage of position in buffer
-  (mode-line-position-line-format '(" %l"))
-  (mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
   (mode-line-format (mode-line-maker
                      '("%e" mode-line-front-space
                        (:propertize
@@ -554,9 +549,6 @@ Taken from https://karthinks.com/software/avy-can-do-anything/."
                        mode-line-end-spaces)))
   (fringes-outside-margins t)
   :config
-  ;; TODO 2025-07-10: Ask on emacs-devel why this isn't a defcustom.
-  (setq mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis))
-
   ;; Add segments to `global-mode-string'
   (add-to-list 'global-mode-string '(vc-mode (:eval (concat vc-mode " ")))))
 
