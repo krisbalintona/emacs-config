@@ -5279,10 +5279,9 @@ which file on the system it backs up."
 ;; - `Buffer-menu-group-sort-by'
 (setup buff-menu
 
-  (with-eval-after-load 'buff-menu
-    (setopt Buffer-menu-human-readable-sizes t
-            Buffer-menu-group-by
-            '(Buffer-menu-group-by-root Buffer-menu-group-by-mode)))
+  (setopt Buffer-menu-human-readable-sizes t
+          Buffer-menu-group-by
+          '(Buffer-menu-group-by-root Buffer-menu-group-by-mode))
 
   ;; Addition to `display-buffer-alist'
   (add-to-list 'display-buffer-alist
