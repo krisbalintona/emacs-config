@@ -2759,6 +2759,24 @@ a random date within the next DAYS days."
                       ;; Must return a list (of arguments)
                       (lambda () (list (krisb-org-review--select-day)))))))
 
+
+;; Adjacent to org-review: NEXT_VISIBLE
+(defun krisb-org-review-insert-next-visible ()
+  "Prompt the user for the date of the next review, and insert
+it as a property of the headline."
+  (interactive nil org-mode org-agenda-mode)
+  (require 'org-review)
+  (let ((ts (format-time-string (car org-time-stamp-formats) (org-read-date nil t))))
+    (org-review-insert-date "NEXT_VISIBLE"
+                            'inactive ts)))
+
+(with-eval-after-load 'org
+  (bind-keys :map org-mode-map
+             ("C-c r v" . krisb-org-review-insert-next-visible)))
+(with-eval-after-load 'org-agenda
+  (bind-keys :map org-agenda-mode-map
+             ("C-c r v" . krisb-org-review-insert-next-visible)))
+
 ;;;;; Org-repeat-by-cron
 (setup org-repeat-by-cron
   (:package org-repeat-by-cron)
@@ -2991,29 +3009,13 @@ Do not use cache when FORCE is non-nil."
 
 ;; Custom predicates.  Inspired by org-review
 (with-eval-after-load 'org-ql
-  (let ((prop-name "NEXT_VISIBLE"))
-    (defun krisb-org-review-insert-next-visible ()
-      "Prompt the user for the date of the next review, and insert
-it as a property of the headline."
-      (interactive nil org-mode org-agenda-mode)
-      (let ((ts (format-time-string (car org-time-stamp-formats) (org-read-date nil t))))
-        (org-review-insert-date prop-name
-                                'inactive ts)))
-
-    (org-ql-defpred tosee ()
-      "Match headings I should see now."
-      :body
-      (let* ((prop-val (org-entry-get (point) prop-name))
-             (next (and prop-val (org-read-date nil t prop-val))))
-        (or (not next)
-            (time-less-p next (current-time)))))
-
-    (with-eval-after-load 'org
-      (bind-keys :map org-mode-map
-                 ("C-c r v" . krisb-org-review-insert-next-visible)))
-    (with-eval-after-load 'org-agenda
-      (bind-keys :map org-agenda-mode-map
-                 ("C-c r v" . krisb-org-review-insert-next-visible)))))
+  (org-ql-defpred tosee ()
+    "Match headings I should see now."
+    :body
+    (let* ((prop-val (org-entry-get (point) "NEXT_VISIBLE"))
+           (next (and prop-val (org-read-date nil t prop-val))))
+      (or (not next)
+          (time-less-p next (current-time))))))
 
 ;;;; Bespoke extensions
 ;; Log changes to certain properties.
