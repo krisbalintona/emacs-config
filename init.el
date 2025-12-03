@@ -2295,22 +2295,23 @@ inserted with e.g. `org-insert-last-stored-link' or
           org-refile-allow-creating-parent-nodes 'confirm))
 
 (setup org-refile
-  (with-eval-after-load 'vertico
-    ;; Workaround for vertico issue with `org-refile'.  See
-    ;; https://github.com/minad/vertico#org-refile
-    (setopt org-refile-use-outline-path 'file
-            org-outline-path-complete-in-steps t)
-    (defun krisb-vertico-enforce-basic-completion (&rest args)
-      (minibuffer-with-setup-hook
-          (:append
-           (lambda ()
-             (let ((map (make-sparse-keymap)))
-               (define-key map [tab] #'minibuffer-complete)
-               (use-local-map (make-composed-keymap (list map) (current-local-map))))
-             (setq-local completion-styles (cons 'basic completion-styles)
-                         vertico-preselect 'prompt)))
-        (apply args)))
-    (advice-add #'org-olpath-completing-read :around #'krisb-vertico-enforce-basic-completion)))
+  (when (eq krisb-completion-paradigm 'vertico)
+    (with-eval-after-load 'vertico
+      ;; Workaround for vertico issue with `org-refile'.  See
+      ;; https://github.com/minad/vertico#org-refile
+      (setopt org-refile-use-outline-path 'file
+              org-outline-path-complete-in-steps t)
+      (defun krisb-vertico-enforce-basic-completion (&rest args)
+        (minibuffer-with-setup-hook
+            (:append
+             (lambda ()
+               (let ((map (make-sparse-keymap)))
+                 (define-key map [tab] #'minibuffer-complete)
+                 (use-local-map (make-composed-keymap (list map) (current-local-map))))
+               (setq-local completion-styles (cons 'basic completion-styles)
+                           vertico-preselect 'prompt)))
+          (apply args)))
+      (advice-add #'org-olpath-completing-read :around #'krisb-vertico-enforce-basic-completion))))
 
 ;;;; Other org packages
 ;;;;; Org-contrib
