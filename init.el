@@ -2031,7 +2031,7 @@ call `diff-buffer-with-file’ instead."
 
   (setopt org-capture-use-agenda-date t)
 
-  ;; Helperes for `org-capture-templates'
+  ;; Helpers for `org-capture-templates'
   (defun krisb-org-capture--org-node-by-tags (tags)
     "Interactively prompt for an org-node candidate matching TAGS.
 TAGS is a list of regexps that match org-node tags.
@@ -2053,14 +2053,31 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
 
   ;; See also `org-capture-templates-contexts'
   (setopt org-capture-templates
-          '(("t" "Todo" entry
+          `(("t" "Todo" entry
              (file krisb-org-agenda-main-file)
              "* TODO %? :INBOX:%^g\n"
              :empty-lines 1)
             ("T" "Todo (without processing)" entry
              (file krisb-org-agenda-main-file)
              "* TODO %? %^g\n"
-             :empty-lines 1)
+             :empty-lines 1
+             :prepare-finalize (lambda ()
+                                 (message "Insert NEXT_VISIBLE")
+                                 (krisb-org-review-insert-next-visible)
+                                 (message "Insert NEXT_REVIEW")
+                                 (org-review-insert-next-review)))
+            ("c" "Coding projects and contributions" entry
+             (file (lambda () (expand-file-name "coding_projects.org" krisb-org-agenda-directory)))
+             "* TODO %? %^g\n"
+             :empty-lines 1
+             :refile-targets
+             ((,(expand-file-name "coding_projects.org" krisb-org-agenda-directory)
+               . (:level . 1)))
+             :prepare-finalize (lambda ()
+                                 (message "Insert NEXT_VISIBLE")
+                                 (krisb-org-review-insert-next-visible)
+                                 (message "Insert NEXT_REVIEW")
+                                 (org-review-insert-next-review)))
             ("j" "Journal" entry
              (file+olp+datetree
               (lambda ()
@@ -2163,7 +2180,7 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
 #+hugo_paired_shortcodes:\n\n%?"
              :jump-to-captured t
              :immediate-finish t)
-            ("g" "Game review" entry
+            ("g" "LoL match review" entry
              (file+olp+datetree
               (lambda ()
                 (let* ((candidate-ids
@@ -2762,13 +2779,12 @@ a random date within the next DAYS days."
                       ;; Must return a list (of arguments)
                       (lambda () (list (krisb-org-review--select-day)))))))
 
-
 ;; Adjacent to org-review: NEXT_VISIBLE
+(autoload 'krisb-org-review-insert-next-visible "org-review")
 (defun krisb-org-review-insert-next-visible ()
   "Prompt the user for the date of the next review, and insert
 it as a property of the headline."
   (interactive nil org-mode org-agenda-mode)
-  (require 'org-review)
   (let ((ts (format-time-string (car org-time-stamp-formats) (org-read-date nil t))))
     (org-review-insert-date "NEXT_VISIBLE"
                             'inactive ts)))
