@@ -1995,7 +1995,8 @@ call `diff-buffer-with-file’ instead."
                                                     (krisb-org-agenda-skip-org-ql
                                                      '(and (not (done))
                                                            (tosee)
-                                                           (tags-local "WAITING")))))))
+                                                           (or (tags-local "PING")
+                                                               (tags-local "WAITING"))))))))
               (alltodo ""
                        ((org-agenda-overriding-header "Pushed to the front")
                         (org-agenda-skip-function 'krisb-org-agenda-skip-pushed)))))
