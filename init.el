@@ -2752,6 +2752,13 @@ a random date within the next DAYS days."
                       ;; Must return a list (of arguments)
                       (lambda () (list (krisb-org-review--select-day)))))))
 
+;;;;; Org-repeat-by-cron
+(setup org-repeat-by-cron
+  (:package org-repeat-by-cron)
+  
+  (with-eval-after-load 'org
+    (global-org-repeat-by-cron-mode)))
+
 ;;;;; Org-hide-drawers
 ;; Make org drawers less visually obtrusive.
 (setup org-hide-drawers

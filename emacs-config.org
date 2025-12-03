@@ -7135,6 +7135,9 @@ Integration with org-ql:
   ;;;;; Org-review
   <<org-review>>
 
+  ;;;;; Org-repeat-by-cron
+  <<org-repeat-by-cron>>
+
   ;;;;; Org-hide-drawers
   <<org-hide-drawers>>
 
