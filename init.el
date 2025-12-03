@@ -2631,8 +2631,7 @@ headline."
   (with-eval-after-load 'org-web-tools
     (setopt org-web-tools-pandoc-replacements
             (add-to-list 'org-web-tools-pandoc-replacements
-                         ;; Middle dot, specified in unicode
-                         '("\u00b7" . "|"))))
+                         `(,(rx "·") . "|"))))
 
   ;; Open then go into `view-mode'
   (with-eval-after-load 'org-web-tools
