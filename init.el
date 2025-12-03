@@ -4607,9 +4607,11 @@ functionality."
                  (_
                   '(log-edit-mode ?` ?`)))))
       (setq-local cape-elisp-symbol-wrapper
-                  (cl-substitute new 'log-edit-mode
+                  (if (boundp 'cape-elisp-symbol-wrapper)
+                      (cl-substitute new 'log-edit-mode
                                  cape-elisp-symbol-wrapper
-                                 :key #'car :test #'equal))))
+                                 :key #'car :test #'equal)
+                    (list new)))))
 
   (krisb-cape-setup-capfs
     "shells"
