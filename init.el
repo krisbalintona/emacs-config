@@ -5256,7 +5256,19 @@ which file on the system it backs up."
 ;; edebug (see
 ;; https://github.com/mmontone/emacs-inspector?tab=readme-ov-file#from-the-emacs-debugger).
 (setup inspector
-  (:package inspector))
+  (:package inspector)
+
+  (with-eval-after-load 'inspector
+    (setopt inspector-switch-to-buffer nil))) ; Use `display-buffer'
+
+(add-to-list 'display-buffer-alist
+             '((major-mode . inspector-mode)
+               nil
+               (post-command-select-window . t)))
+(add-to-list 'display-buffer-alist
+             '("\\*Inspector pprint"
+               (display-buffer-below-selected)
+               (post-command-select-window . t)))
 
 ;;; Do-at-point
 (setup do-at-point
