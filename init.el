@@ -5266,7 +5266,16 @@ which file on the system it backs up."
   (:package inspector)
 
   (with-eval-after-load 'inspector
-    (setopt inspector-switch-to-buffer nil))) ; Use `display-buffer'
+    (setopt inspector-switch-to-buffer nil)) ; Use `display-buffer'
+
+  (defun krisb-eval-expression (arg)
+    "Call `eval-expression' unless called with the `-' prefix argument.
+When called with `-' instead call `inspector-inspect-expression'."
+    (interactive "P")
+    (call-interactively (if (eq arg '-)
+                            'inspector-inspect-expression
+                          'eval-expression)))
+  (bind-key [remap eval-expression] #'krisb-eval-expression))
 
 (add-to-list 'display-buffer-alist
              '((major-mode . inspector-mode)

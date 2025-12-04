@@ -3942,7 +3942,16 @@ Consequently, the elisp backend is used if there is no other local backend to us
     (:package inspector)
 
     (with-eval-after-load 'inspector
-      (setopt inspector-switch-to-buffer nil))) ; Use `display-buffer'
+      (setopt inspector-switch-to-buffer nil)) ; Use `display-buffer'
+
+    (defun krisb-eval-expression (arg)
+      "Call `eval-expression' unless called with the `-' prefix argument.
+  When called with `-' instead call `inspector-inspect-expression'."
+      (interactive "P")
+      (call-interactively (if (eq arg '-)
+                              'inspector-inspect-expression
+                            'eval-expression)))
+    (bind-key [remap eval-expression] #'krisb-eval-expression))
 
   <<inspector-display-buffer-alist>>
 #+end_src
