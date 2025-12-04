@@ -2355,14 +2355,14 @@ inserted with e.g. `org-insert-last-stored-link' or
   (:package org-contrib))
 
 ;;;;; Org-modern
+;; TODO 2025-12-03: Document
+;; - `org-modern-agenda'
 (setup org-modern
   (:package org-modern)
 
   (with-eval-after-load 'org
     (add-hook 'org-mode-hook #'org-modern-mode))
-  (with-eval-after-load 'org-agenda
-    (add-hook 'org-agenda-finalize-hook #'org-modern-agenda))
-
+  
   (with-eval-after-load 'org-modern
     ;; Keywords
     (setopt org-modern-keyword nil)

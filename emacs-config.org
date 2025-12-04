@@ -887,14 +887,14 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
 
 #+name: org-modern
 #+begin_src emacs-lisp
+  ;; TODO 2025-12-03: Document
+  ;; - `org-modern-agenda'
   (setup org-modern
     (:package org-modern)
 
     (with-eval-after-load 'org
       (add-hook 'org-mode-hook #'org-modern-mode))
-    (with-eval-after-load 'org-agenda
-      (add-hook 'org-agenda-finalize-hook #'org-modern-agenda))
-
+    
     (with-eval-after-load 'org-modern
       ;; Keywords
       (setopt org-modern-keyword nil)
