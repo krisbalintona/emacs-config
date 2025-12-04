@@ -724,7 +724,6 @@ to if called with ARG, or any prefix argument."
                   (eager-display . t))
             (kill-ring (styles . (orderless-literal-and-prefixes)))
             (imenu (eager-display . t))
-            ;; Consult-specific category overrides
             (consult-outline (styles . (orderless-literal-and-prefixes)))
             (consult-location (eager-display . t)
                               (eager-update . t))
@@ -734,6 +733,7 @@ to if called with ARG, or any prefix argument."
             (consult-info (eager-display . nil)
                           (eager-update . t))
             (recentf (eager-display . t))
+            (bookmark (eager-display . t))
             (project-file (eager-display . t))
             ;; For tempel `citar-at-point-function's and commands
             (tempel (eager-display . t))

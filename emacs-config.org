@@ -1575,7 +1575,6 @@ See also ~(elisp) Beeping~.
 
 Consult-specific completion category overrides:
 #+begin_src emacs-lisp :noweb-ref completion-category-overrides
-  ;; Consult-specific category overrides
   (consult-outline (styles . (orderless-literal-and-prefixes)))
   (consult-location (eager-display . t)
                     (eager-update . t))
@@ -2639,6 +2638,10 @@ Wayland specific:
                '((or "\\*Bookmark List\\*"
                      (major-mode . bookmark-bmenu-mode))
                  (display-buffer-in-new-tab)))
+#+end_src
+
+#+begin_src emacs-lisp :noweb-ref completion-category-overrides
+  (bookmark (eager-display . t))
 #+end_src
 
 ** Desktop: Reopen buffers
