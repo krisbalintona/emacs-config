@@ -1575,6 +1575,7 @@ call `diff-buffer-with-file’ instead."
 
   (add-hook 'prog-mode-hook #'hs-minor-mode)
   (add-hook 'conf-mode-hook #'hs-minor-mode)
+  (:hide-mode hs-minor-mode)
   
   ;; See also `hs-hide-block-behavior' and `hs-display-lines-hidden'
   (with-eval-after-load 'hideshow
