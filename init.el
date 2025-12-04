@@ -322,6 +322,7 @@ package-archives, e.g. \"gnu\")."))
 (setup emacs
   ;; Always load newest byte code
   (setopt load-prefer-newer t)
+  
   ;; Enable all disabled commands
   (setopt disabled-command-function nil)
   
@@ -372,7 +373,8 @@ package-archives, e.g. \"gnu\")."))
   ;; Follow symlinks when opening files
   (setopt find-file-visit-truename t)
   
-  ;; Move files into trash directory
+  ;; Move files into trash directory.  See also
+  ;; `remote-file-name-inhibit-delete-by-moving-to-trash'
   (setopt trash-directory (no-littering-expand-var-file-name "trash")
           delete-by-moving-to-trash t) ; See also `remote-file-name-inhibit-delete-by-moving-to-trash'
   
@@ -426,7 +428,9 @@ package-archives, e.g. \"gnu\")."))
     (setq-local sentence-end-double-space
                 (cond ((derived-mode-p '(prog-mode conf-mode log-edit-mode)) t)
                       ((derived-mode-p '(text-mode wombag-show-mode)) nil))))
-  (add-hook 'after-change-major-mode-hook #'krisb-sentence-end-double-space-setup))
+  (add-hook 'after-change-major-mode-hook #'krisb-sentence-end-double-space-setup)
+  
+  (setopt shell-command-prompt-show-cwd t))
 
 ;;; Custom
 ;;; Set and load custom file
@@ -1125,9 +1129,11 @@ Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
 ;; - `auto-save-include-big-deletions’
 ;; - `delete-auto-save-files’ and
 ;;   `kill-buffer-delete-auto-save-files’
-;; - `remote-file-name-inhibit-auto-save-visited’
 ;; TODO 2025-05-23: Note that auto-save is distinct from
 ;; `auto-save-visited-mode’
+;; 
+;; See also `remote-file-name-inhibit-auto-save' and
+;; `remote-file-name-inhibit-auto-save-visited'
 (setup files
 
   (setopt auto-save-default t ; Only a local minor mode exists; this variable influences the global value
@@ -1406,10 +1412,6 @@ Then apply ARGS."
             electric-quote-replace-double t)))
 
 ;;; Files
-;; TODO 2025-11-28: Document these:
-;; - For auto-save-visited: `remote-file-name-inhibit-auto-save-visited'
-;; - For trash: `remote-file-name-inhibit-delete-by-moving-to-trash'
-;; - For auto-save: `remote-file-name-inhibit-auto-save'
 (setup files
   
   (with-eval-after-load 'files
@@ -1417,6 +1419,11 @@ Then apply ARGS."
             ;; Disables aggressive caching that slows Dired/Magit;
             ;; test and toggle if needed.
             remote-file-name-inhibit-cache nil
+
+            remote-file-name-inhibit-auto-save-visited nil
+            remote-file-name-inhibit-auto-save nil
+            remote-file-name-inhibit-delete-by-moving-to-trash t
+            
             ;; Set a timeout to prevent the failure to access files to
             ;; indefinitely bloc Emacs
             remote-file-name-access-timeout 10)))
@@ -1432,7 +1439,11 @@ Then apply ARGS."
   (:hide-mode auto-revert-mode)
 
   (setopt auto-revert-interval 3
-          global-auto-revert-non-file-buffers t))
+          global-auto-revert-non-file-buffers t)
+
+  ;; Revert remote files too.  See also
+  ;; `remote-file-name-inhibit-auto-save-visited'
+  (setopt auto-revert-remote-files t))
 
 ;;; Newcomment
 ;; TODO 2025-05-20: Document the user options below in the literate
@@ -1488,12 +1499,6 @@ call `diff-buffer-with-file’ instead."
         (diff-buffer-with-file (current-buffer))
       (vc-diff)))
   (:bind-keys ([remap vc-diff] . krisb-vc-diff-dwim)))
-
-;; Don't do VC operations inside remote files
-(with-eval-after-load 'vc
-  (setopt vc-ignore-dir-regexp
-          (rx (or (group (regexp vc-ignore-dir-regexp))
-                  (group (regexp tramp-file-name-regexp))))))
 
 ;;;; Vc-git
 ;; TODO 2025-07-10: Document:
@@ -3141,7 +3146,7 @@ PROP is the name of the property.  See
       '("Netflix" "Hulu" "Disney+" "Tubi" ":ETC")))
   (add-to-list 'org-property-allowed-value-functions #'krisb-org-property-allowed-platform))
 
-;;; TRAMP
+;;; Tramp
 ;; TODO 2025-11-28: Document this:
 ;; - `tramp-verbose'
 ;; - `tramp-syntax' - See (info "(tramp) Change file name syntax")
@@ -3151,10 +3156,11 @@ PROP is the name of the property.  See
   ;; "(tramp) Frequently Asked Questions").  Many/most of the
   ;; selections below were taken from there.
   (with-eval-after-load 'tramp
-    ;; Only see warnings and errors.  I change this on-the-fly if I
-    ;; need to debug
-    (setopt tramp-verbose 2
-            tramp-default-remote-shell "/bin/bash")
+    (setopt tramp-verbose 4
+            ;; 2025-12-06: Increase the cutoff to use external
+            ;; methods.  Recommendation taken from testing of
+            ;; https://coredumped.dev/2025/06/18/making-tramp-go-brrrr./
+            tramp-copy-size-limit (* 1024 1024)) ; 1MB
 
     ;; FIXME 2025-11-30: Not sure why this "davs"is causing problems
     ;; for me... disable it for now.
@@ -3192,7 +3198,20 @@ PROP is the name of the property.  See
      '((dired-check-symlinks . nil)))
     (connection-local-set-profiles
      '(:application tramp :machine "epoche")
-     'dired-no-symlink)))
+     'dired-no-symlink))
+
+  ;; Guix-specific
+  ;; Add the user's load path to `tramp-remote-path' so that TRAMP can
+  ;; search the directories Guix adds to PATH
+  (with-eval-after-load 'tramp
+    (add-to-list 'tramp-remote-path 'tramp-own-remote-path)))
+
+;;; Tramp-hlo
+(setup tramp-hlo
+  (:package (tramp-hlo :url "https://github.com/jsadusk/tramp-hlo.git"))
+  
+  (with-eval-after-load 'tramp
+    (tramp-hlo-setup)))
 
 ;;; Tramp-theme
 ;; NOTE: I learned about this package from (info "(tramp) Frequently

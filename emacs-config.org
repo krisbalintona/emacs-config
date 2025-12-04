@@ -25,7 +25,7 @@ See also the useful command ~org-babel-goto-named-src-block~ and other useful co
 
 ** Always load newest byte code
 
-#+begin_src emacs-lisp :noweb-ref emacs-misc
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   ;; Always load newest byte code
   (setopt load-prefer-newer t)
 #+end_src
@@ -1179,7 +1179,8 @@ See also ~(elisp) Beeping~.
 ** Trash
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Move files into trash directory
+  ;; Move files into trash directory.  See also
+  ;; `remote-file-name-inhibit-delete-by-moving-to-trash'
   (setopt trash-directory (no-littering-expand-var-file-name "trash")
           delete-by-moving-to-trash t) ; See also `remote-file-name-inhibit-delete-by-moving-to-trash'
 
@@ -1202,9 +1203,11 @@ See also ~(elisp) Beeping~.
   ;; - `auto-save-include-big-deletions’
   ;; - `delete-auto-save-files’ and
   ;;   `kill-buffer-delete-auto-save-files’
-  ;; - `remote-file-name-inhibit-auto-save-visited’
   ;; TODO 2025-05-23: Note that auto-save is distinct from
   ;; `auto-save-visited-mode’
+  ;; 
+  ;; See also `remote-file-name-inhibit-auto-save' and
+  ;; `remote-file-name-inhibit-auto-save-visited'
   (setup files
 
     (setopt auto-save-default t ; Only a local minor mode exists; this variable influences the global value
@@ -1340,7 +1343,9 @@ See also ~(elisp) Beeping~.
     (:hide-mode auto-revert-mode)
 
     (setopt auto-revert-interval 3
-            global-auto-revert-non-file-buffers t))
+            global-auto-revert-non-file-buffers t)
+
+    <<auto-revert-remote-files>>)
 #+end_src
 
 ** Disable lock files
@@ -1650,8 +1655,6 @@ Consult-specific completion category overrides:
           (diff-buffer-with-file (current-buffer))
         (vc-diff)))
     (:bind-keys ([remap vc-diff] . krisb-vc-diff-dwim)))
-
-  <<tramp-vc-ignore-dir-regexp>>
 #+end_src
 
 #+name: vc-display-buffer-alist
@@ -3584,6 +3587,10 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
 
 **** Shells and compilation
 
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  (setopt shell-command-prompt-show-cwd t)
+#+end_src
+
 ***** EAT: Best terminal emulator
 
 #+name: eat
@@ -3687,10 +3694,6 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
 
 #+name: files
 #+begin_src emacs-lisp
-  ;; TODO 2025-11-28: Document these:
-  ;; - For auto-save-visited: `remote-file-name-inhibit-auto-save-visited'
-  ;; - For trash: `remote-file-name-inhibit-delete-by-moving-to-trash'
-  ;; - For auto-save: `remote-file-name-inhibit-auto-save'
   (setup files
     
     (with-eval-after-load 'files
@@ -3698,9 +3701,21 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
               ;; Disables aggressive caching that slows Dired/Magit;
               ;; test and toggle if needed.
               remote-file-name-inhibit-cache nil
+
+              remote-file-name-inhibit-auto-save-visited nil
+              remote-file-name-inhibit-auto-save nil
+              remote-file-name-inhibit-delete-by-moving-to-trash t
+              
               ;; Set a timeout to prevent the failure to access files to
               ;; indefinitely bloc Emacs
               remote-file-name-access-timeout 10)))
+#+end_src
+
+#+name: auto-revert-remote-files
+#+begin_src emacs-lisp
+  ;; Revert remote files too.  See also
+  ;; `remote-file-name-inhibit-auto-save-visited'
+  (setopt auto-revert-remote-files t)
 #+end_src
 
 ****** TRAMP: Pretend we're in a remote machine!
@@ -3719,10 +3734,11 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
     ;; "(tramp) Frequently Asked Questions").  Many/most of the
     ;; selections below were taken from there.
     (with-eval-after-load 'tramp
-      ;; Only see warnings and errors.  I change this on-the-fly if I
-      ;; need to debug
-      (setopt tramp-verbose 2
-              tramp-default-remote-shell "/bin/bash")
+      (setopt tramp-verbose 4
+              ;; 2025-12-06: Increase the cutoff to use external
+              ;; methods.  Recommendation taken from testing of
+              ;; https://coredumped.dev/2025/06/18/making-tramp-go-brrrr./
+              tramp-copy-size-limit (* 1024 1024)) ; 1MB
 
       ;; FIXME 2025-11-30: Not sure why this "davs"is causing problems
       ;; for me... disable it for now.
@@ -3760,7 +3776,10 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
        '((dired-check-symlinks . nil)))
       (connection-local-set-profiles
        '(:application tramp :machine "epoche")
-       'dired-no-symlink)))
+       'dired-no-symlink))
+
+    ;; Guix-specific
+    <<guix-tramp>>)
 #+end_src
 
 #+name: tramp-backup-directory-alist
@@ -3772,7 +3791,7 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
     (setopt tramp-backup-directory-alist backup-directory-alist))
 #+end_src
 
-#+name: tramp-vc-ignore-dir-regexp
+I do not use this myself, but for users who don't need VC when using tramp on remote machines, they can make vc.el not do any of its usual operations in the background when e.g. visiting files:
 #+begin_src emacs-lisp
   ;; Don't do VC operations inside remote files
   (with-eval-after-load 'vc
@@ -3792,6 +3811,22 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
 
     (with-eval-after-load 'tramp
       (load-theme 'tramp)))
+#+end_src
+
+****** Tramp-hlo: "High-level operations" for tramp
+
+A problem with Tramp is that there are certain common tasks which inevitably require many round-trips. Tramp-HLO's solution is to specially do those expensive tasks on the server side, sending the final result to the local machine---these are "high-level operations. It does this by running bash scripts that accomplish the goal of these expensive elisp functions. There are two such functions it currently replaces:
++ ~locate-dominating-file~
++ ~dir-locals-find-file~
+The performance increase can be /drastic/.
+
+#+name: tramp-hlo
+#+begin_src emacs-lisp
+  (setup tramp-hlo
+    (:package (tramp-hlo :url "https://github.com/jsadusk/tramp-hlo.git"))
+    
+    (with-eval-after-load 'tramp
+      (tramp-hlo-setup)))
 #+end_src
 
 **** Emacs-lisp
@@ -7097,6 +7132,14 @@ Integration with org-ql:
   (add-to-list 'trusted-content "/gnu/store/")
 #+end_src
 
+#+name: guix-tramp
+#+begin_src emacs-lisp
+  ;; Add the user's load path to `tramp-remote-path' so that TRAMP can
+  ;; search the directories Guix adds to PATH
+  (with-eval-after-load 'tramp
+    (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+#+end_src
+
 * Deployments
 
 ** PC
@@ -7369,8 +7412,11 @@ Integration with org-ql:
   ;;;; Bespoke extensions
   <<org-log-properties>>
 
-  ;;; TRAMP
+  ;;; Tramp
   <<tramp>>
+
+  ;;; Tramp-hlo
+  <<tramp-hlo>>
 
   ;;; Tramp-theme
   <<tramp-theme>>
