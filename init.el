@@ -5331,6 +5331,11 @@ which file on the system it backs up."
           mode-line-misc-info
           mode-line-end-spaces))
 
+;;; Regexp-disasm
+;; Learned about this project from Ihor's config
+(setup regexp-disasm
+  (:package (regexp-disasm :url "https://github.com/mattiase/regexp-disasm.git")))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

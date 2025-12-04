@@ -3952,6 +3952,15 @@ Consequently, the elisp backend is used if there is no other local backend to us
                  (post-command-select-window . t)))
 #+end_src
 
+****** Regexp-disasm: Disassemble regexps
+
+#+name: regexp-disasm
+#+begin_src emacs-lisp
+  ;; Learned about this project from Ihor's config
+  (setup regexp-disasm
+    (:package (regexp-disasm :url "https://github.com/mattiase/regexp-disasm.git")))
+#+end_src
+
 ***** Package authorship
 
 ***** Highlight-function-calls: Highlight function calls!
@@ -7526,9 +7535,12 @@ Integration with org-ql:
 
   ;;; Buff-menu
   <<buff-menu>>
-  
+
   ;;; `mode-line-format'
   <<mode-line-format>>
+
+  ;;; Regexp-disasm
+  <<regexp-disasm>>
 
   ;;; Startup time
   <<startup-time>>
@@ -7549,4 +7561,4 @@ Integration with org-ql:
 #  LocalWords:  noweb org's Linters Balintona Kristoffer LocalWords Elpaca el Runtime PDFs Ef elisp
 #  LocalWords:  Minibuffer Vertico Fontaine Theming Savehist minibuffer facto de Minibuffers pdf El
 #  LocalWords:  minibuffers Autorevert WIP EmacsWiki TODO GCMH Imenu Isearch Newcomment VCS VC jj
-#  LocalWords:  jujutsu JJ Hotfuzz hotfuzz emacs BufFace subtree Paren Hideshow
+#  LocalWords:  jujutsu JJ Hotfuzz hotfuzz emacs BufFace subtree Paren Hideshow Elisp
