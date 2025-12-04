@@ -1667,10 +1667,16 @@ call `diff-buffer-with-file’ instead."
 
   (pulsar-global-mode 1)
 
-  (setopt pulsar-pulse t
-          pulsar-face 'pulsar-red
-          pulsar-delay 0.05
-          pulsar-iterations 5))
+  (with-eval-after-load 'pulsar
+    (setopt pulsar-pulse t
+            pulsar-delay 0.05
+            pulsar-iterations 5
+            pulsar-pulse-on-window-change t)
+    
+    ;; Faces
+    (setopt pulsar-face 'pulsar-red
+            pulsar-region-change-face 'pulsar-cyan
+            pulsar-window-change-face 'pulsar-green)))
 
 ;;; Org
 ;;;; Org built-ins
