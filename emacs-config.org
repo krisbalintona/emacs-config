@@ -3806,7 +3806,9 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
       (add-to-list 'trusted-content "~/emacs-repos/")))
 #+end_src
 
-***** Help.el: Emacs's self-documentation
+***** Elisp introspection
+
+****** Help.el: Emacs's self-documentation
 
 #+name: help.el
 #+begin_src emacs-lisp
@@ -3843,7 +3845,7 @@ Tell ~display-buffer-alist~ where to show help buffers:
                  (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)))
 #+end_src
 
-***** Apropos: Discover meaningful lisp symbols
+****** Apropos: Discover meaningful lisp symbols
 
 Apropos is a built-in library that queries the user for a regexp or word list to search existing symbols for. For example, ~apropos-user-option~ will search all user options (i.e., symbols defined by ~defcustom~). Evaluate ~M-x apropos-command ^apropos RET~ to see all the helpful commands apropos offers.
 #+name: apropos
@@ -3854,7 +3856,61 @@ Apropos is a built-in library that queries the user for a regexp or word list to
 #+end_src
 Additionally, all apropos commands will expand the subset of symbols they search when called with a universal argument. For example, ~apropos-user-option~ with a universal argument will search all variables, not just user options. (The option ~apropos-do-all~ determines whether =C-u= is required for this behavior.)
 
-***** Elisp-demos: Examples in documentation
+****** Find-func: Go to elisp definitions
+
+#+name: find-func
+#+begin_src emacs-lisp
+  ;; Binds useful commands for jumping to variables, functions, and
+  ;; libraries
+  (setup find-func
+
+    ;; Emacs 31 converted `find-function-setup-keys' into
+    ;; `find-function-setup-keys'
+    (if (fboundp 'find-function-mode)
+        (find-function-mode 1)
+      (find-function-setup-keys)))
+
+  (setup tab-bar
+    ;; Useful keybinds for `tab-bar-mode' usage
+    (with-eval-after-load 'tab-bar
+      (defun krisb-find-library-other-tab (library)
+        "Find LIBRARY in other tab."
+        (interactive (list (read-library-name)))
+        (switch-to-buffer-other-tab
+         (save-window-excursion (funcall-interactively #'find-library library))))
+
+      (defun krisb-find-function-other-tab (function)
+        "Find FUNCTION in other tab."
+        (interactive (find-function-read))
+        (find-function-do-it function nil 'switch-to-buffer-other-tab))
+
+      (:bind-keys :map tab-prefix-map
+                  ("F" . krisb-find-function-other-tab)
+                  ("L" . krisb-find-library-other-tab))))
+#+end_src
+
+****** Xref for emacs-lisp
+
+The only elisp-specific configuration I have for xref is this:
+#+name: xref-elisp
+#+begin_src emacs-lisp
+  ;; We remove the default sole fallback backend, `etags--xref-backend',
+  ;; which prompts the user for an etags table -- this is undesirable
+  ;; for me, since I don't use etags.
+  (remove-hook 'xref-backend-functions #'etags--xref-backend)
+  ;; Then add `elisp--xref-backend' as the global value of
+  ;; `xref-backend-functions', which means it is run when the local
+  ;; value ends with `t'.  (See (info "(elisp) Running Hooks") for an
+  ;; explanation of why.)
+  ;; 
+  ;; Effectively, when combined with the above, this becomes the (only)
+  ;; backend function that is checked after all the buffer-local backend
+  ;; functions are checked.
+  (add-hook 'xref-backend-functions #'elisp--xref-backend)
+#+end_src
+Consequently, the elisp backend is used if there is no other local backend to use. This means we can, e.g., jump to any elisp symbol definition in any buffer without another active backend function.
+
+****** Elisp-demos: Examples in documentation
 
 #+name: elisp-demos
 #+begin_src emacs-lisp
@@ -3867,7 +3923,7 @@ Additionally, all apropos commands will expand the subset of symbols they search
       (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)))
 #+end_src
 
-***** Inspector: Provide a UI for showing prettified elisp objects
+****** Inspector: Provide a UI for showing prettified elisp objects
 
 #+name: inspector
 #+begin_src emacs-lisp
@@ -3936,60 +3992,6 @@ Additionally, all apropos commands will expand the subset of symbols they search
 
     (global-paren-face-mode 1))
 #+end_src
-
-***** Find-func: Go to elisp definitions
-
-#+name: find-func
-#+begin_src emacs-lisp
-  ;; Binds useful commands for jumping to variables, functions, and
-  ;; libraries
-  (setup find-func
-
-    ;; Emacs 31 converted `find-function-setup-keys' into
-    ;; `find-function-setup-keys'
-    (if (fboundp 'find-function-mode)
-        (find-function-mode 1)
-      (find-function-setup-keys)))
-
-  (setup tab-bar
-    ;; Useful keybinds for `tab-bar-mode' usage
-    (with-eval-after-load 'tab-bar
-      (defun krisb-find-library-other-tab (library)
-        "Find LIBRARY in other tab."
-        (interactive (list (read-library-name)))
-        (switch-to-buffer-other-tab
-         (save-window-excursion (funcall-interactively #'find-library library))))
-
-      (defun krisb-find-function-other-tab (function)
-        "Find FUNCTION in other tab."
-        (interactive (find-function-read))
-        (find-function-do-it function nil 'switch-to-buffer-other-tab))
-
-      (:bind-keys :map tab-prefix-map
-                  ("F" . krisb-find-function-other-tab)
-                  ("L" . krisb-find-library-other-tab))))
-#+end_src
-
-***** Xref for emacs-lisp
-
-The only elisp-specific configuration I have for xref is this:
-#+name: xref-elisp
-#+begin_src emacs-lisp
-  ;; We remove the default sole fallback backend, `etags--xref-backend',
-  ;; which prompts the user for an etags table -- this is undesirable
-  ;; for me, since I don't use etags.
-  (remove-hook 'xref-backend-functions #'etags--xref-backend)
-  ;; Then add `elisp--xref-backend' as the global value of
-  ;; `xref-backend-functions', which means it is run when the local
-  ;; value ends with `t'.  (See (info "(elisp) Running Hooks") for an
-  ;; explanation of why.)
-  ;; 
-  ;; Effectively, when combined with the above, this becomes the (only)
-  ;; backend function that is checked after all the buffer-local backend
-  ;; functions are checked.
-  (add-hook 'xref-backend-functions #'elisp--xref-backend)
-#+end_src
-Consequently, the elisp backend is used if there is no other local backend to use. This means we can, e.g., jump to any elisp symbol definition in any buffer without another active backend function.
 
 *** Prose writing
 
