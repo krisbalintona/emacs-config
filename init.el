@@ -1958,6 +1958,7 @@ call `diff-buffer-with-file’ instead."
            (not (tags-local "PROJECT" "INBOX"))
            (tosee)
            (or (and (or (habit)
+                        ;; FIXME 2025-12-03: Avoid hard-coding this path
                         (path "recurring\\.org"))
                     (or (scheduled :to today)
                         (deadline :to auto)))))))
@@ -1978,7 +1979,6 @@ call `diff-buffer-with-file’ instead."
     "Filter tasks for review agenda."
     (krisb-org-agenda-skip-org-ql
      '(and (not (done))
-           (tosee)
            (or (toreview)
                (tags-local "REVIEW")))))
   
@@ -2715,16 +2715,6 @@ value of `org-review-next-property-name' or
            (org-with-wide-buffer (or (outline-next-heading) (point-max)))))
 
     ;; Commands
-    (defun krisb-org-review-unreview ()
-      "Un-review the current heading.
-Removes the properties denoted by `org-review-next-property-name' and
-`org-review-last-property-name'."
-      (interactive)
-      (when (org-entry-get (point) org-review-next-property-name)
-        (org-delete-property org-review-next-property-name))
-      (when (org-entry-get (point) org-review-last-property-name)
-        (org-delete-property org-review-last-property-name)))
-    
     (defun krisb-org-review-scheduled-to-review ()
       "Turn the scheduled date of an agenda entry to a review date.
 Sets the value of `org-review-next-property-name' to the scheduled
@@ -2770,22 +2760,8 @@ a random date within the next DAYS days."
         (org-review-insert-date org-review-next-property-name
                                 org-review-next-timestamp-format
                                 ts))))
-
-  ;; Autoloads
-  (dolist (func '(krisb-org-review-has-review-property-p
-                  krisb-org-review-unreview
-                  krisb-org-review-scheduled-to-review
-                  krisb-org-review--select-day
-                  krisb-org-review-randomize))
-    (autoload func "org-review"))
   
   ;; Keybinds
-  (with-eval-after-load 'org
-    (bind-keys :map org-mode-map
-               ("C-c r u" . krisb-org-review-unreview)))
-  (with-eval-after-load 'org-agenda
-    (bind-keys :map org-agenda-mode-map
-               ("C-c r u" . krisb-org-review-unreview)))
   (with-eval-after-load 'org-agenda
     (add-to-list 'org-agenda-bulk-custom-functions
                  '(?R krisb-org-review-randomize
@@ -2802,12 +2778,31 @@ it as a property of the headline."
     (org-review-insert-date "NEXT_VISIBLE"
                             'inactive ts)))
 
+(defun krisb-org-review-remove ()
+  "Un-review the current heading.
+Removes the properties denoted by `org-review-next-property-name' and
+`org-review-last-property-name'."
+  (interactive)
+  (let* ((props (org-entry-properties))
+         (prop-name
+          (completing-read "Remove property:"
+                           (remq nil
+                                 (mapcar
+                                  (lambda (p)
+                                    (member (car p) '("NEXT_REVIEW" "NEXT_VISIBLE")))
+                                  props)))))
+    (when (org-entry-get (point) prop-name)
+      (org-delete-property prop-name))))
+
 (with-eval-after-load 'org
   (bind-keys :map org-mode-map
-             ("C-c r v" . krisb-org-review-insert-next-visible)))
+             ("C-c r v" . krisb-org-review-insert-next-visible)
+             ("C-c r u" . krisb-org-review-remove)))
+
 (with-eval-after-load 'org-agenda
   (bind-keys :map org-agenda-mode-map
-             ("C-c r v" . krisb-org-review-insert-next-visible)))
+             ("C-c r v" . krisb-org-review-insert-next-visible)
+             ("C-c r u" . krisb-org-review-remove)))
 
 ;;;;; Org-repeat-by-cron
 (setup org-repeat-by-cron
