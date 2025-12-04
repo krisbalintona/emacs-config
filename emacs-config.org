@@ -4102,11 +4102,17 @@ This section is for the major mode
 
       ;; Tags
       (setopt org-tags-column 0
+              org-use-fast-tag-selection 'auto
+              org-fast-tag-selection-single-key 'expert
               org-tags-exclude-from-inheritance
               '("PROJECT" "email"
                 "__journal" "__log" "__top_of_mind")
-              org-use-fast-tag-selection 'auto
-              org-fast-tag-selection-single-key t)
+              org-tag-faces '(("INBOX" . font-lock-variable-use-face)
+                              ("PROJECT" . font-lock-doc-markup-face)
+                              ("WAITING" . font-lock-keyword-face)
+                              ("PING" . font-lock-keyword-face)
+                              ("REVIEW" . font-lock-keyword-face)
+                              ("PUSHED" . font-lock-negation-char-face)))
       ;; See also `org-todo-state-tags-triggers'
       <<org-after-tags-change-hook>>
 

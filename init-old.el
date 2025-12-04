@@ -1680,8 +1680,6 @@ The context buffer is the buffer that shows annotation contents in
   ;; (org-agenda-remove-tags 'prefix)
   
   ;; Tags
-  ;; We set `org-tags-exclude-from-inheritance’ directory locally
-  (org-tag-faces '(("project" . outline-1)))
   ;; TODO 2025-05-24: Revisit this.
   (org-fast-tag-selection-single-key 'expert))
 
