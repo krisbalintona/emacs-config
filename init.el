@@ -3244,7 +3244,6 @@ PROP is the name of the property.  See
              ([remap bookmark-jump] . consult-bookmark)
              ([remap Info-search] . consult-info)
              ([remap imenu] . consult-imenu)
-             ([remap flymake-show-buffer-diagnostics] . consult-flymake)
              ([remap repeat-complex-command] . consult-complex-command)
              :map goto-map              ; The `M-g' prefix
              ("f" . consult-flymake)
@@ -3253,6 +3252,7 @@ PROP is the name of the property.  See
              ("l" . consult-line)
              ("a" . consult-org-agenda)
              ("m" . consult-mark)
+             ("F" . consult-flymake)
              :map search-map            ; The `M-s' prefix
              ("i" . consult-info)
              ("g" . consult-git-grep)
