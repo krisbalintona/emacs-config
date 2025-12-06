@@ -424,10 +424,16 @@ package-archives, e.g. \"gnu\")."))
   
   ;; Set `sentence-end-double-space' conditionally
   (defun krisb-sentence-end-double-space-setup ()
-    "Set up the value for `sentence-end-double-space'."
-    (setq-local sentence-end-double-space
-                (cond ((derived-mode-p '(prog-mode conf-mode log-edit-mode)) t)
-                      ((derived-mode-p '(text-mode wombag-show-mode)) nil))))
+    "Set up the value for `sentence-end-double-space'.
+  However, do not override buffer-local and directory-local values for
+  `sentence-end-double-space'."
+    ;; First check if `sentence-end-double-space' is set buffer-locally
+    ;; (`file-local-variables-alist') or directory-locally
+    ;; (`dir-local-variables-alist')
+    (unless (local-variable-p 'sentence-end-double-space)
+      (setq-local sentence-end-double-space
+                  (cond ((derived-mode-p '(prog-mode conf-mode log-edit-mode)) t)
+                        ((derived-mode-p '(text-mode wombag-show-mode)) nil)))))
   (add-hook 'after-change-major-mode-hook #'krisb-sentence-end-double-space-setup)
   
   (setopt shell-command-prompt-show-cwd t))
