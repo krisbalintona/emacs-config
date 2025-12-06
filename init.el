@@ -725,9 +725,9 @@ to if called with ARG, or any prefix argument."
             ;; partial paths (when `completion-pcm-leading-wildcard'
             ;; is non-nil)
             (file (styles . (partial-completion))
-                  (eager-display . t))
+                  (eager-update . t))
             (kill-ring (styles . (orderless-literal-and-prefixes)))
-            (imenu (eager-display . t))
+            (imenu (eager-update . t))
             (consult-outline (styles . (orderless-literal-and-prefixes)))
             (consult-location (eager-display . t)
                               (eager-update . t))
@@ -738,7 +738,7 @@ to if called with ARG, or any prefix argument."
                           (eager-update . t))
             (recentf (eager-display . t))
             (bookmark (eager-display . t))
-            (project-file (eager-display . t))
+            (project-file (eager-update . t))
             ;; For tempel `citar-at-point-function's and commands
             (tempel (eager-display . t))
             (info-menu (eager-display t))))
@@ -828,7 +828,7 @@ distance + `string-lessp' first rather than using only `string-lessp'."
   ;; Automatic ("eager") display and updating of the *Completions*
   ;; buffer: control with `completion-category-overrides'
   (setopt completion-eager-display 'auto
-          completion-eager-update t)
+          completion-eager-update 'auto)
 
   ;; Selection of the Completions buffer from the minibuffer
   (setopt completion-auto-help 'always
