@@ -4720,6 +4720,15 @@ completion at point function."
   ;; Mode line
   (with-eval-after-load 'project
     (setopt project-mode-line t
+            ;; When editing remote files or when in deeply nested
+            ;; non-projects (`locate-dominating-file' is very
+            ;; expensive in such cases), the project mode line will
+            ;; cause severe slow downs.  Limit how frequently the
+            ;; function can be called using the bulit-in timeout.el.
+            project-mode-line-format
+            '(:eval (progn
+                      (require 'timeout)
+                      (timeout-throttle 'project-mode-line-format 0.2)))
             project-mode-line-face 'italic))
   ;; TODO 2025-12-03: Try to get this fixed upstream?
   ;; Set `project-mode-line' specially in Guix store directories
