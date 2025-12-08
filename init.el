@@ -3194,23 +3194,43 @@ PROP is the name of the property.  See
             ;; direct copying between two remote servers" in (info
             ;; "(tramp) Ssh setup")
             tramp-use-scp-direct-remote-copying t
-            remote-file-name-inhibit-cache nil)
-
-    ;; Don't show symlinks, since that requires the expensive
-    ;; `file-truename'.  Taken from (info "(tramp) Frequently Asked
-    ;; Questions")
-    (connection-local-set-profile-variables
-     'dired-no-symlink
-     '((dired-check-symlinks . nil)))
-    (connection-local-set-profiles
-     '(:application tramp :machine "epoche")
-     'dired-no-symlink))
+            remote-file-name-inhibit-cache nil))
 
   ;; Guix-specific
   ;; Add the user's load path to `tramp-remote-path' so that TRAMP can
   ;; search the directories Guix adds to PATH
   (with-eval-after-load 'tramp
     (add-to-list 'tramp-remote-path 'tramp-own-remote-path)))
+
+;; User- and host-specific configurations
+(with-eval-after-load 'tramp
+  
+  ;; Don't show symlinks, since that requires the expensive
+  ;; `file-truename'.  Taken from (info "(tramp) Frequently Asked
+  ;; Questions")
+  (connection-local-set-profile-variables 'krisb-dired-no-symlink
+                                          '((dired-check-symlinks . nil)))
+  (connection-local-set-profiles '(:application tramp :machine "sublation")
+                                 'krisb-dired-no-symlink)
+
+  ;; Use "direct async processes": create sub-processes directly on
+  ;; the host.  See 5.6.10 Improving performance of asynchronous
+  ;; remote processes in (info "(tramp) Remote processes").  I
+  ;; learned of this from
+  ;; https://coredumped.dev/2025/06/18/making-tramp-go-brrrr./#use-direct-async
+  ;;
+  ;; Be aware of the limitations described in the aforementioned
+  ;; manual page, including:
+  ;; - Only works for some methods,
+  ;; - Does not support interactive user authentication
+  ;; - Cannot be applied for ssh-based methods that use the
+  ;;   RemoteCommand option.
+  ;; - May fail when when the command is too long (e.g. long
+  ;;   directory names or long PATH that is set)
+  (connection-local-set-profile-variables 'krisb-remote-direct-async-process
+                                          '((tramp-direct-async-process . t)))
+  (connection-local-set-profiles '(:application tramp :user "krisbalintona" :machine "sublation")
+                                 'krisb-remote-direct-async-process))
 
 ;;; Tramp-hlo
 (setup tramp-hlo
