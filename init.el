@@ -1278,6 +1278,8 @@ Then apply ARGS."
     (unbind-key "o" diff-mode-shared-map))
   (with-eval-after-load 'eat
     (unbind-key "M-o" eat-semi-char-mode-map))
+  (with-eval-after-load 'xscheme
+    (unbind-key "M-o" scheme-mode-map))
 
   (setopt switch-to-buffer-obey-display-actions t
           window-resize-pixelwise t
