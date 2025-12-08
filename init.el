@@ -4662,7 +4662,7 @@ functionality."
     "elisp"
     '(emacs-lisp-mode-hook lisp-interaction-mode-hook)
     (list #'cape-file #'cape-elisp-symbol))
-  
+
   (krisb-cape-setup-capfs
     "commit"
     '(git-commit-setup-hook log-edit-mode-hook)
@@ -4762,7 +4762,7 @@ completion at point function."
             project-mode-line-format
             '(:eval (progn
                       (require 'timeout)
-                      (timeout-throttle 'project-mode-line-format 0.2)))
+                      (timeout-throttled-func 'project-mode-line-format 0.2)))
             project-mode-line-face 'italic))
   ;; TODO 2025-12-03: Try to get this fixed upstream?
   ;; Set `project-mode-line' specially in Guix store directories

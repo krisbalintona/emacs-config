@@ -2933,7 +2933,7 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
               project-mode-line-format
               '(:eval (progn
                         (require 'timeout)
-                        (timeout-throttle 'project-mode-line-format 0.2)))
+                        (timeout-throttled-func 'project-mode-line-format 0.2)))
               project-mode-line-face 'italic))
     <<guix-project-mode-line>>
 
