@@ -2408,16 +2408,17 @@ Vertico provides several extensions:
     ;; https://github.com/minad/corfu?tab=readme-ov-file#completing-in-the-minibuffer
     (setopt global-corfu-minibuffer
             (lambda ()
-              ;; Enable in minibuffer unless...
-              (not (or
-                    ;; Using the default Completions buffer
-                    (eq krisb-completion-paradigm 'completion-list)
-                    ;; Showing completions in the minibuffer from either
-                    ;; MCT or vertico
-                    (bound-and-true-p mct--active)
-                    (bound-and-true-p vertico--input)
-                    ;; Inputting password
-                    (eq (current-local-map) read-passwd-map))))))
+              ;; Enable in minibuffer if it is for a command that reads
+              ;; elisp expressions (e.g. `eval-expression') and if it
+              ;; satisfies the other predicates below
+              (and (eq (current-local-map) read--expression-map)
+                   (not (or
+                         ;; Showing completions in the minibuffer from
+                         ;; either MCT or vertico
+                         (bound-and-true-p mct--active)
+                         (bound-and-true-p vertico--input)
+                         ;; Inputting password
+                         (eq (current-local-map) read-passwd-map)))))))
 
   ;; Extras
   (setup corfu
