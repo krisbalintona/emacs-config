@@ -1417,6 +1417,18 @@ Then apply ARGS."
     (setopt electric-quote-context-sensitive t
             electric-quote-replace-double t)))
 
+(with-eval-after-load 'log-edit
+  (defun 3krisb-electric-setup-log-edit ()
+    "Add to `electric-pair-text-pairs'."
+    (make-local-variable 'electric-pair-pairs)
+    (when-let* ((project (project-current))
+                (new (pcase (expand-file-name (project-root project))
+                       ((pred (string-match-p "emacs-repos/packages/emacs/"))
+                        (cl-pushnew '(?' . ?') electric-pair-pairs :test #'equal))
+                       (_
+                        (cl-pushnew '(?` . ?`) electric-pair-pairs :test #'equal)))))))
+  (add-hook 'log-edit-mode-hook 'krisb-electric-setup-log-edit))
+
 ;;; Files
 (setup files
   
@@ -1562,14 +1574,7 @@ call `diff-buffer-with-file’ instead."
   ;; an empty hook.)
   (with-eval-after-load 'log-edit
     (add-hook 'log-edit-hook #'auto-fill-mode)
-    (add-hook 'log-edit-hook #'log-edit-maybe-show-diff))
-
-  (with-eval-after-load 'log-edit
-    (defun krisb-electric-setup-log-edit ()
-      "Add to `electric-pair-text-pairs'."
-      (make-local-variable 'electric-pair-pairs)
-      (cl-pushnew '(?` . ?`) electric-pair-pairs :test #'equal))
-    (add-hook 'log-edit-mode-hook 'krisb-electric-setup-log-edit)))
+    (add-hook 'log-edit-hook #'log-edit-maybe-show-diff)))
 
 ;;; Outline.el
 (setup outline
@@ -4665,18 +4670,20 @@ functionality."
     ;; depending on the project I'm in
     ;; todo 2025-11-30: Figure out which directories I want to do what
     ;; and program that behavior accordingly
-    (let ((new (pcase (expand-file-name (project-root (project-current)))
-                 ((pred (string-match-p "emacs-repos/packages/emacs/"))
-                  '(log-edit-mode ?' ?'))
-                 (_
-                  '(log-edit-mode ?` ?`)))))
-      (setq-local cape-elisp-symbol-wrapper
-                  (if (boundp 'cape-elisp-symbol-wrapper)
-                      (cl-substitute new 'log-edit-mode
-                                 cape-elisp-symbol-wrapper
-                                 :key #'car :test #'equal)
-                    (list new)))))
-
+    (make-local-variable 'cape-elisp-symbol-wrapper)
+    (when-let* ((project (project-current))
+                (new (pcase (expand-file-name (project-root project))
+                       ((pred (string-match-p "emacs-repos/packages/emacs/"))
+                        (cl-pushnew '(log-edit-mode ?' ?')
+                                    cape-elisp-symbol-wrapper
+                                    :key #'car
+                                    :test #'equal))
+                       (_
+                        (cl-pushnew '(log-edit-mode ?` ?`)
+                                    cape-elisp-symbol-wrapper
+                                    :key #'car
+                                    :test #'equal)))))))
+  
   (krisb-cape-setup-capfs
     "shells"
     '(eshell-mode-hook comint-mode-hook)
