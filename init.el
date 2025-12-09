@@ -3265,9 +3265,11 @@ PROP is the name of the property.  See
 
 ;;; Tramp-hlo
 (setup tramp-hlo
+  (:quit) ; FIXME 2025-12-09: Issues with vc/vc-jj.  Will look into this in the future
   (:pin tramp-hlo "gnu-elpa-devel")
   (:package tramp-hlo)
   
+  (autoload 'tramp-hlo-setup "tramp-hlo")
   (with-eval-after-load 'tramp
     (tramp-hlo-setup)))
 
