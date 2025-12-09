@@ -4682,8 +4682,9 @@ functionality."
     (list #'cape-elisp-symbol)
     ;; Also change the delimiters inserted by `cape-elisp-symbol'
     ;; depending on the project I'm in
-    ;; todo 2025-11-30: Figure out which directories I want to do what
+    ;; TODO 2025-11-30: Figure out which directories I want to do what
     ;; and program that behavior accordingly
+    (require 'cape)
     (make-local-variable 'cape-elisp-symbol-wrapper)
     (when-let* ((project (project-current)))
       (pcase (expand-file-name (project-root project))
