@@ -2535,15 +2535,15 @@ inserted with e.g. `org-insert-last-stored-link' or
 If non-nil, include.  If nil, exclude.  This predicate excludes these
 nodes:
 - With non-nil ROAM_EXCLUDE property value."
-    (let ((exclude-val (cdr (assoc "ROAM_EXCLUDE" (org-node-get-properties node)))))
+    (let ((exclude-val (cdr (assoc "ROAM_EXCLUDE" (org-mem-properties node)))))
       (not (or (when exclude-val (string= "t" (string-trim exclude-val)))))))
   (setopt org-node-filter-fn #'krisb-org-node-filter-fn)
 
   ;; Bespoke `org-node-custom-link-format-fn' function
   (cl-defmethod krisb-org-node-custom-link-format-fn ((node org-mem-entry))
     "Bespoke function for `org-node-custom-link-format-fn'."
-    (if (or (file-in-directory-p (org-node-get-file node) krisb-org-agenda-directory)
-            (file-in-directory-p (org-node-get-file node) krisb-org-archive-directory))
+    (if (or (file-in-directory-p (org-mem-file node) krisb-org-agenda-directory)
+            (file-in-directory-p (org-mem-file node) krisb-org-archive-directory))
         (org-node-get-title node)
       (let* ((place (krisb-org-node-get-place node))
              (type (krisb-org-node-get-type node))
@@ -2561,7 +2561,7 @@ nodes:
   (cl-defmacro krisb-org-node--get-property (property node)
     "Get value of PROPERTY from NODE.
 NODE is an org-mem-entry."
-    `(cdr (assoc ,property (org-node-get-properties ,node) #'string-equal)))
+    `(cdr (assoc ,property (org-mem-properties ,node) #'string-equal)))
 
   (cl-defmethod krisb-org-node-get-box ((node org-mem-entry))
     "Return the value of the ROAM_BOX property of NODE."
@@ -2574,7 +2574,7 @@ containing NODE instead."
     (let ((box (krisb-org-node-get-box node))
           (dir (file-name-nondirectory
                 (directory-file-name
-                 (file-name-directory (org-node-get-file node))))))
+                 (file-name-directory (org-mem-file node))))))
       (propertize (or box (concat "/" dir)) 'face 'shadow)))
 
   (cl-defmethod krisb-org-node-get-place ((node org-mem-entry))
