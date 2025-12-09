@@ -2627,7 +2627,8 @@ Wayland specific:
 #+end_src
 
 #+begin_src emacs-lisp :noweb-ref completion-category-overrides
-  (recentf (eager-display . t))
+  (recentf (eager-display . t)
+           (eager-update . t))
 #+end_src
 
 ** Bookmark

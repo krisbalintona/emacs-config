@@ -742,7 +742,8 @@ to if called with ARG, or any prefix argument."
                           (eager-update . t))
             (consult-info (eager-display . nil)
                           (eager-update . t))
-            (recentf (eager-display . t))
+            (recentf (eager-display . t)
+                     (eager-update . t))
             (bookmark (eager-display . t))
             (project-file (eager-update . t))
             ;; For tempel `citar-at-point-function's and commands
