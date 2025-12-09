@@ -1714,6 +1714,17 @@ call `diff-buffer-with-file’ instead."
     (add-hook 'org-mode-hook (lambda ()
                                (setq-local line-spacing 0.2
                                            fill-column 100))))
+  ;; Show zero width spaces (org syntax's escape character) as red
+  ;; middle dots
+  (font-lock-add-keywords
+   'org-mode
+   `(("\u200B"
+      0 (progn
+          ;; Show a red middle dot at the ZWSP
+          (put-text-property (match-beginning 0) (match-end 0)
+                             'display (propertize "·" 'face '(:inherit error)))
+          nil)))
+   'append)
 
   (setopt org-directory krisb-folio-directory)
 
