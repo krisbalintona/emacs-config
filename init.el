@@ -4161,9 +4161,8 @@ send from."
   ;; seem to succeed as the command run when clicking the mode line mail
   ;; string?
   (setopt display-time-mail-string krisb-display-time-mail-string
-          display-time-mail-function 'krisb-display-time-mail-notmuch-function)
-  (with-eval-after-load 'notmuch
-    (setopt display-time-mail-face 'notmuch-search-flagged-face))
+          display-time-mail-function 'krisb-display-time-mail-notmuch-function
+          display-time-mail-face 'font-lock-keyword-face)
   
   ;; FIXME 2025-05-26: This assumes that we always leave notmuch via the
   ;; notmuch-hello buffer.  This is a workaround because I know of no
