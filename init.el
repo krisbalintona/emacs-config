@@ -1421,15 +1421,15 @@ Then apply ARGS."
             electric-quote-replace-double t)))
 
 (with-eval-after-load 'log-edit
-  (defun 3krisb-electric-setup-log-edit ()
+  (defun krisb-electric-setup-log-edit ()
     "Add to `electric-pair-text-pairs'."
     (make-local-variable 'electric-pair-pairs)
-    (when-let* ((project (project-current))
-                (new (pcase (expand-file-name (project-root project))
-                       ((pred (string-match-p "emacs-repos/packages/emacs/"))
-                        (cl-pushnew '(?' . ?') electric-pair-pairs :test #'equal))
-                       (_
-                        (cl-pushnew '(?` . ?`) electric-pair-pairs :test #'equal)))))))
+    (when-let* ((project (project-current)))
+      (pcase (expand-file-name (project-root project))
+        ((pred (string-match-p "emacs-repos/packages/emacs/"))
+         (cl-pushnew '(?' . ?') electric-pair-pairs :test #'equal))
+        (_
+         (cl-pushnew '(?` . ?`) electric-pair-pairs :test #'equal)))))
   (add-hook 'log-edit-mode-hook 'krisb-electric-setup-log-edit))
 
 ;;; Files
@@ -4683,18 +4683,16 @@ functionality."
     ;; todo 2025-11-30: Figure out which directories I want to do what
     ;; and program that behavior accordingly
     (make-local-variable 'cape-elisp-symbol-wrapper)
-    (when-let* ((project (project-current))
-                (new (pcase (expand-file-name (project-root project))
-                       ((pred (string-match-p "emacs-repos/packages/emacs/"))
-                        (cl-pushnew '(log-edit-mode ?' ?')
-                                    cape-elisp-symbol-wrapper
-                                    :key #'car
-                                    :test #'equal))
-                       (_
-                        (cl-pushnew '(log-edit-mode ?` ?`)
-                                    cape-elisp-symbol-wrapper
-                                    :key #'car
-                                    :test #'equal)))))))
+    (when-let* ((project (project-current)))
+      (pcase (expand-file-name (project-root project))
+        ((pred (string-match-p "emacs-repos/packages/emacs/"))
+         (setq cape-elisp-symbol-wrapper
+               (cons '(log-edit-mode ?' ?')
+                     (assq-delete-all 'log-edit-mode cape-elisp-symbol-wrapper))))
+        (_
+         (setq cape-elisp-symbol-wrapper
+               (cons '(log-edit-mode ?` ?`)
+                     (assq-delete-all 'log-edit-mode cape-elisp-symbol-wrapper)))))))
   
   (krisb-cape-setup-capfs
     "shells"
