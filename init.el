@@ -4766,28 +4766,14 @@ completion at point function."
   ;; Mode line
   (with-eval-after-load 'project
     (setopt project-mode-line t
-            ;; When editing remote files or when in deeply nested
-            ;; non-projects (`locate-dominating-file' is very
-            ;; expensive in such cases), the project mode line will
-            ;; cause severe slow downs.  Limit how frequently the
-            ;; function can be called using the bulit-in timeout.el.
-            project-mode-line-format
-            '(:eval (progn
-                      (require 'timeout)
-                      (timeout-throttled-func 'project-mode-line-format 0.2)))
             project-mode-line-face 'italic))
-  ;; TODO 2025-12-03: Try to get this fixed upstream?
-  ;; Set `project-mode-line' specially in Guix store directories
-  (defun krisb-guix-project-mode-line ()
-    "Set `project-mode-line' to nil inside Guix store.
-  When `project-mode-line' is non-nil and the user is inside the Guix
-  store (/gnu/store/), project.el continuously attempts to find the
-  project the file belongs to.  This calculation is expensive in deep file
-  paths, since `locate-dominating-file', an expensive function, is called
-  many times.  So we set that setting to nil in such buffers."
-    (when (and (buffer-file-name) (string-match-p "^/gnu/store/" (buffer-file-name)))
-      (setq-local project-mode-line nil)))
-  (add-hook 'find-file-hook #'krisb-guix-project-mode-line)
+  ;; When editing remote files or when in deeply nested non-projects
+  ;; (`locate-dominating-file' is very expensive in such cases), the
+  ;; project mode line will cause severe slow downs.  Limit how
+  ;; frequently the function can be called using the bulit-in
+  ;; timeout.el.
+  (require 'timeout)
+  (timeout-throttle 'project-mode-line-format 0.2)
 
   ;; Keybindings
   (with-eval-after-load 'project
