@@ -3253,7 +3253,8 @@ PROP is the name of the property.  See
 
 ;;; Tramp-hlo
 (setup tramp-hlo
-  (:package (tramp-hlo :url "https://github.com/jsadusk/tramp-hlo.git"))
+  (:pin tramp-hlo "gnu-elpa-devel")
+  (:package tramp-hlo)
   
   (with-eval-after-load 'tramp
     (tramp-hlo-setup)))

@@ -3881,7 +3881,8 @@ The performance increase can be /drastic/.
 #+name: tramp-hlo
 #+begin_src emacs-lisp
   (setup tramp-hlo
-    (:package (tramp-hlo :url "https://github.com/jsadusk/tramp-hlo.git"))
+    (:pin tramp-hlo "gnu-elpa-devel")
+    (:package tramp-hlo)
     
     (with-eval-after-load 'tramp
       (tramp-hlo-setup)))
