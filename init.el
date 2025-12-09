@@ -2771,19 +2771,23 @@ to an org-review workflow."
           (setq days (read-number prompt 7)
                 prompt "Scatter tasks across how many days? Must be greater than 0: "))
         days))
-    (defun krisb-org-review-randomize (days)
-      "Randomly set the next review date for entry within the next DAYS days.
+    (defun krisb-org-review-randomize (prop-name days)
+      "Randomly set the next PROP-NAME date for entry within the next DAYS days.
 DAYS should be a positive integer.  Calls `org-review-insert-date' onto
 a random date within the next DAYS days."
-      (interactive (list (krisb-org-review--select-day)))
+      (interactive
+       (list (completing-read "Property: "
+                              (list org-review-next-property-name
+                                    "NEXT_VISIBLE"))
+             (krisb-org-review--select-day)))
       (let* ((random-day (1+ (random days)))
              (ts (format-time-string (car org-time-stamp-formats)
                                      (time-add (current-time) (days-to-time random-day)))))
-        ;; We don't also call `org-review-insert-last-review' because I sometimes
-        ;; I do not want that.  In the cases when I'd like that function called as
-        ;; well, I persist the org-agenda marks and call that function before or
-        ;; after this one
-        (org-review-insert-date org-review-next-property-name
+        ;; We don't also call `org-review-insert-last-review' because
+        ;; I sometimes I do not want that.  In the cases when I'd like
+        ;; that function called as well, I persist the org-agenda
+        ;; marks and call that function before or after this one
+        (org-review-insert-date prop-name
                                 org-review-next-timestamp-format
                                 ts))))
   
@@ -2792,7 +2796,11 @@ a random date within the next DAYS days."
     (add-to-list 'org-agenda-bulk-custom-functions
                  '(?R krisb-org-review-randomize
                       ;; Must return a list (of arguments)
-                      (lambda () (list (krisb-org-review--select-day)))))))
+                      (lambda ()
+                        (list (completing-read "Property: "
+                                               (list org-review-next-property-name
+                                                     "NEXT_VISIBLE"))
+                              (krisb-org-review--select-day)))))))
 
 ;; Adjacent to org-review: NEXT_VISIBLE
 (defun krisb-org-review-insert-next-visible ()
@@ -2809,16 +2817,17 @@ it as a property of the headline."
 Removes the properties denoted by `org-review-next-property-name' and
 `org-review-last-property-name'."
   (interactive)
-  (let* ((props (org-entry-properties))
-         (prop-name
-          (completing-read "Remove property:"
-                           (remq nil
-                                 (mapcar
-                                  (lambda (p)
-                                    (member (car p) '("NEXT_REVIEW" "NEXT_VISIBLE")))
-                                  props)))))
-    (when (org-entry-get (point) prop-name)
-      (org-delete-property prop-name))))
+  (if-let* ((props (org-entry-properties))
+            (present-props
+             (remq nil
+                   (mapcar
+                    (lambda (p)
+                      (member (car p) '("NEXT_REVIEW" "NEXT_VISIBLE")))
+                    props)))
+            (prop-name
+             (completing-read "Remove property:" present-props)))
+      (org-delete-property prop-name)
+    (message "No review properties present in entry")))
 
 (with-eval-after-load 'org
   (bind-keys :map org-mode-map
