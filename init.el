@@ -3306,7 +3306,6 @@ PROP is the name of the property.  See
              ([remap imenu] . consult-imenu)
              ([remap repeat-complex-command] . consult-complex-command)
              :map goto-map              ; The `M-g' prefix
-             ("f" . consult-flymake)
              ("o" . consult-outline)
              ("e" . consult-compile-error)
              ("l" . consult-line)
