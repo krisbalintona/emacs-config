@@ -747,7 +747,9 @@ to if called with ARG, or any prefix argument."
             (project-file (eager-update . t))
             ;; For tempel `citar-at-point-function's and commands
             (tempel (eager-display . t))
-            (info-menu (eager-display t))))
+            (info-menu (eager-display t))
+            (org-node (eager-update . t)
+                      (eager-display . t))))
   
   ;; How do we want to treat case in completion?
   (setopt completion-ignore-case t

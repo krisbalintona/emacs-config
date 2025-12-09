@@ -4631,6 +4631,12 @@ This section is for the major mode
        (org-entry-get nil "ROAM_REFS" 'inherit))))
 #+end_src
 
+
+#+begin_src emacs-lisp :noweb-ref completion-category-overrides
+  (org-node (eager-update . t)
+            (eager-display . t))
+#+end_src
+
 **** Org-web-tools
 
 #+name: org-web-tools
