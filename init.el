@@ -5358,10 +5358,20 @@ When called with `-' instead call `inspector-inspect-expression'."
   (bind-key "C-;" #'do-at-point)
 
   (with-eval-after-load 'do-at-point
+    (defun krisb-do-at-point-powerthesaurus (beg end)
+      "Prompt for a synonym of region between BEG and END and replace it."
+      ;; See the description of FUNC in the docstring of
+      ;; `do-at-point-actions' for why BEG and END are the bounds of the
+      ;; thing at point
+      (let* ((query-term (buffer-substring-no-properties beg end))
+             ;; See `powerthesaurus-supported-query-types' for the list
+             ;; of types
+             (query-type :synonyms))
+        (funcall 'powerthesaurus-lookup query-term query-type beg end)))
     (add-to-list 'do-at-point-user-actions
-                 '(word (?T "Thesaurus" powerthesaurus-lookup-synonyms-dwim)))
+                 '(word (?T "Thesaurus" krisb-do-at-point-powerthesaurus)))
     (add-to-list 'do-at-point-user-actions
-                 '(region (?T "Thesaurus" powerthesaurus-lookup-synonyms-dwim)))))
+                 '(region (?T "Thesaurus" krisb-do-at-point-powerthesaurus)))))
 
 ;;; Which-func
 ;; TODO 2025-12-03: Document:
