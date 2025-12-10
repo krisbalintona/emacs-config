@@ -2092,7 +2092,7 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
                                 (cl-every (lambda (re)
                                             (cl-some (lambda (str)
                                                        (string-match-p re str))
-                                                     (org-node-get-tags node)))
+                                                     (org-mem-tags node)))
                                           tags))
                               t nil 'org-node-hist)
              org-node--candidate<>entry))
@@ -2129,12 +2129,12 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
               (lambda ()
                 (let* ((node (krisb-org-capture--org-node-by-tags `(,(rx bol (or "__journal" "__top_of_mind") eol)))))
                   (org-capture-put :krisb-node node)
-                  (org-node-get-file node)))
+                  (org-mem-file node)))
               (lambda ()
                 (let ((node (org-capture-get :krisb-node)))
                   ;; Should return nil if node is a file
-                  (when (org-node-is-subtree node)
-                    (org-node-get-olp-with-self node)))))
+                  (when (org-mem-subtree-p node)
+                    (org-mem-olpath-with-self node)))))
              "* %<%c>\n"
              :tree-type (year quarter month)
              :jump-to-captured t
@@ -2148,12 +2148,12 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
               (lambda ()
                 (let* ((node (org-mem-entry-by-id "20241006T214800.000000")))
                   (org-capture-put :krisb-node node)
-                  (org-node-get-file node)))
+                  (org-mem-file node)))
               (lambda ()
                 (let ((node (org-capture-get :krisb-node)))
                   ;; Should return nil if node is a file
-                  (when (org-node-is-subtree node)
-                    (org-node-get-olp-with-self node)))))
+                  (when (org-mem-subtree-p node)
+                    (org-mem-olpath-with-self node)))))
              "* %<%c>\n\n*P:* %(car (krisb-oblique-strategies--random))\n\n"
              :tree-type (year quarter month)
              :jump-to-captured t
@@ -2166,12 +2166,12 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
               (lambda ()
                 (let* ((node (krisb-org-capture--org-node-by-tags '("^__log$"))))
                   (org-capture-put :krisb-node node)
-                  (org-node-get-file node)))
+                  (org-mem-file node)))
               (lambda ()
                 (let ((node (org-capture-get :krisb-node)))
                   ;; Should return nil if node is a file
-                  (when (org-node-is-subtree node)
-                    (org-node-get-olp-with-self node)))))
+                  (when (org-mem-subtree-p node)
+                    (org-mem-olpath-with-self node)))))
              "%U %?"
              :tree-type (quarter week)
              :clock-in t
@@ -2181,12 +2181,12 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
               (lambda ()
                 (let* ((node (org-mem-entry-by-id "20241114T091749.707997")))
                   (org-capture-put :krisb-node node)
-                  (org-node-get-file node)))
+                  (org-mem-file node)))
               (lambda ()
                 (let ((node (org-capture-get :krisb-node)))
                   ;; Should return nil if node is a file
-                  (when (org-node-is-subtree node)
-                    (org-node-get-olp-with-self node)))))
+                  (when (org-mem-subtree-p node)
+                    (org-mem-olpath-with-self node)))))
              "* (%<%c>)%?\n\n"
              :tree-type (year quarter month)
              :jump-to-captured t
@@ -2196,12 +2196,12 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
               (lambda ()
                 (let* ((node (krisb-org-capture--org-node-by-tags '("^__references$"))))
                   (org-capture-put :krisb-node node)
-                  (org-node-get-file node)))
+                  (org-mem-file node)))
               (lambda ()
                 (let ((node (org-capture-get :krisb-node)))
                   ;; Should return nil if node is a file
-                  (when (org-node-is-subtree node)
-                    (org-node-get-olp-with-self node)))))
+                  (when (org-mem-subtree-p node)
+                    (org-mem-olpath-with-self node)))))
              "* %?\n"
              :tree-type (year month)
              :jump-to-captured t
@@ -2241,12 +2241,12 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
                                           t nil 'org-node-hist)
                          org-node--candidate<>entry)))
                   (org-capture-put :krisb-node node)
-                  (org-node-get-file node)))
+                  (org-mem-file node)))
               (lambda ()
                 (let ((node (org-capture-get :krisb-node)))
                   ;; Should return nil if node is a file
-                  (when (org-node-is-subtree node)
-                    (org-node-get-olp-with-self node)))))
+                  (when (org-mem-subtree-p node)
+                    (org-mem-olpath-with-self node)))))
              "* %?
 ** Successes
 ** Mistakes"
