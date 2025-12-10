@@ -924,6 +924,7 @@ ending the minibuffer session. (This is equivalent to the behavior of
 
   (with-eval-after-load 'orderless
     (setopt orderless-component-separator 'orderless-escapable-split-on-space
+            orderless-expand-substring 'substring ; Prefer this `orderless-try-completion' behavior
             orderless-matching-styles
             '(orderless-regexp
               orderless-prefixes
