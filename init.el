@@ -1454,12 +1454,17 @@ Then apply ARGS."
 
   (:hide-mode auto-revert-mode)
 
-  (setopt auto-revert-interval 3
-          global-auto-revert-non-file-buffers t)
+  (with-eval-after-load 'autorevert
+    (setopt auto-revert-interval 3
+            global-auto-revert-non-file-buffers t))
 
   ;; Revert remote files too.  See also
   ;; `remote-file-name-inhibit-auto-save-visited'
-  (setopt auto-revert-remote-files t))
+  (setopt auto-revert-remote-files t)
+  
+  (if (fboundp 'vc-auto-revert-mode)
+      (vc-auto-revert-mode 1)             ; Emacs 31
+    (global-auto-revert-mode 1)))
 
 ;;; Newcomment
 ;; TODO 2025-05-20: Document the user options below in the literate
@@ -1493,11 +1498,6 @@ Then apply ARGS."
   (with-eval-after-load 'vc
     (remove-hook 'vc-log-finish-functions 'vc-shrink-buffer-window))
   
-  ;; Revert version-controlled buffers
-  (if (fboundp 'vc-auto-revert-mode)
-      (vc-auto-revert-mode 1)           ; Emacs 31
-    (global-auto-revert-mode 1))
-
   (add-to-list 'display-buffer-alist
                '((or . ((major-mode . vc-dir-mode)
                         (major-mode . vc-git-log-view-mode)

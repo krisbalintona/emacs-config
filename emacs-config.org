@@ -1342,10 +1342,13 @@ See also ~(elisp) Beeping~.
 
     (:hide-mode auto-revert-mode)
 
-    (setopt auto-revert-interval 3
-            global-auto-revert-non-file-buffers t)
+    (with-eval-after-load 'autorevert
+      (setopt auto-revert-interval 3
+              global-auto-revert-non-file-buffers t))
 
-    <<auto-revert-remote-files>>)
+    <<auto-revert-remote-files>>
+    
+    <<vc-auto-revert>>)
 #+end_src
 
 ** Disable lock files
@@ -1628,11 +1631,6 @@ Consult-specific completion category overrides:
     (with-eval-after-load 'vc
       (remove-hook 'vc-log-finish-functions 'vc-shrink-buffer-window))
     
-    ;; Revert version-controlled buffers
-    (if (fboundp 'vc-auto-revert-mode)
-        (vc-auto-revert-mode 1)           ; Emacs 31
-      (global-auto-revert-mode 1))
-
     <<vc-display-buffer-alist>>)
 
   ;; Dispatcher between `vc-diff’ and `diff-buffer-with-file’
@@ -1655,6 +1653,13 @@ Consult-specific completion category overrides:
                         (major-mode . vc-git-log-view-mode)
                         (major-mode . vc-git-region-history-mode)))
                  (display-buffer-same-window)))
+#+end_src
+
+#+name: vc-auto-revert
+#+begin_src emacs-lisp
+  (if (fboundp 'vc-auto-revert-mode)
+      (vc-auto-revert-mode 1)             ; Emacs 31
+    (global-auto-revert-mode 1))
 #+end_src
 
 ** Log-edit
