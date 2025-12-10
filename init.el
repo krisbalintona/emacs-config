@@ -730,27 +730,18 @@ to if called with ARG, or any prefix argument."
             ;; We include `partial-completion' to enable wildcards and
             ;; partial paths (when `completion-pcm-leading-wildcard'
             ;; is non-nil)
-            (file (styles . (partial-completion))
-                  (eager-update . t))
+            (file (styles . (partial-completion)))
             (kill-ring (styles . (orderless-literal-and-prefixes)))
-            (imenu (eager-update . t))
             (consult-outline (styles . (orderless-literal-and-prefixes)))
-            (consult-location (eager-display . t)
-                              (eager-update . t))
-            (org-heading (eager-update . t))        ; For `consult-org-heading'
-            (consult-grep (eager-display . nil)
-                          (eager-update . t))
-            (consult-info (eager-display . nil)
-                          (eager-update . t))
-            (recentf (eager-display . t)
-                     (eager-update . t))
+            (consult-location (eager-display . t))
+            (consult-grep (eager-display . nil))
+            (consult-info (eager-display . nil))
+            (recentf (eager-display . t))
             (bookmark (eager-display . t))
-            (project-file (eager-update . t))
             ;; For tempel `citar-at-point-function's and commands
             (tempel (eager-display . t))
             (info-menu (eager-display t))
-            (org-node (eager-update . t)
-                      (eager-display . t))))
+            (org-node (eager-display . t))))
   
   ;; How do we want to treat case in completion?
   (setopt completion-ignore-case t
@@ -837,10 +828,10 @@ distance + `string-lessp' first rather than using only `string-lessp'."
   ;; Automatic ("eager") display and updating of the *Completions*
   ;; buffer: control with `completion-category-overrides'
   (setopt completion-eager-display 'auto
-          completion-eager-update 'auto)
+          completion-eager-update t)
 
   ;; Selection of the Completions buffer from the minibuffer
-  (setopt completion-auto-help 'always
+  (setopt completion-auto-help 'visible
           completion-auto-select 'second-tab ; When, if ever, to select *Completions* on TAB press
           completion-auto-deselect nil)
 

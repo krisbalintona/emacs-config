@@ -1434,10 +1434,6 @@ See also ~(elisp) Beeping~.
     (setopt org-imenu-depth 7))      ; Show more than just 2 levels...
 #+end_src
 
-#+begin_src emacs-lisp :noweb-ref completion-category-overrides
-  (imenu (eager-update . t))
-#+end_src
-
 ** Isearch
 
 #+name: isearch
@@ -1580,13 +1576,9 @@ See also ~(elisp) Beeping~.
 Consult-specific completion category overrides:
 #+begin_src emacs-lisp :noweb-ref completion-category-overrides
   (consult-outline (styles . (orderless-literal-and-prefixes)))
-  (consult-location (eager-display . t)
-                    (eager-update . t))
-  (org-heading (eager-update . t))        ; For `consult-org-heading'
-  (consult-grep (eager-display . nil)
-                (eager-update . t))
-  (consult-info (eager-display . nil)
-                (eager-update . t))
+  (consult-location (eager-display . t))
+  (consult-grep (eager-display . nil))
+  (consult-info (eager-display . nil))
 #+end_src
 
 ** Smart-mark: =C-g= restores point when marking
@@ -1874,8 +1866,7 @@ Settings for the filtering of completion candidates, regardless of the completio
               ;; We include `partial-completion' to enable wildcards and
               ;; partial paths (when `completion-pcm-leading-wildcard'
               ;; is non-nil)
-              (file (styles . (partial-completion))
-                    (eager-update . t))
+              (file (styles . (partial-completion)))
               (kill-ring (styles . (orderless-literal-and-prefixes)))
               <<completion-category-overrides>>))
     
@@ -1952,10 +1943,10 @@ Settings for the filtering of completion candidates, regardless of the completio
     ;; Automatic ("eager") display and updating of the *Completions*
     ;; buffer: control with `completion-category-overrides'
     (setopt completion-eager-display 'auto
-            completion-eager-update 'auto)
+            completion-eager-update t)
 
     ;; Selection of the Completions buffer from the minibuffer
-    (setopt completion-auto-help 'always
+    (setopt completion-auto-help 'visible
             completion-auto-select 'second-tab ; When, if ever, to select *Completions* on TAB press
             completion-auto-deselect nil)
 
@@ -2626,8 +2617,7 @@ Wayland specific:
 #+end_src
 
 #+begin_src emacs-lisp :noweb-ref completion-category-overrides
-  (recentf (eager-display . t)
-           (eager-update . t))
+  (recentf (eager-display . t))
 #+end_src
 
 ** Bookmark
@@ -2956,10 +2946,6 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
       (add-to-list 'project-switch-commands '(project-recompile "Recompile"))
 
       <<eat-project-switch-commands>>))
-#+end_src
-
-#+begin_src emacs-lisp :noweb-ref completion-category-overrides
-  (project-file (eager-update . t))
 #+end_src
 
 * Do-at-point: Do things to the things at point
@@ -4645,8 +4631,7 @@ This section is for the major mode
 
 
 #+begin_src emacs-lisp :noweb-ref completion-category-overrides
-  (org-node (eager-update . t)
-            (eager-display . t))
+  (org-node (eager-display . t))
 #+end_src
 
 **** Org-web-tools
