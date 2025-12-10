@@ -3547,7 +3547,7 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
                  (window-height . 0.25)))
   (add-to-list 'display-buffer-alist
                '(((category . xref)
-                  (display-buffer-reuse-window display-buffer-use-some-window)
+                  (display-buffer-reuse-window display-buffer-reuse-mode-window display-buffer-use-some-window)
                   (some-window . mru))))
 #+end_src
 

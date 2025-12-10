@@ -4593,7 +4593,7 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
                    (window-height . 0.25)))
     (add-to-list 'display-buffer-alist
                  '(((category . xref)
-                    (display-buffer-reuse-window display-buffer-use-some-window)
+                    (display-buffer-reuse-window display-buffer-reuse-mode-window display-buffer-use-some-window)
                     (some-window . mru))))))
 
 (setup xref
