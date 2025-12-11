@@ -5434,6 +5434,22 @@ When called with `-' instead call `inspector-inspect-expression'."
 (setup regexp-disasm
   (:package (regexp-disasm :url "https://github.com/mattiase/regexp-disasm.git")))
 
+;;; Guile
+(setup guix
+  (:package guix)
+
+  (with-eval-after-load 'scheme
+    (add-hook 'scheme-mode-hook #'guix-devel-mode)
+    (add-hook 'scheme-mode-hook #'guix-prettify-mode)))
+
+;;; Nftables-mode
+(setup nftables-mode
+  (:package nftables-mode))
+
+;;; Caddyfile-mode
+(setup caddyfile-mode
+  (:package caddyfile-mode))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

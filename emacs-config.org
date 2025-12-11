@@ -4119,6 +4119,36 @@ Consequently, the elisp backend is used if there is no other local backend to us
     (global-paren-face-mode 1))
 #+end_src
 
+**** Guile (Guix)
+
+#+name: guile
+#+begin_src emacs-lisp
+  (setup guix
+    (:package guix)
+
+    (with-eval-after-load 'scheme
+      (add-hook 'scheme-mode-hook #'guix-devel-mode)
+      (add-hook 'scheme-mode-hook #'guix-prettify-mode)))
+#+end_src
+
+**** Networking
+
+***** Nftables-mode
+
+#+name: nftables-mode
+#+begin_src emacs-lisp
+  (setup nftables-mode
+    (:package nftables-mode))
+#+end_src
+
+***** Caddyfile-mode
+
+#+name: caddyfile-mode
+#+begin_src emacs-lisp
+  (setup caddyfile-mode
+    (:package caddyfile-mode))
+#+end_src
+
 *** Prose writing
 
 **** Grammar checking
@@ -7687,6 +7717,15 @@ Integration with org-ql:
 
   ;;; Regexp-disasm
   <<regexp-disasm>>
+
+  ;;; Guile
+  <<guile>>
+
+  ;;; Nftables-mode
+  <<nftables-mode>>
+
+  ;;; Caddyfile-mode
+  <<caddyfile-mode>>
 
   ;;; Startup time
   <<startup-time>>
