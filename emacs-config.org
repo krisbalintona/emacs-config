@@ -1757,6 +1757,8 @@ Consult-specific completion category overrides:
     ;;                      :background (modus-themes-with-colors bg-dim)))
     )
 
+  <<diff-mode-display-buffer-alist>>
+
   (setup pulsar
     ;; Pulsar pulses while navigating
     (with-eval-after-load 'pulsar
@@ -1765,6 +1767,16 @@ Consult-specific completion category overrides:
       (add-to-list 'pulsar-pulse-functions 'diff-hunk-next)
       (add-to-list 'pulsar-pulse-functions 'diff-hunk-prev)
       (add-to-list 'pulsar-pulse-functions 'diff-hunk-kill)))
+#+end_src
+
+#+name: diff-mode-display-buffer-alist
+#+begin_src emacs-lisp :noweb-ref display-buffer-alist
+  (add-to-list 'display-buffer-alist
+               `((major-mode . diff-mode)
+                 (display-buffer-reuse-mode-window
+                  display-buffer-in-previous-window
+                  display-buffer-use-least-recent-window
+                  display-buffer-pop-up-window)))
 #+end_src
 
 ** Vc-git: VC with git

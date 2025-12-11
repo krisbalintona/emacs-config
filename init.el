@@ -3414,6 +3414,13 @@ PROP is the name of the property.  See
   ;;                      :background (modus-themes-with-colors bg-dim)))
   )
 
+(add-to-list 'display-buffer-alist
+             `((major-mode . diff-mode)
+               (display-buffer-reuse-mode-window
+                display-buffer-in-previous-window
+                display-buffer-use-least-recent-window
+                display-buffer-pop-up-window)))
+
 (setup pulsar
   ;; Pulsar pulses while navigating
   (with-eval-after-load 'pulsar
