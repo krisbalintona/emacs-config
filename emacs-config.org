@@ -6078,20 +6078,48 @@ Mode line indicator for notmuch emails:
      (t "🞷 "))
     "Icon I use for displaying mail in `display-time-string-forms'.")
 
-  (defun krisb-display-time-mail-notmuch-function ()
-    "Function for `display-time-mail-function'.
-  Returns non-nil when there is mail."
-    (when-let* ((executable-find "notmuch")
-                (command
-                 (format "notmuch search tag:inbox and tag:unread and not tag:list and not tag:sub | wc -l"))
-                (mail-count (string-to-number (shell-command-to-string command))))
-      (< 0 mail-count)))
+  ;; Asynchronously update count for relevant mail.  We do so
+  ;; asynchronously since "notmuch count" can sometimes cause a
+  ;; noticeable delay
+  (defvar krisb-display-time-mail-count 0
+    "Count for relevant unread mail.")
+
+  (defun krisb-display-time--update-mail-count ()
+    "Update the *notmuch count* buffer.
+  This buffer\\='s content is the the number of relevant emails currently
+  unread.
+
+  Return the \"notmuch count\" process spawned."
+    (with-temp-buffer
+      (let ((buf (get-buffer-create "*notmuch count*"))
+            result)
+        (make-process
+         :name "notmuch-count"
+         :buffer buf
+         :noquery t
+         :command (list "notmuch"
+                        "count" "tag:inbox" "and"
+                        "tag:unread" "and"
+                        "not" "tag:list" "and"
+                        "not" "tag:sub")
+         :filter (lambda (_proc chunk)
+                   (setq result (concat result chunk)))
+         :sentinel (lambda (proc event)
+                     (when (string= event "finished\n")
+                       (setq krisb-display-time-mail-count (string-to-number result))))))))
+
+  (defun krisb-display-time-mail-count ()
+    "Returns non-nil when there is relevant mail.
+  Meant to be the value of `display-time-mail-function'."
+    (when-let ((buf (get-buffer "*notmuch count*")))
+      (with-current-buffer buf
+        (< 0 krisb-display-time-mail-count))))
 
   ;; TODO 2025-05-26: Setting `read-mail-command’ to `notmuch’ doesn’t
   ;; seem to succeed as the command run when clicking the mode line mail
   ;; string?
   (setopt display-time-mail-string krisb-display-time-mail-string
-          display-time-mail-function 'krisb-display-time-mail-notmuch-function
+          display-time-mail-function #'krisb-display-time-mail-count
           display-time-mail-face 'font-lock-keyword-face)
 
   ;; FIXME 2025-05-26: This assumes that we always leave notmuch via the
@@ -6105,7 +6133,10 @@ Mode line indicator for notmuch emails:
   (with-eval-after-load 'notmuch
     (advice-add 'notmuch-bury-or-kill-this-buffer :around
                 (lambda (&rest args)
+                  "Update mail count and mode line."
                   (when (equal major-mode 'notmuch-hello-mode)
+                    (krisb-display-time--update-mail-count)
+                    ;; Update mode line display now
                     (display-time-update))
                   (apply args))))
 #+end_src
