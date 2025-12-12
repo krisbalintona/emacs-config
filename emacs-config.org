@@ -3674,6 +3674,25 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
       ;; upstream: https://codeberg.org/akib/emacs-eat/issues/241
       (add-to-list 'vc-deduce-backend-nonvc-modes 'eat-mode)))
 
+  ;; REVIEW 2025-12-11: Consider contributing upstream.  However,
+  ;; currently, the project author has not been active.  Many issues and
+  ;; PRs have gone unreviewed/unnoticed for around a year now.
+  ;; Fix buffer names for remote projects
+  (with-eval-after-load 'project
+    (el-patch-defun project-prefixed-buffer-name (mode)
+      (concat "*"
+              (when-let* ((remote (file-remote-p default-directory 'host)))
+                ;; Similar format as `mode-line-buffer-identification'
+                ;; does for remote buffers
+                (concat remote ": "))
+              (if-let* ((proj (project-current nil)))
+                  (project-name proj)
+                (file-name-nondirectory
+                 (directory-file-name default-directory)))
+              "-"
+              (downcase mode)
+              "*")))
+
   ;; Unbind M-<NUMBER> keybinds because I use them for switching betweeb
   ;; tab-bar tabs
   (setup eat
