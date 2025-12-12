@@ -3910,41 +3910,53 @@ send from."
           notmuch-show-all-tags-list t)
 
   ;; Notmuch-searches
-  (setopt notmuch-saved-searches
-          '(( :name "inbox"
-              :query "(tag:inbox and not tag:list) or (tag:inbox and tag:watch)"
-              :sort-order oldest-first
-              :key "i")
-            ( :name "Emacs mailing lists"
-              :query "tag:list and tag:inbox and tag:emacs"
-              :sort-order newest-first
-              :key "e")
-            ( :name "Guix mailing lists"
-              :query "tag:list and tag:inbox and (tag:guix or tag:mumi)"
-              :sort-order newest-first
-              :key "g")
-            ( :name "Other mailing lists"
-              :query "tag:list and tag:inbox and (path:l2md/other/** or List:\"~abcdw/rde-discuss@lists.sr.ht\" or to:\"~abcdw/rde-discuss@lists.sr.ht\""
-              :sort-order newest-first
-              :key "o")
-            ( :name "sent"
-              :query "tag:sent"
-              :sort-order newest-first
-              :key "s")
-            ( :name "drafts"
-              :query "tag:draft or path:drafts/"
-              :sort-order newest-first
-              :key "d"
-              :search-type unthreaded)
-            ( :name "archived"
-              :query "not tag:inbox and not tag:trash"
-              :key "a")
-            ( :name "all"
-              :query "path:**"
-              :key "A")
-            ( :name "trash"
-              :query "tag:trash"
-              :key "t")))
+  (let ((emacs-devel "List:emacs-devel")
+        (emacs-bugs "List:bug-gnu-emacs")
+        (guix-devel "List:guix-devel")
+        (guix-help "List:help-guix")
+        (guix-patches "List:guix-patches")
+        (guix-bugs "List:bug-guix")
+        (mumi-bugs "List:bug-mumi")
+        (rde "List:\"~abcdw/rde-discuss@lists.sr.ht\"")
+        (notmuch "List:notmuch.notmuchmail.org"))
+    (setopt notmuch-saved-searches
+            `(( :name "inbox"
+                :query "tag:inbox and (not tag:list or tag:watch)"
+                :sort-order oldest-first
+                :key "i")
+              ( :name "Emacs mailing lists"
+                :query ,(format "(%s or %s) and tag:inbox"
+                                emacs-devel emacs-bugs)
+                :sort-order newest-first
+                :key "e")
+              ( :name "Guix mailing lists"
+                :query ,(format "(%s or %s or %s or %s) and tag:inbox"
+                                guix-devel guix-help guix-patches guix-bugs)
+                :sort-order newest-first
+                :key "g")
+              ( :name "Other mailing lists"
+                :query ,(format "(%s or %s or %s) and tag:inbox"
+                                mumi-bugs rde notmuch)
+                :sort-order newest-first
+                :key "o")
+              ( :name "sent"
+                :query "tag:sent"
+                :sort-order newest-first
+                :key "s")
+              ( :name "drafts"
+                :query "tag:draft or path:drafts/"
+                :sort-order newest-first
+                :key "d"
+                :search-type unthreaded)
+              ( :name "archived"
+                :query "not tag:inbox and not tag:trash"
+                :key "a")
+              ( :name "all"
+                :query "path:**"
+                :key "A")
+              ( :name "trash"
+                :query "tag:trash"
+                :key "t"))))
   ;; See `man' for mbsync and notmuch to see valid search terms. See
   ;; https://www.emacswiki.org/emacs/NotMuch#h5o-2 on how to expunge local files
   ;; via cli
