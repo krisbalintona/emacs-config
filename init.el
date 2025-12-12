@@ -1593,7 +1593,8 @@ call `diff-buffer-with-file’ instead."
   
   ;; See also `hs-hide-block-behavior' and `hs-display-lines-hidden'
   (with-eval-after-load 'hideshow
-    (setopt hs-isearch-open t)))
+    (setopt hs-hide-comments-when-hiding-all nil
+            hs-isearch-open t)))
 
 ;;; Outli.el
 ;; TODO 2025-05-20: Document that I prefer this over the heavier,

@@ -3493,7 +3493,8 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
     
     ;; See also `hs-hide-block-behavior' and `hs-display-lines-hidden'
     (with-eval-after-load 'hideshow
-      (setopt hs-isearch-open t)))
+      (setopt hs-hide-comments-when-hiding-all nil
+              hs-isearch-open t)))
 #+end_src
 
 **** Org-src: Programming in org-mode
