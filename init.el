@@ -2539,11 +2539,11 @@ nodes:
     "Bespoke function for `org-node-custom-link-format-fn'."
     (if (or (file-in-directory-p (org-mem-file node) krisb-org-agenda-directory)
             (file-in-directory-p (org-mem-file node) krisb-org-archive-directory))
-        (org-node-get-title node)
+        (org-mem-entry-title node)
       (let* ((place (krisb-org-node-get-place node))
              (type (krisb-org-node-get-type node))
-             (title (org-node-get-title node))
-             (file-title (org-node-get-file-title node)))
+             (title (org-mem-entry-title node))
+             (file-title (org-mem-file-title-strict node)))
         (concat (when place (format "(%s) " place))
                 (when type (format "{%s} " type))
                 title
