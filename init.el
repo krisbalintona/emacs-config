@@ -4224,6 +4224,8 @@ send from."
                      (when (string= event "finished\n")
                        (setq krisb-display-time-mail-count (string-to-number result))))))))
   
+  (run-with-timer 0 120 #'krisb-display-time--update-mail-count)
+  
   (defun krisb-display-time-mail-count ()
     "Returns non-nil when there is relevant mail.
   Meant to be the value of `display-time-mail-function'."
