@@ -3188,7 +3188,7 @@ PROP is the name of the property.  See
   ;; "(tramp) Frequently Asked Questions").  Many/most of the
   ;; selections below were taken from there.
   (with-eval-after-load 'tramp
-    (setopt tramp-verbose 4
+    (setopt tramp-verbose 1
             ;; 2025-12-06: Increase the cutoff to use external
             ;; methods.  Recommendation taken from testing of
             ;; https://coredumped.dev/2025/06/18/making-tramp-go-brrrr./
