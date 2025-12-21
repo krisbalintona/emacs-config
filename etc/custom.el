@@ -5,25 +5,15 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(activities arei astute bui cape citar-org-node cl-generic cond-star
-                consult corfu do-at-point eat edit-indirect
-                editorconfig ef-themes eglot el-patch elisp-demos erc
-                exec-path-from-shell faceup fancy-compilation
-                fish-mode flymake-vale fontaine gcmh geiser-guile
-                highlight-function-calls hotfuzz inspector jinx lin
-                magit-popup mixed-pitch no-littering notmuch-addr
-                notmuch-bookmarks ntlm ol-notmuch olivetti on
-                orderless org-contrib org-hide-drawers org-mime
-                org-modern org-ql org-repeat-by-cron org-review
-                org-roam-folgezettel org-web-tools orgmdb outli
-                package-upgrade-guard paren-face persid powerthesaurus
-                pulsar puni python setup smart-mark so-long
-                soap-client svg tab-bookmark tablist tempel timeout
-                track-changes tramp tramp-theme try use-package vc-jj
-                verilog-mode vertico which-key window-tool-bar wombag
-                work-timer))
+   '(caddyfile-mode guix list-packages-ext nftables-mode package-x persid
+                    sops tramp-hlo vc-jj work-timer))
  '(package-vc-selected-packages
-   '((tab-bookmark :url "https://github.com/minad/tab-bookmark.git")
+   '((sops :url "https://github.com/krisbalintona/sops.git" :branch
+           "devel")
+     (tramp-hlo :url "https://github.com/jsadusk/tramp-hlo.git")
+     (regexp-disasm :url
+                    "https://github.com/mattiase/regexp-disasm.git")
+     (tab-bookmark :url "https://github.com/minad/tab-bookmark.git")
      (org-mime :url "https://github.com/krisbalintona/org-mime.git"
                :branch "merge")
      (persid :url "https://github.com/rougier/persid.git")
@@ -53,8 +43,14 @@
      (org-capture :url "https://github.com/krisbalintona/org-mode.git"
                   :branch "org-capture" :main-file
                   "lisp/org-capture.el")))
+ '(pulsar-window-change-face 'pulsar-green)
  '(safe-local-variable-directories
-   '("/home/krisbalintona/repos/hako-Testament/"
+   '("/home/krisbalintona/guix-repos/rde/"
+     "/ssh:krisbalintona@192.168.4.242:/home/krisbalintona/guix-config/"
+     "/ssh:sublation:/home/krisbalintona/guix-config/"
+     "/home/krisbalintona/guix-repos/guix/"
+     "/home/krisbalintona/guix-repos/hako-Testament/"
+     "/home/krisbalintona/repos/hako-Testament/"
      "/home/krisbalintona/Documents/org-database/notes/notebooks/buoy/"
      "/home/krisbalintona/Documents/org-database/notes/notebooks/"
      "/home/krisbalintona/Documents/org-database/notes/media/"
