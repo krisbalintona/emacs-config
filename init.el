@@ -1442,7 +1442,9 @@ Then apply ARGS."
             
             ;; Set a timeout to prevent the failure to access files to
             ;; indefinitely bloc Emacs
-            remote-file-name-access-timeout 10)))
+            remote-file-name-access-timeout 10
+
+            enable-remote-dir-locals t)))
 
 ;;; Autorevert
 ;; Automatically update buffers as files are externally modified

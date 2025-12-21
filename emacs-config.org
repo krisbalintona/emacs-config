@@ -3768,7 +3768,9 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
               
               ;; Set a timeout to prevent the failure to access files to
               ;; indefinitely bloc Emacs
-              remote-file-name-access-timeout 10)))
+              remote-file-name-access-timeout 10
+
+              enable-remote-dir-locals t)))
 #+end_src
 
 #+name: auto-revert-remote-files
