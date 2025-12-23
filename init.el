@@ -5537,6 +5537,25 @@ When called with `-' instead call `inspector-inspect-expression'."
             ;; uniquify-min-dir-content 1
             uniquify-dirname-transform #'project-uniquify-dirname-transform)))
 
+;;; Sops
+;; TODO 2025-06-16: Document the following information.  `sops-mode’
+;; and `global-sops-mode' only conditionally keep themselves enabled
+;; in files encrypted with SOPS.  If it is, we can use the available
+;; commands to edit the file.
+(setup sops
+  (:package (sops :url "https://github.com/krisbalintona/sops.git"
+                  :branch "devel"))
+  
+  (global-sops-mode 1)
+  
+  (:bind-keys ("C-c e e" . sops-edit-file)
+              :map sops-mode-map
+              ("C-c e e" . sops-edit-file)
+              ("C-c e c" . sops-save-file)
+              ("C-c e C-c" . sops-save-file)
+              ("C-c e k" . sops-cancel)
+              ("C-c e C-k" . sops-cancel)))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

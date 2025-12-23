@@ -2291,22 +2291,6 @@ duration."
   ;; TODO 2025-06-10: Avoid hard-coding this directory?
   (geiser-guile-load-path (list "/home/krisbalintona/guix-config/")))
 
-;;;; Sops
-;; Edit SOPS files inside Emacs.
-;; TODO 2025-06-16: Document the following information.  `sops-mode’
-;; and `global-sops-mode' only conditionally keep themselves enabled
-;; in files encrypted with SOPS.  If it is, we can use the available
-;; commands to edit the file.
-(use-package sops
-  :ensure t
-  :defer t
-  :hook
-  (on-first-file-hook . global-sops-mode)
-  :bind
-  (("C-c e C-c" . sops-save-file)
-   ("C-c e C-k" . sops-cancel)
-   ("C-c e C-d" . sops-edit-file)))
-
 ;;; Package authorship
 
 ;;;; Package-lint-flymake
