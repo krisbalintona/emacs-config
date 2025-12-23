@@ -1186,7 +1186,8 @@ Then apply ARGS."
   (bind-keys :map ctl-x-map
              ("M-f" . recentf-open))
 
-  (setopt recentf-auto-cleanup 600
+  (setopt recentf-autosave-interval 300 ; Emacs 31
+          recentf-auto-cleanup 600
           recentf-max-saved-items 1000
           recentf-max-menu-items 15)
   (setopt recentf-show-messages nil)
