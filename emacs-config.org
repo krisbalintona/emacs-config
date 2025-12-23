@@ -2852,6 +2852,24 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
                  (display-buffer-in-new-tab)))
 #+end_src
 
+** Uniquify: Ensure buffer names are unique
+
+#+name: uniquify
+#+begin_src emacs-lisp
+  ;; TODO 2025-12-12: Document also:
+  ;; - `uniquify-ignore-buffers-re'
+  ;; - `uniquify-strip-common-suffix'
+  ;; - `uniquify-after-kill-buffer-flag'
+
+  (setup uniquify
+    
+    (with-eval-after-load 'uniquify
+      (setopt uniquify-buffer-name-style 'forward
+              uniquify-trailing-separator-flag t
+              ;; uniquify-min-dir-content 1
+              uniquify-dirname-transform #'project-uniquify-dirname-transform)))
+#+end_src
+
 * Mode line
 
 ** Time: Display time
@@ -7799,6 +7817,9 @@ Integration with org-ql:
 
   ;;; Caddyfile-mode
   <<caddyfile-mode>>
+
+  ;;; Uniquify
+  <<uniquify>>
 
   ;;; Startup time
   <<startup-time>>

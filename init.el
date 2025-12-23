@@ -5523,6 +5523,20 @@ When called with `-' instead call `inspector-inspect-expression'."
 (setup caddyfile-mode
   (:package caddyfile-mode))
 
+;;; Uniquify
+;; TODO 2025-12-12: Document also:
+;; - `uniquify-ignore-buffers-re'
+;; - `uniquify-strip-common-suffix'
+;; - `uniquify-after-kill-buffer-flag'
+
+(setup uniquify
+  
+  (with-eval-after-load 'uniquify
+    (setopt uniquify-buffer-name-style 'forward
+            uniquify-trailing-separator-flag t
+            ;; uniquify-min-dir-content 1
+            uniquify-dirname-transform #'project-uniquify-dirname-transform)))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()
