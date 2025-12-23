@@ -3794,9 +3794,11 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
 
 #+name: auto-revert-remote-files
 #+begin_src emacs-lisp
-  ;; Revert remote files too.  See also
-  ;; `remote-file-name-inhibit-auto-save-visited'
-  (setopt auto-revert-remote-files t)
+  ;; FIXME 2025-12-29: Causing freezes when SSHing into my remote
+  ;; machine.  Look into if this is a Tramp or remote machine issue.
+  ;; ;; Revert remote files too?  See also
+  ;; ;; `remote-file-name-inhibit-auto-save-visited'
+  ;; (setopt auto-revert-remote-files t)
 #+end_src
 
 ****** TRAMP: Pretend we're in a remote machine!

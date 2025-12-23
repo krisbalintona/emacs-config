@@ -1461,9 +1461,11 @@ Then apply ARGS."
     (setopt auto-revert-interval 3
             global-auto-revert-non-file-buffers t))
 
-  ;; Revert remote files too.  See also
-  ;; `remote-file-name-inhibit-auto-save-visited'
-  (setopt auto-revert-remote-files t)
+  ;; FIXME 2025-12-29: Causing freezes when SSHing into my remote
+  ;; machine.  Look into if this is a Tramp or remote machine issue.
+  ;; ;; Revert remote files too?  See also
+  ;; ;; `remote-file-name-inhibit-auto-save-visited'
+  ;; (setopt auto-revert-remote-files t)
   
   (if (fboundp 'vc-auto-revert-mode)
       (vc-auto-revert-mode 1)             ; Emacs 31
