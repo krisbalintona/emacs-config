@@ -4790,39 +4790,6 @@ functionality."
     (with-eval-after-load 'eglot
       (advice-add #'eglot-completion-at-point :around #'cape-wrap-nonexclusive))))
 
-;; Resolve the undesirable behavior of `cape-elisp-symbol' and friends
-;; with occupying the *Help* buffer, as described here:
-;; https://github.com/minad/corfu/discussions/504#discussioncomment-12592545.
-;; This solution was taken from the suggestion of
-;; https://github.com/minad/corfu/discussions/504#discussioncomment-12593463
-(setup cape
-  (with-eval-after-load 'corfu
-    (defun krisb-cape-corfu-popupinfo--doc-buffer (str)
-      "Wrapper around `elisp--company-doc-buffer'.
-This function is a replacement for `elisp--company-doc-buffer', which
-normally returns the main Help buffer (returned by `help-buffer').
-Instead, this function returns a separate buffer to use as the Help
-buffer.
-
-Accepts the same argument as `elisp--company-doc-buffer' (STR).
-
-Meant to be used with `cape-capf-properties' on the `cape-elisp-symbol'
-completion at point function."
-      (let* ((help-xref-following t)
-             (new-help-buf-name
-              "*corfu-popupinfo documentation*")
-             (new-help-buf (get-buffer-create new-help-buf-name)))
-        (with-current-buffer new-help-buf
-          (help-mode)
-          (elisp--company-doc-buffer str))))
-
-    (defun krisb-cape-elisp--around-advice (orig-fun &rest _args)
-      "Advice to use a different doc buffer for documentation."
-      (cape-wrap-properties orig-fun :company-doc-buffer #'krisb-cape-corfu-popupinfo--doc-buffer))
-
-    (dolist (capf '(cape-elisp-symbol elisp-completion-at-point))
-      (advice-add capf :around #'krisb-cape-elisp--around-advice))))
-
 ;;; Project
 ;; TODO 2025-05-22: Document:
 ;; - `project-vc-extra-root-markers’

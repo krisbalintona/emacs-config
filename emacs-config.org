@@ -2185,39 +2185,6 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
     (with-eval-after-load 'cape
       (with-eval-after-load 'eglot
         (advice-add #'eglot-completion-at-point :around #'cape-wrap-nonexclusive))))
-
-  ;; Resolve the undesirable behavior of `cape-elisp-symbol' and friends
-  ;; with occupying the *Help* buffer, as described here:
-  ;; https://github.com/minad/corfu/discussions/504#discussioncomment-12592545.
-  ;; This solution was taken from the suggestion of
-  ;; https://github.com/minad/corfu/discussions/504#discussioncomment-12593463
-  (setup cape
-    (with-eval-after-load 'corfu
-      (defun krisb-cape-corfu-popupinfo--doc-buffer (str)
-        "Wrapper around `elisp--company-doc-buffer'.
-  This function is a replacement for `elisp--company-doc-buffer', which
-  normally returns the main Help buffer (returned by `help-buffer').
-  Instead, this function returns a separate buffer to use as the Help
-  buffer.
-
-  Accepts the same argument as `elisp--company-doc-buffer' (STR).
-
-  Meant to be used with `cape-capf-properties' on the `cape-elisp-symbol'
-  completion at point function."
-        (let* ((help-xref-following t)
-               (new-help-buf-name
-                "*corfu-popupinfo documentation*")
-               (new-help-buf (get-buffer-create new-help-buf-name)))
-          (with-current-buffer new-help-buf
-            (help-mode)
-            (elisp--company-doc-buffer str))))
-
-      (defun krisb-cape-elisp--around-advice (orig-fun &rest _args)
-        "Advice to use a different doc buffer for documentation."
-        (cape-wrap-properties orig-fun :company-doc-buffer #'krisb-cape-corfu-popupinfo--doc-buffer))
-
-      (dolist (capf '(cape-elisp-symbol elisp-completion-at-point))
-        (advice-add capf :around #'krisb-cape-elisp--around-advice))))
 #+end_src
 
 * Interfaces
@@ -2472,6 +2439,41 @@ Vertico provides several extensions:
     
     ;; See also `corfu-history-duplicate' and `corfu-history-decay'
     (corfu-history-mode 1))
+#+end_src
+
+Before Corfu 2.7, specifically [[https://github.com/minad/corfu/commit/4c4a41b0b3a7a65729b701670052d2287f57b427][commit 4c4a41b]], the ​*Help​* buffer would be replaced when showing documentation for elisp symbols via e.g. corfu-popupinfo. This is documented in [[https://lists.gnu.org/archive/html/bug-gnu-emacs/2025-11/msg00513.html][Emacs bug#79792]]. For earlier versions of Corfu, below can be included as a workaround.
+#+begin_src emacs-lisp
+  ;; Resolve the undesirable behavior of `cape-elisp-symbol' and friends
+  ;; with occupying the *Help* buffer, as described here:
+  ;; https://github.com/minad/corfu/discussions/504#discussioncomment-12592545.
+  ;; This solution was taken from the suggestion of
+  ;; https://github.com/minad/corfu/discussions/504#discussioncomment-12593463
+  (with-eval-after-load 'corfu
+    (defun krisb-cape-corfu-popupinfo--doc-buffer (str)
+      "Wrapper around `elisp--company-doc-buffer'.
+  This function is a replacement for `elisp--company-doc-buffer', which
+  normally returns the main Help buffer (returned by `help-buffer').
+  Instead, this function returns a separate buffer to use as the Help
+  buffer.
+
+  Accepts the same argument as `elisp--company-doc-buffer' (STR).
+
+  Meant to be used with `cape-capf-properties' on the `cape-elisp-symbol'
+  completion at point function."
+      (let* ((help-xref-following t)
+             (new-help-buf-name
+              "*corfu-popupinfo documentation*")
+             (new-help-buf (get-buffer-create new-help-buf-name)))
+        (with-current-buffer new-help-buf
+          (help-mode)
+          (elisp--company-doc-buffer str))))
+
+    (defun krisb-cape-elisp--around-advice (orig-fun &rest _args)
+      "Advice to use a different doc buffer for documentation."
+      (cape-wrap-properties orig-fun :company-doc-buffer #'krisb-cape-corfu-popupinfo--doc-buffer))
+      
+    (dolist (capf '(cape-elisp-symbol elisp-completion-at-point))
+      (advice-add capf :around #'krisb-cape-elisp--around-advice)))
 #+end_src
 
 *** Completion-preview: Show just the next completion candidate
