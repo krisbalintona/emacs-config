@@ -4666,11 +4666,16 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
     (add-to-list 'display-buffer-alist
                  `((or (major-mode . xref--xref-buffer-mode)
                        (,(rx (literal xref-buffer-name))))
-                   (display-buffer-below-selected display-buffer-at-bottom)
+                   (display-buffer-reuse-window
+                    display-buffer-reuse-mode-window
+                    display-buffer-below-selected
+                    display-buffer-at-bottom)
                    (window-height . 0.25)))
     (add-to-list 'display-buffer-alist
                  '(((category . xref)
-                    (display-buffer-reuse-window display-buffer-reuse-mode-window display-buffer-use-some-window)
+                    (display-buffer-reuse-window
+                     display-buffer-reuse-mode-window
+                     display-buffer-use-some-window)
                     (some-window . mru))))))
 
 (setup xref
