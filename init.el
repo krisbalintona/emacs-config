@@ -3559,6 +3559,13 @@ PROP is the name of the property.  See
   (bind-keys :map krisb-open-keymap
              ("s" . eat))
 
+  (with-eval-after-load 'eat
+    ;; Set TERM to xterm-256color in order for certain functionality
+    ;; to be match normal terminals, like avoiding "WARNING: terminal
+    ;; is not fully functional" messages.  (Haven't noticed any
+    ;; unexpected behavior from this yet.)
+    (setopt eat-term-name "xterm-256color"))
+
   ;; 2025-04-05: This resolves the continuation lines issue in EAT
   ;; terminal (including eat-shell in
   ;; `eat-eshell-visual-command-mode').  The continuation line issue
