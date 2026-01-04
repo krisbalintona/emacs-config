@@ -3237,10 +3237,12 @@ PROP is the name of the property.  See
   ;; Don't show symlinks, since that requires the expensive
   ;; `file-truename'.  Taken from (info "(tramp) Frequently Asked
   ;; Questions")
-  (connection-local-set-profile-variables 'krisb-dired-no-symlink
-                                          '((dired-check-symlinks . nil)))
-  (connection-local-set-profiles '(:application tramp :machine "sublation")
-                                 'krisb-dired-no-symlink)
+  (connection-local-set-profile-variables
+   'krisb-dired-no-symlink
+   '((dired-check-symlinks . nil)))
+  (connection-local-set-profiles
+   '(:application tramp :machine "sublation")
+   'krisb-dired-no-symlink)
 
   ;; Use "direct async processes": create sub-processes directly on
   ;; the host.  See 5.6.10 Improving performance of asynchronous
@@ -3256,10 +3258,41 @@ PROP is the name of the property.  See
   ;;   RemoteCommand option.
   ;; - May fail when when the command is too long (e.g. long
   ;;   directory names or long PATH that is set)
-  (connection-local-set-profile-variables 'krisb-remote-direct-async-process
-                                          '((tramp-direct-async-process . t)))
-  (connection-local-set-profiles '(:application tramp :user "krisbalintona" :machine "sublation")
-                                 'krisb-remote-direct-async-process))
+  (connection-local-set-profile-variables
+   'krisb-remote-direct-async-process
+   '((tramp-direct-async-process . t)))
+  (connection-local-set-profiles
+   '(:application tramp :user "krisbalintona" :machine "sublation")
+   'krisb-remote-direct-async-process)
+
+  ;; NOTE 2026-01-04: Set `shell-file-name' specially.  This is a
+  ;; workaround for several problems:
+  ;;
+  ;; 1. Because tramp shells are non-login, they do not source
+  ;;    ~/.profile, which is populated by the setup-environment script
+  ;;    in e.g. ~/.guix-home, which
+  ;;    `home-environment-variables-service-type' adds to.  As a
+  ;;    workaround, we manually source ~/.profile for created
+  ;;    interactive shells (e.g., `shell', `eat').
+  ;;
+  ;; 2. I use fish but currently have the SHELL for my sublation machine
+  ;;    bash.  The reason is issues using tramp on this machine with a
+  ;;    non-POSIX shell.  As a workaround, I start the fish shell
+  ;;    manually (only for created interactive shells like `shell' and
+  ;;    `eat').
+  ;;
+  ;; 3. Set the LC_ALL env var in order to render unicode properly.
+  ;;    (Setting LC_ALL might be overkill, but I wasn't able to
+  ;;    determine which specific LC_* variable suffices for this end.)
+  (connection-local-set-profile-variables
+   'krisb-remote-source-profile
+   `((shell-file-name . "/bin/sh -c 'source ~/.profile && exec $(which fish)'")
+     (tramp-remote-process-environment
+      ;; FIXME 2026-01-04: Avoid hardcoding locale somehow?
+      . ,(cons "LC_ALL=en_US.utf8" tramp-remote-process-environment))))
+  (connection-local-set-profiles
+   '(:application tramp :user "krisbalintona" :machine "sublation")
+   'krisb-remote-source-profile))
 
 ;;; Tramp-hlo
 (setup tramp-hlo
