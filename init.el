@@ -5530,6 +5530,12 @@ When called with `-' instead call `inspector-inspect-expression'."
     (add-hook 'scheme-mode-hook #'guix-devel-mode)
     (add-hook 'scheme-mode-hook #'guix-prettify-mode)))
 
+(setup geiser
+  (:package geiser))
+
+(setup geiser-guile
+  (:package geiser-guile))
+
 ;;; Nftables-mode
 (setup nftables-mode
   (:package nftables-mode))

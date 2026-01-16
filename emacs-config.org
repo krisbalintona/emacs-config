@@ -4188,7 +4188,7 @@ Consequently, the elisp backend is used if there is no other local backend to us
     (global-paren-face-mode 1))
 #+end_src
 
-**** Guile (Guix)
+**** Guile and Guix
 
 #+name: guile
 #+begin_src emacs-lisp
@@ -4198,6 +4198,12 @@ Consequently, the elisp backend is used if there is no other local backend to us
     (with-eval-after-load 'scheme
       (add-hook 'scheme-mode-hook #'guix-devel-mode)
       (add-hook 'scheme-mode-hook #'guix-prettify-mode)))
+
+  (setup geiser
+    (:package geiser))
+
+  (setup geiser-guile
+    (:package geiser-guile))
 #+end_src
 
 **** Networking
