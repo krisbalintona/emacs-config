@@ -4884,7 +4884,7 @@ functionality."
     (bind-keys :map project-prefix-map
                ("s" . eat-project))
     (cl-nsubstitute '(eat-project "EAT") 'project-shell project-switch-commands
-                    :key #'car)))
+                    :key #'car))))
 
 ;;; Info
 ;; TODO 2025-06-16: Document:
