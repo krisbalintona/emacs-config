@@ -4939,7 +4939,9 @@ functionality."
   ;; (`tramp-backup-directory-alist'); use `backup-directory-alist'
   ;; instead
   (with-eval-after-load 'tramp
-    (setopt tramp-backup-directory-alist backup-directory-alist))
+    ;; TODO 2025-12-12: Revisit this.
+    ;; (setopt tramp-backup-directory-alist backup-directory-alist)
+    )
 
   ;; Numbering backups
   (setopt version-control t

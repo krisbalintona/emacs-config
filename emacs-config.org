@@ -3904,7 +3904,9 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
   ;; (`tramp-backup-directory-alist'); use `backup-directory-alist'
   ;; instead
   (with-eval-after-load 'tramp
-    (setopt tramp-backup-directory-alist backup-directory-alist))
+    ;; TODO 2025-12-12: Revisit this.
+    ;; (setopt tramp-backup-directory-alist backup-directory-alist)
+    )
 #+end_src
 
 I do not use this myself, but for users who don't need VC when using tramp on remote machines, they can make vc.el not do any of its usual operations in the background when e.g. visiting files:
