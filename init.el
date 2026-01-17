@@ -4843,8 +4843,7 @@ functionality."
 (setup project
 
   (with-eval-after-load 'project
-    (setopt project-prompter 'project-prompt-project-name ; Emacs 31
-            project-file-history-behavior 'relativize
+    (setopt project-file-history-behavior 'relativize
             ;; FIXME 2025-11-23: I have to use `file-relative-name'
             ;; since `project-root' returns abbreviated file paths.
             ;; Create a bug report/patch to have file paths be
