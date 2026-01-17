@@ -1222,9 +1222,7 @@ Then apply ARGS."
                    (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)))))
 
 ;;; Apropos
-(setup apropos
-  
-  (bind-keys ("C-h u" . apropos-user-option)))
+(setup apropos)
 
 ;;; Messages buffer
 ;; Visual-line-mode in *Messages* buffer

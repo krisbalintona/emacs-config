@@ -4015,9 +4015,7 @@ Tell ~display-buffer-alist~ where to show help buffers:
 Apropos is a built-in library that queries the user for a regexp or word list to search existing symbols for. For example, ~apropos-user-option~ will search all user options (i.e., symbols defined by ~defcustom~). Evaluate ~M-x apropos-command ^apropos RET~ to see all the helpful commands apropos offers.
 #+name: apropos
 #+begin_src emacs-lisp
-  (setup apropos
-    
-    (bind-keys ("C-h u" . apropos-user-option)))
+  (setup apropos)
 #+end_src
 Additionally, all apropos commands will expand the subset of symbols they search when called with a universal argument. For example, ~apropos-user-option~ with a universal argument will search all variables, not just user options. (The option ~apropos-do-all~ determines whether =C-u= is required for this behavior.)
 
