@@ -4862,18 +4862,6 @@ functionality."
   (with-eval-after-load 'project
     (setopt project-mode-line t
             project-mode-line-face 'italic)
-
-    ;; Solution to overwhelming `locate-dominating-file' calls from
-    ;; project mode line, as presented here:
-    ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=78545#59
-    (setopt project-mode-line-format '(:eval (project-mode-line-buffer-local)))
-    (defvar-local project-mode-line-buffer-local nil)
-    (defun project-mode-line-buffer-local ()
-      (unless project-mode-line-buffer-local
-        (require 'timeout)
-        (setq-local project-mode-line-buffer-local
-                    (timeout-throttled-func 'project-mode-line-format 0.3)))
-      (funcall project-mode-line-buffer-local)))
   
   ;; Keybindings
   (with-eval-after-load 'project
