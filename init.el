@@ -127,6 +127,7 @@ nothing."
 ;; 2025-10-23 TODO: Revisit this.  Ideally, should be more safe than
 ;; setting this value to an outright t
 (setopt package-vc-allow-build-commands t)
+(setopt package-review-policy t) ; Review packages upon upgrade
 
 ;;;; Setup.el
 (unless (package-installed-p 'setup)
@@ -5049,10 +5050,7 @@ which file on the system it backs up."
   (add-hook 'text-mode-hook #'flymake-vale-load))
 
 ;;; Package-guard-upgrade
-(setup package-upgrade-guard
-  (:package (package-upgrade-guard :url "https://github.com/kn66/package-upgrade-guard.el.git"))
-  
-  (package-upgrade-guard-mode 1))
+
 
 ;;; Sendmail
 ;; Use the `sendmail' program to send emails?  If yes, set the value
