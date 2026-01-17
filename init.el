@@ -3652,9 +3652,8 @@ PROP is the name of the property.  See
   (with-eval-after-load 'olivetti
     (setopt olivetti-body-width 0.55
             olivetti-minimum-body-width 80
-            olivetti-margin-width 8
-            olivetti-style 'fancy)) ; Fancy makes the buffer look like a page
-
+            olivetti-margin-width 8))
+            
   ;; TODO 2025-05-22: Revisit this.
   ;; ;; FIXME 2024-01-11: This is a temporary solution. Olivetti's
   ;; ;; changing of margins and fringes messes with the calculation of
