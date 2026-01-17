@@ -5,8 +5,24 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(caddyfile-mode guix list-packages-ext nftables-mode package-x persid
-                    sops tramp-hlo vc-jj work-timer))
+   '(activities astute caddyfile-mode cape citar-org-node cl-generic
+                cond-star consult corfu do-at-point eat editorconfig
+                ef-themes eglot el-patch elisp-demos erc
+                exec-path-from-shell faceup fancy-compilation
+                fish-mode flymake-vale fontaine gcmh geiser-guile guix
+                highlight-function-calls hotfuzz inspector jinx lin
+                list-packages-ext magit-popup mixed-pitch
+                nftables-mode no-littering notmuch-addr
+                notmuch-bookmarks ntlm ol-notmuch olivetti on
+                orderless org-contrib org-hide-drawers org-mime
+                org-modern org-ql org-repeat-by-cron org-review
+                org-roam-folgezettel org-web-tools orgmdb outli
+                package-upgrade-guard package-x paren-face persid
+                powerthesaurus pulsar puni python regexp-disasm sesman
+                setup smart-mark so-long soap-client sops svg
+                tab-bookmark tempel timeout track-changes tramp-hlo
+                tramp-theme try use-package vc-jj verilog-mode vertico
+                which-key window-tool-bar wombag work-timer))
  '(package-vc-selected-packages
    '((sops :url "https://github.com/krisbalintona/sops.git" :branch
            "devel")
@@ -45,7 +61,8 @@
                   "lisp/org-capture.el")))
  '(pulsar-window-change-face 'pulsar-green)
  '(safe-local-variable-directories
-   '("/home/krisbalintona/guix-repos/rde/"
+   '("/home/krisbalintona/guix-config/"
+     "/home/krisbalintona/guix-repos/rde/"
      "/ssh:krisbalintona@192.168.4.242:/home/krisbalintona/guix-config/"
      "/ssh:sublation:/home/krisbalintona/guix-config/"
      "/home/krisbalintona/guix-repos/guix/"
