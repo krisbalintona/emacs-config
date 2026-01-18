@@ -4843,6 +4843,8 @@ functionality."
 ;; - `project-vc-extra-root-markers’
 ;; - `project-kill-buffer-conditions'
 (setup project
+  (:pin project "gnu-elpa-devel")
+  (:package project)
 
   (with-eval-after-load 'project
     (setopt project-file-history-behavior 'relativize
