@@ -5,3 +5,4 @@
 /tree-sitter/
 *.elc
 recipes/*.elc
+/tramp-rpc/

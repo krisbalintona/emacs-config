@@ -3947,6 +3947,14 @@ The performance increase can be /drastic/.
       (tramp-hlo-setup)))
 #+end_src
 
+****** Tramp-RPC: Experiment with using remote RPC server instead of parsing shell command output
+
+#+name: tramp-rpc
+#+begin_src emacs-lisp
+  (setup tramp-rpc
+    (:package (tramp-rpc :url "https://github.com/ArthurHeymans/emacs-tramp-rpc.git")))
+#+end_src
+
 **** Emacs-lisp
 
 ***** Elisp-mode: The emacs-lisp major-mode
@@ -7692,6 +7700,9 @@ Integration with org-ql:
 
   ;;; Tramp-theme
   <<tramp-theme>>
+
+  ;;; Tramp-rpc
+  <<tramp-rpc>>
 
   ;;; Paren-face
   <<paren-face>>
