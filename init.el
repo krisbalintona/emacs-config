@@ -1685,18 +1685,26 @@ call `diff-buffer-with-file’ instead."
 (setup pulsar
   (:package pulsar)
 
-  (pulsar-global-mode 1)
-
   (with-eval-after-load 'pulsar
     (setopt pulsar-pulse t
             pulsar-delay 0.05
             pulsar-iterations 5
             pulsar-pulse-on-window-change t)
+
+    (cl-delete 'backward-kill-word pulsar-pulse-region-functions)
+    (cl-delete 'backward-kill-sexp pulsar-pulse-region-functions)
+    (cl-delete 'backward-kill-sentence pulsar-pulse-region-functions)
+    (cl-delete 'kill-word pulsar-pulse-region-functions)
+    (cl-delete 'kill-sexp pulsar-pulse-region-functions)
+    (cl-delete 'kill-line pulsar-pulse-region-functions)
+    (cl-delete 'kill-visual-line pulsar-pulse-region-functions)
     
     ;; Faces
     (setopt pulsar-face 'pulsar-red
             pulsar-region-change-face 'pulsar-cyan
-            pulsar-window-change-face 'pulsar-green)))
+            pulsar-window-change-face 'pulsar-green))
+
+  (pulsar-global-mode 1))
 
 ;;; Org
 ;;;; Org built-ins
