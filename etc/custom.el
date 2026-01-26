@@ -6,8 +6,8 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    '(activities astute caddyfile-mode cape citar-org-node cl-generic
-                cond-star consult corfu do-at-point eat editorconfig
-                ef-themes eglot el-patch elisp-demos erc
+                compat cond-star consult corfu do-at-point eat
+                editorconfig ef-themes eglot el-patch elisp-demos erc
                 exec-path-from-shell faceup fancy-compilation
                 fish-mode flymake-vale fontaine gcmh geiser-guile guix
                 highlight-function-calls hotfuzz inspector jinx lin
@@ -17,14 +17,16 @@
                 orderless org-contrib org-hide-drawers org-mime
                 org-modern org-ql org-repeat-by-cron org-review
                 org-roam-folgezettel org-web-tools orgmdb outli
-                package-upgrade-guard package-x paren-face persid
-                powerthesaurus pulsar puni python regexp-disasm sesman
-                setup smart-mark so-long soap-client sops svg
-                tab-bookmark tempel timeout track-changes tramp-hlo
+                package-x paren-face persid powerthesaurus project
+                pulsar puni python regexp-disasm sesman setup
+                smart-mark so-long soap-client sops svg tab-bookmark
+                tempel timeout track-changes tramp-hlo tramp-rpc
                 tramp-theme try use-package vc-jj verilog-mode vertico
                 which-key window-tool-bar wombag work-timer))
  '(package-vc-selected-packages
-   '((sops :url "https://github.com/krisbalintona/sops.git" :branch
+   '((tramp-rpc :url
+                "https://github.com/ArthurHeymans/emacs-tramp-rpc.git")
+     (sops :url "https://github.com/krisbalintona/sops.git" :branch
            "devel")
      (tramp-hlo :url "https://github.com/jsadusk/tramp-hlo.git")
      (regexp-disasm :url
@@ -61,7 +63,8 @@
                   "lisp/org-capture.el")))
  '(pulsar-window-change-face 'pulsar-green)
  '(safe-local-variable-directories
-   '("/home/krisbalintona/guix-config/"
+   '("/home/krisbalintona/emacs-repos/packages/org-mode/"
+     "/home/krisbalintona/guix-config/"
      "/home/krisbalintona/guix-repos/rde/"
      "/ssh:krisbalintona@192.168.4.242:/home/krisbalintona/guix-config/"
      "/ssh:sublation:/home/krisbalintona/guix-config/"
