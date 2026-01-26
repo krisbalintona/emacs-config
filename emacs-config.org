@@ -3954,7 +3954,11 @@ The performance increase can be /drastic/.
 #+name: tramp-rpc
 #+begin_src emacs-lisp
   (setup tramp-rpc
-    (:package (tramp-rpc :url "https://github.com/ArthurHeymans/emacs-tramp-rpc.git")))
+    (:package (tramp-rpc :url "https://github.com/ArthurHeymans/emacs-tramp-rpc.git"
+                         :branch "Python"))
+
+    (with-eval-after-load 'tramp-rpc
+      (setopt tramp-rpc-deploy-backend 'python)))
 #+end_src
 
 **** Emacs-lisp

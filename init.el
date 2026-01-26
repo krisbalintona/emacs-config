@@ -3314,7 +3314,11 @@ PROP is the name of the property.  See
 
 ;;; Tramp-rpc
 (setup tramp-rpc
-  (:package (tramp-rpc :url "https://github.com/ArthurHeymans/emacs-tramp-rpc.git")))
+  (:package (tramp-rpc :url "https://github.com/ArthurHeymans/emacs-tramp-rpc.git"
+                       :branch "Python"))
+
+  (with-eval-after-load 'tramp-rpc
+    (setopt tramp-rpc-deploy-backend 'python)))
 
 ;;; Paren-face
 ;; Creates a face just for parentheses.  Useful for lispy languages
