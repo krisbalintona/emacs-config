@@ -6211,7 +6211,7 @@ Mode line indicator for notmuch emails:
   Return the \"notmuch count\" process spawned."
     (with-temp-buffer
       (let ((buf (get-buffer-create "*notmuch count*"))
-            result)
+            result)                       ; Store result for sentinel
         (make-process
          :name "notmuch-count"
          :buffer buf
@@ -6222,11 +6222,20 @@ Mode line indicator for notmuch emails:
                         "not" "tag:list" "and"
                         "not" "tag:sub")
          :filter (lambda (_proc chunk)
+                   ;; Store result for (lexically-bound) retrieval by
+                   ;; sentinel
                    (setq result (concat result chunk)))
          :sentinel (lambda (proc event)
                      (when (string= event "finished\n")
+                       ;; Set cached mail count
+                       ;; (`krisb-display-time-mail-count') to value
+                       ;; stored in RESULT
                        (setq krisb-display-time-mail-count (string-to-number result))))))))
 
+  ;; Update mail count every 120 seconds.  Although, only
+  ;; `krisb-display-time-mail-count' is updated; the mode line is not.
+  ;; To update the mode line as well, call `display-time-update'
+  ;; afterwards
   (run-with-timer 0 120 #'krisb-display-time--update-mail-count)
 
   (defun krisb-display-time-mail-count ()
@@ -6247,19 +6256,36 @@ Mode line indicator for notmuch emails:
   ;; notmuch-hello buffer.  This is a workaround because I know of no
   ;; other reliable indiaction of when I’m done checking mail.  Is there
   ;; something better?
+  ;;
   ;; Advise `notmuch-bury-or-kill-this-buffer’ such that it updates
   ;; after leaving the notmuch-hello buffer.  This prevents the mail
   ;; string from being visible right after we’ve just checked mail in
   ;; notmuch
+  (defun krisb-notmuch-hello-update-mail-count-advice (&rest args)
+    "Update mode line mail count immediately.
+  The mail count is the number stored in the variable
+  `krisb-display-time-mail-count'.  It is updated by calling
+  `krisb-display-time--update-mail-count'.  We then call
+  `display-time-update' to update the mode line to reflect the new value.
+
+  Our approach is to call `display-time-update' at the end of the existing
+  sentinel of `krisb-display-time--update-mail-count'.
+
+  Meant to be added as :around advice for
+  `notmuch-bury-or-kill-this-buffer'.  ARGS are the arguments passed to
+  `notmuch-bury-or-kill-this-buffer'."
+    (when (equal major-mode 'notmuch-hello-mode)
+      (let* ((process (krisb-display-time--update-mail-count))
+             (initial-sentinel (process-sentinel process)))
+        (set-process-sentinel process
+                              (lambda (proc event)
+                                (when initial-sentinel
+                                  (funcall initial-sentinel proc event))
+                                (when (string= event "finished\n")
+                                  (display-time-update))))))
+    (apply args))
   (with-eval-after-load 'notmuch
-    (advice-add 'notmuch-bury-or-kill-this-buffer :around
-                (lambda (&rest args)
-                  "Update mail count and mode line."
-                  (when (equal major-mode 'notmuch-hello-mode)
-                    (krisb-display-time--update-mail-count)
-                    ;; Update mode line display now
-                    (display-time-update))
-                  (apply args))))
+    (advice-add 'notmuch-bury-or-kill-this-buffer :around #'krisb-notmuch-hello-update-mail-count-advice))
 #+end_src
 
 I have several patches awaiting review or application. They are:
