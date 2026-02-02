@@ -6829,6 +6829,7 @@ Log when the value of certain properties are changed:
            (not (tags-local "PROJECT" "INBOX"))
            (tosee)
            (not (tags-local "REVIEW"))
+           (not (tags "PUSHED"))
            (or (and (todo "NEXT" "TODO")
                     (not (or (scheduled)
                              (deadline))))

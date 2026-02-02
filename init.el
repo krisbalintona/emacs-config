@@ -2015,6 +2015,7 @@ call `diff-buffer-with-file’ instead."
            (not (tags-local "PROJECT" "INBOX"))
            (tosee)
            (not (tags-local "REVIEW"))
+           (not (tags "PUSHED"))
            (or (and (todo "NEXT" "TODO")
                     (not (or (scheduled)
                              (deadline))))
