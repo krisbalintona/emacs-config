@@ -5578,6 +5578,10 @@ When called with `-' instead call `inspector-inspect-expression'."
               ("C-c e k" . sops-cancel)
               ("C-c e C-k" . sops-cancel)))
 
+;;; Yaml-mode
+(setup yaml-mode
+  (:package yaml-mode))
+
 ;;; Startup time
 ;; Message for total init time after startup
 (defun krisb-startup-time ()

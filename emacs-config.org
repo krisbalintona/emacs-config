@@ -4254,6 +4254,14 @@ Consequently, the elisp backend is used if there is no other local backend to us
                 ("C-c e C-k" . sops-cancel)))
 #+end_src
 
+**** Yaml
+
+#+name: yaml-mode
+#+begin_src emacs-lisp
+  (setup yaml-mode
+    (:package yaml-mode))
+#+end_src
+
 *** Prose writing
 
 **** Grammar checking
@@ -7917,6 +7925,9 @@ Integration with org-ql:
 
   ;;; Sops
   <<sops>>
+
+  ;;; Yaml-mode
+  <<yaml-mode>>
 
   ;;; Startup time
   <<startup-time>>
