@@ -1,6 +1,12 @@
 ;; -*- lexical-binding: t; -*-
 
-(setq force-load-messages t)
+(defconst krisb-extra-verbose-p (getenv "EXTRA_VERBOSE")
+  "Whether Emacs should be \"extra verbose\" with certain things.
+A variable I use in several places when I want Emacs to be particularly
+verbose for the sake of, e.g., debugging and testing.")
+
+(when krisb-extra-verbose-p
+  (setq force-load-messages t))
 
 (setopt user-full-name "Kristoffer Balintona"
         user-mail-address "krisbalintona@gmail.com")
@@ -460,11 +466,14 @@ package-archives, e.g. \"gnu\")."))
 ;; reset the value after initialization.
 (defun krisb-gc-set-options ()
   "Set garbage collection options."
+  ;; When KRISB-EXTRA-VERBOSE-P is non-nil, print garbage collection
+  ;; messages.  Otherwise, keep the default.
+  (when krisb-extra-verbose-p
+    (setopt garbage-collection-messages t))
   ;; NOTE 2024-02-11: Please reference
   ;; https://emacsconf.org/2023/talks/gc/ for a statistically-informed
   ;; recommendation for GC variables
-  (setopt garbage-collection-messages t
-          gc-cons-threshold (* 16 1024 1024) ; 16 mb
+  (setopt gc-cons-threshold (* 16 1024 1024) ; 16 mb
           gc-cons-percentage 0.15))
 (add-hook 'after-init-hook #'krisb-gc-set-options)
 
@@ -495,14 +504,15 @@ package-archives, e.g. \"gnu\")."))
 
   (add-hook 'on-first-buffer-hook #'gcmh-mode)
 
-  (setopt gcmh-high-cons-threshold gc-cons-threshold
-          ;; If the idle delay is too long, we run the risk of runaway
-          ;; memory usage in busy sessions.  And if it's too low, then
-          ;; we may as well not be using gcmh at all.  See
-          ;; https://emacsconf.org/2023/talks/gc/ for a
-          ;; statistically-informed analysis of GC in Emacs.
-          gcmh-idle-delay 5
-          gcmh-verbose garbage-collection-messages))
+  (with-eval-after-load 'gcmh
+    (setopt gcmh-high-cons-threshold (* 32 1024 1024) ; 32 Mb
+            ;; If the idle delay is too long, we run the risk of runaway
+            ;; memory usage in busy sessions.  And if it's too low, then
+            ;; we may as well not be using gcmh at all.  See
+            ;; https://emacsconf.org/2023/talks/gc/ for a
+            ;; statistically-informed analysis of GC in Emacs.
+            gcmh-idle-delay 5
+            gcmh-verbose garbage-collection-messages)))
 
 ;; Increase GC threshold when in minibuffer
 (with-eval-after-load 'gcmh
