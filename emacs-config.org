@@ -168,6 +168,13 @@ In Emacs 31, packages installed with package.el can now be reviewed upon upgradi
   verbose for the sake of, e.g., debugging and testing.")
 #+end_src
 
+** Configuration unit macros
+
+#+name: config-units
+#+begin_src emacs-lisp
+  (require 'config-units)
+#+end_src
+
 ** Bespoke helpers and variables
 
 #+name: config-helpers
@@ -7537,6 +7544,8 @@ Integration with org-ql:
   <<emacs-environment>>
 
   <<load-messages>>
+
+  <<config-units>>
 
   <<bio>>
 
