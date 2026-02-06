@@ -22,7 +22,7 @@
                 smart-mark so-long soap-client sops svg tab-bookmark
                 tempel timeout track-changes tramp-hlo tramp-rpc
                 tramp-theme try use-package vc-jj verilog-mode vertico
-                which-key window-tool-bar wombag work-timer))
+                which-key window-tool-bar wombag work-timer yaml-mode))
  '(package-vc-selected-packages
    '((tramp-rpc :url
                 "https://github.com/ArthurHeymans/emacs-tramp-rpc.git")
@@ -102,8 +102,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(corfu-default ((t (:inherit 'default))))
  '(highlight-function-calls-face ((t (:underline nil :inherit font-lock-function-call-face))))
- '(log-edit-summary ((t (:family "Overpass Nerd Font Propo"))))
  '(org-cite ((t (:foreground "DarkSeaGreen4"))))
  '(org-cite-key ((t (:foreground "forest green" :slant italic)))))
