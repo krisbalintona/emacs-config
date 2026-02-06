@@ -13,6 +13,19 @@ Preview org blocks with noweb syntax with ~org-babel-expand-src-block~, bound to
 
 See also the useful command ~org-babel-goto-named-src-block~ and other useful commands in =(org) Key bindings and Useful Functions=.
 
+* Emacs build
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
+
+As of 2026-02-06, the following are the flags I prefer to compile Emacs with.
+#+begin_src emacs-lisp :exports both
+  system-configuration-options
+#+end_src
+
+#+RESULTS:
+: --prefix=/home/krisbalintona/emacs/31.0 --exec-prefix=/home/krisbalintona/emacs/31.0 --with-modules --with-tree-sitter --with-threads --without-gconf --with-native-compilation=yes 'CFLAGS=-O2 -pipe -march=native'
+
 * Personal information
 
 #+name: bio
@@ -30,9 +43,9 @@ See also the useful command ~org-babel-goto-named-src-block~ and other useful co
   (setopt load-prefer-newer t)
 #+end_src
 
-** Be verbose: message when any file is loaded
+** Be verbose about file loading when requested
 
-For the sake of debugging my config file and ensuring a reasonable startup speed, I make sure a message is printed every time a package is loaded.
+For the sake of debugging my config file and auditing startup speed, I may make sure a message is printed every time a package is loaded.
 #+name: load-messages
 #+begin_src emacs-lisp
   (when krisb-extra-verbose-p
@@ -74,7 +87,7 @@ For the sake of debugging my config file and ensuring a reasonable startup speed
   <<link-monkeypatches>>
 #+end_src
 
-** Package.el
+** Package.el: The built-in Emacs package manager
 
 #+name: package.el
 #+begin_src emacs-lisp
