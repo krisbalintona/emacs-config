@@ -6,3 +6,4 @@
 *.elc
 recipes/*.elc
 /tramp-rpc/
+/user-lisp/.user-lisp-autoloads.el

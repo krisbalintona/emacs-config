@@ -8,6 +8,8 @@ verbose for the sake of, e.g., debugging and testing.")
 (when krisb-extra-verbose-p
   (setq force-load-messages t))
 
+(require 'config-units)
+
 (setopt user-full-name "Kristoffer Balintona"
         user-mail-address "krisbalintona@gmail.com")
 
