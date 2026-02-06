@@ -3304,10 +3304,9 @@ PROP is the name of the property.  See
   ;;    determine which specific LC_* variable suffices for this end.)
   (connection-local-set-profile-variables
    'krisb-remote-source-profile
-   `((shell-file-name . "/bin/sh -c 'source ~/.profile && exec $(which fish)'")
-     (tramp-remote-process-environment
-      ;; FIXME 2026-01-04: Avoid hardcoding locale somehow?
-      . ,(cons "LC_ALL=en_US.utf8" tramp-remote-process-environment))))
+   `((tramp-remote-process-environment
+      . ,(cons (concat "LC_ALL=" current-locale-environment)
+               tramp-remote-process-environment))))
   (connection-local-set-profiles
    '(:application tramp :user "krisbalintona" :machine "sublation")
    'krisb-remote-source-profile))
