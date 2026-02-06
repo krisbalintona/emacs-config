@@ -539,9 +539,10 @@ package-archives, e.g. \"gnu\")."))
     (advice-add 'corfu-quit :after #'krisb-gcmh-minibuffer-exit)
     (advice-add 'corfu-insert :after #'krisb-gcmh-minibuffer-exit)))
 
-;;; Try
-(setup try
-  (:package try))
+;;; Package-x
+(setup package-x
+  (:pin project "gnu-elpa-devel")
+  (:package package-x))
 
 ;;; Fontaine
 ;; Define and apply face presets.

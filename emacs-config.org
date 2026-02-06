@@ -129,12 +129,23 @@ In Emacs 31, packages installed with package.el can now be reviewed upon upgradi
 
 [fn:1] See also [[https://github.com/kn66/package-upgrade-guard.el][package-upgrade-guard.el]], which I used prior to the implementation of this feature into Emacs.
 
-*** Try: Try out Emacs packages
+*** COMMENT Try: Try out Emacs packages
+
+2026-02-07: I favor package-x instead, developed by active contributor package.el, Philip Kaludercic.
 
 #+name: try
 #+begin_src emacs-lisp
   (setup try
     (:package try))
+#+end_src
+
+*** Package-x: Package.el extras
+
+#+name: package-x
+#+begin_src emacs-lisp
+  (setup package-x
+    (:pin project "gnu-elpa-devel")
+    (:package package-x))
 #+end_src
 
 ** Elpaca
@@ -7569,8 +7580,8 @@ Integration with org-ql:
   ;;;; GCMH
   <<gcmh>>
 
-  ;;; Try
-  <<try>>
+  ;;; Package-x
+  <<package-x>>
 
   ;;; Fontaine
   <<fontaine>>
