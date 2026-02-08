@@ -419,9 +419,10 @@ package-archives, e.g. \"gnu\")."))
   ;; Exclude from M-x commands definitely irrelevant to the current
   ;; major mode
   (setopt read-extended-command-predicate #'command-completion-default-include-p)
-  ;; Insert spaces instead of tab characters.  The below disables
-  ;; `indent-tabs-mode' globally
-  (setopt indent-tabs-mode nil)
+  (setopt tab-width 4
+          ;; Insert spaces instead of tab characters.  The below
+          ;; disables `indent-tabs-mode' globally
+          indent-tabs-mode nil)
   
   ;; Use DWIM case commands
   (bind-keys
