@@ -3767,9 +3767,10 @@ PROP is the name of the property.  See
   ;;        (setq inhibit-startup-screen t))))
   (desktop-save-mode 1)
 
-  (setopt desktop-load-locked-desktop 'check-pid
-          desktop-save 'ask-if-new
-          desktop-auto-save-timeout 3)
+  (with-eval-after-load 'desktop
+    (setopt desktop-load-locked-desktop 'check-pid
+            desktop-save 'ask-if-new
+            desktop-auto-save-timeout 10))
   ;; TODO 2025-05-19: Revisit this.
   ;; (desktop-files-not-to-save
   ;;  (rx (or (regexp "\\(\\`/[^/:]*:\\|(ftp)\\'\\)")
