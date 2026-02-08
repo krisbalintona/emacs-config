@@ -1722,7 +1722,6 @@ call `diff-buffer-with-file’ instead."
 ;;;; Org built-ins
 ;;;;; Org-mode
 (setup org
-  (:pin org-mode "gnu-elpa-devel")
   (:package org)
 
   (with-eval-after-load 'org
