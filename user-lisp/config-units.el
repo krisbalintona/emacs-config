@@ -2,10 +2,8 @@
 
 ;; Copyright (C) 2026 Kristoffer Balintona
 
-;; Author: Daniel Mendler
-;; Created: 2022
-;; License: GPL-3.0-or-later
-;; Version: 0.1
+;; Author: Kristoffer Balintona
+;; Created: 2026
 
 ;; This file is not part of GNU Emacs.
 
@@ -29,13 +27,43 @@
 ;; TODO 2026-02-09: Warn/user-error for setting non-existing config
 ;; unit property.
 
+;; TODO 2026-02-09: Consider have a user-option for handling packages
+;; that are listed in config-package-specifications but are not
+;; required by any config unit: either warn or install automatically,
+;; with a message.
+
+;; TODO 2026-02-09: Better error messages and handling.
+
 ;;; Code:
 
 (require 'thunk)
 
+;; Pacify byte-compiler
+(defvar package-pinned-packages)
+
 (defvar config-units nil
   "Alist of (name . list-of-thunk-specs).
-Each thunk-spec is a plist with :deps, :packages, :thunk.")
+Each thunk specification is a plist with :deps, :packages, :thunk.")
+
+;; TODO 2026-02-09: Turn into defcustom.
+(defvar config-package-specifications nil
+  "List of package installation specifications.
+Each package specification is a list whose car is a symbol for the name
+of the package.  This symbol should be referenced by the :packages
+property in `defconfig'.
+
+The cdr of this list should be a plist.  Required properties in this
+plist are:
+- :manager - The package manager in use.  Available options: `package'
+  and `package-vc'.
+- :spec - A Lisp form passed to the package installation function(s)
+  associated with the package manager specified by :manager.
+Optional properties are:
+- :pin - A form added to `package-pinned-packages'.  Only has an effect
+  when :manager is `package'.
+
+The value of this variable is used in `config--install-packages' to
+install packages specified in `defconfig' forms.")
 
 (defvar config-units-forced nil
   "List of config unit names that have been fully forced.")
@@ -54,7 +82,7 @@ thunk's properties.  NAME-AND-OPTS has the form:
 
 NAME is the name of the associated configuration unit of the specified
 thunk.  There are several available thunk properties:
-- :deps  - A list of configuration unit names this thunk depends on.
+- :deps - A list of configuration unit names this thunk depends on.
 - :packages - A list of packages to install, if they aren\\='t already.
 
 BODY will be evaluated after all the thunks in the configuration units
@@ -93,8 +121,23 @@ DEPS is a list of configuration unit names."
   "Ensure all PACKAGES are installed."
   (when packages
     (dolist (pkg packages)
-      (unless (package-installed-p pkg)
-        (package-install pkg)))))
+      (let* ((props (cdr (assoc pkg config-package-specifications)))
+             (manager (plist-get props :manager))
+             (spec (plist-get props :spec))
+             (pin (plist-get props :pin)))
+        (pcase manager
+          ('package
+           (add-to-list 'package-pinned-packages pin)
+           (unless (package-installed-p spec)
+             (package-install spec)))
+          ('package-vc
+           (unless (package-installed-p spec)
+             (package-vc-install spec)))
+          ((pred null)
+           (error "Keyword :manager is required for package %s in `config-package-specifications'"
+                  pkg))
+          (_
+           (error "Value of \"%s\" for :manager not supported" manager)))))))
 
 (defun config--try-force-thunk (name index thunk-spec)
   "Try to force a specific thunk if its deps are satisfied.
