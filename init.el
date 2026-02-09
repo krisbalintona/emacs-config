@@ -411,20 +411,6 @@ package-archives, e.g. \"gnu\")."))
   ;; `duplicate-region-final-position' user options
   (bind-key "C-x ;" #'duplicate-dwim)
   
-  ;; `indent-for-tab-command' functionality: what happens when you press
-  ;; TAB in a regular buffer?
-  (setopt tab-always-indent 'complete
-          tab-first-completion 'word)
-  
-  ;; Show context menu from right-click
-  (when (display-graphic-p) (context-menu-mode 1))
-  
-  ;; See (emacs) Minibuffer Edit for an explanation
-  (setopt resize-mini-windows t)
-  
-  ;; Exclude from M-x commands definitely irrelevant to the current
-  ;; major mode
-  (setopt read-extended-command-predicate #'command-completion-default-include-p)
   (setopt tab-width 4
           ;; Insert spaces instead of tab characters.  The below
           ;; disables `indent-tabs-mode' globally
@@ -450,6 +436,20 @@ package-archives, e.g. \"gnu\")."))
                         ((derived-mode-p '(text-mode wombag-show-mode)) nil)))))
   (add-hook 'after-change-major-mode-hook #'krisb-sentence-end-double-space-setup)
   
+  ;; `indent-for-tab-command' functionality: what happens when you press
+  ;; TAB in a regular buffer?
+  (setopt tab-always-indent 'complete
+          tab-first-completion 'word)
+  
+  ;; Show context menu from right-click
+  (when (display-graphic-p) (context-menu-mode 1))
+  
+  ;; See (emacs) Minibuffer Edit for an explanation
+  (setopt resize-mini-windows t)
+  
+  ;; Exclude from M-x commands definitely irrelevant to the current
+  ;; major mode
+  (setopt read-extended-command-predicate #'command-completion-default-include-p)
   (setopt shell-command-prompt-show-cwd t))
 
 ;;; Custom

@@ -34,16 +34,18 @@ As of 2026-02-06, the following are the flags I prefer to compile Emacs with.
           user-mail-address "krisbalintona@gmail.com")
 #+end_src
 
-* Emacs package management
+* Bootstrap (core Emacs behavior)
 
-** Always load newest byte code
+** Package management
+
+*** Always load newest byte code
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   ;; Always load newest byte code
   (setopt load-prefer-newer t)
 #+end_src
 
-** Be verbose about file loading when requested
+*** Be verbose about file loading when requested
 
 For the sake of debugging my config file and auditing startup speed, I may make sure a message is printed every time a package is loaded.
 #+name: load-messages
@@ -52,7 +54,7 @@ For the sake of debugging my config file and auditing startup speed, I may make 
     (setq force-load-messages t))
 #+end_src
 
-** Add my WIP "monkey patches" directory to ~load-path~
+*** Add my WIP "monkey patches" directory to ~load-path~
 
 #+name: wip
 #+begin_src emacs-lisp
@@ -87,7 +89,7 @@ For the sake of debugging my config file and auditing startup speed, I may make 
   <<link-monkeypatches>>
 #+end_src
 
-** Package.el: The built-in Emacs package manager
+*** Package.el: The built-in Emacs package manager
 
 #+name: package.el
 #+begin_src emacs-lisp
@@ -131,7 +133,7 @@ In Emacs 31, packages installed with package.el can now be reviewed upon upgradi
 
 [fn:1] See also [[https://github.com/kn66/package-upgrade-guard.el][package-upgrade-guard.el]], which I used prior to the implementation of this feature into Emacs.
 
-*** COMMENT Try: Try out Emacs packages
+**** COMMENT Try: Try out Emacs packages
 
 2026-02-07: I favor package-x instead, developed by active contributor package.el, Philip Kaludercic.
 
@@ -141,7 +143,7 @@ In Emacs 31, packages installed with package.el can now be reviewed upon upgradi
     (:package try))
 #+end_src
 
-*** Package-x: Package.el extras
+**** Package-x: Package.el extras
 
 #+name: package-x
 #+begin_src emacs-lisp
@@ -150,15 +152,15 @@ In Emacs 31, packages installed with package.el can now be reviewed upon upgradi
     (:package package-x))
 #+end_src
 
-** Elpaca
+*** Elpaca
 
 #+name: elpaca
 #+begin_src emacs-lisp
 #+end_src
 
-* Meta-configuration
+** Meta-configuration
 
-** Emacs environment
+*** Emacs environment
 
 #+name: emacs-environment
 #+begin_src emacs-lisp
@@ -168,7 +170,7 @@ In Emacs 31, packages installed with package.el can now be reviewed upon upgradi
   verbose for the sake of, e.g., debugging and testing.")
 #+end_src
 
-** Config-units: Bespoke configuration unit macros
+*** Config-units: Bespoke configuration unit macros
 
 #+name: config-units-setup
 #+begin_src emacs-lisp
@@ -182,7 +184,7 @@ In Emacs 31, packages installed with package.el can now be reviewed upon upgradi
   (load-all-configs)
 #+end_src
 
-** Setup.el: A transparent =use-package= alternative
+*** Setup.el: A transparent =use-package= alternative
 
 Setup.el simply provides various macros inside ~(setup ...)~ forms. It comes with many of its own while making it easy for users to define their own macros. Macros are useful for Emacs configuration: they reduce repetition and boilerplate. See setup's Emacs Wiki page: [[https://www.emacswiki.org/emacs/SetupEl][EmacsWiki: Setup El]].
 
@@ -331,13 +333,13 @@ Setup.el simply provides various macros inside ~(setup ...)~ forms. It comes wit
               (plist-get (cdr (assoc 'emacs-lisp-mode consult-imenu-config)) :types)))))
 #+end_src
 
-*** Why use setup.el over use-package?
+**** Why use setup.el over use-package?
 
 In my opinion, use-package's macros add an opaqueness that adds a layer of potential confusion. One has to learn the specific "use-package language"---avoiding all its foot-guns and practicing its conventions---in order to configure their Emacs. Instead, I prefer setup.el because it's simply a bunch of straightforward elisp macros.
 
 This lets setup.el configurations be transparent rather than opaque: I understand exactly what elisp is at play and what it's doing. Consequently, I think configurations leveraging setup.el require no special know-how or caution to write or understand---I wouldn't say the same for use-package.
 
-** Bespoke helpers and variables
+*** Bespoke helpers and variables
 
 #+name: config-helpers
 #+begin_src emacs-lisp
@@ -397,7 +399,7 @@ This lets setup.el configurations be transparent rather than opaque: I understan
   (bind-key "C-c t" krisb-toggle-keymap 'global-map)
 #+end_src
 
-** Add bespoke lisp modules to ~load-path~
+*** Add bespoke lisp modules to ~load-path~
 
 #+name: site-lisp
 #+begin_src emacs-lisp
@@ -406,7 +408,43 @@ This lets setup.el configurations be transparent rather than opaque: I understan
     (add-to-list 'load-path path))
 #+end_src
 
-** No-littering.el: keep a tidy =.emacs.d/=
+*** On.el: Add hooks that help startup times
+
+#+name: on.el
+#+begin_src emacs-lisp
+  ;; Package exposes a number of utility hooks and functions ported from
+  ;; Doom Emacs.  The hooks make it easier to speed up Emacs startup by
+  ;; providing finer-grained control of the timing at which packages are
+  ;; loaded.  Provides the following hooks:
+  ;; - `on-first-input-hook'
+  ;; - `on-init-ui-hook'
+  ;; - `on-first-file-hook'
+  ;; - `on-switch-frame-hook'
+  ;; - `on-first-buffer-hook'
+  ;; - `on-switch-buffer-hook'
+  ;; - `on-switch-window-hook'
+  (setup on
+    (:package on)
+    (:require))
+#+end_src
+
+*** El-patch: override packages in a future-proof way
+
+There is a problem when we use the typical ~(advice-add ... :override ...)~, namely, upstream definitions may change. This either renders our override unnecessary or our new function incompatible with the rest of upstream. El-patch provides a way to override functions while becoming aware of any upstream changes to the function we originally intended to override.
+
+#+name: el-patch
+#+begin_src emacs-lisp
+  (setup el-patch
+    ;; Elpaca: :ensure (:wait t)
+    (:package el-patch)
+    (:require))
+#+end_src
+
+# TODO 2025-06-03: Describe relation to https://elpa.gnu.org/packages/advice-patch.html.
+
+** ~user-emacs-directory~ hygiene
+
+*** No-littering.el: keep a tidy =.emacs.d/=
 
 # TODO 2025-11-10: Look into having package-user-dir follow no-littering's conventions? Should be in
 # no-littering-var-directory, I think.
@@ -453,41 +491,7 @@ We also do this:
       (expand-file-name  "var/eln-cache/" user-emacs-directory))))
 #+end_src
 
-** On.el: Add hooks that help startup times
-
-#+name: on.el
-#+begin_src emacs-lisp
-  ;; Package exposes a number of utility hooks and functions ported from
-  ;; Doom Emacs.  The hooks make it easier to speed up Emacs startup by
-  ;; providing finer-grained control of the timing at which packages are
-  ;; loaded.  Provides the following hooks:
-  ;; - `on-first-input-hook'
-  ;; - `on-init-ui-hook'
-  ;; - `on-first-file-hook'
-  ;; - `on-switch-frame-hook'
-  ;; - `on-first-buffer-hook'
-  ;; - `on-switch-buffer-hook'
-  ;; - `on-switch-window-hook'
-  (setup on
-    (:package on)
-    (:require))
-#+end_src
-
-** El-patch: override packages in a future-proof way
-
-There is a problem when we use the typical ~(advice-add ... :override ...)~, namely, upstream definitions may change. This either renders our override unnecessary or our new function incompatible with the rest of upstream. El-patch provides a way to override functions while becoming aware of any upstream changes to the function we originally intended to override.
-
-#+name: el-patch
-#+begin_src emacs-lisp
-  (setup el-patch
-    ;; Elpaca: :ensure (:wait t)
-    (:package el-patch)
-    (:require))
-#+end_src
-
-# TODO 2025-06-03: Describe relation to https://elpa.gnu.org/packages/advice-patch.html.
-
-** Dealing with ~custom-file~
+*** Dealing with ~custom-file~
 
 We use a snippet like the one below to set and load the ~custom-file~:
 #+name: set-and-load-custom-file
@@ -510,7 +514,7 @@ Alternatively, one could have a "temporary" custom file to avoid loading any cus
   (setopt custom-file (make-temp-file "emacs-custom-file-" nil ".el"))
 #+end_src
 
-* Runtime performance
+** Runtime performance
 
 Performance optimizations belonging in =early-init.el=:
 #+name: early-perf-optimizations
@@ -533,7 +537,7 @@ See also:
 - [[graphical-elements][These settings place inside =early-init.el=]]
 - ~(setopt org-agenda-inhibit-startup t)~
 
-** Garbage collection
+*** Garbage collection
 
 Set ~gc-cons-threshold~ to as high a number as possible just for startup.
 #+name: garbage-collection-early-init
@@ -579,7 +583,7 @@ Some bespoke commands and helper functions related to garbage collection:
                       concat (format "%s: %s + %s = %s\n" type used free total))))
 #+end_src
 
-*** GCMH
+**** GCMH
 
 #+name: gcmh
 #+begin_src emacs-lisp
@@ -637,7 +641,7 @@ Some bespoke commands and helper functions related to garbage collection:
       (advice-add 'corfu-insert :after #'krisb-gcmh-minibuffer-exit)))
 #+end_src
 
-** Report total startup time
+*** Report total startup time
 
 #+name: startup-time
 #+begin_src emacs-lisp
@@ -648,23 +652,23 @@ Some bespoke commands and helper functions related to garbage collection:
   (add-hook 'after-init-hook #'krisb-startup-time)
 #+end_src
 
-* Remove Emacs training wheels
+* Foundation (base Emacs behavior)
 
-** Don't warn when using disabled commands
+** Remove Emacs training wheels
 
+Don't warn when using disabled commands
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   ;; Enable all disabled commands
   (setopt disabled-command-function nil)
 #+end_src
 
-** Don't warn when advising functions
-
+Don't warn when advising functions
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   ;; Don’t warn when advising
   (setopt ad-redefinition-action 'accept)
 #+end_src
 
-* System path
+** Exec-path-from-shell: Properly set ~$PATH~
 
 #+name: exec-path-from-shell
 #+begin_src emacs-lisp
@@ -682,9 +686,9 @@ Some bespoke commands and helper functions related to garbage collection:
     (exec-path-from-shell-initialize))
 #+end_src
 
-* Graphical and auditory elements
+** Graphical and auditory elements
 
-** The Emacs frame
+*** The Emacs frame
 
 Set UI for the Emacs frame itself (e.g., scroll bars, tool bars, window decorations):
 #+name: graphical-elements
@@ -722,7 +726,7 @@ Set UI for the Emacs frame itself (e.g., scroll bars, tool bars, window decorati
           inhibit-startup-buffer-menu t)
 #+end_src
 
-*** Transparency
+**** Transparency
 
 #+name: frame-transparency
 #+begin_src emacs-lisp
@@ -750,9 +754,9 @@ Set UI for the Emacs frame itself (e.g., scroll bars, tool bars, window decorati
   (bind-key "<f9>" #'krisb-frame-toggle-transparency)
 #+end_src
 
-** Style
+*** Style
 
-*** Themes
+**** Themes
 
 Helpers:
 #+name: theme-helpers
@@ -778,7 +782,7 @@ Helpers:
     (mapc #'disable-theme (cdr custom-enabled-themes)))
 #+end_src
 
-**** Ef-themes
+***** Ef-themes
 
 #+name: ef-themes
 #+begin_src emacs-lisp
@@ -793,7 +797,7 @@ Helpers:
     (krisb-enable-theme-time-of-day (car ef-themes-to-toggle) (cadr ef-themes-to-toggle)))
 #+end_src
 
-*** User option: Make all themes safe
+**** User option: Make all themes safe
 
 This option controls which themes Emacs does not ask for confirmation to load. Setting it to ~t~ means Emacs never asks for confirmation:
 #+name: safe-themes
@@ -802,7 +806,7 @@ This option controls which themes Emacs does not ask for confirmation to load. S
   (setopt custom-safe-themes t)
 #+end_src
 
-*** Fontaine: Setting fonts
+**** Fontaine: Setting fonts
 
 #+name: fontaine
 #+begin_src emacs-lisp
@@ -880,7 +884,7 @@ This option controls which themes Emacs does not ask for confirmation to load. S
       (add-hook 'fontaine-set-preset-hook #'pulsar-pulse-line)))
 #+end_src
 
-*** Cursor types
+**** Cursor types
 
 I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, less-noticeable cursor for variable-pitch fonts---almost always when prose---and blocky cursors for programming---almost always fixed-pitch fonts.
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
@@ -910,7 +914,7 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
     (add-hook 'completion-list-mode-hook #'krisb-set-cursor-completions-list))
 #+end_src
 
-*** Word wrap
+**** Word wrap
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   ;; Word wrapping.  Continue wrapped lines at whitespace rather than
@@ -918,7 +922,7 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
   (setopt word-wrap t)
 #+end_src
 
-*** Pulsar: Alternative to pulse.el
+**** Pulsar: Alternative to pulse.el
 
 #+name: pulsar
 #+begin_src emacs-lisp
@@ -948,9 +952,9 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
     (pulsar-global-mode 1))
 #+end_src
 
-*** Org-mode buffers
+**** Org-mode buffers
 
-**** Org-modern: Successor to org-superstar
+***** Org-modern: Successor to org-superstar
 
 #+name: org-modern
 #+begin_src emacs-lisp
@@ -1030,7 +1034,7 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
     )
 #+end_src
 
-**** Astute.el: Display punctuation typographically
+***** Astute.el: Display punctuation typographically
 
 #+name: astute
 #+begin_src emacs-lisp
@@ -1054,7 +1058,7 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
                 "tis"))))
 #+end_src
 
-**** Org-hide-drawers
+***** Org-hide-drawers
 
 #+name: org-hide-drawers
 #+begin_src emacs-lisp
@@ -1111,7 +1115,7 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
                  ("h" . org-hide-drawers-transient))))
 #+end_src
 
-*** Olivetti: Horizontally center buffer body
+**** Olivetti: Horizontally center buffer body
 
 #+name: olivetti
 #+begin_src emacs-lisp
@@ -1166,7 +1170,7 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
     )
 #+end_src
 
-*** Mixed-pitch
+**** Mixed-pitch
 
 #+name: mixed-pitch
 #+begin_src emacs-lisp
@@ -1184,7 +1188,7 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
             mixed-pitch-variable-pitch-cursor nil))
 #+end_src
 
-*** Lin: Stylistic enhancement to ~hl-line-mode~
+**** Lin: Stylistic enhancement to ~hl-line-mode~
 
 #+name: lin
 #+begin_src emacs-lisp
@@ -1202,7 +1206,7 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
       (add-to-list 'lin-mode-hooks 'LaTeX-mode-hook)))
 #+end_src
 
-** Disable the ring bell
+*** Disable the ring bell
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   ;; Disable the ring-bell (it's annoying)
@@ -1210,7 +1214,7 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
 #+end_src
 See also ~(elisp) Beeping~.
 
-** Hide "BufFace" minor-mode lighter
+*** Hide "BufFace" minor-mode lighter
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   ;; Hide `buffer-face-mode' minor-mode lighter
@@ -1219,7 +1223,7 @@ See also ~(elisp) Beeping~.
     (:hide-mode buffer-face-mode))
 #+end_src
 
-** Don't let the window manager stop Emacs from resizing its frames when fullscreen
+*** Don't let the window manager stop Emacs from resizing its frames when fullscreen
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   ;; Don't let the window manager stop Emacs from resizing its frames
@@ -1227,16 +1231,16 @@ See also ~(elisp) Beeping~.
   (setopt alter-fullscreen-frames t)      ; Emacs 31
 #+end_src
 
-* General file handling
+** General file handling
 
-** Follow symlinks when opening files
+*** Follow symlinks when opening files
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   ;; Follow symlinks when opening files
   (setopt find-file-visit-truename t)
 #+end_src
 
-** Trash
+*** Trash
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   ;; Move files into trash directory.  See also
@@ -1254,7 +1258,7 @@ See also ~(elisp) Beeping~.
       (message "delete-by-moving-to-trash is nil; not emptying trash")))
 #+end_src
 
-** Auto-save: Recover unsaved changes
+*** Auto-save: Recover unsaved changes
 
 #+name: auto-save
 #+begin_src emacs-lisp
@@ -1297,7 +1301,7 @@ See also ~(elisp) Beeping~.
     (advice-add 'make-auto-save-file-name :around #'krisb-auto-save-hash-file-name))
 #+end_src
 
-** Auto-save-visited: Automatic saves
+*** Auto-save-visited: Automatic saves
 
 #+name: auto-save-visited
 #+begin_src emacs-lisp
@@ -1317,7 +1321,7 @@ See also ~(elisp) Beeping~.
     (add-hook 'on-first-file-hook #'auto-save-visited-mode))
 #+end_src
 
-** Backup: Recover files
+*** Backup: Recover files
 
 # TODO 2025-05-23: Mention no-littering's `no-littering-theme-backups'.
 
@@ -1389,7 +1393,7 @@ See also ~(elisp) Beeping~.
     (advice-add 'make-backup-file-name-1 :around #'krisb-backup-file-name-hash))
 #+end_src
 
-** Autorevert: Keep buffers up-to-date
+*** Autorevert: Keep buffers up-to-date
 
 #+name: autorevert
 #+begin_src emacs-lisp
@@ -1411,7 +1415,7 @@ See also ~(elisp) Beeping~.
     <<vc-auto-revert>>)
 #+end_src
 
-** Disable lock files
+*** Disable lock files
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   ;; Don't create lock files.  See also `remote-file-name-inhibit-locks'
@@ -1419,16 +1423,16 @@ See also ~(elisp) Beeping~.
   (setopt create-lockfiles nil)
 #+end_src
 
-* General buffer movement and editing
+** Editing primitives (buffer movement and editing)
 
-** Cycle-spacing behavior
+*** Cycle-spacing behavior
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   ;; Behavior for `cycle-spacing-actions'
   (setopt cycle-spacing-actions '(just-one-space (delete-all-space -) restore))
 #+end_src
 
-** Bespoke editing commands
+*** Bespoke editing commands
 
 #+name: bespoke-editing
 #+begin_src emacs-lisp
@@ -1472,7 +1476,7 @@ See also ~(elisp) Beeping~.
    ("C-S-j" . krisb-join-line-below))
 #+end_src
 
-** Repeat.el
+*** Repeat.el
 
 #+name: repeat.el
 #+begin_src emacs-lisp
@@ -1480,7 +1484,7 @@ See also ~(elisp) Beeping~.
     (add-hook 'on-first-input-hook #'repeat-mode))
 #+end_src
 
-** Imenu
+*** Imenu
 
 #+name: imenu
 #+begin_src emacs-lisp
@@ -1497,7 +1501,7 @@ See also ~(elisp) Beeping~.
     (setopt org-imenu-depth 7))      ; Show more than just 2 levels...
 #+end_src
 
-** Isearch
+*** Isearch
 
 #+name: isearch
 #+begin_src emacs-lisp
@@ -1526,7 +1530,7 @@ See also ~(elisp) Beeping~.
             search-whitespace-regexp ".*?"))
 #+end_src
 
-** Occur: A grep for your buffer
+*** Occur: A grep for your buffer
 
 #+name: occur
 #+begin_src emacs-lisp
@@ -1543,7 +1547,7 @@ See also ~(elisp) Beeping~.
                  (post-command-select-window . t)))
 #+end_src
 
-** Newcomment: Emacs' commenting suite
+*** Newcomment: Emacs' commenting suite
 
 #+name: newcomment
 #+begin_src emacs-lisp
@@ -1557,7 +1561,7 @@ See also ~(elisp) Beeping~.
     (setopt comment-empty-lines t))
 #+end_src
 
-** Consult
+*** Consult
 
 #+name: consult
 #+begin_src emacs-lisp
@@ -1644,7 +1648,7 @@ Consult-specific completion category overrides:
   (consult-info (eager-display . nil))
 #+end_src
 
-** Smart-mark: =C-g= restores point when marking
+*** Smart-mark: =C-g= restores point when marking
 
 #+name: smart-mark
 #+begin_src emacs-lisp
@@ -1656,7 +1660,7 @@ Consult-specific completion category overrides:
     (smart-mark-mode 1))
 #+end_src
 
-** The ~duplicate-*~ commands
+*** The ~duplicate-*~ commands
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep  "\n\n"
   ;; TODO 2025-05-22: Document the `duplicate-line-final-position'and
@@ -1664,233 +1668,157 @@ Consult-specific completion category overrides:
   (bind-key "C-x ;" #'duplicate-dwim)
 #+end_src
 
-* VCS
+*** Do-at-point: Do things to the things at point
 
-** VC.el: Interface for version control systems
+#+name: do-at-point
+#+begin_src emacs-lisp
+  (setup do-at-point
+    (:package do-at-point)
+    
+    (bind-key "C-;" #'do-at-point)
 
-#+name: vc.el
+    (with-eval-after-load 'do-at-point
+      <<do-at-point-user-actions>>))
+#+end_src
+
+*** Electric: Auto-insert delimiters
+
+#+name: electric
 #+begin_src emacs-lisp
   ;; TODO 2025-05-20: Document the user options below in the literate
   ;; config:
-  ;; - `vc-annotate-display-mode'
-  ;; - `vc-revert-show-diff'
-  (setup vc
-
-    (with-eval-after-load 'vc
-      (setopt vc-follow-symlinks t
-              vc-allow-rewriting-published-history 'ask ; Emacs 31
-              vc-async-checkin t
-              vc-allow-async-diff t       ; Emacs 31
-              vc-revert-show-diff t
-              vc-find-revision-no-save t            ; Emacs 31
-              vc-dir-hide-up-to-date-on-revert t    ; Emacs 31
-              vc-dir-save-some-buffers-on-revert t  ; Emacs 31
-              vc-use-incoming-outgoing-prefixes t)) ; Emacs 31
-
-    ;; I dislike this default
-    (with-eval-after-load 'vc
-      (remove-hook 'vc-log-finish-functions 'vc-shrink-buffer-window))
+  ;; - `electric-quote-comment'
+  ;; - `electric-quote-string'
+  ;; - `electric-quote-inhibit-functions'
+  ;; - `electric-pair-delete-adjacent-pairs'
+  ;; - `electric-pair-pairs'
+  ;; - `electric-pair-text-pairs'
+  ;; NOTE: 2025-05-22: For some reason lisp-mode sets these buffer
+  ;; locally.  See `lisp-mode-variables'.
+  ;; - `electric-pair-skip-whitespace'
+  ;; - `electric-pair-open-newline-between-pairs'
+  (setup electric
     
-    <<vc-display-buffer-alist>>)
+    (electric-pair-mode 1)
+    (electric-indent-mode 1)
 
-  ;; Dispatcher between `vc-diff’ and `diff-buffer-with-file’
-  (setup vc
-    (defun krisb-vc-diff-dwim ()
-      "Call `vc-diff’ or `diff-buffer-with-file’.
-  Calls `vc-diff’ if the buffer is unmodified.  If buffer is modified,
-  call `diff-buffer-with-file’ instead."
-      (interactive)
-      (if (and (not (eq major-mode 'vc-dir-mode)) (buffer-modified-p))
-          (diff-buffer-with-file (current-buffer))
-        (vc-diff)))
-    (:bind-keys ([remap vc-diff] . krisb-vc-diff-dwim)))
+    (with-eval-after-load 'electric
+      (setopt electric-quote-context-sensitive t
+              electric-quote-replace-double t)))
+
+  <<electric-log-edit>>
 #+end_src
 
-#+name: vc-display-buffer-alist
-#+begin_src emacs-lisp :noweb-ref display-buffer-alist
-  (add-to-list 'display-buffer-alist
-               '((or . ((major-mode . vc-dir-mode)
-                        (major-mode . vc-git-log-view-mode)
-                        (major-mode . vc-git-region-history-mode)))
-                 (display-buffer-same-window)))
-#+end_src
+*** Paren: Highlight matching parentheses
 
-#+name: vc-auto-revert
+#+name: paren
 #+begin_src emacs-lisp
-  (if (fboundp 'vc-auto-revert-mode)
-      (vc-auto-revert-mode 1)             ; Emacs 31
-    (global-auto-revert-mode 1))
-#+end_src
-
-** Log-edit
-
-#+name: log-edit
-#+begin_src emacs-lisp
-  ;; TODO 2025-05-20: Document the user options below in the literate
-  ;; config:
-  ;; - `log-edit-headers-alist'
-  ;; - `log-edit-setup-add-author'
-  (setup log-edit
-
-    (:face log-edit-summary ((t (:family ,(face-attribute 'variable-pitch :family)))))
+  (setup paren
     
-    ;; Evaluate after log-edit defines `log-edit-hook' first, since the
-    ;; hook already has several functions.  (Otherwise, we are adding to
-    ;; an empty hook.)
-    (with-eval-after-load 'log-edit
-      (add-hook 'log-edit-hook #'auto-fill-mode)
-      (add-hook 'log-edit-hook #'log-edit-maybe-show-diff)))
+    (with-eval-after-load 'paren
+      (setopt show-paren-not-in-comments-or-strings 'on-mismatch)))
 #+end_src
 
-#+name: cape-log-edit
+*** Delsel: Delete region when yanking
+
+#+name: delsel
 #+begin_src emacs-lisp
-  (krisb-cape-setup-capfs
-    "commit"
-    '(git-commit-setup-hook log-edit-mode-hook)
-    (list #'cape-elisp-symbol)
-    ;; Also change the delimiters inserted by `cape-elisp-symbol'
-    ;; depending on the project I'm in
-    ;; TODO 2025-11-30: Figure out which directories I want to do what
-    ;; and program that behavior accordingly
-    (require 'cape)
-    (make-local-variable 'cape-elisp-symbol-wrapper)
-    (when-let* ((project (project-current)))
-      (pcase (expand-file-name (project-root project))
-        ((pred (string-match-p "emacs-repos/packages/emacs/"))
-         (setq cape-elisp-symbol-wrapper
-               (cons '(log-edit-mode ?' ?')
-                     (assq-delete-all 'log-edit-mode cape-elisp-symbol-wrapper))))
-        (_
-         (setq cape-elisp-symbol-wrapper
-               (cons '(log-edit-mode ?` ?`)
-                     (assq-delete-all 'log-edit-mode cape-elisp-symbol-wrapper)))))))
+  (setup delsel
+    
+    (delete-selection-mode t))
 #+end_src
 
-#+name: electric-log-edit
+*** Whitespace: Visualize whitespace
+
+#+name: whitespace
 #+begin_src emacs-lisp
-  (with-eval-after-load 'log-edit
-    (defun krisb-electric-setup-log-edit ()
-      "Add to `electric-pair-text-pairs'."
-      (make-local-variable 'electric-pair-pairs)
-      (when-let* ((project (project-current)))
-        (pcase (expand-file-name (project-root project))
-          ((pred (string-match-p "emacs-repos/packages/emacs/"))
-           (cl-pushnew '(?' . ?') electric-pair-pairs :test #'equal))
-          (_
-           (cl-pushnew '(?` . ?`) electric-pair-pairs :test #'equal)))))
-    (add-hook 'log-edit-mode-hook 'krisb-electric-setup-log-edit))
+  ;; Visualize whitespace so mistakes are more easily detectable.
+  (setup whitespace
+
+    (setopt whitespace-style             ; See also `whitespace-cleanup'
+            '( empty face tab-mark tabs page-delimiters
+               indentation space-before-tab space-after-tab)
+            whitespace-display-mappings '((tab-mark ?\t [?› ?\t])
+                                          (newline-mark ?\n [?¬ ?\n])
+                                          (space-mark ?\  [?·] [?.]))
+            whitespace-line-column nil)
+
+    (add-hook 'prog-mode-hook #'whitespace-mode)
+    (:hide-mode))
 #+end_src
 
-** Diff-mode: Display diffs
+*** Indentation settings
 
-#+name: diff-mode
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  (setopt tab-width 4
+          ;; Insert spaces instead of tab characters.  The below
+          ;; disables `indent-tabs-mode' globally
+          indent-tabs-mode nil)
+#+end_src
+
+*** Rebind capitalization commands
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Use DWIM case commands
+  (bind-keys
+   ([remap upcase-word] . upcase-dwim)
+   ([remap downcase-word] . downcase-dwim)
+   ([remap capitalize-word] . capitalize-dwim))
+#+end_src
+
+*** Word-wrap-mode: Slight improvements to word-wrapping
+
+#+name: word-wrap-mode
 #+begin_src emacs-lisp
-  ;; TODO 2025-06-07: Document:
-  ;; - `diff-font-lock-syntax’
-  ;; - `diff-refine’
-  (setup diff-mode
-
-    (setopt diff-font-lock-prettify t ; Make diff headers look like Magit’s
-            ;; 2024-10-23 TODO: Revisit this. I think it causes a bug in
-            ;; vc-jj
-            ;; diff-default-read-only t
-            )
-
-    (:bind-keys :map diff-mode-map
-                ("v" . vc-next-action))
-
-    (add-hook 'diff-mode-hook #'diff-delete-empty-files)
-
-    ;; TODO 2025-06-07: Revisit this.
-    ;; (krisb-modus-themes-setup-faces
-    ;;  "diff-mode"
-    ;;  (set-face-attribute 'diff-header nil
-    ;;                      :height 1.2
-    ;;                      :overline t
-    ;;                      :width 'expanded
-    ;;                      :foreground (modus-themes-with-colors fg-alt)
-    ;;                      :extend t)
-    ;;  (set-face-attribute 'diff-hunk-header nil
-    ;;                      :height 1.1
-    ;;                      :slant 'italic
-    ;;                      :foreground 'unspecified
-    ;;                      :background (modus-themes-with-colors bg-dim)))
-    )
-
-  <<diff-mode-display-buffer-alist>>
-
-  (setup pulsar
-    ;; Pulsar pulses while navigating
-    (with-eval-after-load 'pulsar
-      (add-to-list 'pulsar-pulse-functions 'diff-file-next)
-      (add-to-list 'pulsar-pulse-functions 'diff-file-prev)
-      (add-to-list 'pulsar-pulse-functions 'diff-hunk-next)
-      (add-to-list 'pulsar-pulse-functions 'diff-hunk-prev)
-      (add-to-list 'pulsar-pulse-functions 'diff-hunk-kill)))
+  ;; Instead of wrapping lines on whitespace, as is the default, also
+  ;; wrap lines on the characters denoted by
+  ;; `word-wrap-whitespace-characters’, e.g., em-dashes and en-dashes.
+  (setup word-wrap-mode
+    
+    (global-word-wrap-whitespace-mode 1))
 #+end_src
 
-#+name: diff-mode-display-buffer-alist
-#+begin_src emacs-lisp :noweb-ref display-buffer-alist
-  (add-to-list 'display-buffer-alist
-               `((major-mode . diff-mode)
-                 (display-buffer-reuse-mode-window
-                  display-buffer-in-previous-window
-                  display-buffer-use-least-recent-window
-                  display-buffer-pop-up-window)))
-#+end_src
+*** Puni: Enhancements to basic text editing and movement
 
-** Vc-git: VC with git
-
-#+name: vc-git
+#+name: puni
 #+begin_src emacs-lisp
-  ;; TODO 2025-07-10: Document:
-  ;; - `vc-git-revision-complete-only-branches'
-  (setup vc-git
+  ;; Puni: major-mode-agnostic structural editing.  We use some of its
+  ;; commands, but do not enable the mode.
+  (setup puni
+    (:package puni)
 
-    (setopt vc-git-log-edit-summary-target-len (+ 50 (length "Summary"))
-            vc-git-log-edit-summary-max-len (+ 70 (length "Summary"))
-            vc-git-diff-switches '("--patch-with-stat" "--histogram")
-            vc-git-root-log-format
-            `("%h %ad (%ar) %aN%d%n  %s"
-              ;; The first shy group matches the characters drawn by
-              ;; --graph. We use numbered groups because
-              ;; `log-view-message-re' wants the revision number to be
-              ;; group 1.
-              ,(concat "^\\(?:[*/\\|]+\\)\\(?:[*/\\| ]+\\)?"
-                       "\\(?1:[0-9a-z]+\\)"      ; %h
-                       " "
-                       "\\(?4:[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\} (.*? ago)\\)?" ; %ad (%ar)
-                       " "
-                       "\\(?3:\\(?:[[:alpha:]]+\\.?[\n ]\\)+\\)" ; %aN
-                       "\\(?2:([^)]+)\\)?")                      ; %d
-              ((1 'log-view-message)
-               (2 'change-log-list nil lax)
-               (3 'change-log-name)
-               (4 'change-log-date)))))
+    (setopt puni-confirm-when-delete-unbalanced-active-region nil)
+
+    (bind-keys
+     ("C-S-o" . puni-split)
+     ("M-+" . puni-splice)
+     ("M-R" . puni-raise)
+     ([remap transpose-sexps] . puni-transpose)
+     ([remap kill-word] . puni-forward-kill-word)
+     ([remap backward-kill-word] . puni-backward-kill-word)
+     ([remap insert-parentheses] . puni-syntactic-backward-punct)
+     ([remap move-past-close-and-reindent] . puni-syntactic-forward-punct)))
 #+end_src
 
-** Vc-jj: VC with jujutsu (JJ)
+*** Sentence-end-double-space: What counts as a sentence?
 
-#+name: vc-jj
-#+begin_src emacs-lisp
-  ;; Integration between vc.el and the jujutsu (JJ) version control
-  ;; system.  Best jj integration with vc currently (2025-10-17).
-  (setup vc-jj
-    ;; Elpaca: (:repo "https://codeberg.org/krisbalintona/vc-jj.el.git" :branch "merge")
-    (:package (vc-jj :url "https://codeberg.org/krisbalintona/vc-jj.el.git"
-                     :branch "merge"))
-    ;; Require vc-jj and project-jj alongside vc and project since some
-    ;; operation results are cached by them, and we don't want them to
-    ;; cache information that disagrees with vc-jj
-    (:load-after vc)
-    (:load-after project)
-    (require 'project-jj)
-
-    (setopt vc-jj-diff-switches '("--git" "--stat")))
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Set `sentence-end-double-space' conditionally
+  (defun krisb-sentence-end-double-space-setup ()
+    "Set up the value for `sentence-end-double-space'.
+  However, do not override buffer-local and directory-local values for
+  `sentence-end-double-space'."
+    ;; First check if `sentence-end-double-space' is set buffer-locally
+    ;; (`file-local-variables-alist') or directory-locally
+    ;; (`dir-local-variables-alist')
+    (unless (local-variable-p 'sentence-end-double-space)
+      (setq-local sentence-end-double-space
+                  (cond ((derived-mode-p '(prog-mode conf-mode log-edit-mode)) t)
+                        ((derived-mode-p '(text-mode wombag-show-mode)) nil)))))
+  (add-hook 'after-change-major-mode-hook #'krisb-sentence-end-double-space-setup)
 #+end_src
 
-* Completion
-
+** Completion system
 Choose my completion paradigm:
 #+begin_src emacs-lisp :noweb-ref config-options
   (defcustom krisb-completion-paradigm 'completion-list
@@ -1900,7 +1828,7 @@ Choose my completion paradigm:
                    (const :tag "Use `vertico'" vertico)))
 #+end_src
 
-** Filtering completion candidates
+*** Filtering completion candidates
 
 Settings for the filtering of completion candidates, regardless of the completion UI (see also ~krisb-completion-paradigm~).
 #+name: completion
@@ -1953,7 +1881,7 @@ Settings for the filtering of completion candidates, regardless of the completio
             read-buffer-completion-ignore-case t))
 #+end_src
 
-** Behavior of =TAB= outside the minibuffer buffers
+*** Behavior of =TAB= outside the minibuffer buffers
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc  :noweb-sep "\n\n"
   ;; `indent-for-tab-command' functionality: what happens when you press
@@ -1962,7 +1890,7 @@ Settings for the filtering of completion candidates, regardless of the completio
           tab-first-completion 'word)
 #+end_src
 
-** Built-in completions: ~completion-list-mode~
+*** Built-in completions: ~completion-list-mode~
 
 #+name: completion-list
 #+begin_src emacs-lisp
@@ -2067,7 +1995,7 @@ Settings for the filtering of completion candidates, regardless of the completio
     (bind-key [remap keyboard-quit] 'krisb-keyboard-quit 'completion-list-mode-map))
 #+end_src
 
-** Hotfuzz: Blazingly fast replacement for the =flex= completion style
+*** Hotfuzz: Blazingly fast replacement for the =flex= completion style
 
 See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#results]] for benchmarks between fuzzy completion styles. Note that the markedly higher performance of the hotfuzz package shown in this benchmark uses the /dynamic module/ bundled with hotfuzz (so to see similar results, users must do the same).
 
@@ -2110,7 +2038,7 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
               consult--tofu-range #x00fffe))))
 #+end_src
 
-** Orderless: A completion-style for flexibility
+*** Orderless: A completion-style for flexibility
 
 #+name: orderless
 #+begin_src emacs-lisp
@@ -2152,7 +2080,7 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
                                    orderless-prefixes))))
 #+end_src
 
-** Dabbrev: Guess what I mean
+*** Dabbrev: Guess what I mean
 
 #+name: dabbrev
 #+begin_src emacs-lisp
@@ -2170,7 +2098,7 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
         (add-to-list 'dabbrev-ignored-buffer-modes mode))))
 #+end_src
 
-** Cape: ~completion-at-point-functions~ extensions and helpers
+*** Cape: ~completion-at-point-functions~ extensions and helpers
 
 #+name: cape
 #+begin_src emacs-lisp
@@ -2247,9 +2175,9 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
         (advice-add #'eglot-completion-at-point :around #'cape-wrap-nonexclusive))))
 #+end_src
 
-* Interfaces
+** General interfaces
 
-** Context menu
+*** Context menu
 
 A right-click menu:
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
@@ -2257,9 +2185,9 @@ A right-click menu:
   (when (display-graphic-p) (context-menu-mode 1))
 #+end_src
 
-** Minibuffer UI
+*** Minibuffer UI
 
-*** Let the minibuffer shrink
+**** Let the minibuffer shrink
 
 The default behavior is to allow the minibuffer to increase in height if necessary, but not to decrease its height. The setting below allows shrinkage when necessary.
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
@@ -2267,7 +2195,7 @@ The default behavior is to allow the minibuffer to increase in height if necessa
   (setopt resize-mini-windows t)
 #+end_src
 
-*** Minibuffer.el
+**** Minibuffer.el
 
 #+name: minibuffer
 #+begin_src emacs-lisp
@@ -2297,7 +2225,7 @@ The default behavior is to allow the minibuffer to increase in height if necessa
     (add-hook 'completion-list-mode-hook #'mode-line-invisible-mode)) ; Emacs 31.1
 #+end_src
 
-*** Filter out commands irrelevant to the current major mode from the ~execute-extended-command~
+**** Filter out commands irrelevant to the current major mode from the ~execute-extended-command~
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc
   ;; Exclude from M-x commands definitely irrelevant to the current
@@ -2305,7 +2233,7 @@ The default behavior is to allow the minibuffer to increase in height if necessa
   (setopt read-extended-command-predicate #'command-completion-default-include-p)
 #+end_src
 
-*** Vertico: Alternative minibuffer completion interface
+**** Vertico: Alternative minibuffer completion interface
 
 #+name: vertico
 #+begin_src emacs-lisp
@@ -2396,9 +2324,9 @@ Vertico provides several extensions:
                  :spacer #(" " 0 1 (cursor t))))))
 #+end_src
 
-** In-line completion
+*** In-line completion
 
-*** Corfu: In-line completion interface
+**** Corfu: In-line completion interface
 
 #+name: corfu
 #+begin_src emacs-lisp
@@ -2536,7 +2464,7 @@ Before Corfu 2.7, specifically [[https://github.com/minad/corfu/commit/4c4a41b0b
       (advice-add capf :around #'krisb-cape-elisp--around-advice)))
 #+end_src
 
-*** Completion-preview: Show just the next completion candidate
+**** Completion-preview: Show just the next completion candidate
 
 Note that =completion-preview= is prefix-only:
 #+name: completion-preview
@@ -2554,7 +2482,7 @@ Note that =completion-preview= is prefix-only:
               #'krisb-minibuffer-sort-by-history-then-distance)))
 #+end_src
 
-** Customize
+*** Customize
 
 #+name: customize-buffers
 #+begin_src emacs-lisp
@@ -2566,7 +2494,7 @@ Note that =completion-preview= is prefix-only:
           custom-unlispify-tag-names nil)
 #+end_src
 
-** Tab bar
+*** Tab bar
 
 #+name: tab-bar
 #+begin_src emacs-lisp
@@ -2604,7 +2532,133 @@ Note that =completion-preview= is prefix-only:
     (tab-bar-history-mode 1))
 #+end_src
 
-* Messages buffer
+*** Mode line
+
+**** Time: Display time
+
+#+name: time
+#+begin_src emacs-lisp
+  (setup time
+
+    (setopt display-time-24hr-format t
+            display-time-format "%R"
+            display-time-interval 60
+            display-time-default-load-average nil)
+
+    (display-time-mode 1)
+
+    ;; Time zones for `world-clock'
+    (setopt world-clock-list
+            '(("America/Los_Angeles" "Seattle")
+              ("America/New_York" "New York")
+              ("Europe/London" "London")
+              ("Europe/Paris" "Paris")
+              ("Europe/Nicosia" "Nicosia (capital of Cyprus)")
+              ("Asia/Calcutta" "Bangalore")
+              ("Asia/Tokyo" "Tokyo")
+              ("Asia/Shanghai" "Beijing"))))
+#+end_src
+
+**** Mode line format
+
+#+name: mode-line-format
+#+begin_src emacs-lisp
+  ;; TODO 2025-12-03: Document also:
+  ;; - `mode-line-compact'
+  ;; - `mode-line-percent-position'
+  ;; - `mode-line-percent-position'
+  ;; - `mode-line-position-line-format'
+  ;; - `mode-line-position-column-line-format'
+  (setopt mode-line-right-align-edge 'right-fringe
+          ;; TODO 2025-07-10: Ask on emacs-devel why this isn't a
+          ;; defcustom.
+          mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis)
+          mode-line-format
+          '("%e" mode-line-front-space
+            ("" mode-line-mule-info mode-line-client mode-line-modified mode-line-remote mode-line-window-dedicated)
+            mode-line-frame-identification
+            mode-line-buffer-identification "   "
+            mode-line-position
+            mode-line-format-right-align
+            (project-mode-line project-mode-line-format)
+            (vc-mode vc-mode) "  "
+            mode-line-modes
+            mode-line-misc-info
+            mode-line-end-spaces))
+#+end_src
+
+** Window control and management
+
+#+name: window.el
+#+begin_src emacs-lisp
+  ;; TODO 2025-07-21: Document:
+  ;; - `quit-window-kill-buffer'
+  (setup window
+
+    (:bind-keys ("M-o" . other-window))
+    (with-eval-after-load 'diff
+      (unbind-key "o" diff-mode-shared-map))
+    (with-eval-after-load 'eat
+      (unbind-key "M-o" eat-semi-char-mode-map))
+    (with-eval-after-load 'xscheme
+      (unbind-key "M-o" scheme-mode-map))
+
+    (setopt switch-to-buffer-obey-display-actions t
+            window-resize-pixelwise t
+            quit-restore-window-no-switch t ; Emacs 31
+            kill-buffer-quit-windows t))    ; Emacs 31
+#+end_src
+
+Below are other modifications to ~display-buffer-alist~ found elsewhere in this configuration:
+#+begin_src emacs-lisp
+  <<display-buffer-alist>>
+#+end_src
+
+** Buffer list management
+
+*** Buff-menu: Simplest UI for listing buffers
+
+#+name: buff-menu
+#+begin_src emacs-lisp
+  ;; TODO 2025-12-03: Document:
+  ;; - `Buffer-menu-use-frame-buffer-list'
+  ;; - `Buffer-menu-group-sort-by'
+  (setup buff-menu
+
+    (setopt Buffer-menu-human-readable-sizes t
+            Buffer-menu-group-by
+            '(Buffer-menu-group-by-root Buffer-menu-group-by-mode))
+
+    ;; Addition to `display-buffer-alist'
+    <<buff-menu-display-buffer-alist>>)
+#+end_src
+
+#+name: buff-menu-display-buffer-alist
+#+begin_src emacs-lisp :noweb-ref display-buffer-alist
+  (add-to-list 'display-buffer-alist
+               '((major-mode . Buffer-menu-mode)
+                 (display-buffer-in-new-tab)))
+#+end_src
+
+*** Uniquify: Ensure buffer names are unique
+
+#+name: uniquify
+#+begin_src emacs-lisp
+  ;; TODO 2025-12-12: Document also:
+  ;; - `uniquify-ignore-buffers-re'
+  ;; - `uniquify-strip-common-suffix'
+  ;; - `uniquify-after-kill-buffer-flag'
+
+  (setup uniquify
+    
+    (with-eval-after-load 'uniquify
+      (setopt uniquify-buffer-name-style 'forward
+              uniquify-trailing-separator-flag t
+              ;; uniquify-min-dir-content 1
+              uniquify-dirname-transform #'project-uniquify-dirname-transform)))
+#+end_src
+
+** Messages buffer
 
 #+name: messages-buffer
 #+begin_src emacs-lisp
@@ -2626,7 +2680,7 @@ Note that =completion-preview= is prefix-only:
                  (post-command-select-window . t)))
 #+end_src
 
-* COMMENT Clipboard
+** COMMENT Clipboard
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   ;; Don’t wait until yanking to put clipboard text into `kill-ring’
@@ -2646,9 +2700,9 @@ Wayland specific:
                              "--trim-newline" "--type" "text/plain;charset=utf-8" text))))
 #+end_src
 
-* Persistence
+** Persistence
 
-** Savehist: Persist minibuffer history
+*** Savehist: Persist minibuffer history
 
 #+name: savehist
 #+begin_src emacs-lisp
@@ -2665,7 +2719,7 @@ Wayland specific:
       (add-to-list 'savehist-additional-variables var)))
 #+end_src
 
-** Saveplace: Persist location of point
+*** Saveplace: Persist location of point
 
 #+name: saveplace
 #+begin_src emacs-lisp
@@ -2678,7 +2732,7 @@ Wayland specific:
     (add-hook 'on-first-file-hook #'save-place-mode))
 #+end_src
 
-** Recentf: Keep track of recent files
+*** Recentf: Keep track of recent files
 
 #+name: recentf
 #+begin_src emacs-lisp
@@ -2701,7 +2755,7 @@ Wayland specific:
   (recentf (eager-display . t))
 #+end_src
 
-** Bookmark
+*** Bookmark
 
 #+name: bookmark
 #+begin_src emacs-lisp
@@ -2733,7 +2787,7 @@ Wayland specific:
   (bookmark (eager-display . t))
 #+end_src
 
-** Desktop: Reopen buffers
+*** Desktop: Reopen buffers
 
 #+name: desktop
 #+begin_src emacs-lisp
@@ -2812,8 +2866,7 @@ Wayland specific:
     (advice-add 'desktop-restore-file-buffer :after #'krisb-desktop--restore-narrowing))
 #+end_src
 
-
-** COMMENT Activities: Bookmarks for window configurations
+*** COMMENT Activities: Bookmarks for window configurations
 
 *Note 2025-12-03:* I've discovered =tab-bookmarks= and now favor its simpler solution (I realized that bookmarking window configurations/tabs was all I wanted). See [[#h:20251203T041255.447488][Tab-bookmark: Bookmarks for tabs!]].
 
@@ -2842,7 +2895,7 @@ Wayland specific:
               activities-mode-idle-frequency 7)))
 #+end_src
 
-** Tab-bookmark: Bookmarks for tabs!
+*** Tab-bookmark: Bookmarks for tabs!
 :PROPERTIES:
 :CUSTOM_ID: h:20251203T041255.447488
 :END:
@@ -2862,133 +2915,9 @@ Wayland specific:
                ("C-c m P" . tab-bookmark-pop)))
 #+end_src
 
-* Window control and management
+* Domains
 
-#+name: window.el
-#+begin_src emacs-lisp
-  ;; TODO 2025-07-21: Document:
-  ;; - `quit-window-kill-buffer'
-  (setup window
-
-    (:bind-keys ("M-o" . other-window))
-    (with-eval-after-load 'diff
-      (unbind-key "o" diff-mode-shared-map))
-    (with-eval-after-load 'eat
-      (unbind-key "M-o" eat-semi-char-mode-map))
-    (with-eval-after-load 'xscheme
-      (unbind-key "M-o" scheme-mode-map))
-
-    (setopt switch-to-buffer-obey-display-actions t
-            window-resize-pixelwise t
-            quit-restore-window-no-switch t ; Emacs 31
-            kill-buffer-quit-windows t))    ; Emacs 31
-#+end_src
-
-Below are other modifications to ~display-buffer-alist~ found elsewhere in this configuration:
-#+begin_src emacs-lisp
-  <<display-buffer-alist>>
-#+end_src
-
-* Buffer list management
-
-** Buff-menu: Simplest UI for listing buffers
-
-#+name: buff-menu
-#+begin_src emacs-lisp
-  ;; TODO 2025-12-03: Document:
-  ;; - `Buffer-menu-use-frame-buffer-list'
-  ;; - `Buffer-menu-group-sort-by'
-  (setup buff-menu
-
-    (setopt Buffer-menu-human-readable-sizes t
-            Buffer-menu-group-by
-            '(Buffer-menu-group-by-root Buffer-menu-group-by-mode))
-
-    ;; Addition to `display-buffer-alist'
-    <<buff-menu-display-buffer-alist>>)
-#+end_src
-
-#+name: buff-menu-display-buffer-alist
-#+begin_src emacs-lisp :noweb-ref display-buffer-alist
-  (add-to-list 'display-buffer-alist
-               '((major-mode . Buffer-menu-mode)
-                 (display-buffer-in-new-tab)))
-#+end_src
-
-** Uniquify: Ensure buffer names are unique
-
-#+name: uniquify
-#+begin_src emacs-lisp
-  ;; TODO 2025-12-12: Document also:
-  ;; - `uniquify-ignore-buffers-re'
-  ;; - `uniquify-strip-common-suffix'
-  ;; - `uniquify-after-kill-buffer-flag'
-
-  (setup uniquify
-    
-    (with-eval-after-load 'uniquify
-      (setopt uniquify-buffer-name-style 'forward
-              uniquify-trailing-separator-flag t
-              ;; uniquify-min-dir-content 1
-              uniquify-dirname-transform #'project-uniquify-dirname-transform)))
-#+end_src
-
-* Mode line
-
-** Time: Display time
-
-#+name: time
-#+begin_src emacs-lisp
-  (setup time
-
-    (setopt display-time-24hr-format t
-            display-time-format "%R"
-            display-time-interval 60
-            display-time-default-load-average nil)
-
-    (display-time-mode 1)
-
-    ;; Time zones for `world-clock'
-    (setopt world-clock-list
-            '(("America/Los_Angeles" "Seattle")
-              ("America/New_York" "New York")
-              ("Europe/London" "London")
-              ("Europe/Paris" "Paris")
-              ("Europe/Nicosia" "Nicosia (capital of Cyprus)")
-              ("Asia/Calcutta" "Bangalore")
-              ("Asia/Tokyo" "Tokyo")
-              ("Asia/Shanghai" "Beijing"))))
-#+end_src
-
-** Mode line format
-
-#+name: mode-line-format
-#+begin_src emacs-lisp
-  ;; TODO 2025-12-03: Document also:
-  ;; - `mode-line-compact'
-  ;; - `mode-line-percent-position'
-  ;; - `mode-line-percent-position'
-  ;; - `mode-line-position-line-format'
-  ;; - `mode-line-position-column-line-format'
-  (setopt mode-line-right-align-edge 'right-fringe
-          ;; TODO 2025-07-10: Ask on emacs-devel why this isn't a
-          ;; defcustom.
-          mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis)
-          mode-line-format
-          '("%e" mode-line-front-space
-            ("" mode-line-mule-info mode-line-client mode-line-modified mode-line-remote mode-line-window-dedicated)
-            mode-line-frame-identification
-            mode-line-buffer-identification "   "
-            mode-line-position
-            mode-line-format-right-align
-            (project-mode-line project-mode-line-format)
-            (vc-mode vc-mode) "  "
-            mode-line-modes
-            mode-line-misc-info
-            mode-line-end-spaces))
-#+end_src
-
-* Project handling
+** Project handling
 
 #+name: project
 #+begin_src emacs-lisp
@@ -3042,123 +2971,238 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
       <<eat-project-switch-commands>>)))
 #+end_src
 
-* Do-at-point: Do things to the things at point
+** VCS
 
-#+name: do-at-point
-#+begin_src emacs-lisp
-  (setup do-at-point
-    (:package do-at-point)
-    
-    (bind-key "C-;" #'do-at-point)
+*** VC.el: Interface for version control systems
 
-    (with-eval-after-load 'do-at-point
-      <<do-at-point-user-actions>>))
-#+end_src
-
-* Domains
-
-** Composition
-
-*** Electric: Auto-insert delimiters
-
-#+name: electric
+#+name: vc.el
 #+begin_src emacs-lisp
   ;; TODO 2025-05-20: Document the user options below in the literate
   ;; config:
-  ;; - `electric-quote-comment'
-  ;; - `electric-quote-string'
-  ;; - `electric-quote-inhibit-functions'
-  ;; - `electric-pair-delete-adjacent-pairs'
-  ;; - `electric-pair-pairs'
-  ;; - `electric-pair-text-pairs'
-  ;; NOTE: 2025-05-22: For some reason lisp-mode sets these buffer
-  ;; locally.  See `lisp-mode-variables'.
-  ;; - `electric-pair-skip-whitespace'
-  ;; - `electric-pair-open-newline-between-pairs'
-  (setup electric
+  ;; - `vc-annotate-display-mode'
+  ;; - `vc-revert-show-diff'
+  (setup vc
+
+    (with-eval-after-load 'vc
+      (setopt vc-follow-symlinks t
+              vc-allow-rewriting-published-history 'ask ; Emacs 31
+              vc-async-checkin t
+              vc-allow-async-diff t       ; Emacs 31
+              vc-revert-show-diff t
+              vc-find-revision-no-save t            ; Emacs 31
+              vc-dir-hide-up-to-date-on-revert t    ; Emacs 31
+              vc-dir-save-some-buffers-on-revert t  ; Emacs 31
+              vc-use-incoming-outgoing-prefixes t)) ; Emacs 31
+
+    ;; I dislike this default
+    (with-eval-after-load 'vc
+      (remove-hook 'vc-log-finish-functions 'vc-shrink-buffer-window))
     
-    (electric-pair-mode 1)
-    (electric-indent-mode 1)
+    <<vc-display-buffer-alist>>)
 
-    (with-eval-after-load 'electric
-      (setopt electric-quote-context-sensitive t
-              electric-quote-replace-double t)))
-
-  <<electric-log-edit>>
+  ;; Dispatcher between `vc-diff’ and `diff-buffer-with-file’
+  (setup vc
+    (defun krisb-vc-diff-dwim ()
+      "Call `vc-diff’ or `diff-buffer-with-file’.
+  Calls `vc-diff’ if the buffer is unmodified.  If buffer is modified,
+  call `diff-buffer-with-file’ instead."
+      (interactive)
+      (if (and (not (eq major-mode 'vc-dir-mode)) (buffer-modified-p))
+          (diff-buffer-with-file (current-buffer))
+        (vc-diff)))
+    (:bind-keys ([remap vc-diff] . krisb-vc-diff-dwim)))
 #+end_src
 
-*** Paren: Highlight matching parentheses
+#+name: vc-display-buffer-alist
+#+begin_src emacs-lisp :noweb-ref display-buffer-alist
+  (add-to-list 'display-buffer-alist
+               '((or . ((major-mode . vc-dir-mode)
+                        (major-mode . vc-git-log-view-mode)
+                        (major-mode . vc-git-region-history-mode)))
+                 (display-buffer-same-window)))
+#+end_src
 
-#+name: paren
+#+name: vc-auto-revert
 #+begin_src emacs-lisp
-  (setup paren
+  (if (fboundp 'vc-auto-revert-mode)
+      (vc-auto-revert-mode 1)             ; Emacs 31
+    (global-auto-revert-mode 1))
+#+end_src
+
+*** Log-edit
+
+#+name: log-edit
+#+begin_src emacs-lisp
+  ;; TODO 2025-05-20: Document the user options below in the literate
+  ;; config:
+  ;; - `log-edit-headers-alist'
+  ;; - `log-edit-setup-add-author'
+  (setup log-edit
+
+    (:face log-edit-summary ((t (:family ,(face-attribute 'variable-pitch :family)))))
     
-    (with-eval-after-load 'paren
-      (setopt show-paren-not-in-comments-or-strings 'on-mismatch)))
+    ;; Evaluate after log-edit defines `log-edit-hook' first, since the
+    ;; hook already has several functions.  (Otherwise, we are adding to
+    ;; an empty hook.)
+    (with-eval-after-load 'log-edit
+      (add-hook 'log-edit-hook #'auto-fill-mode)
+      (add-hook 'log-edit-hook #'log-edit-maybe-show-diff)))
 #+end_src
 
-*** Delsel: Delete region when yanking
-
-#+name: delsel
+#+name: cape-log-edit
 #+begin_src emacs-lisp
-  (setup delsel
-    
-    (delete-selection-mode t))
+  (krisb-cape-setup-capfs
+    "commit"
+    '(git-commit-setup-hook log-edit-mode-hook)
+    (list #'cape-elisp-symbol)
+    ;; Also change the delimiters inserted by `cape-elisp-symbol'
+    ;; depending on the project I'm in
+    ;; TODO 2025-11-30: Figure out which directories I want to do what
+    ;; and program that behavior accordingly
+    (require 'cape)
+    (make-local-variable 'cape-elisp-symbol-wrapper)
+    (when-let* ((project (project-current)))
+      (pcase (expand-file-name (project-root project))
+        ((pred (string-match-p "emacs-repos/packages/emacs/"))
+         (setq cape-elisp-symbol-wrapper
+               (cons '(log-edit-mode ?' ?')
+                     (assq-delete-all 'log-edit-mode cape-elisp-symbol-wrapper))))
+        (_
+         (setq cape-elisp-symbol-wrapper
+               (cons '(log-edit-mode ?` ?`)
+                     (assq-delete-all 'log-edit-mode cape-elisp-symbol-wrapper)))))))
 #+end_src
 
-*** Whitespace: Visualize whitespace
-
-#+name: whitespace
+#+name: electric-log-edit
 #+begin_src emacs-lisp
-  ;; Visualize whitespace so mistakes are more easily detectable.
-  (setup whitespace
-
-    (setopt whitespace-style             ; See also `whitespace-cleanup'
-            '( empty face tab-mark tabs page-delimiters
-               indentation space-before-tab space-after-tab)
-            whitespace-display-mappings '((tab-mark ?\t [?› ?\t])
-                                          (newline-mark ?\n [?¬ ?\n])
-                                          (space-mark ?\  [?·] [?.]))
-            whitespace-line-column nil)
-
-    (add-hook 'prog-mode-hook #'whitespace-mode)
-    (:hide-mode))
+  (with-eval-after-load 'log-edit
+    (defun krisb-electric-setup-log-edit ()
+      "Add to `electric-pair-text-pairs'."
+      (make-local-variable 'electric-pair-pairs)
+      (when-let* ((project (project-current)))
+        (pcase (expand-file-name (project-root project))
+          ((pred (string-match-p "emacs-repos/packages/emacs/"))
+           (cl-pushnew '(?' . ?') electric-pair-pairs :test #'equal))
+          (_
+           (cl-pushnew '(?` . ?`) electric-pair-pairs :test #'equal)))))
+    (add-hook 'log-edit-mode-hook 'krisb-electric-setup-log-edit))
 #+end_src
 
-*** Indentation
+*** Diff-mode: Display diffs
 
-**** General settings
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  (setopt tab-width 4
-          ;; Insert spaces instead of tab characters.  The below
-          ;; disables `indent-tabs-mode' globally
-          indent-tabs-mode nil)
-#+end_src
-
-*** Rebind capitalization commands
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Use DWIM case commands
-  (bind-keys
-   ([remap upcase-word] . upcase-dwim)
-   ([remap downcase-word] . downcase-dwim)
-   ([remap capitalize-word] . capitalize-dwim))
-#+end_src
-
-*** Word-wrap-mode: Slight improvements to word-wrapping
-
-#+name: word-wrap-mode
+#+name: diff-mode
 #+begin_src emacs-lisp
-  ;; Instead of wrapping lines on whitespace, as is the default, also
-  ;; wrap lines on the characters denoted by
-  ;; `word-wrap-whitespace-characters’, e.g., em-dashes and en-dashes.
-  (setup word-wrap-mode
-    
-    (global-word-wrap-whitespace-mode 1))
+  ;; TODO 2025-06-07: Document:
+  ;; - `diff-font-lock-syntax’
+  ;; - `diff-refine’
+  (setup diff-mode
+
+    (setopt diff-font-lock-prettify t ; Make diff headers look like Magit’s
+            ;; 2024-10-23 TODO: Revisit this. I think it causes a bug in
+            ;; vc-jj
+            ;; diff-default-read-only t
+            )
+
+    (:bind-keys :map diff-mode-map
+                ("v" . vc-next-action))
+
+    (add-hook 'diff-mode-hook #'diff-delete-empty-files)
+
+    ;; TODO 2025-06-07: Revisit this.
+    ;; (krisb-modus-themes-setup-faces
+    ;;  "diff-mode"
+    ;;  (set-face-attribute 'diff-header nil
+    ;;                      :height 1.2
+    ;;                      :overline t
+    ;;                      :width 'expanded
+    ;;                      :foreground (modus-themes-with-colors fg-alt)
+    ;;                      :extend t)
+    ;;  (set-face-attribute 'diff-hunk-header nil
+    ;;                      :height 1.1
+    ;;                      :slant 'italic
+    ;;                      :foreground 'unspecified
+    ;;                      :background (modus-themes-with-colors bg-dim)))
+    )
+
+  <<diff-mode-display-buffer-alist>>
+
+  (setup pulsar
+    ;; Pulsar pulses while navigating
+    (with-eval-after-load 'pulsar
+      (add-to-list 'pulsar-pulse-functions 'diff-file-next)
+      (add-to-list 'pulsar-pulse-functions 'diff-file-prev)
+      (add-to-list 'pulsar-pulse-functions 'diff-hunk-next)
+      (add-to-list 'pulsar-pulse-functions 'diff-hunk-prev)
+      (add-to-list 'pulsar-pulse-functions 'diff-hunk-kill)))
 #+end_src
 
-*** Flymake: Linting
+#+name: diff-mode-display-buffer-alist
+#+begin_src emacs-lisp :noweb-ref display-buffer-alist
+  (add-to-list 'display-buffer-alist
+               `((major-mode . diff-mode)
+                 (display-buffer-reuse-mode-window
+                  display-buffer-in-previous-window
+                  display-buffer-use-least-recent-window
+                  display-buffer-pop-up-window)))
+#+end_src
+
+*** Vc-git: VC with git
+
+#+name: vc-git
+#+begin_src emacs-lisp
+  ;; TODO 2025-07-10: Document:
+  ;; - `vc-git-revision-complete-only-branches'
+  (setup vc-git
+
+    (setopt vc-git-log-edit-summary-target-len (+ 50 (length "Summary"))
+            vc-git-log-edit-summary-max-len (+ 70 (length "Summary"))
+            vc-git-diff-switches '("--patch-with-stat" "--histogram")
+            vc-git-root-log-format
+            `("%h %ad (%ar) %aN%d%n  %s"
+              ;; The first shy group matches the characters drawn by
+              ;; --graph. We use numbered groups because
+              ;; `log-view-message-re' wants the revision number to be
+              ;; group 1.
+              ,(concat "^\\(?:[*/\\|]+\\)\\(?:[*/\\| ]+\\)?"
+                       "\\(?1:[0-9a-z]+\\)"      ; %h
+                       " "
+                       "\\(?4:[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\} (.*? ago)\\)?" ; %ad (%ar)
+                       " "
+                       "\\(?3:\\(?:[[:alpha:]]+\\.?[\n ]\\)+\\)" ; %aN
+                       "\\(?2:([^)]+)\\)?")                      ; %d
+              ((1 'log-view-message)
+               (2 'change-log-list nil lax)
+               (3 'change-log-name)
+               (4 'change-log-date)))))
+#+end_src
+
+*** Vc-jj: VC with jujutsu (JJ)
+
+#+name: vc-jj
+#+begin_src emacs-lisp
+  ;; Integration between vc.el and the jujutsu (JJ) version control
+  ;; system.  Best jj integration with vc currently (2025-10-17).
+  (setup vc-jj
+    ;; Elpaca: (:repo "https://codeberg.org/krisbalintona/vc-jj.el.git" :branch "merge")
+    (:package (vc-jj :url "https://codeberg.org/krisbalintona/vc-jj.el.git"
+                     :branch "merge"))
+    ;; Require vc-jj and project-jj alongside vc and project since some
+    ;; operation results are cached by them, and we don't want them to
+    ;; cache information that disagrees with vc-jj
+    (:load-after vc)
+    (:load-after project)
+    (require 'project-jj)
+
+    (setopt vc-jj-diff-switches '("--git" "--stat")))
+#+end_src
+
+** Composition
+
+*** Programming
+
+**** Programming language-agnostic
+
+***** Flymake: Linting
 
 #+name: flymake
 #+begin_src emacs-lisp
@@ -3205,9 +3249,9 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
                                 'face '(:inherit (bold mode-line-inactive)))))))
 #+end_src
 
-*** Spell checking
+***** Spell checking
 
-**** Ispell
+****** Ispell
 
 #+name: ispell
 #+begin_src emacs-lisp
@@ -3226,7 +3270,7 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
                 (expand-file-name (format "enchant/%s.dic" ispell-dictionary) (xdg-config-home))))))
 #+end_src
 
-**** Flyspell: Highlight spelling errors on-the-fly
+****** Flyspell: Highlight spelling errors on-the-fly
 :PROPERTIES:
 :CUSTOM_ID: h:20251118T184517.526538
 :END:
@@ -3257,7 +3301,7 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
                 ("C-M-i" . nil)))
 #+end_src
 
-**** COMMENT Jinx: Fast and painless spell checker
+****** COMMENT Jinx: Fast and painless spell checker
 :PROPERTIES:
 :CUSTOM_ID: h:20251118T184509.484886
 :END:
@@ -3351,47 +3395,9 @@ Jinx is an alternative to the built-in flyspell (see [[#h:20251118T184517.526538
       (setf (alist-get ?* jinx--save-keys) #'krisb-jinx-save-as-ispell-localword)))
 #+end_src
 
-*** Puni: Enhancements to basic text editing and movement
+***** Text expansion
 
-#+name: puni
-#+begin_src emacs-lisp
-  ;; Puni: major-mode-agnostic structural editing.  We use some of its
-  ;; commands, but do not enable the mode.
-  (setup puni
-    (:package puni)
-
-    (setopt puni-confirm-when-delete-unbalanced-active-region nil)
-
-    (bind-keys
-     ("C-S-o" . puni-split)
-     ("M-+" . puni-splice)
-     ("M-R" . puni-raise)
-     ([remap transpose-sexps] . puni-transpose)
-     ([remap kill-word] . puni-forward-kill-word)
-     ([remap backward-kill-word] . puni-backward-kill-word)
-     ([remap insert-parentheses] . puni-syntactic-backward-punct)
-     ([remap move-past-close-and-reindent] . puni-syntactic-forward-punct)))
-#+end_src
-
-*** Sentence-end-double-space: What counts as a sentence?
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Set `sentence-end-double-space' conditionally
-  (defun krisb-sentence-end-double-space-setup ()
-    "Set up the value for `sentence-end-double-space'.
-  However, do not override buffer-local and directory-local values for
-  `sentence-end-double-space'."
-    ;; First check if `sentence-end-double-space' is set buffer-locally
-    ;; (`file-local-variables-alist') or directory-locally
-    ;; (`dir-local-variables-alist')
-    (unless (local-variable-p 'sentence-end-double-space)
-      (setq-local sentence-end-double-space
-                  (cond ((derived-mode-p '(prog-mode conf-mode log-edit-mode)) t)
-                        ((derived-mode-p '(text-mode wombag-show-mode)) nil)))))
-  (add-hook 'after-change-major-mode-hook #'krisb-sentence-end-double-space-setup)
-#+end_src
-
-*** Abbrev: Inline expansion library
+****** Abbrev: Inline expansion library
 
 #+name: abbrev
 #+begin_src emacs-lisp
@@ -3409,7 +3415,7 @@ Jinx is an alternative to the built-in flyspell (see [[#h:20251118T184517.526538
     (setopt abbrev-mode t))
 #+end_src
 
-*** Tempel: Modern inline expansions
+****** Tempel: Modern inline expansions
 
 #+name: tempel
 #+begin_src emacs-lisp
@@ -3448,9 +3454,7 @@ Tempel-specific completion category overrides:
   (tempel (eager-display . t))
 #+end_src
 
-*** Programming
-
-**** Display-line-numbers
+***** Display-line-numbers
 
 #+name: display-line-numbers
 #+begin_src emacs-lisp
@@ -3464,9 +3468,9 @@ Tempel-specific completion category overrides:
             display-line-numbers-width-start t)) ; Use same width throughout
 #+end_src
 
-**** Outlining
+***** Outlining
 
-***** Outline.el
+****** Outline.el
 
 Outline.el lets one denote headings of whatever level and change narrowing, mark heading contents, and so on based on these headings.
 
@@ -3486,7 +3490,7 @@ Instead of adding ~outline-minor-mode~ directly to major mode hooks, I utilize o
 
 [fn:2] The reason we cannot add ~outline-minor-mode~ to major mode hooks then call ~outli-mode~ through ~outline-minor-mode-hook~ is because ~outli-mode~ internally calls ~outline-minor-mode~, meaning the above method creates an infinite recursion loop.
 
-***** Foldout: Return to a narrowed subtree
+****** Foldout: Return to a narrowed subtree
 
 As far as I understand, foldout is meant as a companion to outline.el. It provides the three commands below alongside several mouse commands:
 + ~foldout-zoom-subtree~ :: Basically ~outline-show-subtree~
@@ -3512,7 +3516,7 @@ Additionally, since ~outline-regexp~ is correctly set in org-mode buffers, the f
       (:require)))
 #+end_src
 
-***** Outli.el: A modern wrapper around outline.el
+****** Outli.el: A modern wrapper around outline.el
 :PROPERTIES:
 :CUSTOM_ID: h:20251118T171202.636238
 :END:
@@ -3555,7 +3559,7 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
             (plist-get (cdr (assoc 'emacs-lisp-mode consult-imenu-config)) :types))))
 #+end_src
 
-***** Hideshow: Selectively hide regions of code
+****** Hideshow: Selectively hide regions of code
 
 #+name:hideshow
 #+begin_src emacs-lisp
@@ -3571,7 +3575,7 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
               hs-isearch-open t)))
 #+end_src
 
-**** Org-src: Programming in org-mode
+***** Org-src: Programming in org-mode
 
 #+name: org-src
 #+begin_src emacs-lisp
@@ -3586,7 +3590,7 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
             org-src-window-setup 'current-window))
 #+end_src
 
-**** Xref: Jump to symbol definitions
+***** Xref: Jump to symbol definitions
 
 #+name: xref
 #+begin_src emacs-lisp
@@ -3653,7 +3657,7 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
                   (some-window . mru))))
 #+end_src
 
-**** Info: Reading manuals
+***** Info: Reading manuals
 
 #+name: info
 #+begin_src emacs-lisp
@@ -3691,7 +3695,7 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
   (info-menu (eager-display t))
 #+end_src
 
-**** Which-func: Indicator for which function I'm in
+***** Which-func: Indicator for which function I'm in
 
 #+name: which-func
 #+begin_src emacs-lisp
@@ -3705,13 +3709,13 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
     (which-function-mode 1))
 #+end_src
 
-**** Shells and compilation
+***** Shells and compilation
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   (setopt shell-command-prompt-show-cwd t)
 #+end_src
 
-***** EAT: Best terminal emulator
+****** EAT: Best terminal emulator
 
 #+name: eat
 #+begin_src emacs-lisp
@@ -3809,7 +3813,7 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
                   :key #'car)
 #+end_src
 
-***** Fish-mode: Major mode for =.fish= files
+****** Fish-mode: Major mode for =.fish= files
 
 #+name: fish-mode
 #+begin_src emacs-lisp
@@ -3817,7 +3821,7 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
     (:package fish-mode))
 #+end_src
 
-***** Fancy-compilation: Make =compilation-mode= prettier
+****** Fancy-compilation: Make =compilation-mode= prettier
 
 # TODO 2025-11-21: Can I get away with removing this package by tweaking the built-in options?
 
@@ -3837,7 +3841,7 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
     (fancy-compilation-mode 1))
 #+end_src
 
-***** Editing remote files
+****** Editing remote files
 
 #+name: files
 #+begin_src emacs-lisp
@@ -3869,7 +3873,7 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
   ;; (setopt auto-revert-remote-files t)
 #+end_src
 
-****** TRAMP: Pretend we're in a remote machine!
+******* TRAMP: Pretend we're in a remote machine!
 
 # TODO 2025-11-28: Also document auto-revert-remote-files and enable-remote-dir-locals. (They should
 # be set to nil if optimizing for performance, which is the default.)
@@ -3984,7 +3988,7 @@ I do not use this myself, but for users who don't need VC when using tramp on re
                     (group (regexp tramp-file-name-regexp))))))
 #+end_src
 
-******* Tramp-theme: Special theming in remote buffers
+******** Tramp-theme: Special theming in remote buffers
 
 #+name: tramp-theme
 #+begin_src emacs-lisp
@@ -3997,7 +4001,7 @@ I do not use this myself, but for users who don't need VC when using tramp on re
       (load-theme 'tramp)))
 #+end_src
 
-****** Tramp-hlo: "High-level operations" for tramp
+******* Tramp-hlo: "High-level operations" for tramp
 
 A problem with Tramp is that there are certain common tasks which inevitably require many round-trips. Tramp-HLO's solution is to specially do those expensive tasks on the server side, sending the final result to the local machine---these are "high-level operations. It does this by running bash scripts that accomplish the goal of these expensive elisp functions. There are two such functions it currently replaces:
 + ~locate-dominating-file~
@@ -4015,7 +4019,7 @@ The performance increase can be /drastic/.
       (tramp-hlo-setup)))
 #+end_src
 
-****** Tramp-RPC: Experiment with using remote RPC server instead of parsing shell command output
+******* Tramp-RPC: Experiment with using remote RPC server instead of parsing shell command output
 
 #+name: tramp-rpc
 #+begin_src emacs-lisp
@@ -4288,9 +4292,24 @@ Consequently, the elisp backend is used if there is no other local backend to us
     (:package caddyfile-mode))
 #+end_src
 
-**** Encryption
+**** Web development
 
-***** Sops: Major mode for editing SOPS files
+***** Yaml
+
+#+name: yaml-mode
+#+begin_src emacs-lisp
+  (setup yaml-mode
+    (:package yaml-mode))
+#+end_src
+
+***** Svelte-mode: Major mode for SvelteKit project files
+
+#+name: svelte-mode
+#+begin_src emacs-lisp
+  (defconfig (web-development :packages (svelte-mode)))
+#+end_src
+
+**** Sops: Major mode for editing SOPS files
 
 #+name: sops
 #+begin_src emacs-lisp
@@ -4313,28 +4332,9 @@ Consequently, the elisp backend is used if there is no other local backend to us
                 ("C-c e C-k" . sops-cancel)))
 #+end_src
 
-**** Yaml
-
-#+name: yaml-mode
-#+begin_src emacs-lisp
-  (setup yaml-mode
-    (:package yaml-mode))
-#+end_src
-
-**** Web development
-
-***** Svelte-mode: Major mode for SvelteKit project files
-
-#+name: svelte-mode
-#+begin_src emacs-lisp
-  (defconfig (web-development :packages (svelte-mode)))
-#+end_src
-
 *** Prose writing
 
-**** Grammar checking
-
-***** Flymake-vale
+**** Flymake-vale: Grammar checking
 
 #+name: flymake-vale
 #+begin_src emacs-lisp
@@ -7486,7 +7486,7 @@ Integration with org-ql:
       (work-timer-with-org-clock-mode 1)))
 #+end_src
 
-* Platform-specific configuration
+* Platform- and system-specific configuration
 
 ** Guix
 
