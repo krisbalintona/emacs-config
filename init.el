@@ -4009,6 +4009,7 @@ send from."
   ;; Notmuch-searches
   (let ((emacs-devel "List:emacs-devel")
         (emacs-bugs "List:bug-gnu-emacs")
+        (emacs-org-mode "List:emacs-orgmode")
         (guix-devel "List:guix-devel")
         (guix-help "List:help-guix")
         (guix-patches "List:guix-patches")
@@ -4022,8 +4023,8 @@ send from."
                 :sort-order oldest-first
                 :key "i")
               ( :name "Emacs mailing lists"
-                :query ,(format "(%s or %s) and tag:inbox"
-                                emacs-devel emacs-bugs)
+                :query ,(format "(%s or %s or %s) and tag:inbox"
+                                emacs-devel emacs-bugs emacs-org-mode)
                 :sort-order newest-first
                 :key "e")
               ( :name "Guix mailing lists"
