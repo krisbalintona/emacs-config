@@ -168,80 +168,18 @@ In Emacs 31, packages installed with package.el can now be reviewed upon upgradi
   verbose for the sake of, e.g., debugging and testing.")
 #+end_src
 
-** Configuration unit macros
+** Config-units: Bespoke configuration unit macros
 
-#+name: config-units
+#+name: config-units-setup
 #+begin_src emacs-lisp
   (require 'config-units)
+  (setopt config-package-specifications
+          '((svelte-mode :manager package :spec svelte-mode)))
 #+end_src
 
-** Bespoke helpers and variables
-
-#+name: config-helpers
+#+name: config-units-load
 #+begin_src emacs-lisp
-  ;;;;; Variables
-  ;; FIXME 2025-05-20: If the path denoted by `krisb-folio-directory'
-  ;; does not exist, other packages that depend on this value are given
-  ;; a non-existing path, likely resulting in errors.  We might solve
-  ;; this by turning this into a function instead, returning nil if it
-  ;; doesn't exist, thereby avoiding passing a non-existing file path to
-  ;; these packages.
-  (defvar krisb-folio-directory (expand-file-name "org-database" "~/Documents")
-    "The directory holding my org files.")
-
-  (defvar krisb-notes-directory (expand-file-name "notes" krisb-folio-directory)
-    "My notes directory.")
-
-  (defvar krisb-org-agenda-directory (expand-file-name "agenda" krisb-folio-directory)
-    "The directory holding my main org-agenda files.")
-
-  (defvar krisb-org-agenda-main-file (expand-file-name "todo.org" krisb-org-agenda-directory)
-    "My main org-agenda file.")
-
-  (defvar krisb-org-archive-directory (expand-file-name "archive" krisb-folio-directory)
-    "The archive directory for my org files.")
-
-  (defvar krisb-bibliography-files (list (expand-file-name "master-lib.bib" krisb-folio-directory))
-    "A list of my bibliography (.bib) files.")
-
-  <<config-options>>
-
-  ;;;;; Directories
-  (defvar krisb-blog-manuscripts-directory (expand-file-name "manuscripts/blog" krisb-notes-directory)
-    "The directory for my pre-export blog files.")
-
-  (defvar krisb-email-directory (expand-file-name "emails/" "~/Documents/")
-    "Directory that houses my local email files.")
-
-  (defvar krisb-email-drafts-directory (expand-file-name "drafts" krisb-email-directory)
-    "Directory that houses my local email drafts.")
-
-  ;;;;; Functions
-  (defun krisb-wayland-p ()
-    "Return non-nil if Emacs is under Wayland."
-    (getenv "WAYLAND_DISPLAY"))
-
-  ;;;;; Keymaps
-  (defvar-keymap krisb-note-keymap
-    :doc "Prefix for my note-taking needs.")
-  (bind-key "C-c n" krisb-note-keymap 'global-map)
-
-  (defvar-keymap krisb-open-keymap
-    :doc "Prefix for opening various hings.")
-  (bind-key "C-c o" krisb-open-keymap 'global-map)
-
-  (defvar-keymap krisb-toggle-keymap
-    :doc "Prefix for toggling stuff.")
-  (bind-key "C-c t" krisb-toggle-keymap 'global-map)
-#+end_src
-
-** Add bespoke lisp modules to ~load-path~
-
-#+name: site-lisp
-#+begin_src emacs-lisp
-  (dolist (path (list (expand-file-name "modules" user-emacs-directory)
-                      (expand-file-name "lisp" user-emacs-directory)))
-    (add-to-list 'load-path path))
+  (load-all-configs)
 #+end_src
 
 ** Setup.el: A transparent =use-package= alternative
@@ -398,6 +336,75 @@ Setup.el simply provides various macros inside ~(setup ...)~ forms. It comes wit
 In my opinion, use-package's macros add an opaqueness that adds a layer of potential confusion. One has to learn the specific "use-package language"---avoiding all its foot-guns and practicing its conventions---in order to configure their Emacs. Instead, I prefer setup.el because it's simply a bunch of straightforward elisp macros.
 
 This lets setup.el configurations be transparent rather than opaque: I understand exactly what elisp is at play and what it's doing. Consequently, I think configurations leveraging setup.el require no special know-how or caution to write or understand---I wouldn't say the same for use-package.
+
+** Bespoke helpers and variables
+
+#+name: config-helpers
+#+begin_src emacs-lisp
+  ;;;;; Variables
+  ;; FIXME 2025-05-20: If the path denoted by `krisb-folio-directory'
+  ;; does not exist, other packages that depend on this value are given
+  ;; a non-existing path, likely resulting in errors.  We might solve
+  ;; this by turning this into a function instead, returning nil if it
+  ;; doesn't exist, thereby avoiding passing a non-existing file path to
+  ;; these packages.
+  (defvar krisb-folio-directory (expand-file-name "org-database" "~/Documents")
+    "The directory holding my org files.")
+
+  (defvar krisb-notes-directory (expand-file-name "notes" krisb-folio-directory)
+    "My notes directory.")
+
+  (defvar krisb-org-agenda-directory (expand-file-name "agenda" krisb-folio-directory)
+    "The directory holding my main org-agenda files.")
+
+  (defvar krisb-org-agenda-main-file (expand-file-name "todo.org" krisb-org-agenda-directory)
+    "My main org-agenda file.")
+
+  (defvar krisb-org-archive-directory (expand-file-name "archive" krisb-folio-directory)
+    "The archive directory for my org files.")
+
+  (defvar krisb-bibliography-files (list (expand-file-name "master-lib.bib" krisb-folio-directory))
+    "A list of my bibliography (.bib) files.")
+
+  <<config-options>>
+
+  ;;;;; Directories
+  (defvar krisb-blog-manuscripts-directory (expand-file-name "manuscripts/blog" krisb-notes-directory)
+    "The directory for my pre-export blog files.")
+
+  (defvar krisb-email-directory (expand-file-name "emails/" "~/Documents/")
+    "Directory that houses my local email files.")
+
+  (defvar krisb-email-drafts-directory (expand-file-name "drafts" krisb-email-directory)
+    "Directory that houses my local email drafts.")
+
+  ;;;;; Functions
+  (defun krisb-wayland-p ()
+    "Return non-nil if Emacs is under Wayland."
+    (getenv "WAYLAND_DISPLAY"))
+
+  ;;;;; Keymaps
+  (defvar-keymap krisb-note-keymap
+    :doc "Prefix for my note-taking needs.")
+  (bind-key "C-c n" krisb-note-keymap 'global-map)
+
+  (defvar-keymap krisb-open-keymap
+    :doc "Prefix for opening various hings.")
+  (bind-key "C-c o" krisb-open-keymap 'global-map)
+
+  (defvar-keymap krisb-toggle-keymap
+    :doc "Prefix for toggling stuff.")
+  (bind-key "C-c t" krisb-toggle-keymap 'global-map)
+#+end_src
+
+** Add bespoke lisp modules to ~load-path~
+
+#+name: site-lisp
+#+begin_src emacs-lisp
+  (dolist (path (list (expand-file-name "modules" user-emacs-directory)
+                      (expand-file-name "lisp" user-emacs-directory)))
+    (add-to-list 'load-path path))
+#+end_src
 
 ** No-littering.el: keep a tidy =.emacs.d/=
 
@@ -4314,6 +4321,15 @@ Consequently, the elisp backend is used if there is no other local backend to us
     (:package yaml-mode))
 #+end_src
 
+**** Web development
+
+***** Svelte-mode: Major mode for SvelteKit project files
+
+#+name: svelte-mode
+#+begin_src emacs-lisp
+  (defconfig (web-development :packages (svelte-mode)))
+#+end_src
+
 *** Prose writing
 
 **** Grammar checking
@@ -7545,7 +7561,7 @@ Integration with org-ql:
 
   <<load-messages>>
 
-  <<config-units>>
+  <<config-units-setup>>
 
   <<bio>>
 
@@ -8009,6 +8025,12 @@ Integration with org-ql:
 
   ;;; Yaml-mode
   <<yaml-mode>>
+
+  ;;; Svelte-mode
+  <<svelte-mode>>
+
+  ;;; Load config units
+  <<config-units-load>>
 
   ;;; Startup time
   <<startup-time>>

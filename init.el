@@ -9,6 +9,8 @@ verbose for the sake of, e.g., debugging and testing.")
   (setq force-load-messages t))
 
 (require 'config-units)
+(setopt config-package-specifications
+        '((svelte-mode :manager package :spec svelte-mode)))
 
 (setopt user-full-name "Kristoffer Balintona"
         user-mail-address "krisbalintona@gmail.com")
@@ -5623,6 +5625,12 @@ When called with `-' instead call `inspector-inspect-expression'."
 ;;; Yaml-mode
 (setup yaml-mode
   (:package yaml-mode))
+
+;;; Svelte-mode
+(defconfig (web-development :packages (svelte-mode)))
+
+;;; Load config units
+(load-all-configs)
 
 ;;; Startup time
 ;; Message for total init time after startup
