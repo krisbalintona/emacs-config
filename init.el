@@ -123,11 +123,13 @@ nothing."
 (setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
                            ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
                            ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                           ("melpa" . "https://melpa.org/packages/"))
+                           ("melpa" . "https://melpa.org/packages/")
+                           ("melpa-stable" . "https://stable.melpa.org/packages/"))
         package-archive-priorities '(("gnu-elpa" . 4)
                                      ("nongnu" . 3)
                                      ("gnu-elpa-devel" . 2)
-                                     ("melpa" . 1))
+                                     ("melpa" . 1)
+                                     ("melpa-stable" . 0))
         package-install-upgrade-built-in t)
 
 ;; 2025-10-23 TODO: Revisit this.  Ideally, should be more safe than
