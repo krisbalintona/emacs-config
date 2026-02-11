@@ -53,13 +53,13 @@ nothing."
 ;; load that file
 (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/emacs-vtable-ship-mints/lisp/emacs-lisp/vtable.el")
 
+;; Load my bespoke version before org's version of org-capture
+(krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/org-mode/lisp/org-capture.el")
+
 ;; I have several patches awaiting review or application.
 (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/notmuch/emacs/notmuch.el")
 (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/notmuch/emacs/notmuch-mua.el")
 (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/notmuch/emacs/notmuch-tree.el")
-
-;; Load my bespoke version before org's version of org-capture
-(krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/org-mode/lisp/org-capture.el")
 
 ;;; Meta-configuration
 
@@ -88,6 +88,8 @@ nothing."
 
 (defvar krisb-bibliography-files (list (expand-file-name "master-lib.bib" krisb-folio-directory))
   "A list of my bibliography (.bib) files.")
+
+;;;;; Options
 
 (defcustom krisb-completion-paradigm 'completion-list
   "Choose our completion paradigm."
@@ -342,31 +344,6 @@ package-archives, e.g. \"gnu\")."))
   ;; Don’t warn when advising
   (setopt ad-redefinition-action 'accept)
   
-  ;; Set `cursor-type' based on major mode
-  (setup emacs
-    (defun krisb-set-cursor-code ()
-      "Set cursor settings for `prog-mode'."
-      (setq-local cursor-type 'box
-                  cursor-in-non-selected-windows 'hollow))
-    (add-hook 'prog-mode-hook #'krisb-set-cursor-code)
-  
-    (defun krisb-set-cursor-prose ()
-      "Set cursor settings for prose major modes."
-      (setq-local cursor-type '(bar . 2)
-                  cursor-in-non-selected-windows 'hollow))
-    (dolist (hook '(org-mode-hook
-                    markdown-mode-hook
-                    git-commit-setup-hook
-                    log-edit-mode-hook
-                    message-mode-hook))
-      (add-hook hook #'krisb-set-cursor-prose))
-  
-    (defun krisb-set-cursor-completions-list ()
-      "Set cursor settings in *Completions* buffer."
-      (when (eq krisb-completion-paradigm 'completion-list)
-        (setq-local cursor-in-non-selected-windows 'hbar)))
-    (add-hook 'completion-list-mode-hook #'krisb-set-cursor-completions-list))
-  
   ;; Word wrapping.  Continue wrapped lines at whitespace rather than
   ;; breaking in the middle of a word.
   (setopt word-wrap t)
@@ -374,17 +351,42 @@ package-archives, e.g. \"gnu\")."))
   ;; Disable the ring-bell (it's annoying)
   (setopt ring-bell-function #'ignore)
   
-  ;; Hide `buffer-face-mode' minor-mode lighter
-  (setup face-remap
-    
-    (:hide-mode buffer-face-mode))
-  
+  ;; Exclude from M-x commands definitely irrelevant to the current
+  ;; major mode
+  (setopt read-extended-command-predicate #'command-completion-default-include-p)
   ;; Don't let the window manager stop Emacs from resizing its frames
   ;; when fullscreen
   (setopt alter-fullscreen-frames t)      ; Emacs 31
   
   ;; Follow symlinks when opening files
   (setopt find-file-visit-truename t)
+  
+  ;; Behavior for `cycle-spacing-actions'
+  (setopt cycle-spacing-actions '(just-one-space (delete-all-space -) restore))
+  
+  ;; Set `cursor-type' based on major mode
+  (defun krisb-set-cursor-code ()
+    "Set cursor settings for `prog-mode'."
+    (setq-local cursor-type 'box
+                cursor-in-non-selected-windows 'hollow))
+  (add-hook 'prog-mode-hook #'krisb-set-cursor-code)
+  
+  (defun krisb-set-cursor-prose ()
+    "Set cursor settings for prose major modes."
+    (setq-local cursor-type '(bar . 2)
+                cursor-in-non-selected-windows 'hollow))
+  (dolist (hook '(org-mode-hook
+                  markdown-mode-hook
+                  git-commit-setup-hook
+                  log-edit-mode-hook
+                  message-mode-hook))
+    (add-hook hook #'krisb-set-cursor-prose))
+  
+  (defun krisb-set-cursor-completions-list ()
+    "Set cursor settings in *Completions* buffer."
+    (when (eq krisb-completion-paradigm 'completion-list)
+      (setq-local cursor-in-non-selected-windows 'hbar)))
+  (add-hook 'completion-list-mode-hook #'krisb-set-cursor-completions-list)
   
   ;; Move files into trash directory.  See also
   ;; `remote-file-name-inhibit-delete-by-moving-to-trash'
@@ -403,9 +405,6 @@ package-archives, e.g. \"gnu\")."))
   ;; Don't create lock files.  See also `remote-file-name-inhibit-locks'
   ;; for remote files
   (setopt create-lockfiles nil)
-  
-  ;; Behavior for `cycle-spacing-actions'
-  (setopt cycle-spacing-actions '(just-one-space (delete-all-space -) restore))
   
   ;; TODO 2025-05-22: Document the `duplicate-line-final-position'and
   ;; `duplicate-region-final-position' user options
@@ -441,16 +440,18 @@ package-archives, e.g. \"gnu\")."))
   (setopt tab-always-indent 'complete
           tab-first-completion 'word)
   
-  ;; Show context menu from right-click
-  (when (display-graphic-p) (context-menu-mode 1))
-  
   ;; See (emacs) Minibuffer Edit for an explanation
   (setopt resize-mini-windows t)
   
-  ;; Exclude from M-x commands definitely irrelevant to the current
-  ;; major mode
-  (setopt read-extended-command-predicate #'command-completion-default-include-p)
-  (setopt shell-command-prompt-show-cwd t))
+  ;; Show context menu from right-click
+  (when (display-graphic-p) (context-menu-mode 1))
+  
+  (setopt shell-command-prompt-show-cwd t)
+  
+  (setup face-remap
+    
+    ;; Hide `buffer-face-mode' minor-mode lighter
+    (:hide-mode buffer-face-mode)))
 
 ;;; Custom
 ;;; Set and load custom file

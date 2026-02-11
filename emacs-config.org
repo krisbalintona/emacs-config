@@ -13,7 +13,7 @@ Preview org blocks with noweb syntax with ~org-babel-expand-src-block~, bound to
 
 See also the useful command ~org-babel-goto-named-src-block~ and other useful commands in =(org) Key bindings and Useful Functions=.
 
-* Emacs build
+* Emacs build options
 :PROPERTIES:
 :VISIBILITY: folded
 :END:
@@ -26,139 +26,9 @@ As of 2026-02-06, the following are the flags I prefer to compile Emacs with.
 #+RESULTS:
 : --prefix=/home/krisbalintona/emacs/31.0 --exec-prefix=/home/krisbalintona/emacs/31.0 --with-modules --with-tree-sitter --with-threads --without-gconf --with-native-compilation=yes 'CFLAGS=-O2 -pipe -march=native'
 
-* Personal information
+* Configuration
 
-#+name: bio
-#+begin_src emacs-lisp
-  (setopt user-full-name "Kristoffer Balintona"
-          user-mail-address "krisbalintona@gmail.com")
-#+end_src
-
-* Bootstrap (core Emacs behavior)
-
-** Package management
-
-*** Always load newest byte code
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Always load newest byte code
-  (setopt load-prefer-newer t)
-#+end_src
-
-*** Be verbose about file loading when requested
-
-For the sake of debugging my config file and auditing startup speed, I may make sure a message is printed every time a package is loaded.
-#+name: load-messages
-#+begin_src emacs-lisp
-  (when krisb-extra-verbose-p
-    (setq force-load-messages t))
-#+end_src
-
-*** Add my WIP "monkey patches" directory to ~load-path~
-
-#+name: wip
-#+begin_src emacs-lisp
-  (defvar krisb-wip-monkeypatches-dir (expand-file-name "wip" user-emacs-directory)
-    "Directory holding my WIP \"monkey patches.\"
-  \"Monkey patches\" are files that are different version of upstream
-  files.  Either for third-party packages or Emacs itself.
-
-  This directory is added to `load-path' in order for these WIP files to
-  be loaded instead of their upstream versions.  This allows me to work on
-  patches to, say, org-mode or Emacs, by loading those versions at
-  startup.")
-
-  (unless (file-exists-p krisb-wip-monkeypatches-dir)
-    (message "Making directory %s..." krisb-wip-monkeypatches-dir)
-    (make-directory krisb-wip-monkeypatches-dir))
-
-  (add-to-list 'load-path krisb-wip-monkeypatches-dir)
-
-  ;; Symbolically link my monkeypatches to `krisb-wip-monkeypatches-dir'
-  (defmacro krisb-wip-monkeypatch-symlink (path)
-    "Symlink PATH into `krisb-wip-monkeypatches-dir'.
-  If PATH is already symlinked into `krisb-wip-monkeypatches-dir', then do
-  nothing."
-    `(let* ((patch-path (expand-file-name ,path))
-            (link-path
-             (expand-file-name (file-name-nondirectory patch-path) krisb-wip-monkeypatches-dir)))
-       (unless (file-exists-p link-path)
-         (message "Symlinking %s to %s..." patch-path link-path)
-         (make-symbolic-link patch-path link-path))))
-
-  <<link-monkeypatches>>
-#+end_src
-
-*** Package.el: The built-in Emacs package manager
-
-#+name: package.el
-#+begin_src emacs-lisp
-  (setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
-                             ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
-                             ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                             ("melpa" . "https://melpa.org/packages/")
-                             ("melpa-stable" . "https://stable.melpa.org/packages/"))
-          package-archive-priorities '(("gnu-elpa" . 4)
-                                       ("nongnu" . 3)
-                                       ("gnu-elpa-devel" . 2)
-                                       ("melpa" . 1)
-                                       ("melpa-stable" . 0))
-          package-install-upgrade-built-in t)
-
-  ;; 2025-10-23 TODO: Revisit this.  Ideally, should be more safe than
-  ;; setting this value to an outright t
-  (setopt package-vc-allow-build-commands t)
-  <<package-review-policy>>
-#+end_src
-
-I also relativize the packages that package.el installs by Emacs version, since I sometimes run different versions of Emacs to test packages, and bytecode incompatibilities might arise between my compiled Emacs and the package.el packages. I make sure to place this before ~package-initialize~ is called; therefore, unless ~package-enable-at-startup~ is nil, this should be placed in early-init.el.
-#+name: package-relativize-version
-#+begin_src emacs-lisp
-  ;; Install package.el packages into separate directories for each
-  ;; Emacs version, to prevent bytecode incompatibility.
-  ;; 
-  ;; I had this idea myself, but I this specific implementation is
-  ;; nearly identical to the one in from
-  ;; https://github.com/purcell/emacs.d.
-  (setopt package-user-dir
-          (expand-file-name (format "elpa/%s.%s" emacs-major-version emacs-minor-version)
-                            user-emacs-directory))
-#+end_src
-
-In Emacs 31, packages installed with package.el can now be reviewed upon upgrading them, letting one vet the code or see its changes since last release.[fn:1] (As of 2026-01-17, this does not include git packages installed with package-vc.)
-#+name: package-review-policy
-#+begin_src emacs-lisp
-  (setopt package-review-policy t) ; Review packages upon upgrade
-#+end_src
-
-[fn:1] See also [[https://github.com/kn66/package-upgrade-guard.el][package-upgrade-guard.el]], which I used prior to the implementation of this feature into Emacs.
-
-**** COMMENT Try: Try out Emacs packages
-
-2026-02-07: I favor package-x instead, developed by active contributor package.el, Philip Kaludercic.
-
-#+name: try
-#+begin_src emacs-lisp
-  (setup try
-    (:package try))
-#+end_src
-
-**** Package-x: Package.el extras
-
-#+name: package-x
-#+begin_src emacs-lisp
-  (setup package-x
-    (:pin project "gnu-elpa-devel")
-    (:package package-x))
-#+end_src
-
-*** Elpaca
-
-#+name: elpaca
-#+begin_src emacs-lisp
-#+end_src
-
-** Meta-configuration
+** Bootstrap (core Emacs behavior)
 
 *** Emacs environment
 
@@ -170,7 +40,18 @@ In Emacs 31, packages installed with package.el can now be reviewed upon upgradi
   verbose for the sake of, e.g., debugging and testing.")
 #+end_src
 
-*** Config-units: Bespoke configuration unit macros
+*** Add bespoke lisp modules to ~load-path~
+
+#+name: site-lisp
+#+begin_src emacs-lisp
+  (dolist (path (list (expand-file-name "modules" user-emacs-directory)
+                      (expand-file-name "lisp" user-emacs-directory)))
+    (add-to-list 'load-path path))
+#+end_src
+
+*** Meta-configuration
+
+**** Config-units: Bespoke configuration unit macros
 
 #+name: config-units-setup
 #+begin_src emacs-lisp
@@ -184,7 +65,7 @@ In Emacs 31, packages installed with package.el can now be reviewed upon upgradi
   (load-all-configs)
 #+end_src
 
-*** Setup.el: A transparent =use-package= alternative
+**** Setup.el: A transparent =use-package= alternative
 
 Setup.el simply provides various macros inside ~(setup ...)~ forms. It comes with many of its own while making it easy for users to define their own macros. Macros are useful for Emacs configuration: they reduce repetition and boilerplate. See setup's Emacs Wiki page: [[https://www.emacswiki.org/emacs/SetupEl][EmacsWiki: Setup El]].
 
@@ -333,11 +214,63 @@ Setup.el simply provides various macros inside ~(setup ...)~ forms. It comes wit
               (plist-get (cdr (assoc 'emacs-lisp-mode consult-imenu-config)) :types)))))
 #+end_src
 
-**** Why use setup.el over use-package?
+***** Why use setup.el over use-package?
 
 In my opinion, use-package's macros add an opaqueness that adds a layer of potential confusion. One has to learn the specific "use-package language"---avoiding all its foot-guns and practicing its conventions---in order to configure their Emacs. Instead, I prefer setup.el because it's simply a bunch of straightforward elisp macros.
 
 This lets setup.el configurations be transparent rather than opaque: I understand exactly what elisp is at play and what it's doing. Consequently, I think configurations leveraging setup.el require no special know-how or caution to write or understand---I wouldn't say the same for use-package.
+
+**** On.el: Add hooks that help startup times
+
+#+name: on.el
+#+begin_src emacs-lisp
+  ;; Package exposes a number of utility hooks and functions ported from
+  ;; Doom Emacs.  The hooks make it easier to speed up Emacs startup by
+  ;; providing finer-grained control of the timing at which packages are
+  ;; loaded.  Provides the following hooks:
+  ;; - `on-first-input-hook'
+  ;; - `on-init-ui-hook'
+  ;; - `on-first-file-hook'
+  ;; - `on-switch-frame-hook'
+  ;; - `on-first-buffer-hook'
+  ;; - `on-switch-buffer-hook'
+  ;; - `on-switch-window-hook'
+  (setup on
+    (:package on)
+    (:require))
+#+end_src
+
+**** El-patch: override packages in a future-proof way
+
+There is a problem when we use the typical ~(advice-add ... :override ...)~, namely, upstream definitions may change. This either renders our override unnecessary or our new function incompatible with the rest of upstream. El-patch provides a way to override functions while becoming aware of any upstream changes to the function we originally intended to override.
+
+#+name: el-patch
+#+begin_src emacs-lisp
+  (setup el-patch
+    ;; Elpaca: :ensure (:wait t)
+    (:package el-patch)
+    (:require))
+#+end_src
+
+# TODO 2025-06-03: Describe relation to https://elpa.gnu.org/packages/advice-patch.html.
+
+*** Exec-path-from-shell: Properly set ~$PATH~
+
+#+name: exec-path-from-shell
+#+begin_src emacs-lisp
+  ;; Ensure Emacs inherits specified variables from the user environment
+  (setup exec-path-from-shell
+    (:package exec-path-from-shell)
+    (:require)
+
+    (setopt exec-path-from-shell-variables
+            '("PATH" "MANPATH" "BROWSER"
+              ;; `ssh-agent' environment variables.  See
+              ;; https://wiki.archlinux.org/title/SSH_keys#Start_ssh-agent_with_systemd_user
+              "SSH_AGENT_PID" "SSH_AUTH_SOCK"))
+
+    (exec-path-from-shell-initialize))
+#+end_src
 
 *** Bespoke helpers and variables
 
@@ -368,7 +301,13 @@ This lets setup.el configurations be transparent rather than opaque: I understan
   (defvar krisb-bibliography-files (list (expand-file-name "master-lib.bib" krisb-folio-directory))
     "A list of my bibliography (.bib) files.")
 
-  <<config-options>>
+  ;;;;; Options
+
+  (defcustom krisb-completion-paradigm 'completion-list
+    "Choose our completion paradigm."
+    :type '(choice :tag "Completions user interface"
+                   (const :tag "Default Completions list UI" built-in)
+                   (const :tag "Use `vertico'" vertico)))
 
   ;;;;; Directories
   (defvar krisb-blog-manuscripts-directory (expand-file-name "manuscripts/blog" krisb-notes-directory)
@@ -399,52 +338,9 @@ This lets setup.el configurations be transparent rather than opaque: I understan
   (bind-key "C-c t" krisb-toggle-keymap 'global-map)
 #+end_src
 
-*** Add bespoke lisp modules to ~load-path~
+*** ~user-emacs-directory~ hygiene
 
-#+name: site-lisp
-#+begin_src emacs-lisp
-  (dolist (path (list (expand-file-name "modules" user-emacs-directory)
-                      (expand-file-name "lisp" user-emacs-directory)))
-    (add-to-list 'load-path path))
-#+end_src
-
-*** On.el: Add hooks that help startup times
-
-#+name: on.el
-#+begin_src emacs-lisp
-  ;; Package exposes a number of utility hooks and functions ported from
-  ;; Doom Emacs.  The hooks make it easier to speed up Emacs startup by
-  ;; providing finer-grained control of the timing at which packages are
-  ;; loaded.  Provides the following hooks:
-  ;; - `on-first-input-hook'
-  ;; - `on-init-ui-hook'
-  ;; - `on-first-file-hook'
-  ;; - `on-switch-frame-hook'
-  ;; - `on-first-buffer-hook'
-  ;; - `on-switch-buffer-hook'
-  ;; - `on-switch-window-hook'
-  (setup on
-    (:package on)
-    (:require))
-#+end_src
-
-*** El-patch: override packages in a future-proof way
-
-There is a problem when we use the typical ~(advice-add ... :override ...)~, namely, upstream definitions may change. This either renders our override unnecessary or our new function incompatible with the rest of upstream. El-patch provides a way to override functions while becoming aware of any upstream changes to the function we originally intended to override.
-
-#+name: el-patch
-#+begin_src emacs-lisp
-  (setup el-patch
-    ;; Elpaca: :ensure (:wait t)
-    (:package el-patch)
-    (:require))
-#+end_src
-
-# TODO 2025-06-03: Describe relation to https://elpa.gnu.org/packages/advice-patch.html.
-
-** ~user-emacs-directory~ hygiene
-
-*** No-littering.el: keep a tidy =.emacs.d/=
+**** No-littering.el: keep a tidy =.emacs.d/=
 
 # TODO 2025-11-10: Look into having package-user-dir follow no-littering's conventions? Should be in
 # no-littering-var-directory, I think.
@@ -491,7 +387,7 @@ We also do this:
       (expand-file-name  "var/eln-cache/" user-emacs-directory))))
 #+end_src
 
-*** Dealing with ~custom-file~
+**** Dealing with ~custom-file~
 
 We use a snippet like the one below to set and load the ~custom-file~:
 #+name: set-and-load-custom-file
@@ -514,30 +410,36 @@ Alternatively, one could have a "temporary" custom file to avoid loading any cus
   (setopt custom-file (make-temp-file "emacs-custom-file-" nil ".el"))
 #+end_src
 
-** Runtime performance
+** Orphans
 
-Performance optimizations belonging in =early-init.el=:
-#+name: early-perf-optimizations
+*** Personal information
+
+#+name: bio
 #+begin_src emacs-lisp
-  ;; Graphical elements of Emacs frame
-  <<graphical-elements>>
-
-  ;; Native-compilations settings
-  (setq native-comp-jit-compilation t
-        native-comp-async-report-warnings-errors 'silent ; Show in *Warnings*  buffer but don't show buffer
-        native-comp-async-jobs-number
-        (- (string-to-number (string-trim-right (shell-command-to-string "nproc"))) 1)) ; Use as many cores as possible
-
-  ;; NOTE 2024-09-16: From Doom Emacs.  Usually, a second,
-  ;; case-insensitive pass over `auto-mode-alist' is time wasted.
-  (setopt auto-mode-case-fold nil)
+  (setopt user-full-name "Kristoffer Balintona"
+          user-mail-address "krisbalintona@gmail.com")
 #+end_src
 
-See also:
-- [[graphical-elements][These settings place inside =early-init.el=]]
-- ~(setopt org-agenda-inhibit-startup t)~
+*** Always load newest byte code
 
-*** Garbage collection
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Always load newest byte code
+  (setopt load-prefer-newer t)
+#+end_src
+
+*** Be verbose about file loading when requested
+
+For the sake of debugging my config file and auditing startup speed, I may make sure a message is printed every time a package is loaded.
+#+name: load-messages
+#+begin_src emacs-lisp
+  (when krisb-extra-verbose-p
+    (setq force-load-messages t))
+#+end_src
+
+*** Garbage collection settings
+:PROPERTIES:
+:CUSTOM_ID: h:20260219T005155.688013
+:END:
 
 Set ~gc-cons-threshold~ to as high a number as possible just for startup.
 #+name: garbage-collection-early-init
@@ -566,6 +468,190 @@ Then set ~gc-cons-threshold~ to its actual value after initialization:
   (add-hook 'after-init-hook #'krisb-gc-set-options)
 #+end_src
 
+See also [[#h:20260219T005323.364130][Garbage collection diagnosis]].
+
+*** Startup speedups
+
+Performance optimizations belonging in =early-init.el=:
+#+name: early-perf-optimizations
+#+begin_src emacs-lisp
+  ;; Graphical elements of Emacs frame
+  <<graphical-elements>>
+
+  ;; Native-compilations settings
+  (setq native-comp-jit-compilation t
+        native-comp-async-report-warnings-errors 'silent ; Show in *Warnings*  buffer but don't show buffer
+        native-comp-async-jobs-number
+        (- (string-to-number (string-trim-right (shell-command-to-string "nproc"))) 1)) ; Use as many cores as possible
+
+  ;; NOTE 2024-09-16: From Doom Emacs.  Usually, a second,
+  ;; case-insensitive pass over `auto-mode-alist' is time wasted.
+  (setopt auto-mode-case-fold nil)
+
+  <<garbage-collection-early-init>>
+#+end_src
+
+See also:
+- [[graphical-elements][These settings place inside =early-init.el=]]
+- ~(setopt org-agenda-inhibit-startup t)~
+
+*** Remove Emacs training wheels
+
+Don't warn when using disabled commands
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Enable all disabled commands
+  (setopt disabled-command-function nil)
+#+end_src
+
+Don't warn when advising functions
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Don’t warn when advising
+  (setopt ad-redefinition-action 'accept)
+#+end_src
+
+*** Make all themes safe
+
+This option controls which themes Emacs does not ask for confirmation to load. Setting it to ~t~ means Emacs never asks for confirmation:
+#+name: safe-themes
+#+begin_src emacs-lisp
+  ;; Make all themes safe
+  (setopt custom-safe-themes t)
+#+end_src
+
+*** Graphical frame elements
+
+Set UI for the Emacs frame itself (e.g., scroll bars, tool bars, window decorations):
+#+name: graphical-elements
+#+begin_src emacs-lisp
+  ;; NOTE 2024-10-03: From Doom Emacs.  If we're disabling these
+  ;; graphical elements, it's faster to do so before they've been
+  ;; initialized.
+  ;; HACK: I intentionally avoid calling `menu-bar-mode',
+  ;;   `tool-bar-mode', and `scroll-bar-mode' because their manipulation
+  ;;   of frame parameters can trigger/queue a superfluous (and
+  ;;   expensive, depending on the window system) frame redraw at
+  ;;   startup. The variables must be set to `nil' as well so users
+  ;;   don't have to call the functions twice to re-enable them.
+  (push '(menu-bar-lines . 0)   default-frame-alist)
+  (push '(tool-bar-lines . 0)   default-frame-alist)
+  (push '(vertical-scroll-bars) default-frame-alist)
+  (setq menu-bar-mode nil
+        tool-bar-mode nil
+        scroll-bar-mode nil)
+
+  ;; Frame defaults
+  (setq frame-resize-pixelwise t
+        frame-inhibit-implied-resize t
+        frame-title-format '("%b")
+        use-dialog-box t                  ; For mouse events
+        use-file-dialog nil
+        inhibit-x-resources t) ; REVIEW 2024-10-03: Not sure the precise effect
+
+  <<frame-transparency>>
+
+  ;; Startup screen
+  (setopt inhibit-splash-screen t
+          inhibit-startup-screen t
+          inhibit-startup-echo-area-message user-login-name ; Read the docstring
+          inhibit-startup-buffer-menu t)
+#+end_src
+
+*** Word wrap
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Word wrapping.  Continue wrapped lines at whitespace rather than
+  ;; breaking in the middle of a word.
+  (setopt word-wrap t)
+#+end_src
+
+*** Disable the ring bell
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Disable the ring-bell (it's annoying)
+  (setopt ring-bell-function #'ignore)
+#+end_src
+See also ~(elisp) Beeping~.
+
+*** Filter out commands irrelevant to the current major mode from the ~execute-extended-command~
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc
+  ;; Exclude from M-x commands definitely irrelevant to the current
+  ;; major mode
+  (setopt read-extended-command-predicate #'command-completion-default-include-p)
+#+end_src
+
+*** Don't let the window manager stop Emacs from resizing its frames when fullscreen
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Don't let the window manager stop Emacs from resizing its frames
+  ;; when fullscreen
+  (setopt alter-fullscreen-frames t)      ; Emacs 31
+#+end_src
+
+*** Follow symlinks when opening files
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Follow symlinks when opening files
+  (setopt find-file-visit-truename t)
+#+end_src
+
+*** Cycle-spacing behavior
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Behavior for `cycle-spacing-actions'
+  (setopt cycle-spacing-actions '(just-one-space (delete-all-space -) restore))
+#+end_src
+
+*** Add my WIP "monkey patches" directory to ~load-path~
+#+name: wip
+#+begin_src emacs-lisp
+  (defvar krisb-wip-monkeypatches-dir (expand-file-name "wip" user-emacs-directory)
+    "Directory holding my WIP \"monkey patches.\"
+  \"Monkey patches\" are files that are different version of upstream
+  files.  Either for third-party packages or Emacs itself.
+
+  This directory is added to `load-path' in order for these WIP files to
+  be loaded instead of their upstream versions.  This allows me to work on
+  patches to, say, org-mode or Emacs, by loading those versions at
+  startup.")
+
+  (unless (file-exists-p krisb-wip-monkeypatches-dir)
+    (message "Making directory %s..." krisb-wip-monkeypatches-dir)
+    (make-directory krisb-wip-monkeypatches-dir))
+
+  (add-to-list 'load-path krisb-wip-monkeypatches-dir)
+
+  ;; Symbolically link my monkeypatches to `krisb-wip-monkeypatches-dir'
+  (defmacro krisb-wip-monkeypatch-symlink (path)
+    "Symlink PATH into `krisb-wip-monkeypatches-dir'.
+  If PATH is already symlinked into `krisb-wip-monkeypatches-dir', then do
+  nothing."
+    `(let* ((patch-path (expand-file-name ,path))
+            (link-path
+             (expand-file-name (file-name-nondirectory patch-path) krisb-wip-monkeypatches-dir)))
+       (unless (file-exists-p link-path)
+         (message "Symlinking %s to %s..." patch-path link-path)
+         (make-symbolic-link patch-path link-path))))
+
+  <<link-monkeypatches>>
+#+end_src
+
+*** Report total startup time
+
+#+name: startup-time
+#+begin_src emacs-lisp
+  ;; Message for total init time after startup
+  (defun krisb-startup-time ()
+    "Report Emacs startup time."
+    (message "Total startup time: %s" (emacs-init-time)))
+  (add-hook 'after-init-hook #'krisb-startup-time)
+#+end_src
+
+*** Garbage collection diagnosis
+:PROPERTIES:
+:CUSTOM_ID: h:20260219T005323.364130
+:END:
+
 Some bespoke commands and helper functions related to garbage collection:
 #+name: garbage-collection-helpers
 #+begin_src emacs-lisp
@@ -583,7 +669,474 @@ Some bespoke commands and helper functions related to garbage collection:
                       concat (format "%s: %s + %s = %s\n" type used free total))))
 #+end_src
 
-**** GCMH
+*** Frame background transparency
+
+#+name: frame-transparency
+#+begin_src emacs-lisp
+  (add-to-list 'default-frame-alist '(alpha-background . 100))
+#+end_src
+
+#+name: frame-transparency-toggle
+#+begin_src emacs-lisp
+
+  ;; Frame background transparency toggle
+  (defun krisb-frame-toggle-transparency (&optional arg)
+    "Toggle the value of `alpha-background'.
+  Toggles between 100 and 72 by default.  Can choose which value to change
+  to if called with ARG, or any prefix argument."
+    (interactive "P")
+    (let ((transparency (pcase arg
+                          ((pred numberp) arg)
+                          ((pred car) (read-number "Change the transparency to which value (0-100)? "))
+                          (_
+                           (pcase (frame-parameter nil 'alpha-background)
+                             (72 100)
+                             (100 72)
+                             (t 100))))))
+      (set-frame-parameter nil 'alpha-background transparency)))
+  (bind-key "<f9>" #'krisb-frame-toggle-transparency)
+#+end_src
+
+*** Theme helpers
+
+#+name: theme-helpers
+#+begin_src emacs-lisp
+  (defun krisb-enable-theme-time-of-day (light-theme dark-theme &optional day-start night-start)
+    "Enables LIGHT-THEME or DARK-THEME based on time of day.
+  LIGHT-THEME and DARK-THEME are a symbol for the name of a theme.
+
+  Night time begins at NIGHT-START hour and daytime begins at DAY-START
+  hour.  If NIGHT-START is nil, default to 19.  If DAY-START is nil,
+  default to 8."
+    (interactive)
+    (let ((hour (string-to-number (format-time-string "%H")))
+          (day-start (or day-start 8))
+          (night-start (or night-start 19)))
+      ;; Dark theme between NIGHT-START and DAY-START
+      (load-theme (if (or (<= night-start hour) (<= hour day-start))
+                      dark-theme light-theme)))
+    ;; Disable the remainder of the enabled themes.  We do this at the
+    ;; end to prevent going from a state of having a theme to having no
+    ;; theme, which would often cause a sudden drastic but momentary
+    ;; change in color (e.g. dark theme to light theme)
+    (mapc #'disable-theme (cdr custom-enabled-themes)))
+#+end_src
+
+*** Cursor types
+
+I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, less-noticeable cursor for variable-pitch fonts---almost always when prose---and blocky cursors for programming---almost always fixed-pitch fonts.
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Set `cursor-type' based on major mode
+  (defun krisb-set-cursor-code ()
+    "Set cursor settings for `prog-mode'."
+    (setq-local cursor-type 'box
+                cursor-in-non-selected-windows 'hollow))
+  (add-hook 'prog-mode-hook #'krisb-set-cursor-code)
+
+  (defun krisb-set-cursor-prose ()
+    "Set cursor settings for prose major modes."
+    (setq-local cursor-type '(bar . 2)
+                cursor-in-non-selected-windows 'hollow))
+  (dolist (hook '(org-mode-hook
+                  markdown-mode-hook
+                  git-commit-setup-hook
+                  log-edit-mode-hook
+                  message-mode-hook))
+    (add-hook hook #'krisb-set-cursor-prose))
+
+  (defun krisb-set-cursor-completions-list ()
+    "Set cursor settings in *Completions* buffer."
+    (when (eq krisb-completion-paradigm 'completion-list)
+      (setq-local cursor-in-non-selected-windows 'hbar)))
+  (add-hook 'completion-list-mode-hook #'krisb-set-cursor-completions-list)
+#+end_src
+
+*** Bespoke editing commands
+
+#+name: bespoke-editing
+#+begin_src emacs-lisp
+  ;; Joining and inserting newlines
+  (defun krisb-open-line-above-goto ()
+    "Insert an empty line above the current line.
+  Position the cursor at it's beginning, according to the current mode.
+  Credit to https://emacsredux.com/blog/2013/06/15/open-line-above/"
+    (interactive)
+    (beginning-of-line)
+    (newline)
+    (forward-line -1)
+    (indent-according-to-mode))
+
+  (defun krisb-open-line-below-goto ()
+    "Insert an empty line after the current line.
+  Position the cursor at its beginning, according to the current mode.
+  Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
+    (interactive)
+    (move-end-of-line nil)
+    (newline-and-indent))
+
+  (defun krisb-join-line-above ()
+    "Join the current line with the line above."
+    (interactive)
+    (save-excursion (delete-indentation))
+    (when (string-match-p "\\`\\s-*$" (thing-at-point 'line))
+      (funcall indent-line-function)))
+
+  (defun krisb-join-line-below ()
+    "Join the current line with the line below."
+    (interactive)
+    (save-excursion (delete-indentation t))
+    (when (bolp)
+      (funcall indent-line-function)))
+
+  (bind-keys
+   ("C-S-p" . krisb-open-line-above-goto)
+   ("C-S-n" . krisb-open-line-below-goto)
+   ("C-S-k" . krisb-join-line-above)
+   ("C-S-j" . krisb-join-line-below))
+#+end_src
+
+*** Trash
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Move files into trash directory.  See also
+  ;; `remote-file-name-inhibit-delete-by-moving-to-trash'
+  (setopt trash-directory (no-littering-expand-var-file-name "trash")
+          delete-by-moving-to-trash t) ; See also `remote-file-name-inhibit-delete-by-moving-to-trash'
+
+  (defun krisb-empty-trash ()
+    "Empty the trash directory."
+    (interactive)
+    (if delete-by-moving-to-trash
+        (let ((size (string-trim (shell-command-to-string (concat"du -sh " trash-directory " | cut -f1")))))
+          (when (yes-or-no-p (format "Empty trash directory of %s size? " size))
+            (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory "/*")))))
+      (message "delete-by-moving-to-trash is nil; not emptying trash")))
+#+end_src
+
+*** Disable lock files
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Don't create lock files.  See also `remote-file-name-inhibit-locks'
+  ;; for remote files
+  (setopt create-lockfiles nil)
+#+end_src
+
+*** The ~duplicate-*~ commands
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep  "\n\n"
+  ;; TODO 2025-05-22: Document the `duplicate-line-final-position'and
+  ;; `duplicate-region-final-position' user options
+  (bind-key "C-x ;" #'duplicate-dwim)
+#+end_src
+
+*** Indentation settings
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  (setopt tab-width 4
+          ;; Insert spaces instead of tab characters.  The below
+          ;; disables `indent-tabs-mode' globally
+          indent-tabs-mode nil)
+#+end_src
+
+*** Rebind capitalization commands
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Use DWIM case commands
+  (bind-keys
+   ([remap upcase-word] . upcase-dwim)
+   ([remap downcase-word] . downcase-dwim)
+   ([remap capitalize-word] . capitalize-dwim))
+#+end_src
+
+*** Sentence-end-double-space: What counts as a sentence?
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Set `sentence-end-double-space' conditionally
+  (defun krisb-sentence-end-double-space-setup ()
+    "Set up the value for `sentence-end-double-space'.
+  However, do not override buffer-local and directory-local values for
+  `sentence-end-double-space'."
+    ;; First check if `sentence-end-double-space' is set buffer-locally
+    ;; (`file-local-variables-alist') or directory-locally
+    ;; (`dir-local-variables-alist')
+    (unless (local-variable-p 'sentence-end-double-space)
+      (setq-local sentence-end-double-space
+                  (cond ((derived-mode-p '(prog-mode conf-mode log-edit-mode)) t)
+                        ((derived-mode-p '(text-mode wombag-show-mode)) nil)))))
+  (add-hook 'after-change-major-mode-hook #'krisb-sentence-end-double-space-setup)
+#+end_src
+
+*** Behavior of =TAB= outside the minibuffer buffers
+:PROPERTIES:
+:CUSTOM_ID: h:20260219T023245.927849
+:END:
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc  :noweb-sep "\n\n"
+  ;; `indent-for-tab-command' functionality: what happens when you press
+  ;; TAB in a regular buffer?
+  (setopt tab-always-indent 'complete
+          tab-first-completion 'word)
+#+end_src
+
+*** Let the minibuffer shrink
+
+The default behavior is to allow the minibuffer to increase in height if necessary, but not to decrease its height. The setting below allows shrinkage when necessary.
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; See (emacs) Minibuffer Edit for an explanation
+  (setopt resize-mini-windows t)
+#+end_src
+
+*** Enable ~context-menu-mode~
+
+Use the right-click menu:
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Show context menu from right-click
+  (when (display-graphic-p) (context-menu-mode 1))
+#+end_src
+
+*** Customize buffers
+
+#+name: customize-buffers
+#+begin_src emacs-lisp
+  ;; TODO 2025-05-24: Document these options:
+  ;; - `custom-buffer-style’
+  ;; - `custom-search-field' -- useful for Android and other touchscreen
+  ;;                            devices though
+  (setopt custom-theme-allow-multiple-selections t
+          custom-unlispify-tag-names nil)
+#+end_src
+
+*** Mode line format
+
+#+name: mode-line-format
+#+begin_src emacs-lisp
+  ;; TODO 2025-12-03: Document also:
+  ;; - `mode-line-compact'
+  ;; - `mode-line-percent-position'
+  ;; - `mode-line-percent-position'
+  ;; - `mode-line-position-line-format'
+  ;; - `mode-line-position-column-line-format'
+  (setopt mode-line-right-align-edge 'right-fringe
+          ;; TODO 2025-07-10: Ask on emacs-devel why this isn't a
+          ;; defcustom.
+          mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis)
+          mode-line-format
+          '("%e" mode-line-front-space
+            ("" mode-line-mule-info mode-line-client mode-line-modified mode-line-remote mode-line-window-dedicated)
+            mode-line-frame-identification
+            mode-line-buffer-identification "   "
+            mode-line-position
+            mode-line-format-right-align
+            (project-mode-line project-mode-line-format)
+            (vc-mode vc-mode) "  "
+            mode-line-modes
+            mode-line-misc-info
+            mode-line-end-spaces))
+#+end_src
+
+*** Messages buffer
+
+#+name: messages-buffer
+#+begin_src emacs-lisp
+  ;; Visual-line-mode in *Messages* buffer
+  (add-hook 'messages-buffer-mode-hook #'visual-line-mode)
+
+  ;; Mesages buffer positioning
+  <<messages-display-buffer-alist>>
+#+end_src
+
+#+name: messages-display-buffer-alist
+#+begin_src emacs-lisp :noweb-ref display-buffer-alist
+  (add-to-list 'display-buffer-alist
+               `(,(rx (literal messages-buffer-name))
+                 (display-buffer-in-side-window)
+                 (window-height . 0.36)
+                 (side . top)
+                 (slot . 1)
+                 (post-command-select-window . t)))
+#+end_src
+
+*** COMMENT Clipboard
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Don’t wait until yanking to put clipboard text into `kill-ring’
+  (setopt save-interprogram-paste-before-kill t)
+
+  ;; Wayland compatibility
+  <<clipboard-wayland>>
+#+end_src
+
+Wayland specific:
+#+name: clipboard-wayland
+#+begin_src emacs-lisp
+  (when (krisb-wayland-p)
+    (setopt interprogram-cut-function
+            (lambda (text)
+              (start-process "wl-copy" nil "wl-copy"
+                             "--trim-newline" "--type" "text/plain;charset=utf-8" text))))
+#+end_src
+
+*** Editing remote files
+
+#+name: files
+#+begin_src emacs-lisp
+  (setup files
+    
+    (with-eval-after-load 'files
+      (setopt remote-file-name-inhibit-locks t ; Don't create lock files in remotes
+              ;; Disables aggressive caching that slows Dired/Magit;
+              ;; test and toggle if needed.
+              remote-file-name-inhibit-cache nil
+
+              remote-file-name-inhibit-auto-save-visited nil
+              remote-file-name-inhibit-auto-save nil
+              remote-file-name-inhibit-delete-by-moving-to-trash t
+              
+              ;; Set a timeout to prevent the failure to access files to
+              ;; indefinitely bloc Emacs
+              remote-file-name-access-timeout 10
+
+              enable-remote-dir-locals t)))
+#+end_src
+
+#+name: auto-revert-remote-files
+#+begin_src emacs-lisp
+  ;; FIXME 2025-12-29: Causing freezes when SSHing into my remote
+  ;; machine.  Look into if this is a Tramp or remote machine issue.
+  ;; ;; Revert remote files too?  See also
+  ;; ;; `remote-file-name-inhibit-auto-save-visited'
+  ;; (setopt auto-revert-remote-files t)
+#+end_src
+
+*** Show current working directory ("cwd") in command prompts
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  (setopt shell-command-prompt-show-cwd t)
+#+end_src
+
+*** Lieer-specific configuration to send emails with notmuch
+:PROPERTIES:
+:CUSTOM_ID: h:20251117T172940.524114
+:END:
+
+I use [[https://github.com/gauteh/lieer][Lieer]] (the =gmi= executable) to send and receive emails. This is because I am tied to using a GMail account, and I would greatly prefer two-way synchronization between my local machine and the GMail remote machine. Lieer achieve this.
+
+Lieer, in addition to syncing emails, is also capable of sending them. Although it is possible to use another program to send emails via GMail (such as the =msmtp= program; see [[#h:20251117T171828.614236][my configuration for smtpmail.el]]), =gmi= is convenient since it already requires credentials to my Google account to sync emails---might as well use the same program and credentials to send emails.
+
+Below are settings sufficient to get Emacs---with the sendmail library, in particular---to use =gmi= to send emails. They are mostly taken (and modified) from [[https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer][the Lieer wiki]]:
+#+name: notmuch-sending
+#+begin_src emacs-lisp
+  ;; Use Lieer to send emails.  Also see
+  ;; `krisb-notmuch-set-sendmail-args'.  Read
+  ;; https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer.
+  (with-eval-after-load 'sendmail
+    (setopt sendmail-program (or (executable-find "gmi") "sendmail")
+            send-mail-function 'sendmail-send-it))
+
+  ;; GMail already copies sent emails, so don't move them elsewhere
+  ;; locally after sending; see (emacs) Mail Headers for an explanation
+  ;; of the FCC header.  (Using gmi to send emails also automatically
+  ;; does this for us locally.)
+  (with-eval-after-load 'notmuch
+    (setopt notmuch-fcc-dirs nil))
+
+  ;; Set sendmail args appropriate to using lieer as `sendmail-program'
+  (defun krisb-notmuch-set-sendmail-args ()
+    "Modify `message-sendmail-extra-arguments' to send emails via gmi.
+  Set `message-sendmail-extra-arguments' such that, when
+  `sendmail-program' is the path to a gmi executable, the arguments passed
+  to `sendmail-program' are modified buffer-locally.  They are modified
+  such that gmi sends the email and stores the sent email in the
+  appropriate mail directory."
+    (when (and (stringp sendmail-program) (string-match-p "gmi" sendmail-program))
+      (let* ((from (downcase (message-fetch-field "from")))
+             (root-maildir krisb-email-directory)
+             ;; These maildirs are according to the structure in my
+             ;; local filesystem
+             (personal-maildir (expand-file-name "personal" root-maildir))
+             (uni-maildir (expand-file-name "uni" root-maildir)))
+        ;; See `message-send-mail-with-sendmail' for the relation
+        ;; between `sendmail-program' and
+        ;; `message-sendmail-extra-arguments'
+        (setq-local message-sendmail-extra-arguments
+                    (list "send" "--quiet" "-t" "-C"
+                          (cond
+                           ((string-match-p "krisbalintona@gmail\\.com" from)
+                            personal-maildir)
+                           ((string-match-p "kristoffer_balintona@alumni\\.brown\\.edu" from)
+                            uni-maildir)))))))
+  (with-eval-after-load 'message
+    (add-hook 'message-send-mail-hook #'krisb-notmuch-set-sendmail-args))
+#+end_src
+
+** Packages
+*** Package.el: The built-in Emacs package manager
+
+#+name: package.el
+#+begin_src emacs-lisp
+  (setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
+                             ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
+                             ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                             ("melpa" . "https://melpa.org/packages/")
+                             ("melpa-stable" . "https://stable.melpa.org/packages/"))
+          package-archive-priorities '(("gnu-elpa" . 4)
+                                       ("nongnu" . 3)
+                                       ("gnu-elpa-devel" . 2)
+                                       ("melpa" . 1)
+                                       ("melpa-stable" . 0))
+          package-install-upgrade-built-in t)
+
+  ;; 2025-10-23 TODO: Revisit this.  Ideally, should be more safe than
+  ;; setting this value to an outright t
+  (setopt package-vc-allow-build-commands t)
+  <<package-review-policy>>
+#+end_src
+
+I also relativize the packages that package.el installs by Emacs version, since I sometimes run different versions of Emacs to test packages, and bytecode incompatibilities might arise between my compiled Emacs and the package.el packages. I make sure to place this before ~package-initialize~ is called; therefore, unless ~package-enable-at-startup~ is nil, this should be placed in early-init.el.
+#+name: package-relativize-version
+#+begin_src emacs-lisp
+  ;; Install package.el packages into separate directories for each
+  ;; Emacs version, to prevent bytecode incompatibility.
+  ;; 
+  ;; I had this idea myself, but I this specific implementation is
+  ;; nearly identical to the one in from
+  ;; https://github.com/purcell/emacs.d.
+  (setopt package-user-dir
+          (expand-file-name (format "elpa/%s.%s" emacs-major-version emacs-minor-version)
+                            user-emacs-directory))
+#+end_src
+
+In Emacs 31, packages installed with package.el can now be reviewed upon upgrading them, letting one vet the code or see its changes since last release.[fn:1] (As of 2026-01-17, this does not include git packages installed with package-vc.)
+#+name: package-review-policy
+#+begin_src emacs-lisp
+  (setopt package-review-policy t) ; Review packages upon upgrade
+#+end_src
+
+[fn:1] See also [[https://github.com/kn66/package-upgrade-guard.el][package-upgrade-guard.el]], which I used prior to the implementation of this feature into Emacs.
+
+*** COMMENT Try: Try out Emacs packages
+
+2026-02-07: I favor package-x instead, developed by active contributor package.el, Philip Kaludercic.
+
+#+name: try
+#+begin_src emacs-lisp
+  (setup try
+    (:package try))
+#+end_src
+
+*** Package-x: Package.el extras
+
+#+name: package-x
+#+begin_src emacs-lisp
+  (setup package-x
+    (:pin project "gnu-elpa-devel")
+    (:package package-x))
+#+end_src
+
+*** GCMH: "Garbage Collector Magic Hack"
+:PROPERTIES:
+:CUSTOM_ID: h:20260219T004705.251676
+:END:
 
 #+name: gcmh
 #+begin_src emacs-lisp
@@ -641,148 +1194,7 @@ Some bespoke commands and helper functions related to garbage collection:
       (advice-add 'corfu-insert :after #'krisb-gcmh-minibuffer-exit)))
 #+end_src
 
-*** Report total startup time
-
-#+name: startup-time
-#+begin_src emacs-lisp
-  ;; Message for total init time after startup
-  (defun krisb-startup-time ()
-    "Report Emacs startup time."
-    (message "Total startup time: %s" (emacs-init-time)))
-  (add-hook 'after-init-hook #'krisb-startup-time)
-#+end_src
-
-* Foundation (base Emacs behavior)
-
-** Remove Emacs training wheels
-
-Don't warn when using disabled commands
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Enable all disabled commands
-  (setopt disabled-command-function nil)
-#+end_src
-
-Don't warn when advising functions
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Don’t warn when advising
-  (setopt ad-redefinition-action 'accept)
-#+end_src
-
-** Exec-path-from-shell: Properly set ~$PATH~
-
-#+name: exec-path-from-shell
-#+begin_src emacs-lisp
-  ;; Ensure Emacs inherits specified variables from the user environment
-  (setup exec-path-from-shell
-    (:package exec-path-from-shell)
-    (:require)
-
-    (setopt exec-path-from-shell-variables
-            '("PATH" "MANPATH" "BROWSER"
-              ;; `ssh-agent' environment variables.  See
-              ;; https://wiki.archlinux.org/title/SSH_keys#Start_ssh-agent_with_systemd_user
-              "SSH_AGENT_PID" "SSH_AUTH_SOCK"))
-
-    (exec-path-from-shell-initialize))
-#+end_src
-
-** Graphical and auditory elements
-
-*** The Emacs frame
-
-Set UI for the Emacs frame itself (e.g., scroll bars, tool bars, window decorations):
-#+name: graphical-elements
-#+begin_src emacs-lisp
-  ;; NOTE 2024-10-03: From Doom Emacs.  If we're disabling these
-  ;; graphical elements, it's faster to do so before they've been
-  ;; initialized.
-  ;; HACK: I intentionally avoid calling `menu-bar-mode',
-  ;;   `tool-bar-mode', and `scroll-bar-mode' because their manipulation
-  ;;   of frame parameters can trigger/queue a superfluous (and
-  ;;   expensive, depending on the window system) frame redraw at
-  ;;   startup. The variables must be set to `nil' as well so users
-  ;;   don't have to call the functions twice to re-enable them.
-  (push '(menu-bar-lines . 0)   default-frame-alist)
-  (push '(tool-bar-lines . 0)   default-frame-alist)
-  (push '(vertical-scroll-bars) default-frame-alist)
-  (setq menu-bar-mode nil
-        tool-bar-mode nil
-        scroll-bar-mode nil)
-
-  ;; Frame defaults
-  (setq frame-resize-pixelwise t
-        frame-inhibit-implied-resize t
-        frame-title-format '("%b")
-        use-dialog-box t                  ; For mouse events
-        use-file-dialog nil
-        inhibit-x-resources t) ; REVIEW 2024-10-03: Not sure the precise effect
-
-  <<frame-transparency>>
-
-  ;; Startup screen
-  (setopt inhibit-splash-screen t
-          inhibit-startup-screen t
-          inhibit-startup-echo-area-message user-login-name ; Read the docstring
-          inhibit-startup-buffer-menu t)
-#+end_src
-
-**** Transparency
-
-#+name: frame-transparency
-#+begin_src emacs-lisp
-  (add-to-list 'default-frame-alist '(alpha-background . 100))
-#+end_src
-
-#+name: frame-transparency-toggle
-#+begin_src emacs-lisp
-
-  ;; Frame background transparency toggle
-  (defun krisb-frame-toggle-transparency (&optional arg)
-    "Toggle the value of `alpha-background'.
-  Toggles between 100 and 72 by default.  Can choose which value to change
-  to if called with ARG, or any prefix argument."
-    (interactive "P")
-    (let ((transparency (pcase arg
-                          ((pred numberp) arg)
-                          ((pred car) (read-number "Change the transparency to which value (0-100)? "))
-                          (_
-                           (pcase (frame-parameter nil 'alpha-background)
-                             (72 100)
-                             (100 72)
-                             (t 100))))))
-      (set-frame-parameter nil 'alpha-background transparency)))
-  (bind-key "<f9>" #'krisb-frame-toggle-transparency)
-#+end_src
-
-*** Style
-
-**** Themes
-
-Helpers:
-#+name: theme-helpers
-#+begin_src emacs-lisp
-  (defun krisb-enable-theme-time-of-day (light-theme dark-theme &optional day-start night-start)
-    "Enables LIGHT-THEME or DARK-THEME based on time of day.
-  LIGHT-THEME and DARK-THEME are a symbol for the name of a theme.
-
-  Night time begins at NIGHT-START hour and daytime begins at DAY-START
-  hour.  If NIGHT-START is nil, default to 19.  If DAY-START is nil,
-  default to 8."
-    (interactive)
-    (let ((hour (string-to-number (format-time-string "%H")))
-          (day-start (or day-start 8))
-          (night-start (or night-start 19)))
-      ;; Dark theme between NIGHT-START and DAY-START
-      (load-theme (if (or (<= night-start hour) (<= hour day-start))
-                      dark-theme light-theme)))
-    ;; Disable the remainder of the enabled themes.  We do this at the
-    ;; end to prevent going from a state of having a theme to having no
-    ;; theme, which would often cause a sudden drastic but momentary
-    ;; change in color (e.g. dark theme to light theme)
-    (mapc #'disable-theme (cdr custom-enabled-themes)))
-#+end_src
-
-***** Ef-themes
+*** Ef-themes
 
 #+name: ef-themes
 #+begin_src emacs-lisp
@@ -797,16 +1209,7 @@ Helpers:
     (krisb-enable-theme-time-of-day (car ef-themes-to-toggle) (cadr ef-themes-to-toggle)))
 #+end_src
 
-**** User option: Make all themes safe
-
-This option controls which themes Emacs does not ask for confirmation to load. Setting it to ~t~ means Emacs never asks for confirmation:
-#+name: safe-themes
-#+begin_src emacs-lisp
-  ;; Make all themes safe
-  (setopt custom-safe-themes t)
-#+end_src
-
-**** Fontaine: Setting fonts
+*** Fontaine: Setting fonts
 
 #+name: fontaine
 #+begin_src emacs-lisp
@@ -884,45 +1287,7 @@ This option controls which themes Emacs does not ask for confirmation to load. S
       (add-hook 'fontaine-set-preset-hook #'pulsar-pulse-line)))
 #+end_src
 
-**** Cursor types
-
-I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, less-noticeable cursor for variable-pitch fonts---almost always when prose---and blocky cursors for programming---almost always fixed-pitch fonts.
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Set `cursor-type' based on major mode
-  (setup emacs
-    (defun krisb-set-cursor-code ()
-      "Set cursor settings for `prog-mode'."
-      (setq-local cursor-type 'box
-                  cursor-in-non-selected-windows 'hollow))
-    (add-hook 'prog-mode-hook #'krisb-set-cursor-code)
-
-    (defun krisb-set-cursor-prose ()
-      "Set cursor settings for prose major modes."
-      (setq-local cursor-type '(bar . 2)
-                  cursor-in-non-selected-windows 'hollow))
-    (dolist (hook '(org-mode-hook
-                    markdown-mode-hook
-                    git-commit-setup-hook
-                    log-edit-mode-hook
-                    message-mode-hook))
-      (add-hook hook #'krisb-set-cursor-prose))
-
-    (defun krisb-set-cursor-completions-list ()
-      "Set cursor settings in *Completions* buffer."
-      (when (eq krisb-completion-paradigm 'completion-list)
-        (setq-local cursor-in-non-selected-windows 'hbar)))
-    (add-hook 'completion-list-mode-hook #'krisb-set-cursor-completions-list))
-#+end_src
-
-**** Word wrap
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Word wrapping.  Continue wrapped lines at whitespace rather than
-  ;; breaking in the middle of a word.
-  (setopt word-wrap t)
-#+end_src
-
-**** Pulsar: Alternative to pulse.el
+*** Pulsar: Alternative to pulse.el
 
 #+name: pulsar
 #+begin_src emacs-lisp
@@ -952,9 +1317,7 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
     (pulsar-global-mode 1))
 #+end_src
 
-**** Org-mode buffers
-
-***** Org-modern: Successor to org-superstar
+*** Org-modern: Successor to org-superstar
 
 #+name: org-modern
 #+begin_src emacs-lisp
@@ -1034,31 +1397,7 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
     )
 #+end_src
 
-***** Astute.el: Display punctuation typographically
-
-#+name: astute
-#+begin_src emacs-lisp
-  ;; Display punctuation typographically (e.g., em-dashes as "—" and
-  ;; en-dashes as "–")
-  (setup astute
-    (:package astute)
-    
-    (with-eval-after-load 'org
-      (add-hook 'org-mode-hook #'astute-mode))
-    
-    (with-eval-after-load 'astute
-      (setopt astute-lighter " As"
-              astute-prefix-single-quote-exceptions
-              '("bout"
-                "em"
-                "n'"
-                "cause"
-                "round"
-                "twas"
-                "tis"))))
-#+end_src
-
-***** Org-hide-drawers
+*** Org-hide-drawers
 
 #+name: org-hide-drawers
 #+begin_src emacs-lisp
@@ -1115,7 +1454,31 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
                  ("h" . org-hide-drawers-transient))))
 #+end_src
 
-**** Olivetti: Horizontally center buffer body
+*** Astute.el: Display punctuation typographically
+
+#+name: astute
+#+begin_src emacs-lisp
+  ;; Display punctuation typographically (e.g., em-dashes as "—" and
+  ;; en-dashes as "–")
+  (setup astute
+    (:package astute)
+    
+    (with-eval-after-load 'org
+      (add-hook 'org-mode-hook #'astute-mode))
+    
+    (with-eval-after-load 'astute
+      (setopt astute-lighter " As"
+              astute-prefix-single-quote-exceptions
+              '("bout"
+                "em"
+                "n'"
+                "cause"
+                "round"
+                "twas"
+                "tis"))))
+#+end_src
+
+*** Olivetti: Horizontally center buffer body
 
 #+name: olivetti
 #+begin_src emacs-lisp
@@ -1170,7 +1533,7 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
     )
 #+end_src
 
-**** Mixed-pitch
+*** Mixed-pitch
 
 #+name: mixed-pitch
 #+begin_src emacs-lisp
@@ -1188,7 +1551,7 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
             mixed-pitch-variable-pitch-cursor nil))
 #+end_src
 
-**** Lin: Stylistic enhancement to ~hl-line-mode~
+*** Lin: Stylistic enhancement to ~hl-line-mode~
 
 #+name: lin
 #+begin_src emacs-lisp
@@ -1206,56 +1569,13 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
       (add-to-list 'lin-mode-hooks 'LaTeX-mode-hook)))
 #+end_src
 
-*** Disable the ring bell
+*** Face-remap
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Disable the ring-bell (it's annoying)
-  (setopt ring-bell-function #'ignore)
-#+end_src
-See also ~(elisp) Beeping~.
-
-*** Hide "BufFace" minor-mode lighter
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Hide `buffer-face-mode' minor-mode lighter
   (setup face-remap
     
+    ;; Hide `buffer-face-mode' minor-mode lighter
     (:hide-mode buffer-face-mode))
-#+end_src
-
-*** Don't let the window manager stop Emacs from resizing its frames when fullscreen
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Don't let the window manager stop Emacs from resizing its frames
-  ;; when fullscreen
-  (setopt alter-fullscreen-frames t)      ; Emacs 31
-#+end_src
-
-** General file handling
-
-*** Follow symlinks when opening files
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Follow symlinks when opening files
-  (setopt find-file-visit-truename t)
-#+end_src
-
-*** Trash
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Move files into trash directory.  See also
-  ;; `remote-file-name-inhibit-delete-by-moving-to-trash'
-  (setopt trash-directory (no-littering-expand-var-file-name "trash")
-          delete-by-moving-to-trash t) ; See also `remote-file-name-inhibit-delete-by-moving-to-trash'
-
-  (defun krisb-empty-trash ()
-    "Empty the trash directory."
-    (interactive)
-    (if delete-by-moving-to-trash
-        (let ((size (string-trim (shell-command-to-string (concat"du -sh " trash-directory " | cut -f1")))))
-          (when (yes-or-no-p (format "Empty trash directory of %s size? " size))
-            (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory "/*")))))
-      (message "delete-by-moving-to-trash is nil; not emptying trash")))
 #+end_src
 
 *** Auto-save: Recover unsaved changes
@@ -1413,67 +1733,6 @@ See also ~(elisp) Beeping~.
     <<auto-revert-remote-files>>
     
     <<vc-auto-revert>>)
-#+end_src
-
-*** Disable lock files
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Don't create lock files.  See also `remote-file-name-inhibit-locks'
-  ;; for remote files
-  (setopt create-lockfiles nil)
-#+end_src
-
-** Editing primitives (buffer movement and editing)
-
-*** Cycle-spacing behavior
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Behavior for `cycle-spacing-actions'
-  (setopt cycle-spacing-actions '(just-one-space (delete-all-space -) restore))
-#+end_src
-
-*** Bespoke editing commands
-
-#+name: bespoke-editing
-#+begin_src emacs-lisp
-  ;; Joining and inserting newlines
-  (defun krisb-open-line-above-goto ()
-    "Insert an empty line above the current line.
-  Position the cursor at it's beginning, according to the current mode.
-  Credit to https://emacsredux.com/blog/2013/06/15/open-line-above/"
-    (interactive)
-    (beginning-of-line)
-    (newline)
-    (forward-line -1)
-    (indent-according-to-mode))
-
-  (defun krisb-open-line-below-goto ()
-    "Insert an empty line after the current line.
-  Position the cursor at its beginning, according to the current mode.
-  Credit to https://emacsredux.com/blog/2013/03/26/smarter-open-line/"
-    (interactive)
-    (move-end-of-line nil)
-    (newline-and-indent))
-
-  (defun krisb-join-line-above ()
-    "Join the current line with the line above."
-    (interactive)
-    (save-excursion (delete-indentation))
-    (when (string-match-p "\\`\\s-*$" (thing-at-point 'line))
-      (funcall indent-line-function)))
-
-  (defun krisb-join-line-below ()
-    "Join the current line with the line below."
-    (interactive)
-    (save-excursion (delete-indentation t))
-    (when (bolp)
-      (funcall indent-line-function)))
-
-  (bind-keys
-   ("C-S-p" . krisb-open-line-above-goto)
-   ("C-S-n" . krisb-open-line-below-goto)
-   ("C-S-k" . krisb-join-line-above)
-   ("C-S-j" . krisb-join-line-below))
 #+end_src
 
 *** Repeat.el
@@ -1660,14 +1919,6 @@ Consult-specific completion category overrides:
     (smart-mark-mode 1))
 #+end_src
 
-*** The ~duplicate-*~ commands
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep  "\n\n"
-  ;; TODO 2025-05-22: Document the `duplicate-line-final-position'and
-  ;; `duplicate-region-final-position' user options
-  (bind-key "C-x ;" #'duplicate-dwim)
-#+end_src
-
 *** Do-at-point: Do things to the things at point
 
 #+name: do-at-point
@@ -1747,25 +1998,6 @@ Consult-specific completion category overrides:
     (:hide-mode))
 #+end_src
 
-*** Indentation settings
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  (setopt tab-width 4
-          ;; Insert spaces instead of tab characters.  The below
-          ;; disables `indent-tabs-mode' globally
-          indent-tabs-mode nil)
-#+end_src
-
-*** Rebind capitalization commands
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Use DWIM case commands
-  (bind-keys
-   ([remap upcase-word] . upcase-dwim)
-   ([remap downcase-word] . downcase-dwim)
-   ([remap capitalize-word] . capitalize-dwim))
-#+end_src
-
 *** Word-wrap-mode: Slight improvements to word-wrapping
 
 #+name: word-wrap-mode
@@ -1800,202 +2032,10 @@ Consult-specific completion category overrides:
      ([remap move-past-close-and-reindent] . puni-syntactic-forward-punct)))
 #+end_src
 
-*** Sentence-end-double-space: What counts as a sentence?
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Set `sentence-end-double-space' conditionally
-  (defun krisb-sentence-end-double-space-setup ()
-    "Set up the value for `sentence-end-double-space'.
-  However, do not override buffer-local and directory-local values for
-  `sentence-end-double-space'."
-    ;; First check if `sentence-end-double-space' is set buffer-locally
-    ;; (`file-local-variables-alist') or directory-locally
-    ;; (`dir-local-variables-alist')
-    (unless (local-variable-p 'sentence-end-double-space)
-      (setq-local sentence-end-double-space
-                  (cond ((derived-mode-p '(prog-mode conf-mode log-edit-mode)) t)
-                        ((derived-mode-p '(text-mode wombag-show-mode)) nil)))))
-  (add-hook 'after-change-major-mode-hook #'krisb-sentence-end-double-space-setup)
-#+end_src
-
-** Completion system
-Choose my completion paradigm:
-#+begin_src emacs-lisp :noweb-ref config-options
-  (defcustom krisb-completion-paradigm 'completion-list
-    "Choose our completion paradigm."
-    :type '(choice :tag "Completions user interface"
-                   (const :tag "Default Completions list UI" built-in)
-                   (const :tag "Use `vertico'" vertico)))
-#+end_src
-
-*** Filtering completion candidates
-
-Settings for the filtering of completion candidates, regardless of the completion UI (see also ~krisb-completion-paradigm~).
-#+name: completion
-#+begin_src emacs-lisp
-  ;; TODO 2025-05-27: Document this advice by vertico to show
-  ;; `completing-read-multiple' separator on Emacs versions below 31:
-  ;; https://github.com/minad/vertico#completing-read-multiple.
-  (setup minibuffer
-    
-    ;; Completion styles.  `completion-styles' is set initially here but
-    ;; may be modified elsewhere later (e.g., when loading the orderless
-    ;; package, I add to `completion-styles')
-    (setopt completion-styles '(substring initials flex)
-            ;; Emacs 31.  Treat words like the substring completion
-            ;; style does.  Read its docstring for details
-            completion-pcm-leading-wildcard t) ; Emacs 31
-
-    ;; A non-exhaustive list of known completion categories:
-    ;; - `bookmark'
-    ;; - `buffer'
-    ;; - `charset'
-    ;; - `coding-system'
-    ;; - `color'
-    ;; - `command' (e.g. `M-x')
-    ;;
-    ;; During completion, you can find out the category of the
-    ;; completion canddiate at point by evaluating the form below in the
-    ;; minibuffer when the point is on a completion candidate (note:
-    ;; users can only do so when `enable-recursive-minibuffers' is
-    ;; non-nil):
-    ;; 
-    ;;  (completion-metadata-get (completion-metadata (minibuffer-contents) minibuffer-completion-table minibuffer-completion-predicate) 'category)
-    ;;
-    (setq completion-category-defaults nil) ; This is a defvar, although setopt would still set it
-    (setopt completion-category-overrides
-            ;; NOTE: The eager-display and eager-update properties only
-            ;; have an effect on the completion list system, not
-            ;; minibuffer completion systems (like vertico)
-            '((calendar-month (display-sort-function . identity))
-              ;; We include `partial-completion' to enable wildcards and
-              ;; partial paths (when `completion-pcm-leading-wildcard'
-              ;; is non-nil)
-              (file (styles . (partial-completion)))
-              (kill-ring (styles . (orderless-literal-and-prefixes)))
-              <<completion-category-overrides>>))
-    
-    ;; How do we want to treat case in completion?
-    (setopt completion-ignore-case t
-            read-file-name-completion-ignore-case t
-            read-buffer-completion-ignore-case t))
-#+end_src
-
-*** Behavior of =TAB= outside the minibuffer buffers
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc  :noweb-sep "\n\n"
-  ;; `indent-for-tab-command' functionality: what happens when you press
-  ;; TAB in a regular buffer?
-  (setopt tab-always-indent 'complete
-          tab-first-completion 'word)
-#+end_src
-
-*** Built-in completions: ~completion-list-mode~
-
-#+name: completion-list
-#+begin_src emacs-lisp
-  ;; TODO 2025-05-20: Document the following options below in the
-  ;; literate configuration:
-  ;; - `completion-cycle-threshold' - Cycling = repeated completion
-  ;;   attempts insert the next completion candidate into the minibuffer
-  ;; - `completion-flex-nospace’
-  (setup minibuffer
-
-    ;; Completions format
-    (setopt completion-show-help nil
-            completions-max-height 10 ; Otherwise the completions buffer can grow to fill the entire frame
-            completions-format 'vertical
-            completions-group t           ; Emacs 28
-            completions-detailed t) ; Show annotations for candidates (like marginalia.el)
-
-    ;; Custom sorting function.  Copied from Ihor's dotemacs.  Based on
-    ;; Emacs 31's `minibuffer-sort-by-history' (the 'historical value
-    ;; for `completions-sort')
-    (defun krisb-minibuffer-sort-by-history-then-distance (completions)
-      "Sort COMPLETIONS by Levenshtein distance to input, then put recent on top.
-  This function is like `minibuffer-sort-by-history', but sorts by string
-  distance + `string-lessp' first rather than using only `string-lessp'."
-      (let* ((minibuffer-input (when (minibufferp) (minibuffer-contents)))
-             (to-complete-string
-              (when minibuffer-input
-                (substring minibuffer-input
-                           (car (completion-boundaries
-                                 minibuffer-input
-                                 minibuffer-completion-table nil "")))))
-             (pre-sorted
-              (sort completions
-                    :lessp
-                    (if to-complete-string
-                        (lambda (a b)
-                          (let ((distance-a (string-distance to-complete-string a))
-                                (distance-b (string-distance to-complete-string b)))
-                            (or (< distance-a distance-b)
-                                (and (= distance-a distance-b)
-                                     (string-lessp a b)))))
-                      #'string-lessp))))
-        ;; The following code is copied from
-        ;; `minibuffer-sort-by-history'.
-        ;;
-        ;; Only use history when it's specific to these completions.
-        (if (eq minibuffer-history-variable
-                (default-value minibuffer-history-variable))
-            pre-sorted
-          (minibuffer--sort-by-position
-           (minibuffer--sort-preprocess-history minibuffer-completion-base)
-           pre-sorted))))
-    (setopt completions-sort #'krisb-minibuffer-sort-by-history-then-distance)
-    
-    ;; Automatic ("eager") display and updating of the *Completions*
-    ;; buffer: control with `completion-category-overrides'
-    (setopt completion-eager-display 'auto
-            completion-eager-update t)
-
-    ;; Selection of the Completions buffer from the minibuffer
-    (setopt completion-auto-help 'visible
-            completion-auto-select 'second-tab ; When, if ever, to select *Completions* on TAB press
-            completion-auto-deselect nil)
-
-    ;; *Completion* buffer keybindings
-    (bind-keys :map completion-list-mode-map
-               ;; TODO 2025-11-30: Suggest these bindings to upstream
-               ("b" . previous-column-completion)
-               ("f" . next-column-completion))
-    ;; Emacs 30.1: Navigate in the *Completions* buffer from the
-    ;; minibuffer.  (Fans of vertico might like this)
-    (setopt minibuffer-visible-completions t)
-    (define-key minibuffer-visible-completions-map
-                (kbd "C-v")
-                (minibuffer-visible-completions--bind #'minibuffer-hide-completions))
-    (unbind-key "C-g" minibuffer-visible-completions-map)
-    (define-key minibuffer-visible-completions-map
-                (kbd "C-n")
-                (minibuffer-visible-completions--bind #'minibuffer-next-line-completion))
-    (define-key minibuffer-visible-completions-map
-                (kbd "C-p")
-                (minibuffer-visible-completions--bind #'minibuffer-previous-line-completion)))
-
-  ;; Bespoke extensions
-  (setup minibuffer
-    ;; Change the behavior of `C-g' in the Completions buffer.  (I
-    ;; noticed that a similar command is `mct-keyboard-quit-dwim' from
-    ;; mct.)
-    (defun krisb-keyboard-quit ()
-      "Change the behavior of `C-g' in the Completions buffer.
-  Make `C-g' in in the Completions buffer behave like
-  `minibuffer-keyboard-quit'.
-
-  In the Completions buffer, if the region is active, deactivate the
-  region.  If the region is not active, then call `abort-recursive-edit',
-  ending the minibuffer session. (This is equivalent to the behavior of
-  `minibuffer-keyboard-quit' in the minibuffer.)"
-      (interactive nil completion-list-mode)
-      (if (and delete-selection-mode (region-active-p))
-          (deactivate-mark)
-        (abort-recursive-edit)))
-    (bind-key [remap keyboard-quit] 'krisb-keyboard-quit 'completion-list-mode-map))
-#+end_src
-
 *** Hotfuzz: Blazingly fast replacement for the =flex= completion style
+:PROPERTIES:
+:CUSTOM_ID: h:20260219T023250.583035
+:END:
 
 See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#results]] for benchmarks between fuzzy completion styles. Note that the markedly higher performance of the hotfuzz package shown in this benchmark uses the /dynamic module/ bundled with hotfuzz (so to see similar results, users must do the same).
 
@@ -2039,6 +2079,9 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
 #+end_src
 
 *** Orderless: A completion-style for flexibility
+:PROPERTIES:
+:CUSTOM_ID: h:20260219T023253.259434
+:END:
 
 #+name: orderless
 #+begin_src emacs-lisp
@@ -2099,6 +2142,9 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
 #+end_src
 
 *** Cape: ~completion-at-point-functions~ extensions and helpers
+:PROPERTIES:
+:CUSTOM_ID: h:20260219T023257.693377
+:END:
 
 #+name: cape
 #+begin_src emacs-lisp
@@ -2175,158 +2221,7 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
         (advice-add #'eglot-completion-at-point :around #'cape-wrap-nonexclusive))))
 #+end_src
 
-** General interfaces
-
-*** Context menu
-
-A right-click menu:
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Show context menu from right-click
-  (when (display-graphic-p) (context-menu-mode 1))
-#+end_src
-
-*** Minibuffer UI
-
-**** Let the minibuffer shrink
-
-The default behavior is to allow the minibuffer to increase in height if necessary, but not to decrease its height. The setting below allows shrinkage when necessary.
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; See (emacs) Minibuffer Edit for an explanation
-  (setopt resize-mini-windows t)
-#+end_src
-
-**** Minibuffer.el
-
-#+name: minibuffer
-#+begin_src emacs-lisp
-  (setup minibuffer
-    
-    ;; Minibuffer movement.  See also `minibuffer-visible-completions'
-    ;; and the commands bound to `minibuffer-visible-completions-map'
-    (setopt minibuffer-beginning-of-buffer-movement t)
-    
-    ;; Let a minibuffer be created from within a minibuffer
-    (setopt enable-recursive-minibuffers t)
-    ;; And indicate the current recursion level in the minibuffer prompt
-    (minibuffer-depth-indicate-mode 1)
-
-    ;; TODO 2025-10-14: Document:
-    ;; `history-delete-duplicates'
-    (setopt history-length 1000)
-
-    ;; Minibuffer prompts
-    (setopt minibuffer-default-prompt-format " [%s]")
-    (minibuffer-electric-default-mode 1)  ; Show default value
-    (setopt minibuffer-prompt-properties
-            ;; Don't let point enter the minibuffer prompt
-            '(read-only t cursor-intangible t face minibuffer-prompt))
-
-    ;; Don't show mode line
-    (add-hook 'completion-list-mode-hook #'mode-line-invisible-mode)) ; Emacs 31.1
-#+end_src
-
-**** Filter out commands irrelevant to the current major mode from the ~execute-extended-command~
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc
-  ;; Exclude from M-x commands definitely irrelevant to the current
-  ;; major mode
-  (setopt read-extended-command-predicate #'command-completion-default-include-p)
-#+end_src
-
-**** Vertico: Alternative minibuffer completion interface
-
-#+name: vertico
-#+begin_src emacs-lisp
-  (setup vertico
-    (:package vertico)
-    ;; NOTE 2025-11-25: Trying out the built-in Completions buffer for a
-    ;; while
-    (:quit)
-    
-    (vertico-mode 1)
-    
-    (:bind-keys :filter vertico-mode ("C-c v r" . vertico-repeat)
-                :map vertico-map
-                :filter vertico-mode ("C-c v s" . vertico-suspend))
-
-    (with-eval-after-load 'vertico
-      (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)))
-
-  <<vertico-extensions>>
-#+end_src
-
-Vertico provides several extensions:
-#+name: vertico-extensions
-#+begin_src emacs-lisp
-  ;; More convenient path modification commands
-  (setup vertico-directory
-    (:load-after vertico)
-
-    (with-eval-after-load 'vertico-directory
-      (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)))
-
-  ;; On-demand change the type of UI
-  (setup vertico-multiform
-    (:load-after vertico)
-    
-    (with-eval-after-load 'vertico-multiform
-      (vertico-multiform-mode 1)
-
-      ;; See related, `completion-category-overrides'
-      (setopt vertico-multiform-categories
-              '((buffer flat (vertico-sort-function . nil))
-                (project-buffer flat (vertico-sort-function . nil))
-                (file grid (:keymap . vertico-directory-map))
-                (project-file grid)                ; For `project-find-file'
-                (command flat (vertico-flat-annotate . nil))
-                (symbol-help flat)
-                (kill-ring (vertico-sort-function . nil))
-                (color (vertico-sort-function . vertico-sort-history-length-alpha))
-                (jinx grid
-                      (vertico-grid-annotate . 20)
-                      (vertico-grid-max-columns . 12)
-                      (vertico-grid-separator
-                       . #("    |    " 4 5 (display (space :width (1)) face (:inherit shadow :inverse-video t))))))
-              vertico-multiform-commands
-              `((pdf-view-goto-label
-                 (vertico-sort-function . nil))
-                (".+-history" (vertico-sort-function . nil))
-                (,(rx bol (or (seq "recentf" (* (any alnum))) "consult-recent-file"))
-                 (vertico-sort-function . nil))
-                (,(rx bol (literal "customize-"))
-                 flat)
-                (,(rx bol (or (seq (zero-or-one (literal "krisb-")) (literal "find-library"))
-                              (literal "load-library")))
-                 flat)
-                (,(rx bol (literal "consult-history"))
-                 (vertico-sort-function . nil))
-                ;; NOTE 2025-06-18: Should these commands have a category like
-                ;; e.g. `descibe-function' and `describe-keymap' do?  If so,
-                ;; perhaps I can propose a patch for it.
-                (,(rx (or "find-function"
-                          "find-library"
-                          "find-variable"))
-                 flat)))))
-
-  ;; A minimal, Ido-like UI
-  (setup vertico-flat
-    (:load-after vertico)
-
-    (with-eval-after-load 'vertico-flat
-      (setopt vertico-flat-annotate t
-              vertico-flat-format
-              `( :multiple #("\n{%s}" 0 2 (face minibuffer-prompt) 4 5 (face minibuffer-prompt))
-                 :single #("\n[%s]" 0 2 (face minibuffer-prompt) 2 4 (face success) 4 5 (face minibuffer-prompt))
-                 :prompt #("(%s)" 0 1 (face minibuffer-prompt) 3 4 (face minibuffer-prompt))
-                 :separator #("  |  " 0 5 (face minibuffer-prompt))
-                 :ellipsis ,(propertize "…" 'face 'minibuffer-prompt)
-                 :no-match ,(propertize "\n[No match]" 'face 'shadow)
-                 :spacer #(" " 0 1 (cursor t))))))
-#+end_src
-
-*** In-line completion
-
-**** Corfu: In-line completion interface
+*** Corfu: In-line completion interface
 
 #+name: corfu
 #+begin_src emacs-lisp
@@ -2464,7 +2359,7 @@ Before Corfu 2.7, specifically [[https://github.com/minad/corfu/commit/4c4a41b0b
       (advice-add capf :around #'krisb-cape-elisp--around-advice)))
 #+end_src
 
-**** Completion-preview: Show just the next completion candidate
+*** Completion-preview: Show just the next completion candidate
 
 Note that =completion-preview= is prefix-only:
 #+name: completion-preview
@@ -2482,59 +2377,286 @@ Note that =completion-preview= is prefix-only:
               #'krisb-minibuffer-sort-by-history-then-distance)))
 #+end_src
 
-*** Customize
+*** Minibuffer.el
+:PROPERTIES:
+:CUSTOM_ID: h:20260219T023244.709419
+:END:
 
-#+name: customize-buffers
+#+name: minibuffer
 #+begin_src emacs-lisp
-  ;; TODO 2025-05-24: Document these options:
-  ;; - `custom-buffer-style’
-  ;; - `custom-search-field' -- useful for Android and other touchscreen
-  ;;                            devices though
-  (setopt custom-theme-allow-multiple-selections t
-          custom-unlispify-tag-names nil)
+  (setup minibuffer
+    
+    ;; Minibuffer movement.  See also `minibuffer-visible-completions'
+    ;; and the commands bound to `minibuffer-visible-completions-map'
+    (setopt minibuffer-beginning-of-buffer-movement t)
+    
+    ;; Let a minibuffer be created from within a minibuffer
+    (setopt enable-recursive-minibuffers t)
+    ;; And indicate the current recursion level in the minibuffer prompt
+    (minibuffer-depth-indicate-mode 1)
+
+    ;; TODO 2025-10-14: Document:
+    ;; `history-delete-duplicates'
+    (setopt history-length 1000)
+
+    ;; Minibuffer prompts
+    (setopt minibuffer-default-prompt-format " [%s]")
+    (minibuffer-electric-default-mode 1)  ; Show default value
+    (setopt minibuffer-prompt-properties
+            ;; Don't let point enter the minibuffer prompt
+            '(read-only t cursor-intangible t face minibuffer-prompt))
+
+    ;; Don't show mode line
+    (add-hook 'completion-list-mode-hook #'mode-line-invisible-mode)) ; Emacs 31.1
 #+end_src
 
-*** Tab bar
-
-#+name: tab-bar
+Settings for the filtering of completion candidates, regardless of the completion UI (see also ~krisb-completion-paradigm~).
+#+name: completion
 #+begin_src emacs-lisp
-  (setup tab-bar
+  ;; TODO 2025-05-27: Document this advice by vertico to show
+  ;; `completing-read-multiple' separator on Emacs versions below 31:
+  ;; https://github.com/minad/vertico#completing-read-multiple.
+  (setup minibuffer
+    
+    ;; Completion styles.  `completion-styles' is set initially here but
+    ;; may be modified elsewhere later (e.g., when loading the orderless
+    ;; package, I add to `completion-styles')
+    (setopt completion-styles '(substring initials flex)
+            ;; Emacs 31.  Treat words like the substring completion
+            ;; style does.  Read its docstring for details
+            completion-pcm-leading-wildcard t) ; Emacs 31
 
-    (:bind-keys :map tab-prefix-map
-                ("w" . tab-bar-move-window-to-tab)
-                ("w" . tab-bar-move-window-to-tab)
-                ("c" . tab-bar-change-tab-group)
-                ("C-S-g" . tab-bar-move-tab-to-group)
-                ("D" . tab-bar-close-group-tabs)
-                :repeat-map krisb-tab-bar-repeat-map
-                ("C-c <left>" . tab-bar-history-back)
-                ("C-c <right>" . tab-bar-history-forward)
-                :continue
-                ("<left>" . tab-bar-history-back)
-                ("<right>" . tab-bar-history-forward))
-
-    (with-eval-after-load 'tab-bar
-      (setopt tab-bar-close-button-show nil
-              tab-bar-close-last-tab-choice 'delete-frame
-              tab-bar-new-tab-choice 'window
-              tab-bar-select-tab-modifiers '(meta)
-              tab-bar-tab-hints t
-              tab-bar-show t
-              tab-bar-separator " "
-              tab-bar-show-inactive-group-tabs t
-              tab-bar-format
-              '(tab-bar-format-tabs-groups
-                tab-bar-separator
-                tab-bar-format-align-right
-                tab-bar-format-global)))
-
-    (tab-bar-mode 1)
-    (tab-bar-history-mode 1))
+    ;; A non-exhaustive list of known completion categories:
+    ;; - `bookmark'
+    ;; - `buffer'
+    ;; - `charset'
+    ;; - `coding-system'
+    ;; - `color'
+    ;; - `command' (e.g. `M-x')
+    ;;
+    ;; During completion, you can find out the category of the
+    ;; completion canddiate at point by evaluating the form below in the
+    ;; minibuffer when the point is on a completion candidate (note:
+    ;; users can only do so when `enable-recursive-minibuffers' is
+    ;; non-nil):
+    ;; 
+    ;;  (completion-metadata-get (completion-metadata (minibuffer-contents) minibuffer-completion-table minibuffer-completion-predicate) 'category)
+    ;;
+    (setq completion-category-defaults nil) ; This is a defvar, although setopt would still set it
+    (setopt completion-category-overrides
+            ;; NOTE: The eager-display and eager-update properties only
+            ;; have an effect on the completion list system, not
+            ;; minibuffer completion systems (like vertico)
+            '((calendar-month (display-sort-function . identity))
+              ;; We include `partial-completion' to enable wildcards and
+              ;; partial paths (when `completion-pcm-leading-wildcard'
+              ;; is non-nil)
+              (file (styles . (partial-completion)))
+              (kill-ring (styles . (orderless-literal-and-prefixes)))
+              <<completion-category-overrides>>))
+    
+    ;; How do we want to treat case in completion?
+    (setopt completion-ignore-case t
+            read-file-name-completion-ignore-case t
+            read-buffer-completion-ignore-case t))
 #+end_src
 
-*** Mode line
+Configure ~completion-list-mode~ UI:
+#+name: completion-list
+#+begin_src emacs-lisp
+  ;; TODO 2025-05-20: Document the following options below in the
+  ;; literate configuration:
+  ;; - `completion-cycle-threshold' - Cycling = repeated completion
+  ;;   attempts insert the next completion candidate into the minibuffer
+  ;; - `completion-flex-nospace’
+  (setup minibuffer
 
-**** Time: Display time
+    ;; Completions format
+    (setopt completion-show-help nil
+            completions-max-height 10 ; Otherwise the completions buffer can grow to fill the entire frame
+            completions-format 'vertical
+            completions-group t           ; Emacs 28
+            completions-detailed t) ; Show annotations for candidates (like marginalia.el)
+
+    ;; Custom sorting function.  Copied from Ihor's dotemacs.  Based on
+    ;; Emacs 31's `minibuffer-sort-by-history' (the 'historical value
+    ;; for `completions-sort')
+    (defun krisb-minibuffer-sort-by-history-then-distance (completions)
+      "Sort COMPLETIONS by Levenshtein distance to input, then put recent on top.
+  This function is like `minibuffer-sort-by-history', but sorts by string
+  distance + `string-lessp' first rather than using only `string-lessp'."
+      (let* ((minibuffer-input (when (minibufferp) (minibuffer-contents)))
+             (to-complete-string
+              (when minibuffer-input
+                (substring minibuffer-input
+                           (car (completion-boundaries
+                                 minibuffer-input
+                                 minibuffer-completion-table nil "")))))
+             (pre-sorted
+              (sort completions
+                    :lessp
+                    (if to-complete-string
+                        (lambda (a b)
+                          (let ((distance-a (string-distance to-complete-string a))
+                                (distance-b (string-distance to-complete-string b)))
+                            (or (< distance-a distance-b)
+                                (and (= distance-a distance-b)
+                                     (string-lessp a b)))))
+                      #'string-lessp))))
+        ;; The following code is copied from
+        ;; `minibuffer-sort-by-history'.
+        ;;
+        ;; Only use history when it's specific to these completions.
+        (if (eq minibuffer-history-variable
+                (default-value minibuffer-history-variable))
+            pre-sorted
+          (minibuffer--sort-by-position
+           (minibuffer--sort-preprocess-history minibuffer-completion-base)
+           pre-sorted))))
+    (setopt completions-sort #'krisb-minibuffer-sort-by-history-then-distance)
+    
+    ;; Automatic ("eager") display and updating of the *Completions*
+    ;; buffer: control with `completion-category-overrides'
+    (setopt completion-eager-display 'auto
+            completion-eager-update t)
+
+    ;; Selection of the Completions buffer from the minibuffer
+    (setopt completion-auto-help 'visible
+            completion-auto-select 'second-tab ; When, if ever, to select *Completions* on TAB press
+            completion-auto-deselect nil)
+
+    ;; *Completion* buffer keybindings
+    (bind-keys :map completion-list-mode-map
+               ;; TODO 2025-11-30: Suggest these bindings to upstream
+               ("b" . previous-column-completion)
+               ("f" . next-column-completion))
+    ;; Emacs 30.1: Navigate in the *Completions* buffer from the
+    ;; minibuffer.  (Fans of vertico might like this)
+    (setopt minibuffer-visible-completions t)
+    (define-key minibuffer-visible-completions-map
+                (kbd "C-v")
+                (minibuffer-visible-completions--bind #'minibuffer-hide-completions))
+    (unbind-key "C-g" minibuffer-visible-completions-map)
+    (define-key minibuffer-visible-completions-map
+                (kbd "C-n")
+                (minibuffer-visible-completions--bind #'minibuffer-next-line-completion))
+    (define-key minibuffer-visible-completions-map
+                (kbd "C-p")
+                (minibuffer-visible-completions--bind #'minibuffer-previous-line-completion)))
+
+  ;; Bespoke extensions
+  (setup minibuffer
+    ;; Change the behavior of `C-g' in the Completions buffer.  (I
+    ;; noticed that a similar command is `mct-keyboard-quit-dwim' from
+    ;; mct.)
+    (defun krisb-keyboard-quit ()
+      "Change the behavior of `C-g' in the Completions buffer.
+  Make `C-g' in in the Completions buffer behave like
+  `minibuffer-keyboard-quit'.
+
+  In the Completions buffer, if the region is active, deactivate the
+  region.  If the region is not active, then call `abort-recursive-edit',
+  ending the minibuffer session. (This is equivalent to the behavior of
+  `minibuffer-keyboard-quit' in the minibuffer.)"
+      (interactive nil completion-list-mode)
+      (if (and delete-selection-mode (region-active-p))
+          (deactivate-mark)
+        (abort-recursive-edit)))
+    (bind-key [remap keyboard-quit] 'krisb-keyboard-quit 'completion-list-mode-map))
+#+end_src
+
+*** Vertico: Alternative minibuffer completion interface
+
+#+name: vertico
+#+begin_src emacs-lisp
+  (setup vertico
+    (:package vertico)
+    ;; NOTE 2025-11-25: Trying out the built-in Completions buffer for a
+    ;; while
+    (:quit)
+    
+    (vertico-mode 1)
+    
+    (:bind-keys :filter vertico-mode ("C-c v r" . vertico-repeat)
+                :map vertico-map
+                :filter vertico-mode ("C-c v s" . vertico-suspend))
+
+    (with-eval-after-load 'vertico
+      (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)))
+
+  <<vertico-extensions>>
+#+end_src
+
+Vertico provides several extensions:
+#+name: vertico-extensions
+#+begin_src emacs-lisp
+  ;; More convenient path modification commands
+  (setup vertico-directory
+    (:load-after vertico)
+
+    (with-eval-after-load 'vertico-directory
+      (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)))
+
+  ;; On-demand change the type of UI
+  (setup vertico-multiform
+    (:load-after vertico)
+    
+    (with-eval-after-load 'vertico-multiform
+      (vertico-multiform-mode 1)
+
+      ;; See related, `completion-category-overrides'
+      (setopt vertico-multiform-categories
+              '((buffer flat (vertico-sort-function . nil))
+                (project-buffer flat (vertico-sort-function . nil))
+                (file grid (:keymap . vertico-directory-map))
+                (project-file grid)                ; For `project-find-file'
+                (command flat (vertico-flat-annotate . nil))
+                (symbol-help flat)
+                (kill-ring (vertico-sort-function . nil))
+                (color (vertico-sort-function . vertico-sort-history-length-alpha))
+                (jinx grid
+                      (vertico-grid-annotate . 20)
+                      (vertico-grid-max-columns . 12)
+                      (vertico-grid-separator
+                       . #("    |    " 4 5 (display (space :width (1)) face (:inherit shadow :inverse-video t))))))
+              vertico-multiform-commands
+              `((pdf-view-goto-label
+                 (vertico-sort-function . nil))
+                (".+-history" (vertico-sort-function . nil))
+                (,(rx bol (or (seq "recentf" (* (any alnum))) "consult-recent-file"))
+                 (vertico-sort-function . nil))
+                (,(rx bol (literal "customize-"))
+                 flat)
+                (,(rx bol (or (seq (zero-or-one (literal "krisb-")) (literal "find-library"))
+                              (literal "load-library")))
+                 flat)
+                (,(rx bol (literal "consult-history"))
+                 (vertico-sort-function . nil))
+                ;; NOTE 2025-06-18: Should these commands have a category like
+                ;; e.g. `descibe-function' and `describe-keymap' do?  If so,
+                ;; perhaps I can propose a patch for it.
+                (,(rx (or "find-function"
+                          "find-library"
+                          "find-variable"))
+                 flat)))))
+
+  ;; A minimal, Ido-like UI
+  (setup vertico-flat
+    (:load-after vertico)
+
+    (with-eval-after-load 'vertico-flat
+      (setopt vertico-flat-annotate t
+              vertico-flat-format
+              `( :multiple #("\n{%s}" 0 2 (face minibuffer-prompt) 4 5 (face minibuffer-prompt))
+                 :single #("\n[%s]" 0 2 (face minibuffer-prompt) 2 4 (face success) 4 5 (face minibuffer-prompt))
+                 :prompt #("(%s)" 0 1 (face minibuffer-prompt) 3 4 (face minibuffer-prompt))
+                 :separator #("  |  " 0 5 (face minibuffer-prompt))
+                 :ellipsis ,(propertize "…" 'face 'minibuffer-prompt)
+                 :no-match ,(propertize "\n[No match]" 'face 'shadow)
+                 :spacer #(" " 0 1 (cursor t))))))
+#+end_src
+
+*** Time: Display time
 
 #+name: time
 #+begin_src emacs-lisp
@@ -2559,35 +2681,7 @@ Note that =completion-preview= is prefix-only:
               ("Asia/Shanghai" "Beijing"))))
 #+end_src
 
-**** Mode line format
-
-#+name: mode-line-format
-#+begin_src emacs-lisp
-  ;; TODO 2025-12-03: Document also:
-  ;; - `mode-line-compact'
-  ;; - `mode-line-percent-position'
-  ;; - `mode-line-percent-position'
-  ;; - `mode-line-position-line-format'
-  ;; - `mode-line-position-column-line-format'
-  (setopt mode-line-right-align-edge 'right-fringe
-          ;; TODO 2025-07-10: Ask on emacs-devel why this isn't a
-          ;; defcustom.
-          mode-line-defining-kbd-macro (propertize " Macro" 'face 'mode-line-emphasis)
-          mode-line-format
-          '("%e" mode-line-front-space
-            ("" mode-line-mule-info mode-line-client mode-line-modified mode-line-remote mode-line-window-dedicated)
-            mode-line-frame-identification
-            mode-line-buffer-identification "   "
-            mode-line-position
-            mode-line-format-right-align
-            (project-mode-line project-mode-line-format)
-            (vc-mode vc-mode) "  "
-            mode-line-modes
-            mode-line-misc-info
-            mode-line-end-spaces))
-#+end_src
-
-** Window control and management
+*** Window control and management
 
 #+name: window.el
 #+begin_src emacs-lisp
@@ -2613,8 +2707,6 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
 #+begin_src emacs-lisp
   <<display-buffer-alist>>
 #+end_src
-
-** Buffer list management
 
 *** Buff-menu: Simplest UI for listing buffers
 
@@ -2658,49 +2750,43 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
               uniquify-dirname-transform #'project-uniquify-dirname-transform)))
 #+end_src
 
-** Messages buffer
+*** Tab-bar
 
-#+name: messages-buffer
+#+name: tab-bar
 #+begin_src emacs-lisp
-  ;; Visual-line-mode in *Messages* buffer
-  (add-hook 'messages-buffer-mode-hook #'visual-line-mode)
+  (setup tab-bar
 
-  ;; Mesages buffer positioning
-  <<messages-display-buffer-alist>>
+    (:bind-keys :map tab-prefix-map
+                ("w" . tab-bar-move-window-to-tab)
+                ("w" . tab-bar-move-window-to-tab)
+                ("c" . tab-bar-change-tab-group)
+                ("C-S-g" . tab-bar-move-tab-to-group)
+                ("D" . tab-bar-close-group-tabs)
+                :repeat-map krisb-tab-bar-repeat-map
+                ("C-c <left>" . tab-bar-history-back)
+                ("C-c <right>" . tab-bar-history-forward)
+                :continue
+                ("<left>" . tab-bar-history-back)
+                ("<right>" . tab-bar-history-forward))
+
+    (with-eval-after-load 'tab-bar
+      (setopt tab-bar-close-button-show nil
+              tab-bar-close-last-tab-choice 'delete-frame
+              tab-bar-new-tab-choice 'window
+              tab-bar-select-tab-modifiers '(meta)
+              tab-bar-tab-hints t
+              tab-bar-show t
+              tab-bar-separator " "
+              tab-bar-show-inactive-group-tabs t
+              tab-bar-format
+              '(tab-bar-format-tabs-groups
+                tab-bar-separator
+                tab-bar-format-align-right
+                tab-bar-format-global)))
+
+    (tab-bar-mode 1)
+    (tab-bar-history-mode 1))
 #+end_src
-
-#+name: messages-display-buffer-alist
-#+begin_src emacs-lisp :noweb-ref display-buffer-alist
-  (add-to-list 'display-buffer-alist
-               `(,(rx (literal messages-buffer-name))
-                 (display-buffer-in-side-window)
-                 (window-height . 0.36)
-                 (side . top)
-                 (slot . 1)
-                 (post-command-select-window . t)))
-#+end_src
-
-** COMMENT Clipboard
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Don’t wait until yanking to put clipboard text into `kill-ring’
-  (setopt save-interprogram-paste-before-kill t)
-
-  ;; Wayland compatibility
-  <<clipboard-wayland>>
-#+end_src
-
-Wayland specific:
-#+name: clipboard-wayland
-#+begin_src emacs-lisp
-  (when (krisb-wayland-p)
-    (setopt interprogram-cut-function
-            (lambda (text)
-              (start-process "wl-copy" nil "wl-copy"
-                             "--trim-newline" "--type" "text/plain;charset=utf-8" text))))
-#+end_src
-
-** Persistence
 
 *** Savehist: Persist minibuffer history
 
@@ -2915,9 +3001,7 @@ Wayland specific:
                ("C-c m P" . tab-bookmark-pop)))
 #+end_src
 
-* Domains
-
-** Project handling
+*** Project.el
 
 #+name: project
 #+begin_src emacs-lisp
@@ -2970,8 +3054,6 @@ Wayland specific:
 
       <<eat-project-switch-commands>>)))
 #+end_src
-
-** VCS
 
 *** VC.el: Interface for version control systems
 
@@ -3196,13 +3278,7 @@ Wayland specific:
     (setopt vc-jj-diff-switches '("--git" "--stat")))
 #+end_src
 
-** Composition
-
-*** Programming
-
-**** Programming language-agnostic
-
-***** Flymake: Linting
+*** Flymake: Linting
 
 #+name: flymake
 #+begin_src emacs-lisp
@@ -3249,9 +3325,7 @@ Wayland specific:
                                 'face '(:inherit (bold mode-line-inactive)))))))
 #+end_src
 
-***** Spell checking
-
-****** Ispell
+*** Ispell
 
 #+name: ispell
 #+begin_src emacs-lisp
@@ -3270,7 +3344,7 @@ Wayland specific:
                 (expand-file-name (format "enchant/%s.dic" ispell-dictionary) (xdg-config-home))))))
 #+end_src
 
-****** Flyspell: Highlight spelling errors on-the-fly
+*** Flyspell: Highlight spelling errors on-the-fly
 :PROPERTIES:
 :CUSTOM_ID: h:20251118T184517.526538
 :END:
@@ -3301,7 +3375,7 @@ Wayland specific:
                 ("C-M-i" . nil)))
 #+end_src
 
-****** COMMENT Jinx: Fast and painless spell checker
+*** COMMENT Jinx: Fast and painless spell checker
 :PROPERTIES:
 :CUSTOM_ID: h:20251118T184509.484886
 :END:
@@ -3395,9 +3469,7 @@ Jinx is an alternative to the built-in flyspell (see [[#h:20251118T184517.526538
       (setf (alist-get ?* jinx--save-keys) #'krisb-jinx-save-as-ispell-localword)))
 #+end_src
 
-***** Text expansion
-
-****** Abbrev: Inline expansion library
+*** Abbrev: Inline expansion library
 
 #+name: abbrev
 #+begin_src emacs-lisp
@@ -3415,7 +3487,7 @@ Jinx is an alternative to the built-in flyspell (see [[#h:20251118T184517.526538
     (setopt abbrev-mode t))
 #+end_src
 
-****** Tempel: Modern inline expansions
+*** Tempel: Modern inline expansions
 
 #+name: tempel
 #+begin_src emacs-lisp
@@ -3454,7 +3526,7 @@ Tempel-specific completion category overrides:
   (tempel (eager-display . t))
 #+end_src
 
-***** Display-line-numbers
+*** Display-line-numbers
 
 #+name: display-line-numbers
 #+begin_src emacs-lisp
@@ -3468,9 +3540,7 @@ Tempel-specific completion category overrides:
             display-line-numbers-width-start t)) ; Use same width throughout
 #+end_src
 
-***** Outlining
-
-****** Outline.el
+*** Outline.el
 
 Outline.el lets one denote headings of whatever level and change narrowing, mark heading contents, and so on based on these headings.
 
@@ -3490,7 +3560,7 @@ Instead of adding ~outline-minor-mode~ directly to major mode hooks, I utilize o
 
 [fn:2] The reason we cannot add ~outline-minor-mode~ to major mode hooks then call ~outli-mode~ through ~outline-minor-mode-hook~ is because ~outli-mode~ internally calls ~outline-minor-mode~, meaning the above method creates an infinite recursion loop.
 
-****** Foldout: Return to a narrowed subtree
+*** Foldout: Return to a narrowed subtree
 
 As far as I understand, foldout is meant as a companion to outline.el. It provides the three commands below alongside several mouse commands:
 + ~foldout-zoom-subtree~ :: Basically ~outline-show-subtree~
@@ -3516,7 +3586,7 @@ Additionally, since ~outline-regexp~ is correctly set in org-mode buffers, the f
       (:require)))
 #+end_src
 
-****** Outli.el: A modern wrapper around outline.el
+*** Outli.el: A modern wrapper around outline.el
 :PROPERTIES:
 :CUSTOM_ID: h:20251118T171202.636238
 :END:
@@ -3559,7 +3629,7 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
             (plist-get (cdr (assoc 'emacs-lisp-mode consult-imenu-config)) :types))))
 #+end_src
 
-****** Hideshow: Selectively hide regions of code
+*** Hideshow: Selectively hide regions of code
 
 #+name:hideshow
 #+begin_src emacs-lisp
@@ -3575,22 +3645,7 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
               hs-isearch-open t)))
 #+end_src
 
-***** Org-src: Programming in org-mode
-
-#+name: org-src
-#+begin_src emacs-lisp
-  ;; TODO 2025-05-23: Document:
-  ;; - `org-edit-src-turn-on-auto-save'
-  ;; - `org-edit-src-auto-save-idle-delay’
-  ;; - `org-src-block-faces’
-  (setup org-src
-    (:if-package org)
-
-    (setopt org-src-fontify-natively t
-            org-src-window-setup 'current-window))
-#+end_src
-
-***** Xref: Jump to symbol definitions
+*** Xref: Jump to symbol definitions
 
 #+name: xref
 #+begin_src emacs-lisp
@@ -3657,7 +3712,7 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
                   (some-window . mru))))
 #+end_src
 
-***** Info: Reading manuals
+*** Info: Reading manuals
 
 #+name: info
 #+begin_src emacs-lisp
@@ -3695,7 +3750,7 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
   (info-menu (eager-display t))
 #+end_src
 
-***** Which-func: Indicator for which function I'm in
+*** Which-func: Indicator for which function I'm in
 
 #+name: which-func
 #+begin_src emacs-lisp
@@ -3709,13 +3764,7 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
     (which-function-mode 1))
 #+end_src
 
-***** Shells and compilation
-
-#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  (setopt shell-command-prompt-show-cwd t)
-#+end_src
-
-****** EAT: Best terminal emulator
+*** EAT: Best terminal emulator
 
 #+name: eat
 #+begin_src emacs-lisp
@@ -3813,7 +3862,7 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
                   :key #'car)
 #+end_src
 
-****** Fish-mode: Major mode for =.fish= files
+*** Fish-mode: Major mode for =.fish= files
 
 #+name: fish-mode
 #+begin_src emacs-lisp
@@ -3821,7 +3870,7 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
     (:package fish-mode))
 #+end_src
 
-****** Fancy-compilation: Make =compilation-mode= prettier
+*** Fancy-compilation: Make =compilation-mode= prettier
 
 # TODO 2025-11-21: Can I get away with removing this package by tweaking the built-in options?
 
@@ -3841,39 +3890,7 @@ Outli.el is a thin extension and wrapper around ~outline-minor-mode~ meant to pr
     (fancy-compilation-mode 1))
 #+end_src
 
-****** Editing remote files
-
-#+name: files
-#+begin_src emacs-lisp
-  (setup files
-    
-    (with-eval-after-load 'files
-      (setopt remote-file-name-inhibit-locks t ; Don't create lock files in remotes
-              ;; Disables aggressive caching that slows Dired/Magit;
-              ;; test and toggle if needed.
-              remote-file-name-inhibit-cache nil
-
-              remote-file-name-inhibit-auto-save-visited nil
-              remote-file-name-inhibit-auto-save nil
-              remote-file-name-inhibit-delete-by-moving-to-trash t
-              
-              ;; Set a timeout to prevent the failure to access files to
-              ;; indefinitely bloc Emacs
-              remote-file-name-access-timeout 10
-
-              enable-remote-dir-locals t)))
-#+end_src
-
-#+name: auto-revert-remote-files
-#+begin_src emacs-lisp
-  ;; FIXME 2025-12-29: Causing freezes when SSHing into my remote
-  ;; machine.  Look into if this is a Tramp or remote machine issue.
-  ;; ;; Revert remote files too?  See also
-  ;; ;; `remote-file-name-inhibit-auto-save-visited'
-  ;; (setopt auto-revert-remote-files t)
-#+end_src
-
-******* TRAMP: Pretend we're in a remote machine!
+*** TRAMP: Pretend we're in a remote machine!
 
 # TODO 2025-11-28: Also document auto-revert-remote-files and enable-remote-dir-locals. (They should
 # be set to nil if optimizing for performance, which is the default.)
@@ -3988,7 +4005,7 @@ I do not use this myself, but for users who don't need VC when using tramp on re
                     (group (regexp tramp-file-name-regexp))))))
 #+end_src
 
-******** Tramp-theme: Special theming in remote buffers
+*** Tramp-theme: Special theming in remote buffers
 
 #+name: tramp-theme
 #+begin_src emacs-lisp
@@ -4001,7 +4018,7 @@ I do not use this myself, but for users who don't need VC when using tramp on re
       (load-theme 'tramp)))
 #+end_src
 
-******* Tramp-hlo: "High-level operations" for tramp
+*** Tramp-hlo: "High-level operations" for tramp
 
 A problem with Tramp is that there are certain common tasks which inevitably require many round-trips. Tramp-HLO's solution is to specially do those expensive tasks on the server side, sending the final result to the local machine---these are "high-level operations. It does this by running bash scripts that accomplish the goal of these expensive elisp functions. There are two such functions it currently replaces:
 + ~locate-dominating-file~
@@ -4019,7 +4036,7 @@ The performance increase can be /drastic/.
       (tramp-hlo-setup)))
 #+end_src
 
-******* Tramp-RPC: Experiment with using remote RPC server instead of parsing shell command output
+*** Tramp-RPC: Experiment with using remote RPC server instead of parsing shell command output
 
 #+name: tramp-rpc
 #+begin_src emacs-lisp
@@ -4031,9 +4048,7 @@ The performance increase can be /drastic/.
       (setopt tramp-rpc-deploy-backend 'python)))
 #+end_src
 
-**** Emacs-lisp
-
-***** Elisp-mode: The emacs-lisp major-mode
+*** Elisp-mode: The emacs-lisp major-mode
 
 #+name: elisp-mode
 #+begin_src emacs-lisp
@@ -4053,9 +4068,7 @@ The performance increase can be /drastic/.
       (add-to-list 'trusted-content "~/emacs-repos/")))
 #+end_src
 
-***** Elisp introspection
-
-****** Help.el: Emacs's self-documentation
+*** Help.el: Emacs's self-documentation
 
 #+name: help.el
 #+begin_src emacs-lisp
@@ -4092,7 +4105,7 @@ Tell ~display-buffer-alist~ where to show help buffers:
                  (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)))
 #+end_src
 
-****** Apropos: Discover meaningful lisp symbols
+*** Apropos: Discover meaningful lisp symbols
 
 Apropos is a built-in library that queries the user for a regexp or word list to search existing symbols for. For example, ~apropos-user-option~ will search all user options (i.e., symbols defined by ~defcustom~). Evaluate ~M-x apropos-command ^apropos RET~ to see all the helpful commands apropos offers.
 #+name: apropos
@@ -4101,7 +4114,7 @@ Apropos is a built-in library that queries the user for a regexp or word list to
 #+end_src
 Additionally, all apropos commands will expand the subset of symbols they search when called with a universal argument. For example, ~apropos-user-option~ with a universal argument will search all variables, not just user options. (The option ~apropos-do-all~ determines whether =C-u= is required for this behavior.)
 
-****** Find-func: Go to elisp definitions
+*** Find-func: Go to elisp definitions
 
 #+name: find-func
 #+begin_src emacs-lisp
@@ -4134,7 +4147,7 @@ Additionally, all apropos commands will expand the subset of symbols they search
                   ("L" . krisb-find-library-other-tab))))
 #+end_src
 
-****** Xref for emacs-lisp
+*** Xref for emacs-lisp
 
 The only elisp-specific configuration I have for xref is this:
 #+name: xref-elisp
@@ -4155,7 +4168,7 @@ The only elisp-specific configuration I have for xref is this:
 #+end_src
 Consequently, the elisp backend is used if there is no other local backend to use. This means we can, e.g., jump to any elisp symbol definition in any buffer without another active backend function.
 
-****** Elisp-demos: Examples in documentation
+*** Elisp-demos: Examples in documentation
 
 #+name: elisp-demos
 #+begin_src emacs-lisp
@@ -4168,7 +4181,7 @@ Consequently, the elisp backend is used if there is no other local backend to us
       (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)))
 #+end_src
 
-****** Inspector: Provide a UI for showing prettified elisp objects
+*** Inspector: Provide a UI for showing prettified elisp objects
 
 #+name: inspector
 #+begin_src emacs-lisp
@@ -4206,8 +4219,7 @@ Consequently, the elisp backend is used if there is no other local backend to us
                  (post-command-select-window . t)))
 #+end_src
 
-****** Regexp-disasm: Disassemble regexps
-
+*** Regexp-disasm: Disassemble regexps
 #+name: regexp-disasm
 #+begin_src emacs-lisp
   ;; Learned about this project from Ihor's config
@@ -4215,9 +4227,7 @@ Consequently, the elisp backend is used if there is no other local backend to us
     (:package (regexp-disasm :url "https://github.com/mattiase/regexp-disasm.git")))
 #+end_src
 
-***** Package authorship
-
-***** Highlight-function-calls: Highlight function calls!
+*** Highlight-function-calls: Highlight function calls!
 
 # TODO 2025-11-22: Write commentary on this package's interaction with the new
 # elisp-fontify-semantically
@@ -4241,7 +4251,7 @@ Consequently, the elisp backend is used if there is no other local backend to us
     (:face highlight-function-calls-face ((t (:underline nil :inherit font-lock-function-call-face)))))
 #+end_src
 
-***** Paren-face: Special face for parentheses
+*** Paren-face: Special face for parentheses
 
 #+name: paren-face
 #+begin_src emacs-lisp
@@ -4256,27 +4266,7 @@ Consequently, the elisp backend is used if there is no other local backend to us
     (global-paren-face-mode 1))
 #+end_src
 
-**** Guile and Guix
-
-#+name: guile
-#+begin_src emacs-lisp
-  (setup guix
-    (:package guix)
-
-    (with-eval-after-load 'scheme
-      (add-hook 'scheme-mode-hook #'guix-devel-mode)
-      (add-hook 'scheme-mode-hook #'guix-prettify-mode)))
-
-  (setup geiser
-    (:package geiser))
-
-  (setup geiser-guile
-    (:package geiser-guile))
-#+end_src
-
-**** Networking
-
-***** Nftables-mode
+*** Nftables-mode
 
 #+name: nftables-mode
 #+begin_src emacs-lisp
@@ -4284,7 +4274,7 @@ Consequently, the elisp backend is used if there is no other local backend to us
     (:package nftables-mode))
 #+end_src
 
-***** Caddyfile-mode
+*** Caddyfile-mode
 
 #+name: caddyfile-mode
 #+begin_src emacs-lisp
@@ -4292,9 +4282,7 @@ Consequently, the elisp backend is used if there is no other local backend to us
     (:package caddyfile-mode))
 #+end_src
 
-**** Web development
-
-***** Yaml
+*** Yaml-mode
 
 #+name: yaml-mode
 #+begin_src emacs-lisp
@@ -4302,14 +4290,14 @@ Consequently, the elisp backend is used if there is no other local backend to us
     (:package yaml-mode))
 #+end_src
 
-***** Svelte-mode: Major mode for SvelteKit project files
+*** Svelte-mode: Major mode for SvelteKit project files
 
 #+name: svelte-mode
 #+begin_src emacs-lisp
   (defconfig (web-development :packages (svelte-mode)))
 #+end_src
 
-**** Sops: Major mode for editing SOPS files
+*** Sops: Major mode for editing SOPS files
 
 #+name: sops
 #+begin_src emacs-lisp
@@ -4332,9 +4320,7 @@ Consequently, the elisp backend is used if there is no other local backend to us
                 ("C-c e C-k" . sops-cancel)))
 #+end_src
 
-*** Prose writing
-
-**** Flymake-vale: Grammar checking
+*** Flymake-vale: Grammar checking
 
 #+name: flymake-vale
 #+begin_src emacs-lisp
@@ -4344,7 +4330,7 @@ Consequently, the elisp backend is used if there is no other local backend to us
     (add-hook 'text-mode-hook #'flymake-vale-load))
 #+end_src
 
-**** Org-mode: The de facto major mode for writing
+*** Org-mode: The de facto major mode for writing
 
 This section is for the major mode
 
@@ -4496,7 +4482,7 @@ This section is for the major mode
                 ("*" . "+")))))
 #+end_src
 
-***** Org-footnote
+**** Org-footnote
 
 #+name: org-footnote
 #+begin_src emacs-lisp
@@ -4508,76 +4494,20 @@ This section is for the major mode
             org-footnote-auto-adjust t))
 #+end_src
 
-***** Org-contrib: Collection of org extensions
+**** Org-src: Programming in org-mode
 
-#+name: org-contrib
+#+name: org-src
 #+begin_src emacs-lisp
-  ;; Collection of org packages
-  (setup org-contrib
-    (:package org-contrib))
+  ;; TODO 2025-05-23: Document:
+  ;; - `org-edit-src-turn-on-auto-save'
+  ;; - `org-edit-src-auto-save-idle-delay’
+  ;; - `org-src-block-faces’
+  (setup org-src
+    (:if-package org)
+
+    (setopt org-src-fontify-natively t
+            org-src-window-setup 'current-window))
 #+end_src
-
-**** Dictionary.el: Built-in dictionary
-
-#+name: dictionary
-#+begin_src emacs-lisp
-  ;; See definitions of words from an online dictionary.
-  ;; TODO 2025-05-23: Document these options:
-  ;; - `dictionary-create-buttons’
-  ;; - `dictionary-read-word-function’
-  ;; - `dictionary-search-interface’
-  ;; - `dictionary-server'
-  (setup dictionary
-    :ensure nil
-    ;; Don't forget to install the following packages from the AUR:
-    ;; paru -S dict-wn dict-gcide dict-moby-thesaurus dict-foldoc
-    ;; :ensure-system-package (dict . dictd) ; Localhost (offline). Don't forget to enable the systemd service
-
-    (with-eval-after-load 'dictionary
-      (setopt dictionary-use-single-buffer t
-              dictionary-read-dictionary-function 'dictionary-completing-read-dictionary)
-
-      (when (package-installed-p 'hide-mode-line)
-        (add-hook 'dictionary-mode-hook #'hide-mode-line-mode))))
-#+end_src
-
-**** Powerthesaurus: Preferred thesaurus
-
-#+name: powerthesaurus
-#+begin_src emacs-lisp
-  ;; Search for synonyms using an online thesaurus.
-  (setup powerthesaurus
-    (:package powerthesaurus)
-    
-    (with-eval-after-load 'embark
-      (bind-keys :map embark-region-map
-                 ("t" . powerthesaurus-lookup-synonyms-dwim)
-                 ("T" . powerthesaurus-lookup-dwim)
-                 :map embark-identifier-map
-                 ("t" . powerthesaurus-lookup-synonyms-dwim)
-                 ("T" . powerthesaurus-lookup-dwim))))
-#+end_src
-
-#+begin_src emacs-lisp :noweb-ref do-at-point-user-actions
-  (defun krisb-do-at-point-powerthesaurus (beg end)
-    "Prompt for a synonym of region between BEG and END and replace it."
-    ;; See the description of FUNC in the docstring of
-    ;; `do-at-point-actions' for why BEG and END are the bounds of the
-    ;; thing at point
-    (let* ((query-term (buffer-substring-no-properties beg end))
-           ;; See `powerthesaurus-supported-query-types' for the list
-           ;; of types
-           (query-type :synonyms))
-      (funcall 'powerthesaurus-lookup query-term query-type beg end)))
-  (add-to-list 'do-at-point-user-actions
-               '(word (?T "Thesaurus" krisb-do-at-point-powerthesaurus)))
-  (add-to-list 'do-at-point-user-actions
-               '(region (?T "Thesaurus" krisb-do-at-point-powerthesaurus)))
-#+end_src
-
-** Media management
-
-*** Zettelkasten
 
 **** Org-id
 
@@ -5022,9 +4952,665 @@ My org-roam-folgezettel uses a yet-upstreamed version of vtable.el:
   (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/emacs-vtable-ship-mints/lisp/emacs-lisp/vtable.el")
 #+end_src
 
-*** Bibliographic sources management
+**** Org-contrib: Collection of org extensions
 
-**** Bibtex: Built-in mode for =.bib= files
+#+name: org-contrib
+#+begin_src emacs-lisp
+  ;; Collection of org packages
+  (setup org-contrib
+    (:package org-contrib))
+#+end_src
+
+**** Log when certain properties are changed
+
+Log when the value of certain properties are changed:
+#+name: org-log-properties
+#+begin_src emacs-lisp
+  ;; Log changes to certain properties.
+  ;;
+  ;; The following describes how it works.  We add a function to
+  ;; `org-property-changed-functions' (`krisb-org-log-property-change')
+  ;; that calls `org-add-log-setup' to log a change to properties listed
+  ;; in `krisb-org-log-properties' when they are changed.  (This logging
+  ;; follows the value of of the `org-log-into-drawer' option.)  The
+  ;; PURPOSE argument of `org-add-log-setup' is 'property; a
+  ;; corresponding entry in `org-log-note-headings' is added.  This
+  ;; option controls the format of logged entries based on the PURPOSE
+  ;; argument passed to `org-add-log-setup'.
+  ;;
+  ;; `org-log-note-headings' offers several %-escape sequences.  My
+  ;; desired behavior is to (i) log the name of the property and (ii)
+  ;; the old value of the property, before it is changed.  We abuse the
+  ;; "%s" escape sequence (initially for original todo states) to insert
+  ;; the name of the property changed (by also passing the name of the
+  ;; property as the STATE argument in `org-add-log-setup').  The
+  ;; @-escape sequences offered cannot accommodate (ii) neatly.  To
+  ;; accomplish (ii), we advise `org-entry-put' to store the value of
+  ;; the property before it is changed in
+  ;; `krisb-org-log-property-before'.  Then, we pass this as the
+  ;; PREV-STATE in `krisb-org-log-property-change' so that it can be
+  ;; inserted via the "%S" escape sequence in `org-log-note-headings'.
+  ;; 
+  ;; See also
+  ;; https://www.reddit.com/r/emacs/comments/7gr9ps/add_logbook_entry_and_note_on_orgmode_property/.
+  (with-eval-after-load 'org
+    (defvar krisb-org-log-properties nil
+      "List of properties that are logged when their value is changed.
+  Users can set this variable globally, buffer locally, and directory
+  locally.")
+    (put 'krisb-org-log-properties 'safe-local-variable #'listp)
+
+    (defvar krisb-org-log-property-before nil
+      "Temporary storage of property value before its change.")
+
+    (defun krisb-org-log-property-set-before (epom property _value)
+      "Set the value of `krisb-org-log-property-before'.
+  Meant as advice before `org-entry-put'.  Set the value of
+  `krisb-org-log-property-before' to the value of the property set by
+  `org-entry-put' before it is changed."
+      (setq krisb-org-log-property-before (org-entry-get epom property)))
+    (advice-add 'org-entry-put :before #'krisb-org-log-property-set-before)
+
+    (defun krisb-org-log-property-change (prop _newval)
+      "Log when certain properties change value.
+  PROP is the name of the property being changed and _NEWVAL is the value
+  this property has been set to."
+      ;; NOTE: We allow inserting empty values of
+      ;; `krisb-org-log-property-before' (i.e., when PROP is set for the
+      ;; first time) because org's logging of todo state changes does
+      ;; the same.
+      (when (member prop krisb-org-log-properties)
+        (org-add-log-setup 'property prop krisb-org-log-property-before 'time)))
+    (add-hook 'org-property-changed-functions #'krisb-org-log-property-change)
+
+    ;; We abuse the "%s" key in `org-log-note-headings' to store the
+    ;; name of the property changed rather than the previous todo state,
+    ;; which is the intended use of "%s"
+    (add-to-list 'org-log-note-headings '(property . "Property %s changed from %S on %t")))
+
+  ;; Bespoke settings for my media tracking system
+  (with-eval-after-load 'org
+    (defun krisb-org-property-set-rating (&rest _args)
+      "Read a number for the RATING property.
+  Prompts for a number until the user chooses a number between 0 and 10,
+  inclusive.
+
+  ARGS are the same as `completing-read'."
+      (let* ((existing-rating (org-entry-get (point) "RATING"))
+             (default (when existing-rating (string-to-number existing-rating)))
+             (rating
+              (read-number "Input a rating between 0 and 10, inclusive: " default)))
+        (while (or (< rating 0) (> rating 10))
+          (sleep-for 0.5)
+          (setq rating (read-number "Rating not between 0 and 10, inclusive: " default)))
+        (number-to-string rating)))
+    (add-to-list 'org-property-set-functions-alist
+                 '("RATING" . krisb-org-property-set-rating))
+
+    (defun krisb-org-property-allowed-platform (prop)
+      "Return allowed list of values for the PLATFORM property.
+  PROP is the name of the property.  See
+  `org-property-allowed-value-functions'."
+      (when (string= prop "PLATFORM")
+        '("Netflix" "Hulu" "Disney+" "Tubi" ":ETC")))
+    (add-to-list 'org-property-allowed-value-functions #'krisb-org-property-allowed-platform))
+#+end_src
+
+**** Org-agenda
+
+#+name: org-agenda
+#+begin_src emacs-lisp
+  ;; TODO 2025-05-24: Document these options:
+  ;; - `org-agenda-start-on-weekday’
+  ;; - `org-enforce-todo-checkbox-dependencies’
+  ;; - `org-agenda-show-inherited-tags’
+  ;; - `org-use-tag-inheritance’
+  ;; TODO 2025-05-24: Also mention these options that are elevant to org-agenda:
+  ;; - `org-extend-today-until’
+  ;; - `org-use-effective-time’
+  ;; - `org-use-property-inheritance’
+  ;; TODO 2025-05-24: Explain that `org-todo-keywords’ does not work
+  ;; when set directory locally.  Some relevant mailing list
+  ;; discussions:
+  ;; - https://lists.gnu.org/archive/html/emacs-orgmode/2020-05/msg00426.html,
+  ;; - https://lists.gnu.org/archive/html/emacs-orgmode/2022-10/msg01174.html.
+  ;; We either must set it via file-local keywords or using #+SETUPFILE.
+  (setup org-agenda
+    (:if-package org)
+
+    (bind-keys :map krisb-open-keymap
+               ("a" . org-agenda))
+
+    (with-eval-after-load 'org-agenda
+      (add-hook 'org-agenda-mode-hook #'hl-line-mode))
+
+    (setopt org-agenda-inhibit-startup t
+            org-agenda-files (list krisb-org-agenda-directory))
+
+    (with-eval-after-load 'org-agenda
+      ;; Agenda buffer/window
+      (setopt org-agenda-window-setup 'only-window
+              org-agenda-restore-windows-after-quit t
+              org-agenda-sticky t)
+      
+      ;; Effort
+      (setopt org-agenda-sort-noeffort-is-high nil))
+
+    (with-eval-after-load 'org-agenda
+      <<org-agenda-display-buffer-alist>>))
+
+  (with-eval-after-load 'org-agenda
+    <<org-agenda-custom-commands>>)
+#+end_src
+
+#+name: org-agenda-display-buffer-alist
+#+begin_src emacs-lisp :noweb-ref display-buffer-alist
+  (add-to-list 'display-buffer-alist
+               '("\\*\\(?:Org Select\\|Agenda Commands\\)\\*"
+                 (display-buffer-in-side-window)
+                 (window-height . fit-window-to-buffer)
+                 (side . top)
+                 (slot . -2)
+                 (preserve-size . (nil . t))
+                 (window-parameters . ((mode-line-format . none)))
+                 (post-command-select-window . t)))
+#+end_src
+
+***** Org-agenda views: ~org-agenda-custom-commands~
+#+name: org-agenda-custom-commands
+#+begin_src emacs-lisp
+  ;; `org-agenda-skip-function' functions constructed by
+  ;; `krisb-org-agenda-skip-org-ql', which uses org-ql.  These
+  ;; functions, effectively, let me query org todos instead of with the
+  ;; typical syntax.
+  (defun krisb-org-agenda-skip-timely ()
+    "Filter tasks for timely agenda."
+    (krisb-org-agenda-skip-org-ql
+     '(and (not (done))
+           (or (scheduled :to today)
+               (deadline auto)))))
+
+  (defun krisb-org-agenda-skip-focus ()
+    "Filter tasks for focus agenda."
+    (krisb-org-agenda-skip-org-ql
+     '(and (not (done))
+           (not (tags-local "PROJECT"))
+           (tosee)
+           (not (tags "PUSHED"))
+           (not  (scheduled :to today))
+           (not (deadline auto))
+           (not (tags-local "REVIEW"))
+           (or (todo "DOING")
+               (priority "A")))))
+
+  (defun krisb-org-agenda-skip-pushed ()
+    "Filter tasks for push agenda."
+    (krisb-org-agenda-skip-org-ql
+     '(and (not (done))
+           (tosee)
+           (tags "PUSHED"))))
+
+  (defun krisb-org-agenda-skip-routine ()
+    "Filter tasks for routine agenda."
+    (krisb-org-agenda-skip-org-ql
+     '(and (not (done))
+           (not (tags-local "PROJECT" "INBOX"))
+           (tosee)
+           (or (and (or (habit)
+                        ;; FIXME 2025-12-03: Avoid hard-coding this path
+                        (path "recurring\\.org"))
+                    (or (scheduled :to today)
+                        (deadline :to auto)))))))
+
+  (defun krisb-org-agenda-skip-radar ()
+    "Filter tasks for radar agenda."
+    (krisb-org-agenda-skip-org-ql
+     '(and (not (done))
+           (not (tags-local "PROJECT" "INBOX"))
+           (tosee)
+           (not (tags-local "REVIEW"))
+           (not (tags "PUSHED"))
+           (or (and (todo "NEXT" "TODO")
+                    (not (or (scheduled)
+                             (deadline))))
+               (todo "HOLD" "MAYBE")))))
+
+  (defun krisb-org-agenda-skip-review ()
+    "Filter tasks for review agenda."
+    (krisb-org-agenda-skip-org-ql
+     '(and (not (done))
+           (or (toreview)
+               (tags-local "REVIEW")))))
+
+  (defun krisb-org-agenda-skip-inbox ()
+    "Filter tasks for inbox agenda."
+    (krisb-org-agenda-skip-org-ql
+     '(and (not (done))
+           (tosee)
+           (or (tags-local "INBOX")))))
+
+  (setopt org-agenda-custom-commands
+          '(("n" "Agenda and all TODOs"
+             ((agenda "")
+              (alltodo "")))
+            ("f" "Focus"
+             ((agenda ""
+                      ((org-agenda-overriding-header "Scheduled and deadlines")
+                       (org-agenda-skip-function 'krisb-org-agenda-skip-timely)
+                       (org-agenda-span 2)
+                       (org-agenda-show-future-repeats nil)))
+              (alltodo ""
+                       ((org-agenda-overriding-header "Focus")
+                        (org-agenda-skip-function 'krisb-org-agenda-skip-focus)))
+              (alltodo ""
+                       ((org-agenda-overriding-header "Waiting and Pings")
+                        (org-agenda-skip-function (lambda ()
+                                                    (krisb-org-agenda-skip-org-ql
+                                                     '(and (not (done))
+                                                           (tosee)
+                                                           (or (tags-local "PING")
+                                                               (tags-local "WAITING"))))))))
+              (alltodo ""
+                       ((org-agenda-overriding-header "Pushed to the front")
+                        (org-agenda-skip-function 'krisb-org-agenda-skip-pushed)))))
+            ("r" "Radar"
+             ((alltodo ""
+                       ((org-agenda-overriding-header "Radar")
+                        (org-agenda-skip-function 'krisb-org-agenda-skip-radar)))
+              (alltodo ""
+                       ((org-agenda-overriding-header "Routine")
+                        (org-agenda-skip-function 'krisb-org-agenda-skip-routine)))))
+            ("R" "Review"
+             ((alltodo ""
+                       ((org-agenda-overriding-header "Review")
+                        (org-agenda-skip-function 'krisb-org-agenda-skip-review)))
+              (alltodo ""
+                       ((org-agenda-overriding-header "Inbox")
+                        (org-agenda-skip-function 'krisb-org-agenda-skip-inbox)))))))
+#+end_src
+
+#+name: org-after-tags-change-hook
+#+begin_src emacs-lisp
+  ;; TODO 2025-12-02: Send a patch upstream sometime
+  (el-patch-defun org-set-tags (tags)
+    "Set the tags of the current entry to TAGS, replacing current tags.
+
+  TAGS may be a tags string like \":aa:bb:cc:\", or a list of tags.
+  If TAGS is nil or the empty string, all tags are removed.
+
+  This function assumes point is on a headline."
+    (org-with-wide-buffer
+     (org-fold-core-ignore-modifications
+       (let ((tags (pcase tags
+                     ((pred listp) tags)
+                     ((pred stringp) (split-string (org-trim tags) ":" t))
+                     (_ (error "Invalid tag specification: %S" tags))))
+             (old-tags (org-get-tags nil t))
+             (tags-change? nil))
+         (when org-tags-sort-function
+           (setq tags (sort tags #'org-tags-sort)))
+         (setq tags-change? (not (equal tags old-tags)))
+         (when tags-change?
+           ;; Delete previous tags and any trailing white space.
+           (goto-char (if (org-match-line org-tag-line-re) (match-beginning 1)
+                        (line-end-position)))
+           (skip-chars-backward " \t")
+           (delete-region (point) (line-end-position))
+           ;; Deleting white spaces may break an otherwise empty headline.
+           ;; Re-introduce one space in this case.
+           (unless (org-at-heading-p) (insert " "))
+           (when tags
+             (save-excursion (insert-and-inherit " " (org-make-tag-string tags)))
+             ;; When text is being inserted on an invisible region
+             ;; boundary, it can be inadvertently sucked into
+             ;; invisibility.
+             (unless (org-invisible-p (line-beginning-position))
+               (org-fold-region (point) (line-end-position) nil 'outline))))
+         ;; Align tags, if any.
+         (when (and tags org-auto-align-tags) (org-align-tags))
+         (when tags-change?
+           (el-patch-swap
+             (run-hooks 'org-after-tags-change-hook)
+             (run-hook-with-args 'org-after-tags-change-hook old-tags tags)))))))
+
+  (defun kribs-org-inbox-tag (before-tags after-tags)
+    "Prompt to remove the NEXT_VISIBLE property when adding or removing the INBOX tag.
+  BEFORE-TAGS are the tags before the headline\\='s tags were updated and
+  AFTER-TAGS are the tags after the headline was updated.
+
+  Meant to be added to `org-after-tags-change-hook'."
+    (let ((prop-name "NEXT_VISIBLE")
+          (inbox-tag-p (member "INBOX" (seq-union after-tags before-tags))))
+      (when (and inbox-tag-p
+                 (org-entry-get (point) prop-name)
+                 (y-or-n-p (format "Remove %s property?" prop-name)))
+        (org-entry-delete (point) prop-name)
+        (message "Removed the \"%s\" property from todo" prop-name))))
+  (add-hook 'org-after-tags-change-hook #'kribs-org-inbox-tag)
+#+end_src
+
+#+name: org-todo-state-tags-triggers
+#+begin_src emacs-lisp
+  (setopt org-todo-state-tags-triggers
+          '((todo)
+            ("DOING" ("WAITING" . nil) ("PUSHED" . nil))
+            ("NEXT" ("WAITING" . nil))
+            ("TODO" ("WAITING" . nil))
+            ("HOLD" ("PUSHED" . nil))
+            ("MAYBE" ("WAITING" . nil))
+            (done ("WAITING" . nil) ("PUSHED" . nil))
+            ("DONE")
+            ("CANCELED")))
+#+end_src
+
+**** Org-capture
+
+#+name: org-capture
+#+begin_src emacs-lisp
+  (setup org-capture
+    (:if-package org)
+    
+    (bind-keys ("C-c c" . org-capture))
+
+    (setopt org-capture-use-agenda-date t)
+
+    ;; Helpers for `org-capture-templates'
+    (defun krisb-org-capture--org-node-by-tags (tags)
+      "Interactively prompt for an org-node candidate matching TAGS.
+  TAGS is a list of regexps that match org-node tags.
+
+  This function will use `completing-read' whose candidates are the
+  org-node nodes that match all of TAGS.  It will return a candidate (see
+  `org-node--candidate<>entry')."
+      (require 'org-node)
+      (gethash (completing-read "Select node: "
+                                #'org-node-collection-basic
+                                (lambda (_title node)
+                                  (cl-every (lambda (re)
+                                              (cl-some (lambda (str)
+                                                         (string-match-p re str))
+                                                       (org-mem-tags node)))
+                                            tags))
+                                t nil 'org-node-hist)
+               org-node--candidate<>entry))
+
+    ;; See also `org-capture-templates-contexts'
+    (setopt org-capture-templates
+            `(("t" "Todo" entry
+               (file krisb-org-agenda-main-file)
+               "* TODO %? :INBOX:%^g\n"
+               :empty-lines 1)
+              ("T" "Todo (without processing)" entry
+               (file krisb-org-agenda-main-file)
+               "* TODO %? %^g\n"
+               :empty-lines 1
+               :prepare-finalize (lambda ()
+                                   (message "Insert NEXT_VISIBLE")
+                                   (krisb-org-review-insert-next-visible)
+                                   (message "Insert NEXT_REVIEW")
+                                   (org-review-insert-next-review)))
+              ("c" "Coding projects and contributions" entry
+               (file (lambda () (expand-file-name "coding_projects.org" krisb-org-agenda-directory)))
+               "* TODO %? %^g\n"
+               :empty-lines 1
+               :refile-targets
+               ((,(expand-file-name "coding_projects.org" krisb-org-agenda-directory)
+                 . (:level . 1)))
+               :prepare-finalize (lambda ()
+                                   (message "Insert NEXT_VISIBLE")
+                                   (krisb-org-review-insert-next-visible)
+                                   (message "Insert NEXT_REVIEW")
+                                   (org-review-insert-next-review)))
+              ("j" "Journal" entry
+               (file+olp+datetree
+                (lambda ()
+                  (let* ((node (krisb-org-capture--org-node-by-tags `(,(rx bol (or "__journal" "__top_of_mind") eol)))))
+                    (org-capture-put :krisb-node node)
+                    (org-mem-file node)))
+                (lambda ()
+                  (let ((node (org-capture-get :krisb-node)))
+                    ;; Should return nil if node is a file
+                    (when (org-mem-subtree-p node)
+                      (org-mem-olpath-with-self node)))))
+               "* %<%c>\n"
+               :tree-type (year quarter month)
+               :jump-to-captured t
+               :immediate-finish t
+               :empty-lines 1
+               :hook org-expiry-insert-created
+               :clock-in t
+               :clock-resume t)
+              ("w" "Just write" entry
+               (file+olp+datetree
+                (lambda ()
+                  (let* ((node (org-mem-entry-by-id "20241006T214800.000000")))
+                    (org-capture-put :krisb-node node)
+                    (org-mem-file node)))
+                (lambda ()
+                  (let ((node (org-capture-get :krisb-node)))
+                    ;; Should return nil if node is a file
+                    (when (org-mem-subtree-p node)
+                      (org-mem-olpath-with-self node)))))
+               "* %<%c>\n\n*P:* %(car (krisb-oblique-strategies--random))\n\n"
+               :tree-type (year quarter month)
+               :jump-to-captured t
+               :immediate-finish t
+               :empty-lines 1
+               :clock-in t
+               :clock-resume t)
+              ("l" "Log" item
+               (file+olp+datetree
+                (lambda ()
+                  (let* ((node (krisb-org-capture--org-node-by-tags '("^__log$"))))
+                    (org-capture-put :krisb-node node)
+                    (org-mem-file node)))
+                (lambda ()
+                  (let ((node (org-capture-get :krisb-node)))
+                    ;; Should return nil if node is a file
+                    (when (org-mem-subtree-p node)
+                      (org-mem-olpath-with-self node)))))
+               "%U %?"
+               :tree-type (quarter week)
+               :clock-in t
+               :clock-resume t)
+              ("m" "Work meeting notes" entry
+               (file+olp+datetree
+                (lambda ()
+                  (let* ((node (org-mem-entry-by-id "20241114T091749.707997")))
+                    (org-capture-put :krisb-node node)
+                    (org-mem-file node)))
+                (lambda ()
+                  (let ((node (org-capture-get :krisb-node)))
+                    ;; Should return nil if node is a file
+                    (when (org-mem-subtree-p node)
+                      (org-mem-olpath-with-self node)))))
+               "* (%<%c>)%?\n\n"
+               :tree-type (year quarter month)
+               :jump-to-captured t
+               :immediate-finish t)
+              ("r" "New reference" entry
+               (file+olp+datetree
+                (lambda ()
+                  (let* ((node (krisb-org-capture--org-node-by-tags '("^__references$"))))
+                    (org-capture-put :krisb-node node)
+                    (org-mem-file node)))
+                (lambda ()
+                  (let ((node (org-capture-get :krisb-node)))
+                    ;; Should return nil if node is a file
+                    (when (org-mem-subtree-p node)
+                      (org-mem-olpath-with-self node)))))
+               "* %?\n"
+               :tree-type (year month)
+               :jump-to-captured t
+               :immediate-finish t
+               :empty-lines 1
+               :hook (org-id-get-create org-expiry-insert-created)
+               :before-finalize (org-node-add-refs
+                                 (lambda () (org-set-property "ROAM_BOX" "references"))))
+              ("b" "Blog post" plain
+               (function (lambda ()
+                           (let ((org-node-ask-directory krisb-blog-directory))
+                             (org-node-capture-target))))
+               "#+filetags: :__blog_draft:
+  ,#+hugo_bundle:
+  ,#+export_file_name: index
+  ,#+hugo_tags:
+  ,#+hugo_categories:
+  ,#+hugo_publishdate:
+  ,#+hugo_lastmod:
+  ,#+hugo_custom_front_matter: :TableOfContents true
+  ,#+hugo_draft: true
+  ,#+hugo_paired_shortcodes:\n\n%?"
+               :jump-to-captured t
+               :immediate-finish t)
+              ("g" "LoL match review" entry
+               (file+olp+datetree
+                (lambda ()
+                  (let* ((candidate-ids
+                          (list "20250809T050805.074803"   ; Mid
+                                "20250809T050803.643974")) ; ADC
+                         (node
+                          (gethash
+                           (completing-read "Select node: "
+                                            #'org-node-collection-basic
+                                            (lambda (_title node)
+                                              (member (org-mem-id node) candidate-ids))
+                                            t nil 'org-node-hist)
+                           org-node--candidate<>entry)))
+                    (org-capture-put :krisb-node node)
+                    (org-mem-file node)))
+                (lambda ()
+                  (let ((node (org-capture-get :krisb-node)))
+                    ;; Should return nil if node is a file
+                    (when (org-mem-subtree-p node)
+                      (org-mem-olpath-with-self node)))))
+               "* %?
+  ,** Successes
+  ,** Mistakes"
+               :tree-type (month day)
+               :empty-lines 1))))
+#+end_src
+
+I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/html/emacs-orgmode/2025-05/msg00212.html][Re: [PATCH] Accept nil outline path for file+olp+datetree org-capture-te]]. I use my bespoke version instead, for now.
+#+begin_src emacs-lisp :noweb-ref link-monkeypatches :noweb-sep "\n\n"
+  ;; Load my bespoke version before org's version of org-capture
+  (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/org-mode/lisp/org-capture.el")
+#+end_src
+
+**** Org-refile
+
+#+name: org-refile
+#+begin_src emacs-lisp
+  ;; TODO 2025-06-25: Document:
+  ;; - `org-refile-use-cache'
+  (setup org-refile
+    (:if-package org)
+    
+    (setopt org-refile-targets
+            '((org-agenda-files . (:maxlevel . 3))
+              (org-agenda-files . (:tag . "PROJECT"))
+              (nil . (:maxlevel . 4)))
+            org-outline-path-complete-in-steps nil
+            org-refile-use-outline-path 'title
+            ;; TODO 2024-10-07: Think about whether I actually want this.  What
+            ;; if I want to refile to a non-todo heading in the current file?
+            ;; (org-refile-target-verify-function ; Only let not done todos be refile targets
+            ;;  (lambda () (if (org-entry-is-todo-p) (not (org-entry-is-done-p)))))
+            org-refile-target-verify-function nil
+            org-refile-allow-creating-parent-nodes 'confirm))
+
+  (setup org-refile
+    (when (eq krisb-completion-paradigm 'vertico)
+      (with-eval-after-load 'vertico
+        ;; Workaround for vertico issue with `org-refile'.  See
+        ;; https://github.com/minad/vertico#org-refile
+        (setopt org-refile-use-outline-path 'file
+                org-outline-path-complete-in-steps t)
+        (defun krisb-vertico-enforce-basic-completion (&rest args)
+          (minibuffer-with-setup-hook
+              (:append
+               (lambda ()
+                 (let ((map (make-sparse-keymap)))
+                   (define-key map [tab] #'minibuffer-complete)
+                   (use-local-map (make-composed-keymap (list map) (current-local-map))))
+                 (setq-local completion-styles (cons 'basic completion-styles)
+                             vertico-preselect 'prompt)))
+            (apply args)))
+        (advice-add #'org-olpath-completing-read :around #'krisb-vertico-enforce-basic-completion))))
+#+end_src
+
+**** Org-clock
+
+#+name: org-clock
+#+begin_src emacs-lisp
+  ;; TODO 2025-05-24: Document:
+  ;; - `org-clock-out-when-done’
+  (setup org-clock
+    (:if-package org)
+    
+    (setopt org-clock-in-resume t
+            org-clock-out-remove-zero-time-clocks t))
+#+end_src
+
+*** Dictionary.el: Built-in dictionary
+
+#+name: dictionary
+#+begin_src emacs-lisp
+  ;; See definitions of words from an online dictionary.
+  ;; TODO 2025-05-23: Document these options:
+  ;; - `dictionary-create-buttons’
+  ;; - `dictionary-read-word-function’
+  ;; - `dictionary-search-interface’
+  ;; - `dictionary-server'
+  (setup dictionary
+    :ensure nil
+    ;; Don't forget to install the following packages from the AUR:
+    ;; paru -S dict-wn dict-gcide dict-moby-thesaurus dict-foldoc
+    ;; :ensure-system-package (dict . dictd) ; Localhost (offline). Don't forget to enable the systemd service
+
+    (with-eval-after-load 'dictionary
+      (setopt dictionary-use-single-buffer t
+              dictionary-read-dictionary-function 'dictionary-completing-read-dictionary)
+
+      (when (package-installed-p 'hide-mode-line)
+        (add-hook 'dictionary-mode-hook #'hide-mode-line-mode))))
+#+end_src
+
+*** Powerthesaurus: Preferred thesaurus
+
+#+name: powerthesaurus
+#+begin_src emacs-lisp
+  ;; Search for synonyms using an online thesaurus.
+  (setup powerthesaurus
+    (:package powerthesaurus)
+    
+    (with-eval-after-load 'embark
+      (bind-keys :map embark-region-map
+                 ("t" . powerthesaurus-lookup-synonyms-dwim)
+                 ("T" . powerthesaurus-lookup-dwim)
+                 :map embark-identifier-map
+                 ("t" . powerthesaurus-lookup-synonyms-dwim)
+                 ("T" . powerthesaurus-lookup-dwim))))
+#+end_src
+
+#+begin_src emacs-lisp :noweb-ref do-at-point-user-actions
+  (defun krisb-do-at-point-powerthesaurus (beg end)
+    "Prompt for a synonym of region between BEG and END and replace it."
+    ;; See the description of FUNC in the docstring of
+    ;; `do-at-point-actions' for why BEG and END are the bounds of the
+    ;; thing at point
+    (let* ((query-term (buffer-substring-no-properties beg end))
+           ;; See `powerthesaurus-supported-query-types' for the list
+           ;; of types
+           (query-type :synonyms))
+      (funcall 'powerthesaurus-lookup query-term query-type beg end)))
+  (add-to-list 'do-at-point-user-actions
+               '(word (?T "Thesaurus" krisb-do-at-point-powerthesaurus)))
+  (add-to-list 'do-at-point-user-actions
+               '(region (?T "Thesaurus" krisb-do-at-point-powerthesaurus)))
+#+end_src
+
+*** Bibtex: Built-in mode for =.bib= files
 
 Bibtex.el is the built-in library for parsing =.bib= files---these are BibTex files and biblatex files.[fn:3] It provides its own major mode and various helpful commands and helper functions. (See also [[#h:20251119T003610.792256][Persid: Compact library for creating bibtex entries from bibliographic information]].)
 
@@ -5166,7 +5752,7 @@ Bibtex.el is the built-in library for parsing =.bib= files---these are BibTex fi
 
 [fn:3] Both Bibtex and biblatex use the =.bib= extension; to tell bibtex.el which dialect to use for a given file, use ~bibtex-set-dialect~. You can also customize ~bibtex-dialect~ to change the global/default dialect.
 
-***** Standardizing attachment file locations
+**** WIP: Standardizing attachment file locations
 
 Below are bespoke commands for standardizing the location of file attachments for a bibtex entry, specifically for the =.bib= files /generated by Zotero/[fn:4]. These commands work on the generated =.bib= file to move your attachments, normalizing the format of their names and creating a certain file hierarchy based on the bibtex entry's cite key and bibliographic information.
 
@@ -5599,7 +6185,7 @@ When ~krisb-bibtex-standardize~ is called, it will move all the attachments of t
 
 [fn:4] Ultimately, I wish to move entirely away from Zotero. This is one step towards that end.
 
-**** Persid: Compact library for creating bibtex entries from bibliographic information
+*** Persid: Compact library for creating bibtex entries from bibliographic information
 :PROPERTIES:
 :CUSTOM_ID: h:20251119T003610.792256
 :END:
@@ -5623,7 +6209,7 @@ Persid knows how to retrieve information from the following formats:
       (setopt persid-isbn-generate-citekey 'user)))
 #+end_src
 
-**** Citar: Manage bibliographic data
+*** Citar: Manage bibliographic data
 
 #+name: citar
 #+begin_src emacs-lisp
@@ -5710,7 +6296,7 @@ Persid knows how to retrieve information from the following formats:
                   ([remap org-cite-insert] . citar-insert-citation))))
 #+end_src
 
-**** Citar-org-node: Citar integration with org-node
+*** Citar-org-node: Citar integration with org-node
 
 #+name: citar-org-node
 #+begin_src emacs-lisp
@@ -5728,13 +6314,7 @@ Persid knows how to retrieve information from the following formats:
     (:hide-mode citar-org-node-mode))
 #+end_src
 
-*** Email
-
-Using Emacs for emails involves various packages that fulfill certain roles. For a brief overview of the parts that compose receiving, reading, composing, and sending email, see =(smtpmail) How Mail Works=.
-
-**** Email composition
-
-***** Message.el: Emacs's message composition major mode
+*** Message.el: Emacs's message composition major mode
 
 #+name: message
 #+begin_src emacs-lisp
@@ -5857,7 +6437,7 @@ Using Emacs for emails involves various packages that fulfill certain roles. For
       (add-hook 'message-send-hook #'krisb-message-check-from)))
 #+end_src
 
-***** Footnote.el
+*** Footnote.el
 
 #+name: footnote.el
 #+begin_src emacs-lisp
@@ -5877,9 +6457,7 @@ Using Emacs for emails involves various packages that fulfill certain roles. For
               footnote-prompt-before-deletion nil)))
 #+end_src
 
-**** Sending emails
-
-***** Sendmail: Sending mail from Emacs
+*** Sendmail: Sending mail from Emacs
 
 #+name: sendmail
 #+begin_src emacs-lisp
@@ -5898,7 +6476,7 @@ Using Emacs for emails involves various packages that fulfill certain roles. For
             mail-envelope-from 'header))
 #+end_src
 
-***** Smtpmail: Using the SMTP protocol for sending mail
+*** Smtpmail: Using the SMTP protocol for sending mail
 :PROPERTIES:
 :CUSTOM_ID: h:20251117T171828.614236
 :END:
@@ -5932,63 +6510,8 @@ The most common method to send emails is using the =msmtp= program, which smtpma
 #+end_src
 
 [fn:5] See [[#h:20251117T172940.524114][my Lieer-specific configuration to send emails]].
- 
-***** Lieer-specific configuration to send emails with notmuch
-:PROPERTIES:
-:CUSTOM_ID: h:20251117T172940.524114
-:END:
 
-I use [[https://github.com/gauteh/lieer][Lieer]] (the =gmi= executable) to send and receive emails. This is because I am tied to using a GMail account, and I would greatly prefer two-way synchronization between my local machine and the GMail remote machine. Lieer achieve this.
-
-Lieer, in addition to syncing emails, is also capable of sending them. Although it is possible to use another program to send emails via GMail (such as the =msmtp= program; see [[#h:20251117T171828.614236][my configuration for smtpmail.el]]), =gmi= is convenient since it already requires credentials to my Google account to sync emails---might as well use the same program and credentials to send emails.
-
-Below are settings sufficient to get Emacs---with the sendmail library, in particular---to use =gmi= to send emails. They are mostly taken (and modified) from [[https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer][the Lieer wiki]]:
-#+name: notmuch-sending
-#+begin_src emacs-lisp
-  ;; Use Lieer to send emails.  Also see
-  ;; `krisb-notmuch-set-sendmail-args'.  Read
-  ;; https://github.com/gauteh/lieer/wiki/Emacs-and-Lieer.
-  (with-eval-after-load 'sendmail
-    (setopt sendmail-program (or (executable-find "gmi") "sendmail")
-            send-mail-function 'sendmail-send-it))
-
-  ;; GMail already copies sent emails, so don't move them elsewhere
-  ;; locally after sending; see (emacs) Mail Headers for an explanation
-  ;; of the FCC header.  (Using gmi to send emails also automatically
-  ;; does this for us locally.)
-  (with-eval-after-load 'notmuch
-    (setopt notmuch-fcc-dirs nil))
-
-  ;; Set sendmail args appropriate to using lieer as `sendmail-program'
-  (defun krisb-notmuch-set-sendmail-args ()
-    "Modify `message-sendmail-extra-arguments' to send emails via gmi.
-  Set `message-sendmail-extra-arguments' such that, when
-  `sendmail-program' is the path to a gmi executable, the arguments passed
-  to `sendmail-program' are modified buffer-locally.  They are modified
-  such that gmi sends the email and stores the sent email in the
-  appropriate mail directory."
-    (when (and (stringp sendmail-program) (string-match-p "gmi" sendmail-program))
-      (let* ((from (downcase (message-fetch-field "from")))
-             (root-maildir krisb-email-directory)
-             ;; These maildirs are according to the structure in my
-             ;; local filesystem
-             (personal-maildir (expand-file-name "personal" root-maildir))
-             (uni-maildir (expand-file-name "uni" root-maildir)))
-        ;; See `message-send-mail-with-sendmail' for the relation
-        ;; between `sendmail-program' and
-        ;; `message-sendmail-extra-arguments'
-        (setq-local message-sendmail-extra-arguments
-                    (list "send" "--quiet" "-t" "-C"
-                          (cond
-                           ((string-match-p "krisbalintona@gmail\\.com" from)
-                            personal-maildir)
-                           ((string-match-p "kristoffer_balintona@alumni\\.brown\\.edu" from)
-                            uni-maildir)))))))
-  (with-eval-after-load 'message
-    (add-hook 'message-send-mail-hook #'krisb-notmuch-set-sendmail-args))
-#+end_src
-
-**** Notmuch: Not much of an email client...
+*** Notmuch: Not much of an email client...
 
 #+name: notmuch
 #+begin_src emacs-lisp
@@ -6367,7 +6890,7 @@ I have several patches awaiting review or application. They are:
   (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/notmuch/emacs/notmuch-tree.el")
 #+end_src
 
-***** Notmuch-addr: Better ~notmuch-message-mode~ email address completion
+*** Notmuch-addr: Better ~notmuch-message-mode~ email address completion
 
 #+name: notmuch-addr
 #+begin_src emacs-lisp
@@ -6382,7 +6905,7 @@ I have several patches awaiting review or application. They are:
       (notmuch-addr-setup)))
 #+end_src
 
-***** Ol-notmuch: Glue between notmuch and org links
+*** Ol-notmuch: Glue between notmuch and org links
 
 #+name: ol-notmuch
 #+begin_src emacs-lisp
@@ -6468,7 +6991,7 @@ I have several patches awaiting review or application. They are:
               org-store-link-plist)))))))
 #+end_src
 
-***** Notmuch-bookmarks: Glue between notmuch and bookmarks
+*** Notmuch-bookmarks: Glue between notmuch and bookmarks
 
 #+name: notmuch-bookmarks
 #+begin_src emacs-lisp
@@ -6479,7 +7002,7 @@ I have several patches awaiting review or application. They are:
       (notmuch-bookmarks-mode)))
 #+end_src
 
-**** Org-mime: HTML multiparts for emails
+*** Org-mime: HTML multiparts for emails
 
 #+name: org-mime
 #+begin_src emacs-lisp
@@ -6545,102 +7068,7 @@ I have several patches awaiting review or application. They are:
                  (display-buffer-same-window)))
 #+end_src
 
-*** Films, shows, and comics
-
-Log when the value of certain properties are changed:
-#+name: org-log-properties
-#+begin_src emacs-lisp
-  ;; Log changes to certain properties.
-  ;;
-  ;; The following describes how it works.  We add a function to
-  ;; `org-property-changed-functions' (`krisb-org-log-property-change')
-  ;; that calls `org-add-log-setup' to log a change to properties listed
-  ;; in `krisb-org-log-properties' when they are changed.  (This logging
-  ;; follows the value of of the `org-log-into-drawer' option.)  The
-  ;; PURPOSE argument of `org-add-log-setup' is 'property; a
-  ;; corresponding entry in `org-log-note-headings' is added.  This
-  ;; option controls the format of logged entries based on the PURPOSE
-  ;; argument passed to `org-add-log-setup'.
-  ;;
-  ;; `org-log-note-headings' offers several %-escape sequences.  My
-  ;; desired behavior is to (i) log the name of the property and (ii)
-  ;; the old value of the property, before it is changed.  We abuse the
-  ;; "%s" escape sequence (initially for original todo states) to insert
-  ;; the name of the property changed (by also passing the name of the
-  ;; property as the STATE argument in `org-add-log-setup').  The
-  ;; @-escape sequences offered cannot accommodate (ii) neatly.  To
-  ;; accomplish (ii), we advise `org-entry-put' to store the value of
-  ;; the property before it is changed in
-  ;; `krisb-org-log-property-before'.  Then, we pass this as the
-  ;; PREV-STATE in `krisb-org-log-property-change' so that it can be
-  ;; inserted via the "%S" escape sequence in `org-log-note-headings'.
-  ;; 
-  ;; See also
-  ;; https://www.reddit.com/r/emacs/comments/7gr9ps/add_logbook_entry_and_note_on_orgmode_property/.
-  (with-eval-after-load 'org
-    (defvar krisb-org-log-properties nil
-      "List of properties that are logged when their value is changed.
-  Users can set this variable globally, buffer locally, and directory
-  locally.")
-    (put 'krisb-org-log-properties 'safe-local-variable #'listp)
-
-    (defvar krisb-org-log-property-before nil
-      "Temporary storage of property value before its change.")
-
-    (defun krisb-org-log-property-set-before (epom property _value)
-      "Set the value of `krisb-org-log-property-before'.
-  Meant as advice before `org-entry-put'.  Set the value of
-  `krisb-org-log-property-before' to the value of the property set by
-  `org-entry-put' before it is changed."
-      (setq krisb-org-log-property-before (org-entry-get epom property)))
-    (advice-add 'org-entry-put :before #'krisb-org-log-property-set-before)
-
-    (defun krisb-org-log-property-change (prop _newval)
-      "Log when certain properties change value.
-  PROP is the name of the property being changed and _NEWVAL is the value
-  this property has been set to."
-      ;; NOTE: We allow inserting empty values of
-      ;; `krisb-org-log-property-before' (i.e., when PROP is set for the
-      ;; first time) because org's logging of todo state changes does
-      ;; the same.
-      (when (member prop krisb-org-log-properties)
-        (org-add-log-setup 'property prop krisb-org-log-property-before 'time)))
-    (add-hook 'org-property-changed-functions #'krisb-org-log-property-change)
-
-    ;; We abuse the "%s" key in `org-log-note-headings' to store the
-    ;; name of the property changed rather than the previous todo state,
-    ;; which is the intended use of "%s"
-    (add-to-list 'org-log-note-headings '(property . "Property %s changed from %S on %t")))
-
-  ;; Bespoke settings for my media tracking system
-  (with-eval-after-load 'org
-    (defun krisb-org-property-set-rating (&rest _args)
-      "Read a number for the RATING property.
-  Prompts for a number until the user chooses a number between 0 and 10,
-  inclusive.
-
-  ARGS are the same as `completing-read'."
-      (let* ((existing-rating (org-entry-get (point) "RATING"))
-             (default (when existing-rating (string-to-number existing-rating)))
-             (rating
-              (read-number "Input a rating between 0 and 10, inclusive: " default)))
-        (while (or (< rating 0) (> rating 10))
-          (sleep-for 0.5)
-          (setq rating (read-number "Rating not between 0 and 10, inclusive: " default)))
-        (number-to-string rating)))
-    (add-to-list 'org-property-set-functions-alist
-                 '("RATING" . krisb-org-property-set-rating))
-
-    (defun krisb-org-property-allowed-platform (prop)
-      "Return allowed list of values for the PLATFORM property.
-  PROP is the name of the property.  See
-  `org-property-allowed-value-functions'."
-      (when (string= prop "PLATFORM")
-        '("Netflix" "Hulu" "Disney+" "Tubi" ":ETC")))
-    (add-to-list 'org-property-allowed-value-functions #'krisb-org-property-allowed-platform))
-#+end_src
-
-**** Orgmd: Retrieve and populate IMDB information
+*** Orgmd: Retrieve and populate IMDB information
 
 #+name: orgmdb
 #+begin_src emacs-lisp
@@ -6661,9 +7089,7 @@ Log when the value of certain properties are changed:
                  tomatometer metascore metacritic imdb-rating))))
 #+end_src
 
-*** Articles
-
-**** Wombag: My preferred Wallabag client
+*** Wombag: My preferred Wallabag client
 
 #+name: wombag
 #+begin_src emacs-lisp
@@ -6705,69 +7131,7 @@ Log when the value of certain properties are changed:
         (add-hook 'wombag-show-mode-hook #'org-remark-mode))))
 #+end_src
 
-** Task direction
-
-*** Org-agenda
-
-#+name: org-agenda
-#+begin_src emacs-lisp
-  ;; TODO 2025-05-24: Document these options:
-  ;; - `org-agenda-start-on-weekday’
-  ;; - `org-enforce-todo-checkbox-dependencies’
-  ;; - `org-agenda-show-inherited-tags’
-  ;; - `org-use-tag-inheritance’
-  ;; TODO 2025-05-24: Also mention these options that are elevant to org-agenda:
-  ;; - `org-extend-today-until’
-  ;; - `org-use-effective-time’
-  ;; - `org-use-property-inheritance’
-  ;; TODO 2025-05-24: Explain that `org-todo-keywords’ does not work
-  ;; when set directory locally.  Some relevant mailing list
-  ;; discussions:
-  ;; - https://lists.gnu.org/archive/html/emacs-orgmode/2020-05/msg00426.html,
-  ;; - https://lists.gnu.org/archive/html/emacs-orgmode/2022-10/msg01174.html.
-  ;; We either must set it via file-local keywords or using #+SETUPFILE.
-  (setup org-agenda
-    (:if-package org)
-
-    (bind-keys :map krisb-open-keymap
-               ("a" . org-agenda))
-
-    (with-eval-after-load 'org-agenda
-      (add-hook 'org-agenda-mode-hook #'hl-line-mode))
-
-    (setopt org-agenda-inhibit-startup t
-            org-agenda-files (list krisb-org-agenda-directory))
-
-    (with-eval-after-load 'org-agenda
-      ;; Agenda buffer/window
-      (setopt org-agenda-window-setup 'only-window
-              org-agenda-restore-windows-after-quit t
-              org-agenda-sticky t)
-      
-      ;; Effort
-      (setopt org-agenda-sort-noeffort-is-high nil))
-
-    (with-eval-after-load 'org-agenda
-      <<org-agenda-display-buffer-alist>>))
-
-  (with-eval-after-load 'org-agenda
-    <<org-agenda-custom-commands>>)
-#+end_src
-
-#+name: org-agenda-display-buffer-alist
-#+begin_src emacs-lisp :noweb-ref display-buffer-alist
-  (add-to-list 'display-buffer-alist
-               '("\\*\\(?:Org Select\\|Agenda Commands\\)\\*"
-                 (display-buffer-in-side-window)
-                 (window-height . fit-window-to-buffer)
-                 (side . top)
-                 (slot . -2)
-                 (preserve-size . (nil . t))
-                 (window-parameters . ((mode-line-format . none)))
-                 (post-command-select-window . t)))
-#+end_src
-
-**** Org-ql: Query language for org-mode
+*** Org-ql: Query language for org-mode
 
 #+name: org-ql
 #+begin_src emacs-lisp
@@ -6842,443 +7206,6 @@ Log when the value of certain properties are changed:
              (next (and prop-val (org-read-date nil t prop-val))))
         (or (not next)
             (time-less-p next (current-time))))))
-#+end_src
-
-**** Org-agenda views: ~org-agenda-custom-commands~
-
-#+name: org-agenda-custom-commands
-#+begin_src emacs-lisp
-  ;; `org-agenda-skip-function' functions constructed by
-  ;; `krisb-org-agenda-skip-org-ql', which uses org-ql.  These
-  ;; functions, effectively, let me query org todos instead of with the
-  ;; typical syntax.
-  (defun krisb-org-agenda-skip-timely ()
-    "Filter tasks for timely agenda."
-    (krisb-org-agenda-skip-org-ql
-     '(and (not (done))
-           (or (scheduled :to today)
-               (deadline auto)))))
-
-  (defun krisb-org-agenda-skip-focus ()
-    "Filter tasks for focus agenda."
-    (krisb-org-agenda-skip-org-ql
-     '(and (not (done))
-           (not (tags-local "PROJECT"))
-           (tosee)
-           (not (tags "PUSHED"))
-           (not  (scheduled :to today))
-           (not (deadline auto))
-           (not (tags-local "REVIEW"))
-           (or (todo "DOING")
-               (priority "A")))))
-
-  (defun krisb-org-agenda-skip-pushed ()
-    "Filter tasks for push agenda."
-    (krisb-org-agenda-skip-org-ql
-     '(and (not (done))
-           (tosee)
-           (tags "PUSHED"))))
-
-  (defun krisb-org-agenda-skip-routine ()
-    "Filter tasks for routine agenda."
-    (krisb-org-agenda-skip-org-ql
-     '(and (not (done))
-           (not (tags-local "PROJECT" "INBOX"))
-           (tosee)
-           (or (and (or (habit)
-                        ;; FIXME 2025-12-03: Avoid hard-coding this path
-                        (path "recurring\\.org"))
-                    (or (scheduled :to today)
-                        (deadline :to auto)))))))
-
-  (defun krisb-org-agenda-skip-radar ()
-    "Filter tasks for radar agenda."
-    (krisb-org-agenda-skip-org-ql
-     '(and (not (done))
-           (not (tags-local "PROJECT" "INBOX"))
-           (tosee)
-           (not (tags-local "REVIEW"))
-           (not (tags "PUSHED"))
-           (or (and (todo "NEXT" "TODO")
-                    (not (or (scheduled)
-                             (deadline))))
-               (todo "HOLD" "MAYBE")))))
-
-  (defun krisb-org-agenda-skip-review ()
-    "Filter tasks for review agenda."
-    (krisb-org-agenda-skip-org-ql
-     '(and (not (done))
-           (or (toreview)
-               (tags-local "REVIEW")))))
-
-  (defun krisb-org-agenda-skip-inbox ()
-    "Filter tasks for inbox agenda."
-    (krisb-org-agenda-skip-org-ql
-     '(and (not (done))
-           (tosee)
-           (or (tags-local "INBOX")))))
-
-  (setopt org-agenda-custom-commands
-          '(("n" "Agenda and all TODOs"
-             ((agenda "")
-              (alltodo "")))
-            ("f" "Focus"
-             ((agenda ""
-                      ((org-agenda-overriding-header "Scheduled and deadlines")
-                       (org-agenda-skip-function 'krisb-org-agenda-skip-timely)
-                       (org-agenda-span 2)
-                       (org-agenda-show-future-repeats nil)))
-              (alltodo ""
-                       ((org-agenda-overriding-header "Focus")
-                        (org-agenda-skip-function 'krisb-org-agenda-skip-focus)))
-              (alltodo ""
-                       ((org-agenda-overriding-header "Waiting and Pings")
-                        (org-agenda-skip-function (lambda ()
-                                                    (krisb-org-agenda-skip-org-ql
-                                                     '(and (not (done))
-                                                           (tosee)
-                                                           (or (tags-local "PING")
-                                                               (tags-local "WAITING"))))))))
-              (alltodo ""
-                       ((org-agenda-overriding-header "Pushed to the front")
-                        (org-agenda-skip-function 'krisb-org-agenda-skip-pushed)))))
-            ("r" "Radar"
-             ((alltodo ""
-                       ((org-agenda-overriding-header "Radar")
-                        (org-agenda-skip-function 'krisb-org-agenda-skip-radar)))
-              (alltodo ""
-                       ((org-agenda-overriding-header "Routine")
-                        (org-agenda-skip-function 'krisb-org-agenda-skip-routine)))))
-            ("R" "Review"
-             ((alltodo ""
-                       ((org-agenda-overriding-header "Review")
-                        (org-agenda-skip-function 'krisb-org-agenda-skip-review)))
-              (alltodo ""
-                       ((org-agenda-overriding-header "Inbox")
-                        (org-agenda-skip-function 'krisb-org-agenda-skip-inbox)))))))
-#+end_src
-
-#+name: org-after-tags-change-hook
-#+begin_src emacs-lisp
-  ;; TODO 2025-12-02: Send a patch upstream sometime
-  (el-patch-defun org-set-tags (tags)
-    "Set the tags of the current entry to TAGS, replacing current tags.
-
-  TAGS may be a tags string like \":aa:bb:cc:\", or a list of tags.
-  If TAGS is nil or the empty string, all tags are removed.
-
-  This function assumes point is on a headline."
-    (org-with-wide-buffer
-     (org-fold-core-ignore-modifications
-       (let ((tags (pcase tags
-                     ((pred listp) tags)
-                     ((pred stringp) (split-string (org-trim tags) ":" t))
-                     (_ (error "Invalid tag specification: %S" tags))))
-             (old-tags (org-get-tags nil t))
-             (tags-change? nil))
-         (when org-tags-sort-function
-           (setq tags (sort tags #'org-tags-sort)))
-         (setq tags-change? (not (equal tags old-tags)))
-         (when tags-change?
-           ;; Delete previous tags and any trailing white space.
-           (goto-char (if (org-match-line org-tag-line-re) (match-beginning 1)
-                        (line-end-position)))
-           (skip-chars-backward " \t")
-           (delete-region (point) (line-end-position))
-           ;; Deleting white spaces may break an otherwise empty headline.
-           ;; Re-introduce one space in this case.
-           (unless (org-at-heading-p) (insert " "))
-           (when tags
-             (save-excursion (insert-and-inherit " " (org-make-tag-string tags)))
-             ;; When text is being inserted on an invisible region
-             ;; boundary, it can be inadvertently sucked into
-             ;; invisibility.
-             (unless (org-invisible-p (line-beginning-position))
-               (org-fold-region (point) (line-end-position) nil 'outline))))
-         ;; Align tags, if any.
-         (when (and tags org-auto-align-tags) (org-align-tags))
-         (when tags-change?
-           (el-patch-swap
-             (run-hooks 'org-after-tags-change-hook)
-             (run-hook-with-args 'org-after-tags-change-hook old-tags tags)))))))
-
-  (defun kribs-org-inbox-tag (before-tags after-tags)
-    "Prompt to remove the NEXT_VISIBLE property when adding or removing the INBOX tag.
-  BEFORE-TAGS are the tags before the headline\\='s tags were updated and
-  AFTER-TAGS are the tags after the headline was updated.
-
-  Meant to be added to `org-after-tags-change-hook'."
-    (let ((prop-name "NEXT_VISIBLE")
-          (inbox-tag-p (member "INBOX" (seq-union after-tags before-tags))))
-      (when (and inbox-tag-p
-                 (org-entry-get (point) prop-name)
-                 (y-or-n-p (format "Remove %s property?" prop-name)))
-        (org-entry-delete (point) prop-name)
-        (message "Removed the \"%s\" property from todo" prop-name))))
-  (add-hook 'org-after-tags-change-hook #'kribs-org-inbox-tag)
-#+end_src
-
-#+name: org-todo-state-tags-triggers
-#+begin_src emacs-lisp
-  (setopt org-todo-state-tags-triggers
-          '((todo)
-            ("DOING" ("WAITING" . nil) ("PUSHED" . nil))
-            ("NEXT" ("WAITING" . nil))
-            ("TODO" ("WAITING" . nil))
-            ("HOLD" ("PUSHED" . nil))
-            ("MAYBE" ("WAITING" . nil))
-            (done ("WAITING" . nil) ("PUSHED" . nil))
-            ("DONE")
-            ("CANCELED")))
-#+end_src
-
-*** Org-capture
-
-#+name: org-capture
-#+begin_src emacs-lisp
-  (setup org-capture
-    (:if-package org)
-    
-    (bind-keys ("C-c c" . org-capture))
-
-    (setopt org-capture-use-agenda-date t)
-
-    ;; Helpers for `org-capture-templates'
-    (defun krisb-org-capture--org-node-by-tags (tags)
-      "Interactively prompt for an org-node candidate matching TAGS.
-  TAGS is a list of regexps that match org-node tags.
-
-  This function will use `completing-read' whose candidates are the
-  org-node nodes that match all of TAGS.  It will return a candidate (see
-  `org-node--candidate<>entry')."
-      (require 'org-node)
-      (gethash (completing-read "Select node: "
-                                #'org-node-collection-basic
-                                (lambda (_title node)
-                                  (cl-every (lambda (re)
-                                              (cl-some (lambda (str)
-                                                         (string-match-p re str))
-                                                       (org-mem-tags node)))
-                                            tags))
-                                t nil 'org-node-hist)
-               org-node--candidate<>entry))
-
-    ;; See also `org-capture-templates-contexts'
-    (setopt org-capture-templates
-            `(("t" "Todo" entry
-               (file krisb-org-agenda-main-file)
-               "* TODO %? :INBOX:%^g\n"
-               :empty-lines 1)
-              ("T" "Todo (without processing)" entry
-               (file krisb-org-agenda-main-file)
-               "* TODO %? %^g\n"
-               :empty-lines 1
-               :prepare-finalize (lambda ()
-                                   (message "Insert NEXT_VISIBLE")
-                                   (krisb-org-review-insert-next-visible)
-                                   (message "Insert NEXT_REVIEW")
-                                   (org-review-insert-next-review)))
-              ("c" "Coding projects and contributions" entry
-               (file (lambda () (expand-file-name "coding_projects.org" krisb-org-agenda-directory)))
-               "* TODO %? %^g\n"
-               :empty-lines 1
-               :refile-targets
-               ((,(expand-file-name "coding_projects.org" krisb-org-agenda-directory)
-                 . (:level . 1)))
-               :prepare-finalize (lambda ()
-                                   (message "Insert NEXT_VISIBLE")
-                                   (krisb-org-review-insert-next-visible)
-                                   (message "Insert NEXT_REVIEW")
-                                   (org-review-insert-next-review)))
-              ("j" "Journal" entry
-               (file+olp+datetree
-                (lambda ()
-                  (let* ((node (krisb-org-capture--org-node-by-tags `(,(rx bol (or "__journal" "__top_of_mind") eol)))))
-                    (org-capture-put :krisb-node node)
-                    (org-mem-file node)))
-                (lambda ()
-                  (let ((node (org-capture-get :krisb-node)))
-                    ;; Should return nil if node is a file
-                    (when (org-mem-subtree-p node)
-                      (org-mem-olpath-with-self node)))))
-               "* %<%c>\n"
-               :tree-type (year quarter month)
-               :jump-to-captured t
-               :immediate-finish t
-               :empty-lines 1
-               :hook org-expiry-insert-created
-               :clock-in t
-               :clock-resume t)
-              ("w" "Just write" entry
-               (file+olp+datetree
-                (lambda ()
-                  (let* ((node (org-mem-entry-by-id "20241006T214800.000000")))
-                    (org-capture-put :krisb-node node)
-                    (org-mem-file node)))
-                (lambda ()
-                  (let ((node (org-capture-get :krisb-node)))
-                    ;; Should return nil if node is a file
-                    (when (org-mem-subtree-p node)
-                      (org-mem-olpath-with-self node)))))
-               "* %<%c>\n\n*P:* %(car (krisb-oblique-strategies--random))\n\n"
-               :tree-type (year quarter month)
-               :jump-to-captured t
-               :immediate-finish t
-               :empty-lines 1
-               :clock-in t
-               :clock-resume t)
-              ("l" "Log" item
-               (file+olp+datetree
-                (lambda ()
-                  (let* ((node (krisb-org-capture--org-node-by-tags '("^__log$"))))
-                    (org-capture-put :krisb-node node)
-                    (org-mem-file node)))
-                (lambda ()
-                  (let ((node (org-capture-get :krisb-node)))
-                    ;; Should return nil if node is a file
-                    (when (org-mem-subtree-p node)
-                      (org-mem-olpath-with-self node)))))
-               "%U %?"
-               :tree-type (quarter week)
-               :clock-in t
-               :clock-resume t)
-              ("m" "Work meeting notes" entry
-               (file+olp+datetree
-                (lambda ()
-                  (let* ((node (org-mem-entry-by-id "20241114T091749.707997")))
-                    (org-capture-put :krisb-node node)
-                    (org-mem-file node)))
-                (lambda ()
-                  (let ((node (org-capture-get :krisb-node)))
-                    ;; Should return nil if node is a file
-                    (when (org-mem-subtree-p node)
-                      (org-mem-olpath-with-self node)))))
-               "* (%<%c>)%?\n\n"
-               :tree-type (year quarter month)
-               :jump-to-captured t
-               :immediate-finish t)
-              ("r" "New reference" entry
-               (file+olp+datetree
-                (lambda ()
-                  (let* ((node (krisb-org-capture--org-node-by-tags '("^__references$"))))
-                    (org-capture-put :krisb-node node)
-                    (org-mem-file node)))
-                (lambda ()
-                  (let ((node (org-capture-get :krisb-node)))
-                    ;; Should return nil if node is a file
-                    (when (org-mem-subtree-p node)
-                      (org-mem-olpath-with-self node)))))
-               "* %?\n"
-               :tree-type (year month)
-               :jump-to-captured t
-               :immediate-finish t
-               :empty-lines 1
-               :hook (org-id-get-create org-expiry-insert-created)
-               :before-finalize (org-node-add-refs
-                                 (lambda () (org-set-property "ROAM_BOX" "references"))))
-              ("b" "Blog post" plain
-               (function (lambda ()
-                           (let ((org-node-ask-directory krisb-blog-directory))
-                             (org-node-capture-target))))
-               "#+filetags: :__blog_draft:
-  ,#+hugo_bundle:
-  ,#+export_file_name: index
-  ,#+hugo_tags:
-  ,#+hugo_categories:
-  ,#+hugo_publishdate:
-  ,#+hugo_lastmod:
-  ,#+hugo_custom_front_matter: :TableOfContents true
-  ,#+hugo_draft: true
-  ,#+hugo_paired_shortcodes:\n\n%?"
-               :jump-to-captured t
-               :immediate-finish t)
-              ("g" "LoL match review" entry
-               (file+olp+datetree
-                (lambda ()
-                  (let* ((candidate-ids
-                          (list "20250809T050805.074803"   ; Mid
-                                "20250809T050803.643974")) ; ADC
-                         (node
-                          (gethash
-                           (completing-read "Select node: "
-                                            #'org-node-collection-basic
-                                            (lambda (_title node)
-                                              (member (org-mem-id node) candidate-ids))
-                                            t nil 'org-node-hist)
-                           org-node--candidate<>entry)))
-                    (org-capture-put :krisb-node node)
-                    (org-mem-file node)))
-                (lambda ()
-                  (let ((node (org-capture-get :krisb-node)))
-                    ;; Should return nil if node is a file
-                    (when (org-mem-subtree-p node)
-                      (org-mem-olpath-with-self node)))))
-               "* %?
-  ,** Successes
-  ,** Mistakes"
-               :tree-type (month day)
-               :empty-lines 1))))
-#+end_src
-
-I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/html/emacs-orgmode/2025-05/msg00212.html][Re: [PATCH] Accept nil outline path for file+olp+datetree org-capture-te]]. I use my bespoke version instead, for now.
-#+begin_src emacs-lisp :noweb-ref link-monkeypatches :noweb-sep "\n\n"
-  ;; Load my bespoke version before org's version of org-capture
-  (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/org-mode/lisp/org-capture.el")
-#+end_src
-
-*** Org-refile
-
-#+name: org-refile
-#+begin_src emacs-lisp
-  ;; TODO 2025-06-25: Document:
-  ;; - `org-refile-use-cache'
-  (setup org-refile
-    (:if-package org)
-    
-    (setopt org-refile-targets
-            '((org-agenda-files . (:maxlevel . 3))
-              (org-agenda-files . (:tag . "PROJECT"))
-              (nil . (:maxlevel . 4)))
-            org-outline-path-complete-in-steps nil
-            org-refile-use-outline-path 'title
-            ;; TODO 2024-10-07: Think about whether I actually want this.  What
-            ;; if I want to refile to a non-todo heading in the current file?
-            ;; (org-refile-target-verify-function ; Only let not done todos be refile targets
-            ;;  (lambda () (if (org-entry-is-todo-p) (not (org-entry-is-done-p)))))
-            org-refile-target-verify-function nil
-            org-refile-allow-creating-parent-nodes 'confirm))
-
-  (setup org-refile
-    (when (eq krisb-completion-paradigm 'vertico)
-      (with-eval-after-load 'vertico
-        ;; Workaround for vertico issue with `org-refile'.  See
-        ;; https://github.com/minad/vertico#org-refile
-        (setopt org-refile-use-outline-path 'file
-                org-outline-path-complete-in-steps t)
-        (defun krisb-vertico-enforce-basic-completion (&rest args)
-          (minibuffer-with-setup-hook
-              (:append
-               (lambda ()
-                 (let ((map (make-sparse-keymap)))
-                   (define-key map [tab] #'minibuffer-complete)
-                   (use-local-map (make-composed-keymap (list map) (current-local-map))))
-                 (setq-local completion-styles (cons 'basic completion-styles)
-                             vertico-preselect 'prompt)))
-            (apply args)))
-        (advice-add #'org-olpath-completing-read :around #'krisb-vertico-enforce-basic-completion))))
-#+end_src
-
-*** Org-clock
-
-#+name: org-clock
-#+begin_src emacs-lisp
-  ;; TODO 2025-05-24: Document:
-  ;; - `org-clock-out-when-done’
-  (setup org-clock
-    (:if-package org)
-    
-    (setopt org-clock-in-resume t
-            org-clock-out-remove-zero-time-clocks t))
 #+end_src
 
 *** Org-expiry
@@ -7487,9 +7414,9 @@ Integration with org-ql:
       (work-timer-with-org-clock-mode 1)))
 #+end_src
 
-* Platform- and system-specific configuration
+** Platform- and system-specific configuration
 
-** Guix
+*** Guix
 
 #+name: guix-trusted-content
 #+begin_src emacs-lisp
@@ -7535,6 +7462,42 @@ Integration with org-ql:
    'krisb-remote-source-profile)
 #+end_src
 
+#+name: guile
+#+begin_src emacs-lisp
+  (setup guix
+    (:package guix)
+
+    (with-eval-after-load 'scheme
+      (add-hook 'scheme-mode-hook #'guix-devel-mode)
+      (add-hook 'scheme-mode-hook #'guix-prettify-mode)))
+
+  (setup geiser
+    (:package geiser))
+
+  (setup geiser-guile
+    (:package geiser-guile))
+#+end_src
+
+* Exposition
+
+** Garbage collection
+
+See sections:
++ [[#h:20260219T004705.251676][GCMH: "Garbage Collector Magic Hack"]]
++ [[#h:20260219T005155.688013][Garbage collection settings]]
+
+** Completion
+
+- [[#h:20260219T023244.709419][Minibuffer.el]]
+- [[#h:20260219T023245.927849][Behavior of =TAB= outside the minibuffer buffers]]
+- [[#h:20260219T023253.259434][Orderless: A completion-style for flexibility]]
+- [[#h:20260219T023250.583035][Hotfuzz: Blazingly fast replacement for the =flex= completion style]]
+- [[#h:20260219T023257.693377][Cape: ~completion-at-point-functions~ extensions and helpers]]
+
+** Email
+
+Using Emacs for emails involves various packages that fulfill certain roles. For a brief overview of the parts that compose receiving, reading, composing, and sending email, see =(smtpmail) How Mail Works=.
+
 * Deployments
 
 ** PC
@@ -7547,8 +7510,6 @@ Integration with org-ql:
   <<no-littering-eln-cache>>
 
   <<early-perf-optimizations>>
-
-  <<garbage-collection-early-init>>
 
   <<package-relativize-version>>
 #+end_src
