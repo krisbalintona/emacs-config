@@ -4453,9 +4453,11 @@ This section is for the major mode
               org-use-effective-time t)
 
       ;; Tags
+      ;;
+      ;; See also `org-fast-tag-selection-single-key'
       (setopt org-tags-column 0
               org-use-fast-tag-selection 'auto
-              org-fast-tag-selection-single-key 'expert
+              
               org-tags-exclude-from-inheritance
               '("PROJECT" "email"
                 "__journal" "__log" "__top_of_mind")
