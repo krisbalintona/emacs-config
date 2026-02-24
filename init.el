@@ -2012,6 +2012,8 @@ call `diff-buffer-with-file’ instead."
                                   (not  (scheduled :to today))
                                   (not (deadline auto))
                                   (not (tags-local "REVIEW"))
+                                  (not (or (tags-local "PING")
+                                           (tags-local "WAITING")))
                                   (or (todo "DOING")
                                       (priority "A"))))))))
               (alltodo ""
@@ -2027,7 +2029,6 @@ call `diff-buffer-with-file’ instead."
                        ((org-agenda-overriding-header "Pushed to the front")
                         (org-agenda-skip-function
                          (lambda ()
-                           "Filter tasks for push agenda."
                            (krisb-org-agenda-skip-org-ql
                             '(and (not (done))
                                   (tosee)
@@ -2037,7 +2038,6 @@ call `diff-buffer-with-file’ instead."
                        ((org-agenda-overriding-header "Radar")
                         (org-agenda-skip-function
                          (lambda ()
-                           "Filter tasks for radar agenda."
                            (krisb-org-agenda-skip-org-ql
                             '(and (not (done))
                                   (not (tags-local "PROJECT" "INBOX"))
@@ -2066,20 +2066,26 @@ call `diff-buffer-with-file’ instead."
                        ((org-agenda-overriding-header "Review")
                         (org-agenda-skip-function
                          (lambda ()
-                           "Filter tasks for review agenda."
                            (krisb-org-agenda-skip-org-ql
                             '(and (not (done))
                                   (or (toreview)
-                                      (tags-local "REVIEW"))))))))
+                                      (tags-local "review"))))))))
               (alltodo ""
-                       ((org-agenda-overriding-header "Inbox")
+                       ((org-agenda-overriding-header "inbox")
                         (org-agenda-skip-function
                          (lambda ()
-                           "Filter tasks for inbox agenda."
                            (krisb-org-agenda-skip-org-ql
                             '(and (not (done))
                                   (tosee)
-                                  (or (tags-local "INBOX")))))))))))))
+                                  (or (tags-local "inbox"))))))))
+              (alltodo ""
+                       ((org-agenda-overriding-header "Wishlist")
+                        (org-agenda-skip-function
+                         (lambda ()
+                           (krisb-org-agenda-skip-org-ql
+                            '(and (not (done))
+                                  (tosee)
+                                  (or (tags-local "WISHLIST")))))))))))))
 
 ;;;;; Org-clock
 ;; TODO 2025-05-24: Document:
