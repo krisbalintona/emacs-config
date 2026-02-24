@@ -2119,7 +2119,7 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
 `org-node--candidate<>entry')."
     (require 'org-node)
     (gethash (completing-read "Select node: "
-                              #'org-node-collection-basic
+                              #'org-node-collection
                               (lambda (_title node)
                                 (cl-every (lambda (re)
                                             (cl-some (lambda (str)
@@ -2267,7 +2267,7 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
                        (node
                         (gethash
                          (completing-read "Select node: "
-                                          #'org-node-collection-basic
+                                          #'org-node-collection
                                           (lambda (_title node)
                                             (member (org-mem-id node) candidate-ids))
                                           t nil 'org-node-hist)

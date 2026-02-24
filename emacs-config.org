@@ -5324,7 +5324,7 @@ Log when the value of certain properties are changed:
   `org-node--candidate<>entry')."
       (require 'org-node)
       (gethash (completing-read "Select node: "
-                                #'org-node-collection-basic
+                                #'org-node-collection
                                 (lambda (_title node)
                                   (cl-every (lambda (re)
                                               (cl-some (lambda (str)
@@ -5472,7 +5472,7 @@ Log when the value of certain properties are changed:
                          (node
                           (gethash
                            (completing-read "Select node: "
-                                            #'org-node-collection-basic
+                                            #'org-node-collection
                                             (lambda (_title node)
                                               (member (org-mem-id node) candidate-ids))
                                             t nil 'org-node-hist)
