@@ -5119,78 +5119,9 @@ Log when the value of certain properties are changed:
 #+end_src
 
 ***** Org-agenda views: ~org-agenda-custom-commands~
+
 #+name: org-agenda-custom-commands
 #+begin_src emacs-lisp
-  ;; `org-agenda-skip-function' functions constructed by
-  ;; `krisb-org-agenda-skip-org-ql', which uses org-ql.  These
-  ;; functions, effectively, let me query org todos instead of with the
-  ;; typical syntax.
-  (defun krisb-org-agenda-skip-timely ()
-    "Filter tasks for timely agenda."
-    (krisb-org-agenda-skip-org-ql
-     '(and (not (done))
-           (or (scheduled :to today)
-               (deadline auto)))))
-
-  (defun krisb-org-agenda-skip-focus ()
-    "Filter tasks for focus agenda."
-    (krisb-org-agenda-skip-org-ql
-     '(and (not (done))
-           (not (tags-local "PROJECT"))
-           (tosee)
-           (not (tags "PUSHED"))
-           (not  (scheduled :to today))
-           (not (deadline auto))
-           (not (tags-local "REVIEW"))
-           (or (todo "DOING")
-               (priority "A")))))
-
-  (defun krisb-org-agenda-skip-pushed ()
-    "Filter tasks for push agenda."
-    (krisb-org-agenda-skip-org-ql
-     '(and (not (done))
-           (tosee)
-           (tags "PUSHED"))))
-
-  (defun krisb-org-agenda-skip-routine ()
-    "Filter tasks for routine agenda."
-    (krisb-org-agenda-skip-org-ql
-     '(and (not (done))
-           (not (tags-local "PROJECT" "INBOX"))
-           (tosee)
-           (or (and (or (habit)
-                        ;; FIXME 2025-12-03: Avoid hard-coding this path
-                        (path "recurring\\.org"))
-                    (or (scheduled :to today)
-                        (deadline :to auto)))))))
-
-  (defun krisb-org-agenda-skip-radar ()
-    "Filter tasks for radar agenda."
-    (krisb-org-agenda-skip-org-ql
-     '(and (not (done))
-           (not (tags-local "PROJECT" "INBOX"))
-           (tosee)
-           (not (tags-local "REVIEW"))
-           (not (tags "PUSHED"))
-           (or (and (todo "NEXT" "TODO")
-                    (not (or (scheduled)
-                             (deadline))))
-               (todo "HOLD" "MAYBE")))))
-
-  (defun krisb-org-agenda-skip-review ()
-    "Filter tasks for review agenda."
-    (krisb-org-agenda-skip-org-ql
-     '(and (not (done))
-           (or (toreview)
-               (tags-local "REVIEW")))))
-
-  (defun krisb-org-agenda-skip-inbox ()
-    "Filter tasks for inbox agenda."
-    (krisb-org-agenda-skip-org-ql
-     '(and (not (done))
-           (tosee)
-           (or (tags-local "INBOX")))))
-
   (setopt org-agenda-custom-commands
           '(("n" "Agenda and all TODOs"
              ((agenda "")
@@ -5198,37 +5129,94 @@ Log when the value of certain properties are changed:
             ("f" "Focus"
              ((agenda ""
                       ((org-agenda-overriding-header "Scheduled and deadlines")
-                       (org-agenda-skip-function 'krisb-org-agenda-skip-timely)
+                       (org-agenda-skip-function
+                        (lambda ()
+                          (krisb-org-agenda-skip-org-ql
+                           '(and (not (done))
+                                 (or (scheduled :to today)
+                                     (deadline auto))))))
                        (org-agenda-span 2)
                        (org-agenda-show-future-repeats nil)))
               (alltodo ""
                        ((org-agenda-overriding-header "Focus")
-                        (org-agenda-skip-function 'krisb-org-agenda-skip-focus)))
+                        (org-agenda-skip-function
+                         (lambda ()
+                           (krisb-org-agenda-skip-org-ql
+                            '(and (not (done))
+                                  (not (tags-local "PROJECT"))
+                                  (tosee)
+                                  (not (tags "PUSHED"))
+                                  (not  (scheduled :to today))
+                                  (not (deadline auto))
+                                  (not (tags-local "REVIEW"))
+                                  (or (todo "DOING")
+                                      (priority "A"))))))))
               (alltodo ""
                        ((org-agenda-overriding-header "Waiting and Pings")
-                        (org-agenda-skip-function (lambda ()
-                                                    (krisb-org-agenda-skip-org-ql
-                                                     '(and (not (done))
-                                                           (tosee)
-                                                           (or (tags-local "PING")
-                                                               (tags-local "WAITING"))))))))
+                        (org-agenda-skip-function
+                         (lambda ()
+                           (krisb-org-agenda-skip-org-ql
+                            '(and (not (done))
+                                  (tosee)
+                                  (or (tags-local "PING")
+                                      (tags-local "WAITING"))))))))
               (alltodo ""
                        ((org-agenda-overriding-header "Pushed to the front")
-                        (org-agenda-skip-function 'krisb-org-agenda-skip-pushed)))))
+                        (org-agenda-skip-function
+                         (lambda ()
+                           "Filter tasks for push agenda."
+                           (krisb-org-agenda-skip-org-ql
+                            '(and (not (done))
+                                  (tosee)
+                                  (tags "PUSHED")))))))))
             ("r" "Radar"
              ((alltodo ""
                        ((org-agenda-overriding-header "Radar")
-                        (org-agenda-skip-function 'krisb-org-agenda-skip-radar)))
+                        (org-agenda-skip-function
+                         (lambda ()
+                           "Filter tasks for radar agenda."
+                           (krisb-org-agenda-skip-org-ql
+                            '(and (not (done))
+                                  (not (tags-local "PROJECT" "INBOX"))
+                                  (tosee)
+                                  (not (tags-local "REVIEW"))
+                                  (not (tags "PUSHED"))
+                                  (or (and (todo "NEXT" "TODO")
+                                           (not (or (scheduled)
+                                                    (deadline))))
+                                      (todo "HOLD" "MAYBE"))))))))
               (alltodo ""
                        ((org-agenda-overriding-header "Routine")
-                        (org-agenda-skip-function 'krisb-org-agenda-skip-routine)))))
+                        (org-agenda-skip-function
+                         (lambda ()
+                           (krisb-org-agenda-skip-org-ql
+                            '(and (not (done))
+                                  (not (tags-local "PROJECT" "INBOX"))
+                                  (tosee)
+                                  (or (and (or (habit)
+                                               ;; FIXME 2025-12-03: Avoid hard-coding this path
+                                               (path "recurring\\.org"))
+                                           (or (scheduled :to today)
+                                               (deadline :to auto))))))))))))
             ("R" "Review"
              ((alltodo ""
                        ((org-agenda-overriding-header "Review")
-                        (org-agenda-skip-function 'krisb-org-agenda-skip-review)))
+                        (org-agenda-skip-function
+                         (lambda ()
+                           "Filter tasks for review agenda."
+                           (krisb-org-agenda-skip-org-ql
+                            '(and (not (done))
+                                  (or (toreview)
+                                      (tags-local "REVIEW"))))))))
               (alltodo ""
                        ((org-agenda-overriding-header "Inbox")
-                        (org-agenda-skip-function 'krisb-org-agenda-skip-inbox)))))))
+                        (org-agenda-skip-function
+                         (lambda ()
+                           "Filter tasks for inbox agenda."
+                           (krisb-org-agenda-skip-org-ql
+                            '(and (not (done))
+                                  (tosee)
+                                  (or (tags-local "INBOX"))))))))))))
 #+end_src
 
 #+name: org-after-tags-change-hook
