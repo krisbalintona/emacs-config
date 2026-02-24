@@ -1991,13 +1991,14 @@ call `diff-buffer-with-file’ instead."
               (alltodo "")))
             ("f" "Focus"
              ((agenda ""
-                      ((org-agenda-overriding-header "Scheduled and deadlines")
+                      ((org-agenda-overriding-header "Scheduled, deadlines, and events")
                        (org-agenda-skip-function
                         (lambda ()
                           (krisb-org-agenda-skip-org-ql
                            '(and (not (done))
                                  (or (scheduled :to today)
-                                     (deadline auto))))))
+                                     (deadline auto)
+                                     (ts-active))))))
                        (org-agenda-span 2)
                        (org-agenda-show-future-repeats nil)))
               (alltodo ""
