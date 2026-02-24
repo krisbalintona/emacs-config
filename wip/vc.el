@@ -1,1 +1,0 @@
-/home/krisbalintona/emacs-repos/packages/emacs/worktrees/upstream/lisp/vc/vc.el
