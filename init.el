@@ -1854,7 +1854,7 @@ call `diff-buffer-with-file’ instead."
     ;;
     ;; See also `org-fast-tag-selection-single-key'
     (setopt org-tags-column 0
-            org-use-fast-tag-selection 'auto
+            org-use-fast-tag-selection nil
             
             org-tags-exclude-from-inheritance
             '("PROJECT" "email"
