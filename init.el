@@ -2207,7 +2207,7 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
             ("m" "Work meeting notes" entry
              (file+olp+datetree
               (lambda ()
-                (let* ((node (org-mem-entry-by-id "20241114T091749.707997")))
+                (let* ((node (krisb-org-capture--org-node-by-tags '("^__meeting_notes$"))))
                   (org-capture-put :krisb-node node)
                   (org-mem-file node)))
               (lambda ()
