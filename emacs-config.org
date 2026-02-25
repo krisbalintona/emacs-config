@@ -1750,7 +1750,8 @@ In Emacs 31, packages installed with package.el can now be reviewed upon upgradi
   (setup imenu
 
     (setopt imenu-auto-rescan t
-            imenu-flatten 'group))
+            imenu-flatten 'group
+            imenu-max-item-length nil))
 
   (setup pulsar
     (with-eval-after-load 'pulsar

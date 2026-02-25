@@ -1657,7 +1657,8 @@ call `diff-buffer-with-file’ instead."
 (setup imenu
 
   (setopt imenu-auto-rescan t
-          imenu-flatten 'group))
+          imenu-flatten 'group
+          imenu-max-item-length nil))
 
 (setup pulsar
   (with-eval-after-load 'pulsar
