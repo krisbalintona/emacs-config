@@ -1858,8 +1858,12 @@ call `diff-buffer-with-file’ instead."
             org-use-fast-tag-selection nil
             
             org-tags-exclude-from-inheritance
-            '("PROJECT" "email"
-              "__journal" "__log" "__top_of_mind")
+            '("PROJECT"
+              "email"
+              "__journal"
+              "__log"
+              "__references"
+              "__top_of_mind")
             org-tag-faces '(("INBOX" . font-lock-variable-use-face)
                             ("PROJECT" . font-lock-doc-markup-face)
                             ("WAITING" . font-lock-keyword-face)
