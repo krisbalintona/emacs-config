@@ -1862,6 +1862,7 @@ call `diff-buffer-with-file’ instead."
               "email"
               "__journal"
               "__log"
+              "__meeting_notes"
               "__references"
               "__top_of_mind")
             org-tag-faces '(("INBOX" . font-lock-variable-use-face)
