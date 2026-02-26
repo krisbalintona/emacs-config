@@ -2729,9 +2729,9 @@ into:
 
 This is only for the URLs whose hosts match the regexp
 `krisb-org-web-tools-strip-regexp'."
-      (let ((parsed (url-generic-parse-url url))
-            (stripp
-             (string-match krisb-org-web-tools-strip-regexp (url-host parsed))))
+      (let* ((parsed (url-generic-parse-url url))
+             (stripp
+              (string-match krisb-org-web-tools-strip-regexp (url-host parsed))))
         (when stripp
           (setf (url-filename parsed) (car (url-path-and-query parsed))))
         (url-recreate-url parsed)))
