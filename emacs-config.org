@@ -7436,6 +7436,15 @@ Integration with org-ql:
       (work-timer-with-org-clock-mode 1)))
 #+end_src
 
+*** Shr: Simple HTML Renderer
+
+HTML rendering library. Used across various Emacs packages, e.g., ~notmuch-show-mode~.
+#+name: shr
+#+begin_src emacs-lisp
+  (with-eval-after-load 'shr
+    (setopt shr-use-colors nil))          ; Use my theme's colors
+#+end_src
+
 ** Platform- and system-specific configuration
 
 *** Guix
@@ -8015,6 +8024,9 @@ Using Emacs for emails involves various packages that fulfill certain roles. For
 
   ;;; Svelte-mode
   <<svelte-mode>>
+
+  ;;; Shr
+  <<shr>>
 
   ;;; Load config units
   <<config-units-load>>

@@ -5647,6 +5647,10 @@ When called with `-' instead call `inspector-inspect-expression'."
 ;;; Svelte-mode
 (defconfig (web-development :packages (svelte-mode)))
 
+;;; Shr
+(with-eval-after-load 'shr
+  (setopt shr-use-colors nil))          ; Use my theme's colors
+
 ;;; Load config units
 (load-all-configs)
 
