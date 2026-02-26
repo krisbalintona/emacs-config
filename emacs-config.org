@@ -4819,10 +4819,44 @@ This section is for the major mode
     (:package org-web-tools)
 
     (with-eval-after-load 'org
+      (autoload 'krisb-org-web-tools-insert-link-for-url "org-web-tools")
       (bind-keys :map org-mode-map
-                 ("C-c u" . org-web-tools-insert-link-for-url)))
+                 ("C-c u" . krisb-org-web-tools-insert-link-for-url)))
 
     (with-eval-after-load 'org-web-tools
+      (defcustom krisb-org-web-tools-strip-regexp
+        (rx (or "tiktok.com" "youtube.com"))
+        "Special sites to strip query parameters for."
+        :type 'regexp
+        :group 'org)
+
+      (defun krisb-url-strip-query (url)
+        "Strip the query string from URL.
+
+  For example, turn:
+
+    https://www.youtube.com/shorts/qvOf7jWTmqY?app=desktop
+
+  into:
+
+    https://www.youtube.com/shorts/qvOf7jWTmqY
+
+
+  This is only for the URLs whose hosts match the regexp
+  `krisb-org-web-tools-strip-regexp'."
+        (let ((parsed (url-generic-parse-url url))
+              (stripp
+               (string-match krisb-org-web-tools-strip-regexp (url-host parsed))))
+          (when stripp
+            (setf (url-filename parsed) (car (url-path-and-query parsed))))
+          (url-recreate-url parsed)))
+      
+      (defun krisb-org-web-tools-insert-link-for-url (url)
+        "Like `org-web-tools-insert-link-for-url' but strings query parameters from URL.
+  See `krisb-url-strip-query' for what this means."
+        (interactive (list (krisb-url-strip-query (org-web-tools--get-first-url))))
+        (insert (org-web-tools--org-link-for-url url)))
+      
       (setopt org-web-tools-pandoc-replacements
               (add-to-list 'org-web-tools-pandoc-replacements
                            `(,(rx "·") . "|"))))
