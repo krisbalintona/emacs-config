@@ -5554,6 +5554,26 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
             org-clock-out-remove-zero-time-clocks t))
 #+end_src
 
+**** Org-inline-tags: Bespoke inline tagging
+
+Text like =::tag_1 ::tag_2 ::tag_3= are fontified specially. I regard these are "inline tags." They have no integration with other org-mode functionality. Their only utility is for convenient searching. I have specialized use cases for them: when I want to tag certain lines/elements without elevating that text to a full headline (to use org-mode tags proper).
+#+name: org-inline-tags
+#+begin_src emacs-lisp
+  (with-eval-after-load 'org
+    (setq krisb-org-inline-tags-regexp
+        (rx (group (literal "::")
+                   (any alnum)
+                   (zero-or-more (any alnum "_-")))
+            (one-or-more whitespace)))
+
+    (font-lock-add-keywords
+     'org-mode
+     `((,krisb-org-inline-tags-regexp
+        1
+        '(:inherit (fixed-pitch font-lock-keyword-face))
+        prepend))))
+#+end_src
+
 *** Dictionary.el: Built-in dictionary
 
 #+name: dictionary
@@ -7770,6 +7790,9 @@ Using Emacs for emails involves various packages that fulfill certain roles. For
 
   ;;;;; Org-ql
   <<org-ql>>
+
+  ;;;;; Org-inline-tags
+  <<org-inline-tags>>
 
   ;;;; Bespoke extensions
   <<org-log-properties>>

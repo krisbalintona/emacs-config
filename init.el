@@ -3118,6 +3118,21 @@ Do not use cache when FORCE is non-nil."
       (or (not next)
           (time-less-p next (current-time))))))
 
+;;;;; Org-inline-tags
+(with-eval-after-load 'org
+  (setq krisb-org-inline-tags-regexp
+      (rx (group (literal "::")
+                 (any alnum)
+                 (zero-or-more (any alnum "_-")))
+          (one-or-more whitespace)))
+
+  (font-lock-add-keywords
+   'org-mode
+   `((,krisb-org-inline-tags-regexp
+      1
+      '(:inherit (fixed-pitch font-lock-keyword-face))
+      prepend))))
+
 ;;;; Bespoke extensions
 ;; Log changes to certain properties.
 ;;
