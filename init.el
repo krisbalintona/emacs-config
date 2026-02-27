@@ -851,7 +851,7 @@ distance + `string-lessp' first rather than using only `string-lessp'."
           completion-eager-update t)
 
   ;; Selection of the Completions buffer from the minibuffer
-  (setopt completion-auto-help 'visible
+  (setopt completion-auto-help 'always
           completion-auto-select 'second-tab ; When, if ever, to select *Completions* on TAB press
           completion-auto-deselect nil)
 
