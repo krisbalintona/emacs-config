@@ -2676,7 +2676,7 @@ headline."
 
   (with-eval-after-load 'org-web-tools
     (defcustom krisb-org-web-tools-strip-regexp
-      (rx (or "tiktok.com" "youtube.com"))
+      (rx (or "tiktok.com" "youtube.com/shorts"))
       "Special sites to strip query parameters for."
       :type 'regexp
       :group 'org)
