@@ -2033,10 +2033,12 @@ Consult-specific completion category overrides:
      ([remap move-past-close-and-reindent] . puni-syntactic-forward-punct)))
 #+end_src
 
-*** Hotfuzz: Blazingly fast replacement for the =flex= completion style
+*** COMMENT Hotfuzz: Blazingly fast replacement for the =flex= completion style
 :PROPERTIES:
 :CUSTOM_ID: h:20260219T023250.583035
 :END:
+
+2026-02-28: With commits to Emacs 31 by Joao Tavora, the built-in flex style is significantly faster and more accurate. Hotfuzz is still faster in some cases, but I prefer to stick with built-ins unless external packages are necessary or significantly better.
 
 See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#results]] for benchmarks between fuzzy completion styles. Note that the markedly higher performance of the hotfuzz package shown in this benchmark uses the /dynamic module/ bundled with hotfuzz (so to see similar results, users must do the same).
 

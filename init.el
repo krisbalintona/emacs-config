@@ -895,41 +895,7 @@ ending the minibuffer session. (This is equivalent to the behavior of
   (bind-key [remap keyboard-quit] 'krisb-keyboard-quit 'completion-list-mode-map))
 
 ;;;; Hotfuzz
-;; Hotfuzz is a fuzzy completion style that also can be used with its
-;; bundled dynamic module for improved performance.  (See
-;; https://github.com/axelf4/hotfuzz?tab=readme-ov-file#dynamic-module
-;; for how to do so.)
-;;
-;; When done so, is a much, much faster version of the built-in flex
-;; style (although it is non-greedy and has a different scoring
-;; algorithm).  See
-;; https://github.com/axelf4/emacs-completion-bench#readme for a
-;; comparison of fuzzy completion style packages
-(setup hotfuzz
-  (:package (hotfuzz :url "https://github.com/axelf4/hotfuzz.git"
-                     ;; Compile the dynamic module.  See
-                     ;; https://github.com/axelf4/hotfuzz?tab=readme-ov-file#dynamic-module
-                     :shell-command "cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS=-march=native && cmake --build build"))
-  (:require)
 
-  ;; This setting applies only to completion UIs that don't support
-  ;; `completion-lazy-hilit' (vertico and corfu do, so this setting is
-  ;; ignored when using those UIs)
-  (setopt hotfuzz-max-highlighted-completions most-positive-fixnum)
-
-  ;; Replace the flex completion style with the hotfuzz style after
-  ;; I've set `completion-styles'
-  (with-eval-after-load 'minibuffer
-    (add-hook 'on-first-input-hook
-              (lambda () (cl-nsubstitute 'hotfuzz 'flex completion-styles))))
-
-  ;; We have to change some internal variables consult uses if the
-  ;; dynamic module is compiled.  See
-  ;; https://github.com/axelf4/hotfuzz?tab=readme-ov-file#dynamic-module
-  (when (featurep 'hotfuzz-module)
-    (with-eval-after-load 'consult
-      (setq consult--tofu-char #x100000
-            consult--tofu-range #x00fffe))))
 
 ;;;; Orderless
 (setup orderless
