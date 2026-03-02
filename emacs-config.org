@@ -4039,7 +4039,7 @@ The performance increase can be /drastic/.
       (tramp-hlo-setup)))
 #+end_src
 
-*** Tramp-RPC: Experiment with using remote RPC server instead of parsing shell command output
+*** COMMENT Tramp-RPC: Experiment with using remote RPC server instead of parsing shell command output
 
 #+name: tramp-rpc
 #+begin_src emacs-lisp
