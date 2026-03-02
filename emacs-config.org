@@ -3276,9 +3276,9 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
     ;; cache information that disagrees with vc-jj
     (:load-after vc)
     (:load-after project)
-    (require 'project-jj)
-
-    (setopt vc-jj-diff-switches '("--git" "--stat")))
+    
+    (with-eval-after-load 'vc-jj
+      (setopt vc-jj-diff-switches '("--git" "--stat"))))
 #+end_src
 
 *** Flymake: Linting

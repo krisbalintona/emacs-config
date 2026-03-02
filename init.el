@@ -1543,9 +1543,9 @@ call `diff-buffer-with-file’ instead."
   ;; cache information that disagrees with vc-jj
   (:load-after vc)
   (:load-after project)
-  (require 'project-jj)
-
-  (setopt vc-jj-diff-switches '("--git" "--stat")))
+  
+  (with-eval-after-load 'vc-jj
+    (setopt vc-jj-diff-switches '("--git" "--stat"))))
 
 ;;; Log-edit
 ;; TODO 2025-05-20: Document the user options below in the literate
