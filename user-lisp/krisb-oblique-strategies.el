@@ -1,4 +1,4 @@
-;;; krisb-oblique-strategies.el --- Implementation of Oblique Strategies  -*- lexical-binding: t; -*-
+;;; krisb-oblique-strategies.el --- Simple implementation of Oblique Strategies  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024  Kristoffer Balintona
 
@@ -21,11 +21,11 @@
 ;;; Commentary:
 
 ;; A simple implementation of Oblique Strategies prompts.  See
-;; https://github.com/zzkt/oblique-strategies?tab=readme-ov-file and
-;; https://github.com/zzkt/oblique-strategies?tab=readme-ov-file for more
-;; information on its potential use and function.
+;; https://github.com/zzkt/oblique-strategies for more information on
+;; its function and potential uses.
 
-;; The list of strategies was taken from https://oblique.ookb.co/list.html.
+;; The list of strategies was taken from
+;; https://oblique.ookb.co/list.html.
 
 ;;; Code:
 
@@ -248,7 +248,7 @@
 If N is non-nil, return a list of that many prompts.  If N is nil,
 default to 5."
   (let (prompts)
-    (dotimes (i (or n 5))
+    (dotimes (_ (or n 5))
       (push (seq-random-elt krisb-oblique-strategies-prompts) prompts))
     prompts))
 
