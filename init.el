@@ -2154,7 +2154,7 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
                   ;; Should return nil if node is a file
                   (when (org-mem-subtree-p node)
                     (org-mem-olpath-with-self node)))))
-             "* %<%c>\n\n*P:* %(car (krisb-oblique-strategies--random))\n\n"
+             "* %<%c>\n\n*P:* %(car (krisb-oblique-strategies-random))\n\n"
              :tree-type (year quarter month)
              :jump-to-captured t
              :immediate-finish t

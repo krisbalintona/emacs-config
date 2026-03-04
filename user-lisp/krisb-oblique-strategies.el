@@ -243,7 +243,8 @@
         "Your mistake was a hidden intention.")
   "List of Oblique Strategies prompts.")
 
-(defun krisb-oblique-strategies--random (&optional n)
+;;;###autoload
+(defun krisb-oblique-strategies-random (&optional n)
   "Return a random Oblique Strategies prompt.
 If N is non-nil, return a list of that many prompts.  If N is nil,
 default to 5."
@@ -258,7 +259,7 @@ default to 5."
 The number of prompts available is N, which defaults to 5 if nil."
   (interactive "P")
   (let* ((n (or n 5))
-         (prompts (krisb-oblique-strategies--random n)))
+         (prompts (krisb-oblique-strategies-random n)))
     (completing-read "Choose a prompt: " prompts nil t)))
 
 ;;;###autoload
@@ -269,7 +270,7 @@ The number of prompts available is N, which defaults to 5 if nil."
   (interactive "P")
   (let ((prompt (if select
                     (krisb-oblique-strategies-select n)
-                  (car (krisb-oblique-strategies--random 1)))))
+                  (car (krisb-oblique-strategies-random 1)))))
     (insert prompt)))
 
 ;;; Provide
