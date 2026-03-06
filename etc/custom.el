@@ -7,24 +7,27 @@
  '(package-selected-packages
    '(activities astute caddyfile-mode cape citar-org-node cl-generic
                 compat cond-star consult corfu do-at-point eat
-                editorconfig ef-themes eglot el-patch elisp-demos erc
-                exec-path-from-shell faceup fancy-compilation
-                fish-mode flymake-vale fontaine gcmh geiser-guile guix
-                highlight-function-calls hotfuzz inspector jinx lin
-                list-packages-ext magit-popup mixed-pitch
-                nftables-mode no-littering notmuch-addr
+                editorconfig ef-themes eglot el-job el-patch
+                elisp-demos erc exec-path-from-shell faceup
+                fancy-compilation fish-mode flymake-vale fontaine gcmh
+                geiser-guile guix highlight-function-calls hotfuzz
+                inspector jinx lin list-packages-ext magit-popup
+                mixed-pitch nftables-mode no-littering notmuch-addr
                 notmuch-bookmarks ntlm ol-notmuch olivetti on
-                orderless org-contrib org-hide-drawers org-mime
-                org-modern org-ql org-repeat-by-cron org-review
-                org-roam-folgezettel org-web-tools orgmdb outli
+                orderless org org-contrib org-hide-drawers org-mem
+                org-mime org-modern org-node org-ql org-repeat-by-cron
+                org-review org-roam-folgezettel org-web-tools outli
                 package-x paren-face persid powerthesaurus project
                 pulsar puni python regexp-disasm sesman setup
-                smart-mark so-long soap-client sops svg tab-bookmark
-                tempel timeout track-changes tramp-hlo tramp-rpc
-                tramp-theme try use-package vc-jj verilog-mode vertico
-                which-key window-tool-bar wombag work-timer yaml-mode))
+                smart-mark so-long soap-client sops svelte-mode svg
+                svlete-mode tab-bookmark tempel timeout track-changes
+                tramp-hlo tramp-rpc tramp-theme try use-package vc-jj
+                verilog-mode vertico which-key window-tool-bar
+                winpulse wombag work-timer yaml-mode))
  '(package-vc-selected-packages
-   '((tramp-rpc :url
+   '((winpulse :vc-backend Git :url
+               "https://github.com/xenodium/winpulse")
+     (tramp-rpc :url
                 "https://github.com/ArthurHeymans/emacs-tramp-rpc.git")
      (sops :url "https://github.com/krisbalintona/sops.git" :branch
            "devel")
@@ -63,7 +66,9 @@
                   "lisp/org-capture.el")))
  '(pulsar-window-change-face 'pulsar-green)
  '(safe-local-variable-directories
-   '("/home/krisbalintona/emacs-repos/packages/org-mode/"
+   '("/rpc:sublation:/home/krisbalintona/guix-config/"
+     "/home/krisbalintona/Documents/svelte-blog/"
+     "/home/krisbalintona/emacs-repos/packages/org-mode/"
      "/home/krisbalintona/guix-config/"
      "/home/krisbalintona/guix-repos/rde/"
      "/ssh:krisbalintona@192.168.4.242:/home/krisbalintona/guix-config/"
@@ -102,6 +107,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(corfu-default ((t (:inherit 'default))))
  '(highlight-function-calls-face ((t (:underline nil :inherit font-lock-function-call-face))))
+ '(log-edit-summary ((t (:family "Overpass Nerd Font Propo"))))
  '(org-cite ((t (:foreground "DarkSeaGreen4"))))
  '(org-cite-key ((t (:foreground "forest green" :slant italic)))))
