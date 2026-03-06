@@ -397,9 +397,12 @@ package-archives, e.g. \"gnu\")."))
     "Empty the trash directory."
     (interactive)
     (if delete-by-moving-to-trash
-        (let ((size (string-trim (shell-command-to-string (concat"du -sh " trash-directory " | cut -f1")))))
-          (when (yes-or-no-p (format "Empty trash directory of %s size? " size))
-            (save-window-excursion (async-shell-command (concat "rm -rf " trash-directory "/*")))))
+        (let* ((rm-command (concat "find \"" trash-directory "\" -mindepth 1 -delete"))
+               (size-command (concat "du -hs \"" trash-directory "\" | cut -f1"))
+               (size-prompt
+                (format "Empty trash directory of size %s? " (string-trim (shell-command-to-string size-command)))))
+          (when (yes-or-no-p size-prompt)
+            (save-window-excursion (async-shell-command rm-command))))
       (message "delete-by-moving-to-trash is nil; not emptying trash")))
   
   ;; Don't create lock files.  See also `remote-file-name-inhibit-locks'
