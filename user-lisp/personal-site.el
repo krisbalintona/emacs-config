@@ -1,0 +1,303 @@
+;;; personal-site.el --- Personal site org exporter -*- lexical-binding: t -*-
+
+;; Copyright (C) 2026 Kristoffer Balintona
+
+;; Author: Kristoffer Balintona
+;; Created: 2026
+
+;; This file is not part of GNU Emacs.
+
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; Bespoke org backend and org-publish setup for exporting posts to my
+;; personal site (found at https://kristofferbalintona.me/).
+
+;;; Code:
+
+(require 'ox)
+(require 'ox-publish)
+(require 'esxml)
+
+;;;; Variables and options
+
+(defcustom personal-site-root-dir "~/Documents/svelte-blog/"
+  "Directory of blog project.
+This option is used to define the value of other relevant paths."
+  :type 'directory
+  :group 'personal-site)
+
+(defcustom personal-site-destination-dir
+  (expand-file-name "src/lib/posts/" personal-site-root-dir)
+  "Directory where posts will be exported to."
+  :type 'directory
+  :group 'personal-site)
+
+;;;; Org backend
+;; Define a bespoke org export backend. For a detailed description of
+;; the export process, see (info "(org) Advanced Export
+;; Configuration")
+
+(defconst personal-site-org-post-id-timestamp-format "%Y%m%d%H%M"
+  "Timestamp format for post IDs.
+For my site, I construct post IDs using the date of the post.")
+
+(defun personal-site-org-html--meta-info (info)
+  "Return meta tags for exported document.
+These meta tags store information about the post that will be used later
+by SvelteKit when ingesting the document HTML.
+
+INFO is a plist used as a communication channel."
+  (let* ((title (org-no-properties
+                 (org-html-plain-text
+                  (org-element-interpret-data (plist-get info :title)) info)))
+         ;; Set title to an invisible character instead of leaving it
+         ;; empty, which is invalid.
+         (title (if (org-string-nw-p title) title "&lrm;"))
+         (charset (or (and org-html-coding-system
+                           (symbol-name
+                            (coding-system-get org-html-coding-system 'mime-charset)))
+                      "iso-8859-1")))
+    (concat
+     ;; Title
+     (esxml-to-xml `(meta ((name . "title")
+                           (content . ,title))))
+
+     ;; Date
+     ;;
+     ;; We have a meta tag specifically for the date so SvelteKit can
+     ;; show the same date in different formats, if needed
+     (let ((date (org-export-get-date info (plist-get info :html-metadata-timestamp-format))))
+       (esxml-to-xml `(meta ((name . "date")
+                             (content . ,date)))))
+
+     ;; Character encoding
+     (if (org-html-html5-p info)
+         (esxml-to-xml `(meta ((charset . ,charset))))
+       (esxml-to-xml `(meta ((http-equiv . "Content-Type")
+                             (content . ,(concat "text/html;charset=" charset))))))
+
+     (let* (;; We construct each post's ID using their ISO 8601 with
+            ;; all non-numeric characters removed
+            (postid (org-export-get-date info personal-site-org-post-id-timestamp-format)))
+       ;; Post slug (ID)
+       (esxml-to-xml `(meta ((name . "postid")
+                             (content . ,postid))))))))
+
+(defun personal-site-org-html-template (contents info)
+  "Return complete document string after HTML conversion.
+CONTENTS is the transcoded contents string.  INFO is a plist holding
+export options."
+  (concat
+   ;; Metadata for post (stored as meta tags prior to body tag)
+   (personal-site-org-html--meta-info info)
+
+   ;; Document body (body tag)
+   (let* ((title (and (plist-get info :with-title)
+                      (plist-get info :title)))
+          (title-element (when title
+                           `(h1 ((class . "title")) ,(org-export-data title info))))
+          (subtitle (plist-get info :subtitle))
+          (subtitle-element (when subtitle
+                              `(p ((class . "subtitle") (role . "doc-subtitle"))
+                                  ,(org-export-data subtitle info))))
+
+          (date (when (plist-get info :date)
+                  (org-export-get-date info "%B %e, %Y")))
+          (date-element
+           (when date
+             ;; `(p ((class . "date"))
+             ;;     (i nil ,(org-export-data date info)))
+             `(i ((class . "date")) ,(org-export-data date info))))
+          (html5-fancy (org-html--html5-fancy-p info))
+          (content (assq 'content (plist-get info :html-divs)))
+          (content-tag (intern (nth 1 content)))
+          (content-id (nth 2 content))
+          (content-class (plist-get info :html-content-class)))
+     (esxml-to-xml
+      `(,content-tag ((id . ,content-id) (class . ,content-class))
+                     (,(if html5-fancy 'header 'div) nil
+                      ,date-element
+                      ,@(when title
+                          (list title-element
+                                subtitle-element)))
+                     (raw-string ,contents))))))
+
+(defun personal-site--title-to-slug (title)
+  "Return slug associated with TITLE.
+This slug is used as the directory name associated with a post (inside
+`personal-site-destination-dir')."
+  (downcase
+   (replace-regexp-in-string
+    "-+" "-"
+    (replace-regexp-in-string
+     "[^a-z0-9]+" "_"
+     (downcase title)))))
+
+(defun personal-site-org-output-file-name (&optional subtreep)
+  "Return the full output file path of the current post.
+Like `org-export-output-file-name' but for my personal site\\='s
+directory structure (see `personal-site-destination-dir').
+
+This function is called from the point in org buffer to-be exported.
+
+With a non-nil optional argument SUBTREEP, try to determine output
+file's name by looking for \"EXPORT_FILE_NAME\" property of subtree at
+point.
+
+Return file name as a string."
+  (let* ((export-environment (org-export-get-environment 'html-svelte))
+         (title (org-element-interpret-data (plist-get export-environment :title)))
+         (date-timestamp (car (plist-get export-environment :date)))
+         (postid (org-format-timestamp date-timestamp personal-site-org-post-id-timestamp-format))
+         (directory
+          (or
+           ;; Check EXPORT_FILE_NAME subtree property (when SUBTREEP
+           ;; is non-nil)
+           (when subtreep (org-entry-get nil "EXPORT_FILE_NAME" 'selective))
+           ;; REVIEW 2026-03-27: Should I do this? I'm going to
+           ;; standardize the file names anyway...
+           ;;
+           ;; Check #+EXPORT_FILE_NAME keyword
+           (org-with-point-at (point-min)
+             (catch :found
+               (let ((case-fold-search t))
+                 (while (re-search-forward "^[ \t]*#\\+EXPORT_FILE_NAME:[ \t]+\\S-" nil t)
+                   (let ((element (org-element-at-point)))
+                     (when (org-element-type-p element 'keyword)
+                       (throw :found (org-element-property :value element))))))))
+           ;; Determine export file path for buffer
+           (concat postid "--" (personal-site--title-to-slug title))
+           ;; As a fallback, ask user
+           (read-file-name "Output directory: " personal-site-destination-dir)))
+         (output-directory (expand-file-name directory personal-site-destination-dir)))
+    (unless (file-exists-p output-directory)
+      (make-directory output-directory))
+    (expand-file-name "index.html" output-directory)))
+
+(defun personal-site-org-export-as-html
+    (&optional async subtreep visible-only body-only ext-plist)
+  "Export current buffer to an HTML buffer.
+Behaves identically to `org-html-export-as-html' but with the
+\\='html-svelte backend.
+
+If narrowing is active in the current buffer, only export its narrowed
+part.
+
+If a region is active, export that region.
+
+See the docstring of `org-html-export-as-html' for a description of the
+ASYNC, SUBTREEP, VISIBLE-ONLY, and BODY-ONLY arguments.
+
+EXT-PLIST, when provided, is a property list with external parameters
+overriding Org default settings, but still inferior to file-local
+settings.
+
+Export is done in a buffer named \"*Org HTML Export*\", which will be
+displayed when `org-export-show-temporary-export-buffer' is non-nil."
+  (interactive)
+  (org-export-to-buffer 'html-svelte "*Org HTML Export*"
+    async subtreep visible-only body-only ext-plist
+    (lambda () (set-auto-mode t))))
+
+(defun personal-site-org-export-to-html 
+    (&optional async subtreep visible-only body-only ext-plist)
+  "Export current buffer to a HTML file.
+Behaves identically to `org-html-export-to-html', but with a bespoke
+export file destination (see `personal-site-destination-dir') and using
+the \\='html-svelte backend..
+
+If narrowing is active in the current buffer, only export its
+narrowed part.
+
+If a region is active, export that region.
+
+See the docstring of `org-html-export-to-html' for a description of the
+ASYNC, SUBTREEP, VISIBLE-ONLY, and BODY-ONLY arguments.
+
+EXT-PLIST, when provided, is a property list with external parameters
+overriding Org default settings, but still inferior to file-local
+settings.
+
+Return output file's name."
+  (interactive)
+  (let* ((org-export-coding-system org-html-coding-system)
+         (file (personal-site-org-output-file-name subtreep)))
+    (org-export-to-file 'html-svelte file
+      async subtreep visible-only body-only ext-plist)))
+
+(org-export-define-derived-backend 'html-svelte 'html
+  ;; Used to modify or remove org elements on export, overwriting the
+  ;; filters of the parent backend.  See (info "(org) Advanced Export
+  ;; Configuration") for more information on backend filters
+  ;; :filters-alist
+
+  ;; Entry for backend in the org export menu
+  :menu-entry
+  '(?p "Export to personal site HTML"
+       ((?H "As HTML buffer" personal-site-org-export-as-html)
+        (?h "As HTML file" personal-site-org-export-to-html)
+        (?o "As HTML file and open with Emacs"
+            (lambda (async subtreep visible-only body-only)
+              (if async
+                  (personal-site-org-export-to-html t subtreep visible-only body-only)
+                (find-file
+                 (personal-site-org-export-to-html nil subtreep visible-only body-only)))))))
+
+  ;; Used to define new options or overwrite those of the parent
+  ;; backend
+  :options-alist
+  '((:html-metadata-timestamp-format nil nil "%Y-%m-%dT%H:%M:%S")
+    ;; Force using the modern HTML5
+    (:html-doctype "HTML_DOCTYPE" nil "html5")
+    (:html-html5-fancy nil "html5-fancy" t))
+
+  ;; Used to add new transcoders or overwrite those of the parent
+  ;; backend.  See `org-export-define-backend' for more information on
+  ;; backend transcoders
+  :translate-alist
+  '((template . personal-site-org-html-template)))
+
+;;;; Org publish
+
+;; NOTE 2026-02-12: This is set to nil as I develop.  When in use, a
+;; value of t is more appropriate.
+(setopt org-publish-use-timestamps-flag nil)
+
+;; Define project
+(setopt org-publish-project-alist
+        `(("posts"
+           :base-directory ,krisb-blog-manuscripts-directory
+           :publishing-directory "/tmp/new_blog/posts/"
+           :base-extension "org"
+           :recursive t
+           :publishing-function krisb-org-html-publish-to-html
+           :auto-sitemap t
+           :sitemap-filename "/tmp/new_blog/index.org"
+           :sitemap-title "My Posts"
+           :sitemap-sort-files anti-chronologically
+           :sitemap-format-entry krisb-org-publish-sitemap-format-entry
+           :html-head-include-default-style nil
+           :html-head ,(sxml-to-xml `(link (@ (rel "stylesheet")
+                                              (href "../css/stylesheet.css")
+                                              (type "text/css"))))
+           :html-prefer-user-labels nil ; We have our own function for anchors
+           :org-export-with-broken-links t
+           :with-toc nil
+           :with-cite-processors t)))
+
+;;; Provide
+(provide 'personal-site)
+;;; personal-site.el ends here
