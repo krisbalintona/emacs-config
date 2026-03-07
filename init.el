@@ -1478,8 +1478,9 @@ Then apply ARGS."
   (with-eval-after-load 'vc
     (setopt vc-follow-symlinks t
             vc-allow-rewriting-published-history 'ask ; Emacs 31
-            vc-async-checkin t
-            vc-allow-async-diff t       ; Emacs 31
+            vc-async-checkin t                        ; Emacs 31
+            vc-allow-async-diff t                     ; Emacs 31
+            vc-display-failed-async-commands t        ; Emacs 31
             vc-revert-show-diff t
             vc-find-revision-no-save t            ; Emacs 31
             vc-dir-hide-up-to-date-on-revert t    ; Emacs 31
