@@ -1829,7 +1829,8 @@ call `diff-buffer-with-file’ instead."
             
             org-tags-exclude-from-inheritance
             '("PROJECT"
-              "email"
+              "ONGOING"
+              "PUSHED"
               "__journal"
               "__log"
               "__meeting_notes"
