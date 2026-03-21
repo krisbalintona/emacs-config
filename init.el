@@ -1979,6 +1979,16 @@ call `diff-buffer-with-file’ instead."
                        (org-agenda-span 2)
                        (org-agenda-show-future-repeats nil)))
               (alltodo ""
+                       ((org-agenda-overriding-header "Ongoing and projects")
+                        (org-agenda-skip-function
+                         (lambda ()
+                           (krisb-org-agenda-skip-org-ql
+                            '(and (not (done))
+                                  (tosee)
+                                  (not (tags "PUSHED"))
+                                  (and (tags "ONGOING" "PROJECT")
+                                       (todo "DOING"))))))))
+              (alltodo ""
                        ((org-agenda-overriding-header "Focus")
                         (org-agenda-skip-function
                          (lambda ()
@@ -1992,6 +2002,8 @@ call `diff-buffer-with-file’ instead."
                                   (not (tags-local "REVIEW"))
                                   (not (or (tags-local "PING")
                                            (tags-local "WAITING")))
+                                  (not (and (tags "ONGOING" "PROJECT")
+                                            (todo "DOING")))
                                   (or (todo "DOING")
                                       (priority "A"))))))))
               (alltodo ""
