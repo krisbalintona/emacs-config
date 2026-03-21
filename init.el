@@ -2034,6 +2034,7 @@ call `diff-buffer-with-file’ instead."
                                   (tosee)
                                   (not (tags-local "REVIEW"))
                                   (not (tags "PUSHED"))
+                                  (not (tags-local "WISHLIST"))
                                   (or (and (todo "NEXT" "TODO")
                                            (not (or (scheduled)
                                                     (deadline))))
@@ -2045,6 +2046,7 @@ call `diff-buffer-with-file’ instead."
                            (krisb-org-agenda-skip-org-ql
                             '(and (not (done))
                                   (not (tags-local "PROJECT" "INBOX"))
+                                  (not (tags-local "WISHLIST"))
                                   (tosee)
                                   (or (and (or (habit)
                                                ;; FIXME 2025-12-03: Avoid hard-coding this path
@@ -2061,7 +2063,7 @@ call `diff-buffer-with-file’ instead."
                                   (or (toreview)
                                       (tags-local "review"))))))))
               (alltodo ""
-                       ((org-agenda-overriding-header "inbox")
+                       ((org-agenda-overriding-header "Inbox")
                         (org-agenda-skip-function
                          (lambda ()
                            (krisb-org-agenda-skip-org-ql
