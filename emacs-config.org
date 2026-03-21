@@ -5237,6 +5237,7 @@ Log when the value of certain properties are changed:
                                   (tosee)
                                   (not (tags-local "REVIEW"))
                                   (not (tags "PUSHED"))
+                                  (not (tags-local "WISHLIST"))
                                   (or (and (todo "NEXT" "TODO")
                                            (not (or (scheduled)
                                                     (deadline))))
@@ -5248,6 +5249,7 @@ Log when the value of certain properties are changed:
                            (krisb-org-agenda-skip-org-ql
                             '(and (not (done))
                                   (not (tags-local "PROJECT" "INBOX"))
+                                  (not (tags-local "WISHLIST"))
                                   (tosee)
                                   (or (and (or (habit)
                                                ;; FIXME 2025-12-03: Avoid hard-coding this path
@@ -5264,7 +5266,7 @@ Log when the value of certain properties are changed:
                                   (or (toreview)
                                       (tags-local "review"))))))))
               (alltodo ""
-                       ((org-agenda-overriding-header "inbox")
+                       ((org-agenda-overriding-header "Inbox")
                         (org-agenda-skip-function
                          (lambda ()
                            (krisb-org-agenda-skip-org-ql
