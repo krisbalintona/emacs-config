@@ -212,7 +212,7 @@ displayed when `org-export-show-temporary-export-buffer' is non-nil."
     async subtreep visible-only body-only ext-plist
     (lambda () (set-auto-mode t))))
 
-(defun personal-site-org-export-to-html 
+(defun personal-site-org-export-to-html
     (&optional async subtreep visible-only body-only ext-plist)
   "Export current buffer to a HTML file.
 Behaves identically to `org-html-export-to-html', but with a bespoke
@@ -270,33 +270,53 @@ Return output file's name."
   :translate-alist
   '((template . personal-site-org-html-template)))
 
-;;;; Org publish
+;;;; Org-publish
+;; I use org-publish to make it easier to export all my blog posts
+;; altogether.
 
-;; NOTE 2026-02-12: This is set to nil as I develop.  When in use, a
-;; value of t is more appropriate.
-(setopt org-publish-use-timestamps-flag nil)
+(defun personal-site-org-publish-to-html (plist filename pub-dir)
+  "Publish an org file to HTML for the personal site.
+PLIST is the property list for the current project.  FILENAME is the
+filename of the org file to be published.  PUB-DIR is the publishing
+directory.
 
-;; Define project
-(setopt org-publish-project-alist
-        `(("posts"
-           :base-directory ,krisb-blog-manuscripts-directory
-           :publishing-directory "/tmp/new_blog/posts/"
-           :base-extension "org"
-           :recursive t
-           :publishing-function krisb-org-html-publish-to-html
-           :auto-sitemap t
-           :sitemap-filename "/tmp/new_blog/index.org"
-           :sitemap-title "My Posts"
-           :sitemap-sort-files anti-chronologically
-           :sitemap-format-entry krisb-org-publish-sitemap-format-entry
-           :html-head-include-default-style nil
-           :html-head ,(sxml-to-xml `(link (@ (rel "stylesheet")
-                                              (href "../css/stylesheet.css")
-                                              (type "text/css"))))
-           :html-prefer-user-labels nil ; We have our own function for anchors
-           :org-export-with-broken-links t
-           :with-toc nil
-           :with-cite-processors t)))
+This function is used as the :publishing-function in
+`org-publish-project-alist'."
+  ;; We can't use `org-publish-org-to' directly because that would use
+  ;; `org-export-output-file-name' instead of our
+  ;; `personal-site-org-output-file-name' to determine the output
+  ;; file.  So we define a modified version of `org-publish-org-to'
+  ;; instead
+  (org-with-file-buffer filename
+    (let* ((org-export-coding-system org-html-coding-system)
+           (file (personal-site-org-output-file-name)))
+      (org-export-to-file 'html-svelte file
+        nil nil nil (plist-get plist :body-only)
+        (org-combine-plists
+         plist
+         `(:crossrefs
+           ,(org-publish-cache-get-file-property
+             (file-truename filename) :crossrefs nil t)
+           :filter-final-output
+           (org-publish--store-crossrefs
+            org-publish-collect-index
+            ,@(plist-get plist :filter-final-output))))))))
+
+(setopt
+ ;; NOTE 2026-02-12: This is set to nil as I develop, to force
+ ;; publishing every file.  When in use, a value of t is more
+ ;; appropriate.
+ org-publish-use-timestamps-flag nil
+ org-publish-project-alist
+ `(("personal-site-posts"
+    :base-directory "~/Documents/org-database/notes/manuscripts/blog/"
+    :publishing-directory ,personal-site-destination-dir
+    :base-extension "org"
+    :recursive t
+    :publishing-function personal-site-org-publish-to-html
+    :html-head-include-default-style nil
+    :html-prefer-user-labels nil
+    :with-toc nil)))
 
 ;;; Provide
 (provide 'personal-site)
