@@ -54,6 +54,25 @@ This option is used to define the value of other relevant paths."
   "Timestamp format for post IDs.
 For my site, I construct post IDs using the date of the post.")
 
+;; TODO 2026-03-28: When considering export of subtrees, in which case
+;; we would use the EXPORT_DATE subtree property
+(defun personal-site--org-get-date (info fmt)
+  "Return current post\\='s publish date as a string.
+The date is derived with this precedence:
+1. The value of the file\\='s last \"#+date\" keyword.  This date is
+   formatted using the time format string FMT.
+
+If none of the above apply, return nil.
+
+INFO is a plist used as a communication channel."
+  ;; FIXME 2026-03-28: Should I even use `org-export-get-date'?  It
+  ;; seems like the only built-in option, but it doesn't really do
+  ;; what I want
+  (let ((date (org-export-get-date info fmt)))
+    (when (listp date)
+      (setq date (org-format-timestamp (car (last date)) fmt)))
+    (org-string-nw-p date)))
+
 (defun personal-site-org-html--meta-info (info)
   "Return meta tags for exported document.
 These meta tags store information about the post that will be used later
@@ -70,31 +89,36 @@ INFO is a plist used as a communication channel."
                            (symbol-name
                             (coding-system-get org-html-coding-system 'mime-charset)))
                       "iso-8859-1")))
-    (concat
-     ;; Title
-     (esxml-to-xml `(meta ((name . "title")
-                           (content . ,title))))
+    (string-trim
+     (mapconcat
+      #'esxml-to-xml
+      (list
+       ;; Timestamp for creation of export file
+       (when (plist-get info :time-stamp-file)
+         `(comment nil ,(format-time-string (plist-get info :html-metadata-timestamp-format))))
+       
+       ;; Title
+       `(meta ((name . "title") (content . ,title)))
 
-     ;; Date
-     ;;
-     ;; We have a meta tag specifically for the date so SvelteKit can
-     ;; show the same date in different formats, if needed
-     (let ((date (org-export-get-date info (plist-get info :html-metadata-timestamp-format))))
-       (esxml-to-xml `(meta ((name . "date")
-                             (content . ,date)))))
+       ;; Date
+       ;;
+       ;; We have a meta tag specifically for the date so SvelteKit can
+       ;; show the same date in different formats, if needed
+       (let ((date (personal-site--org-get-date info (plist-get info :html-metadata-timestamp-format))))
+         `(meta ((name . "date") (content . ,date))))
 
-     ;; Character encoding
-     (if (org-html-html5-p info)
-         (esxml-to-xml `(meta ((charset . ,charset))))
-       (esxml-to-xml `(meta ((http-equiv . "Content-Type")
-                             (content . ,(concat "text/html;charset=" charset))))))
+       ;; Character encoding
+       (if (org-html-html5-p info)
+           `(meta ((charset . ,charset)))
+         `(meta ((http-equiv . "Content-Type")
+                 (content . ,(concat "text/html;charset=" charset)))))
 
-     (let* (;; We construct each post's ID using their ISO 8601 with
-            ;; all non-numeric characters removed
-            (postid (org-export-get-date info personal-site-org-post-id-timestamp-format)))
-       ;; Post slug (ID)
-       (esxml-to-xml `(meta ((name . "postid")
-                             (content . ,postid))))))))
+       (let* (;; We construct each post's ID using their ISO 8601 with
+              ;; all non-numeric characters removed
+              (postid (personal-site--org-get-date info personal-site-org-post-id-timestamp-format)))
+         ;; Post ID
+         `(meta ((name . "postid") (content . ,postid)))))
+      "\n"))))
 
 (defun personal-site-org-html-template (contents info)
   "Return complete document string after HTML conversion.
@@ -115,12 +139,9 @@ export options."
                                   ,(org-export-data subtitle info))))
 
           (date (when (plist-get info :date)
-                  (org-export-get-date info "%B %e, %Y")))
-          (date-element
-           (when date
-             ;; `(p ((class . "date"))
-             ;;     (i nil ,(org-export-data date info)))
-             `(i ((class . "date")) ,(org-export-data date info))))
+                  (personal-site--org-get-date info "%B %e, %Y")))
+          (date-element (when date
+                          `(i ((class . "date")) ,(org-export-data date info))))
           (html5-fancy (org-html--html5-fancy-p info))
           (content (assq 'content (plist-get info :html-divs)))
           (content-tag (intern (nth 1 content)))
@@ -253,13 +274,16 @@ Return output file's name."
             (lambda (async subtreep visible-only body-only)
               (if async
                   (personal-site-org-export-to-html t subtreep visible-only body-only)
-                (find-file
+                (find-file-other-window
                  (personal-site-org-export-to-html nil subtreep visible-only body-only)))))))
 
   ;; Used to define new options or overwrite those of the parent
   ;; backend
   :options-alist
-  '((:html-metadata-timestamp-format nil nil "%Y-%m-%dT%H:%M:%S")
+  `((:time-stamp-file nil nil nil)
+    (:html-metadata-timestamp-format nil nil "%Y-%m-%dT%H:%M:%S")
+    ;; Default date set to Unix Epoch (for documents without a date)
+    (:date "DATE" nil "[1970-01-01 Thu 00:00]" parse)
     ;; Force using the modern HTML5
     (:html-doctype "HTML_DOCTYPE" nil "html5")
     (:html-html5-fancy nil "html5-fancy" t))
@@ -309,14 +333,17 @@ This function is used as the :publishing-function in
  org-publish-use-timestamps-flag nil
  org-publish-project-alist
  `(("personal-site-posts"
-    :base-directory "~/Documents/org-database/notes/manuscripts/blog/"
+    :base-directory ,(expand-file-name "posts" krisb-blog-manuscripts-directory)
     :publishing-directory ,personal-site-destination-dir
     :base-extension "org"
     :recursive t
     :publishing-function personal-site-org-publish-to-html
     :html-head-include-default-style nil
     :html-prefer-user-labels nil
-    :with-toc nil)))
+    :with-toc nil
+    :with-tags nil
+    :with-todo-keywords nil
+    :time-stamp-file nil)))
 
 ;;; Provide
 (provide 'personal-site)
