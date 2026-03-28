@@ -6860,7 +6860,7 @@ Mode line indicator for notmuch emails:
       (propertize (all-the-icons-material "mail_outline")
                   'face `(:family ,(all-the-icons-material-family) :height 1.1)
                   'display '(raise -0.1)))
-     (t "🞷 "))
+     (t "*"))
     "Icon I use for displaying mail in `display-time-string-forms'.")
 
   ;; Asynchronously update count for relevant mail.  We do so
