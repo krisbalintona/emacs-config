@@ -1473,6 +1473,7 @@ Then apply ARGS."
 ;; config:
 ;; - `vc-annotate-display-mode'
 ;; - `vc-revert-show-diff'
+;; - `vc-dir-hide-up-to-date-on-revert'
 (setup vc
 
   (with-eval-after-load 'vc
@@ -1483,7 +1484,6 @@ Then apply ARGS."
             vc-display-failed-async-commands t        ; Emacs 31
             vc-revert-show-diff t
             vc-find-revision-no-save t            ; Emacs 31
-            vc-dir-hide-up-to-date-on-revert t    ; Emacs 31
             vc-dir-save-some-buffers-on-revert t  ; Emacs 31
             vc-use-incoming-outgoing-prefixes t)) ; Emacs 31
 
