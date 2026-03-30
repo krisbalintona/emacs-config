@@ -5660,7 +5660,13 @@ When called with `-' instead call `inspector-inspect-expression'."
   (:package yaml-mode))
 
 ;;; Svelte-mode
-(defconfig (web-development :packages (svelte-mode)))
+(setup svelte-mode
+  (:package svelte-mode)
+  
+  (with-eval-after-load 'svelte-mode
+    (add-hook 'svelte-mode-hook #'subword-mode)
+    
+    (setopt svelte-display-submode-name t)))
 
 ;;; Shr
 (with-eval-after-load 'shr

@@ -4297,7 +4297,13 @@ Consequently, the elisp backend is used if there is no other local backend to us
 
 #+name: svelte-mode
 #+begin_src emacs-lisp
-  (defconfig (web-development :packages (svelte-mode)))
+  (setup svelte-mode
+    (:package svelte-mode)
+    
+    (with-eval-after-load 'svelte-mode
+      (add-hook 'svelte-mode-hook #'subword-mode)
+      
+      (setopt svelte-display-submode-name t)))
 #+end_src
 
 *** Sops: Major mode for editing SOPS files
@@ -7495,6 +7501,16 @@ HTML rendering library. Used across various Emacs packages, e.g., ~notmuch-show-
 #+begin_src emacs-lisp
   (with-eval-after-load 'shr
     (setopt shr-use-colors nil))          ; Use my theme's colors
+#+end_src
+
+*** Typescript-ts-mode: Tree-sitter major mode for Typescript
+
+#+name: shr
+#+begin_src emacs-lisp
+  (setup typescript-ts-mode
+    
+    (with-eval-after-load 'typescript-ts-mode
+      (add-hook 'typescript-ts-base-mode-hook #'subword-mode)))
 #+end_src
 
 ** Platform- and system-specific configuration
