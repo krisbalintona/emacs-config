@@ -1481,8 +1481,8 @@ Then apply ARGS."
             vc-allow-rewriting-published-history 'ask ; Emacs 31
             vc-async-checkin t                        ; Emacs 31
             vc-allow-async-diff t                     ; Emacs 31
+            vc-allow-async-revert t
             vc-display-failed-async-commands t        ; Emacs 31
-            vc-revert-show-diff t
             vc-find-revision-no-save t            ; Emacs 31
             vc-dir-save-some-buffers-on-revert t  ; Emacs 31
             vc-use-incoming-outgoing-prefixes t)) ; Emacs 31
