@@ -835,7 +835,7 @@ I set the ~cursor-type~ according to major-mode. Generally, I prefer a thinner, 
 *** Indentation settings
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  (setopt tab-width 4
+  (setopt tab-width 8                     ; Default
           ;; Insert spaces instead of tab characters.  The below
           ;; disables `indent-tabs-mode' globally
           indent-tabs-mode nil)

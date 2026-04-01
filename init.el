@@ -413,7 +413,7 @@ package-archives, e.g. \"gnu\")."))
   ;; `duplicate-region-final-position' user options
   (bind-key "C-x ;" #'duplicate-dwim)
   
-  (setopt tab-width 4
+  (setopt tab-width 8                     ; Default
           ;; Insert spaces instead of tab characters.  The below
           ;; disables `indent-tabs-mode' globally
           indent-tabs-mode nil)
