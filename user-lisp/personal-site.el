@@ -25,6 +25,14 @@
 ;; Bespoke org backend and org-publish setup for exporting posts to my
 ;; personal site (found at https://kristofferbalintona.me/).
 
+;; TODO:
+;; 1. Figure out exporting of assets to assets post subdirectory.
+;; 2. Fontify/highlight code blocks properly.
+;; 3. Ensure cross-post org id links work.
+;; 4. Get rid of randomized class names across org export products.
+;; 5. Improve formatting of footnotes.
+;; 6. Improve formatting of bibliographies.
+
 ;;; Code:
 
 (require 'ox)
