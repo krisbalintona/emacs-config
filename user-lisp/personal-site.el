@@ -27,7 +27,6 @@
 
 ;; TODO:
 ;; 1. Figure out exporting of assets to assets post subdirectory.
-;; 2. Fontify/highlight code blocks properly.
 ;; 3. Ensure cross-post org id links work.
 ;; 4. Get rid of randomized class names across org export products.
 ;; 5. Improve formatting of footnotes.
@@ -36,8 +35,10 @@
 ;;; Code:
 
 (require 'ox)
+(require 'ox-html)
 (require 'ox-publish)
 (require 'esxml)
+(require 'el-patch)
 
 ;;;; Variables and options
 
@@ -164,6 +165,63 @@ export options."
                                 subtitle-element)))
                      (raw-string ,contents))))))
 
+(el-patch-defun (el-patch-swap org-html-src-block personal-site-org-html-src-block)
+  (src-block _contents info)
+  (el-patch-swap
+    "Transcode a SRC-BLOCK element from Org to HTML.
+CONTENTS holds the contents of the item.  INFO is a plist holding
+contextual information."
+    "Transcode a SRC-BLOCK element from Org to HTML.
+CONTENTS holds the contents of the item.  INFO is a plist holding
+contextual information.
+
+This is identical to `org-html-format-code' except in the following
+ways:
+- The src block languages are converted into the appropriate Shiki
+  language grammar name (see https://shiki.style/languages).")
+  (if (org-export-read-attribute :attr_html src-block :textarea)
+      (org-html--textarea-block src-block)
+    (let* ((lang (org-element-property :language src-block))
+           ;; Convert LANG to proper Shiki language grammar name
+           (el-patch-add
+             (lang (pcase lang
+                     ("LaTeX" "latex")
+                     (_ lang))))
+           (code (org-html-format-code src-block info))
+           (label (let ((lbl (org-html--reference src-block info t)))
+                    (if lbl (format " id=\"%s\"" lbl) "")))
+           (klipsify  (and  (plist-get info :html-klipsify-src)
+                            (member lang '("javascript" "js"
+                                           "ruby" "scheme" "clojure" "php" "html")))))
+      (format "<div class=\"org-src-container\">\n%s%s\n</div>"
+              ;; Build caption.
+              (let ((caption (org-export-get-caption src-block)))
+                (if (not caption) ""
+                  (let ((listing-number
+                         (format
+                          "<span class=\"listing-number\">%s </span>"
+                          (format
+                           (org-html--translate "Listing %d:" info)
+                           (org-export-get-ordinal
+                            src-block info nil #'org-html--has-caption-p)))))
+                    (format "<label class=\"org-src-name\">%s%s</label>"
+                            listing-number
+                            (org-trim (org-export-data caption info))))))
+              ;; Contents.
+              (if klipsify
+                  (format "<pre><code class=\"src src-%s\"%s%s>%s</code></pre>"
+                          lang ; lang being nil is OK.
+                          label
+                          (if (string= lang "html")
+                              " data-editor-type=\"html\""
+                            "")
+                          code)
+                (format "<pre class=\"src src-%s\"%s><code>%s</code></pre>"
+                        ;; Lang being nil is OK.
+                        lang label code))))))
+
+;;;;; Exporters
+
 (defun personal-site--title-to-slug (title)
   "Return slug associated with TITLE.
 This slug is used as the directory name associated with a post (inside
@@ -288,7 +346,7 @@ Return output file's name."
   ;; Used to define new options or overwrite those of the parent
   ;; backend
   :options-alist
-  `((:time-stamp-file nil nil nil)
+  '((:time-stamp-file nil nil nil)
     (:html-metadata-timestamp-format nil nil "%Y-%m-%dT%H:%M:%S")
     ;; Default date set to Unix Epoch (for documents without a date)
     (:date "DATE" nil "[1970-01-01 Thu 00:00]" parse)
@@ -300,7 +358,8 @@ Return output file's name."
   ;; backend.  See `org-export-define-backend' for more information on
   ;; backend transcoders
   :translate-alist
-  '((template . personal-site-org-html-template)))
+  '((template . personal-site-org-html-template)
+    (src-block . personal-site-org-html-src-block)))
 
 ;;;; Org-publish
 ;; I use org-publish to make it easier to export all my blog posts
