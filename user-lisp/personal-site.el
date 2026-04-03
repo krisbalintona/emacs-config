@@ -28,7 +28,6 @@
 ;; TODO:
 ;; 1. Figure out exporting of assets to assets post subdirectory.
 ;; 3. Ensure cross-post org id links work.
-;; 4. Get rid of randomized class names across org export products.
 ;; 5. Improve formatting of footnotes.
 ;; 6. Improve formatting of bibliographies.
 
@@ -164,6 +163,102 @@ export options."
                           (list title-element
                                 subtitle-element)))
                      (raw-string ,contents))))))
+
+(defun personal-site--headline-text-to-slug (headline)
+  "Slugify HEADLINE\\'s text.
+Return a slug for the HEADLINE element suitable for use as a URL anchor.
+This function converts the text of HEADLINE to lowercase, replaces
+spaces with hyphens, and removes any characters that are not
+alphanumeric or hyphens.
+
+In the special case where HEADLINE\\'s text is an empty string, return
+\"headline\".
+
+HEADLINE is an org headline element.  INFO is the current export state,
+as a plist."
+  (let* ((title (org-element-property :title headline))
+         (raw (org-no-properties (org-element-interpret-data title)))
+         (lowercased (downcase raw))
+         (trimmed (string-trim lowercased))
+         (hyphenated (replace-regexp-in-string "[[:space:]]+" "-" trimmed))
+         (cleaned (replace-regexp-in-string "[^a-z0-9-]" "" hyphenated))
+         (deduplicated (replace-regexp-in-string "-+" "-" cleaned))
+         (result (string-trim deduplicated "-")))
+    (if (string-empty-p result) "headline" result)))
+
+(defun personal-site--org-export-get-reference-advice (orig datum info)
+  "Advice for `org-export-get-reference' to generate stable IDs.
+When exporting with the 'html-svelte' backend:
+- For headlines, generate a deterministic slug from the headline text,
+  appending a counter only for duplicates.
+- For other elements, generate a reference of the form TYPE-N.
+When not using the 'html-svelte' backend, call
+`org-export-get-reference' normally.
+
+ORIG is the original function.  See `org-export-get-reference' for a
+description of DATUM and INFO."
+  (if (not (eq (org-export-backend-name (plist-get info :back-end)) 'html-svelte))
+      (funcall orig datum info)
+    ;; Keep a cache in INFO like `org-export-get-reference' does
+    (let ((cache (plist-get info :internal-references)))
+      (or (car (rassq datum cache))
+          (let* ((type (org-element-type datum))
+                 (reference
+                  (if (org-element-type-p datum 'headline)
+                      ;; For headlines: SLUG-N counter after the first
+                      ;; duplicate headline
+                      (let* ((slug-cache
+                              ;; Table of DATUM to slug
+                              (or (plist-get info :personal-site-headline-slug-cache)
+                                  (let ((table (make-hash-table :test #'eq)))
+                                    (plist-put info :personal-site-headline-slug-cache table)
+                                    table)))
+                             (cached (gethash datum slug-cache)))
+                        (or
+                         ;; If DATUM has a matching reference already,
+                         ;; just return it
+                         cached
+                         ;; New headline element, so compute new slug
+                         ;; then cache the relevant info.  We also
+                         ;; have to have another cache for the number
+                         ;; of times a given base slug appears, so as
+                         ;; to increment appropriately
+                         (let* ((base-slug (personal-site--headline-text-to-slug datum))
+                                (slug-counts
+                                 ;; Table of BASE-SLUG to count
+                                 (or (plist-get info :personal-site-headline-slug-counts)
+                                     (let ((table (make-hash-table :test #'equal)))
+                                       (plist-put info :personal-site-headline-slug-counts table)
+                                       table)))
+                                (n (gethash base-slug slug-counts 0))
+                                (final-slug (if (zerop n)
+                                                base-slug
+                                              (format "%s-%d" base-slug n))))
+                           (puthash base-slug (1+ n) slug-counts)
+                           (puthash datum final-slug slug-cache)
+                           final-slug)))
+                    ;; For non-headlines: simple TYPE-N counter.
+                    (let* ((counters
+                            (or (plist-get info :personal-site-display-type-counters)
+                                (let ((table (make-hash-table :test #'eq)))
+                                  (plist-put info :personal-site-display-type-counters table)
+                                  table)))
+                           (display-type
+                            (cond ((and (eq type 'paragraph)
+                                        (org-html-standalone-image-p datum info))
+                                   'figure)
+                                  (t type)))
+                           (n (1+ (gethash display-type counters 0))))
+                      (puthash display-type n counters)
+                      (format "%s-%d" display-type n))))
+                 (cache (cons (cons reference datum) cache)))
+            (plist-put info :internal-references cache)
+            reference)))))
+;; We use advice rather than redefining the functions
+;; `org-export-get-reference' uses because many functions use it for
+;; various DATUMs, e.g., figures, headlines, src blocks -- it's easier
+;; to just advise it
+(advice-add 'org-export-get-reference :around #'personal-site--org-export-get-reference-advice)
 
 (el-patch-defun (el-patch-swap org-html-src-block personal-site-org-html-src-block)
   (src-block _contents info)
