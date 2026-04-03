@@ -4303,7 +4303,11 @@ Consequently, the elisp backend is used if there is no other local backend to us
     (with-eval-after-load 'svelte-mode
       (add-hook 'svelte-mode-hook #'subword-mode)
       
-      (setopt svelte-display-submode-name t)))
+      (setopt svelte-display-submode-name t))
+
+    (with-eval-after-load 'eglot
+      (add-to-list 'eglot-server-programs
+                   '(svelte-mode . ("svelteserver" "--stdio")))))
 #+end_src
 
 *** Sops: Major mode for editing SOPS files
@@ -7507,10 +7511,13 @@ HTML rendering library. Used across various Emacs packages, e.g., ~notmuch-show-
 
 #+name: typescript-ts-mode
 #+begin_src emacs-lisp
-  (setup typescript-ts-mode
-    
-    (with-eval-after-load 'typescript-ts-mode
-      (add-hook 'typescript-ts-base-mode-hook #'subword-mode)))
+  (with-eval-after-load 'typescript-ts-mode
+    (add-hook 'typescript-ts-base-mode-hook #'subword-mode))
+
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+                 '((typescript-mode typescript-ts-mode)
+                   . ("typescript-language-server" "--stdio"))))
 #+end_src
 
 *** Direnv: Emacs integration with =direnv=

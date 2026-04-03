@@ -5666,17 +5666,24 @@ When called with `-' instead call `inspector-inspect-expression'."
   (with-eval-after-load 'svelte-mode
     (add-hook 'svelte-mode-hook #'subword-mode)
     
-    (setopt svelte-display-submode-name t)))
+    (setopt svelte-display-submode-name t))
+
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+                 '(svelte-mode . ("svelteserver" "--stdio")))))
 
 ;;; Shr
 (with-eval-after-load 'shr
   (setopt shr-use-colors nil))          ; Use my theme's colors
 
 ;;; Typescript-ts-mode
-(setup typescript-ts-mode
-  
-  (with-eval-after-load 'typescript-ts-mode
-    (add-hook 'typescript-ts-base-mode-hook #'subword-mode)))
+(with-eval-after-load 'typescript-ts-mode
+  (add-hook 'typescript-ts-base-mode-hook #'subword-mode))
+
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '((typescript-mode typescript-ts-mode)
+                 . ("typescript-language-server" "--stdio"))))
 
 ;;; Direnv
 (unless (package-installed-p 'direnv)
