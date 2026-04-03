@@ -390,9 +390,11 @@ settings.
 Export is done in a buffer named \"*Org HTML Export*\", which will be
 displayed when `org-export-show-temporary-export-buffer' is non-nil."
   (interactive)
-  (org-export-to-buffer 'html-svelte "*Org HTML Export*"
-    async subtreep visible-only body-only ext-plist
-    (lambda () (set-auto-mode t))))
+  (let (;; Force exporting raw HTML without styling
+        (org-html-htmlize-output-type nil))
+    (org-export-to-buffer 'html-svelte "*Org HTML Export*"
+      async subtreep visible-only body-only ext-plist
+      (lambda () (set-auto-mode t)))))
 
 (defun personal-site-org-export-to-html
     (&optional async subtreep visible-only body-only ext-plist)
@@ -416,7 +418,9 @@ settings.
 Return output file's name."
   (interactive)
   (let* ((org-export-coding-system org-html-coding-system)
-         (file (personal-site-org-output-file-name subtreep)))
+         (file (personal-site-org-output-file-name subtreep))
+         ;; Force exporting raw HTML without styling
+         (org-html-htmlize-output-type nil))
     (org-export-to-file 'html-svelte file
       async subtreep visible-only body-only ext-plist)))
 
