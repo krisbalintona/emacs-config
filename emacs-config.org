@@ -4327,6 +4327,9 @@ Consequently, the elisp backend is used if there is no other local backend to us
 #+end_src
 
 *** Svelte-mode: Major mode for SvelteKit project files
+:PROPERTIES:
+:CUSTOM_ID: h:20260403T142044.324712
+:END:
 
 #+name: svelte-mode
 #+begin_src emacs-lisp
@@ -7541,6 +7544,9 @@ HTML rendering library. Used across various Emacs packages, e.g., ~notmuch-show-
 #+end_src
 
 *** Typescript-ts-mode: Tree-sitter major mode for Typescript
+:PROPERTIES:
+:CUSTOM_ID: h:20260403T141907.379841
+:END:
 
 #+name: typescript-ts-mode
 #+begin_src emacs-lisp
@@ -7646,6 +7652,12 @@ See sections:
 ** Email
 
 Using Emacs for emails involves various packages that fulfill certain roles. For a brief overview of the parts that compose receiving, reading, composing, and sending email, see =(smtpmail) How Mail Works=.
+
+** Web development
+
+I have minor web development needs for the purposes of developing my personal site. I use several packages for this:
++ [[#h:20260403T142044.324712][Svelte-mode: Major mode for SvelteKit project files]]
++ [[#h:20260403T141907.379841][Typescript-ts-mode: Tree-sitter major mode for Typescript]]
 
 * Deployments
 
