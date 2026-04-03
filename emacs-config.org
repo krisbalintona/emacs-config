@@ -7513,6 +7513,16 @@ HTML rendering library. Used across various Emacs packages, e.g., ~notmuch-show-
       (add-hook 'typescript-ts-base-mode-hook #'subword-mode)))
 #+end_src
 
+*** Direnv: Emacs integration with =direnv=
+
+#+name: direnv
+#+begin_src emacs-lisp
+  (unless (package-installed-p 'direnv)
+    (package-install 'direnv))
+
+  (direnv-mode 1)
+#+end_src
+
 ** Platform- and system-specific configuration
 
 *** Guix
@@ -8095,6 +8105,9 @@ Using Emacs for emails involves various packages that fulfill certain roles. For
 
   ;;; Shr
   <<shr>>
+
+  ;;; Direnv
+  <<direnv>>
 
   ;;; Load config units
   <<config-units-load>>

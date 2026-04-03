@@ -5672,6 +5672,12 @@ When called with `-' instead call `inspector-inspect-expression'."
 (with-eval-after-load 'shr
   (setopt shr-use-colors nil))          ; Use my theme's colors
 
+;;; Direnv
+(unless (package-installed-p 'direnv)
+  (package-install 'direnv))
+
+(direnv-mode 1)
+
 ;;; Load config units
 (load-all-configs)
 
