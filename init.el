@@ -143,6 +143,33 @@ nothing."
 (setopt package-vc-allow-build-commands t)
 (setopt package-review-policy t) ; Review packages upon upgrade
 
+(defmacro krisb-package-install (package &rest args)
+  "Convenience wrapper around `package-install'.
+PACKAGE is the name of a package.
+
+If ARGS are nil, then install PACKAGE using `package-install'.  If ARGS
+is non-nil, then call `package-vc-install' with those arguments.  In
+both cases, if PACKAGE is already installed, do nothing.
+
+This macro was modified from Protesilaos\\='s `prot-emacs-install'
+macro."
+  (declare (indent 0))
+  (unless (symbolp package)
+    (error "The package `%s' is not a symbol" package))
+  (cond
+   ((and package args)
+    `(unless (package-installed-p ',package)
+       (condition-case-unless-debug err
+           (apply #'package-vc-install ',args)
+         (error (message "Failed `package-vc-install' with `%S': `%S'" ',args (cdr err))))))
+   (package
+    `(progn
+       (unless (package-installed-p ',package)
+         (unless package-archive-contents (package-refresh-contents))
+         (condition-case-unless-debug nil
+             (package-install ',package)
+           (error (message "Cannot install `%s'; try `M-x package-refresh-contents' first" ',package))))))))
+
 ;;;; Setup.el
 (unless (package-installed-p 'setup)
   (package-install 'setup))

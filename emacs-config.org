@@ -1093,6 +1093,8 @@ Below are settings sufficient to get Emacs---with the sendmail library, in parti
   ;; setting this value to an outright t
   (setopt package-vc-allow-build-commands t)
   <<package-review-policy>>
+
+  <<krisb-package-install>>
 #+end_src
 
 I also relativize the packages that package.el installs by Emacs version, since I sometimes run different versions of Emacs to test packages, and bytecode incompatibilities might arise between my compiled Emacs and the package.el packages. I make sure to place this before ~package-initialize~ is called; therefore, unless ~package-enable-at-startup~ is nil, this should be placed in early-init.el.
@@ -1113,6 +1115,37 @@ In Emacs 31, packages installed with package.el can now be reviewed upon upgradi
 #+name: package-review-policy
 #+begin_src emacs-lisp
   (setopt package-review-policy t) ; Review packages upon upgrade
+#+end_src
+
+Below is a bespoke macro I use for package installation.
+#+name: krisb-package-install
+#+begin_src emacs-lisp
+  (defmacro krisb-package-install (package &rest args)
+    "Convenience wrapper around `package-install'.
+  PACKAGE is the name of a package.
+
+  If ARGS are nil, then install PACKAGE using `package-install'.  If ARGS
+  is non-nil, then call `package-vc-install' with those arguments.  In
+  both cases, if PACKAGE is already installed, do nothing.
+
+  This macro was modified from Protesilaos\\='s `prot-emacs-install'
+  macro."
+    (declare (indent 0))
+    (unless (symbolp package)
+      (error "The package `%s' is not a symbol" package))
+    (cond
+     ((and package args)
+      `(unless (package-installed-p ',package)
+         (condition-case-unless-debug err
+             (apply #'package-vc-install ',args)
+           (error (message "Failed `package-vc-install' with `%S': `%S'" ',args (cdr err))))))
+     (package
+      `(progn
+         (unless (package-installed-p ',package)
+           (unless package-archive-contents (package-refresh-contents))
+           (condition-case-unless-debug nil
+               (package-install ',package)
+             (error (message "Cannot install `%s'; try `M-x package-refresh-contents' first" ',package))))))))
 #+end_src
 
 [fn:1] See also [[https://github.com/kn66/package-upgrade-guard.el][package-upgrade-guard.el]], which I used prior to the implementation of this feature into Emacs.
