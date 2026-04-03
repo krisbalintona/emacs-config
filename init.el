@@ -49,17 +49,17 @@ nothing."
        (message "Symlinking %s to %s..." patch-path link-path)
        (make-symbolic-link patch-path link-path))))
 
+;; I have several patches awaiting review or application.
+(krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/notmuch/emacs/notmuch.el")
+(krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/notmuch/emacs/notmuch-mua.el")
+(krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/notmuch/emacs/notmuch-tree.el")
+
 ;; Until the vtable work I’ve been testing is upstreamed, we manually
 ;; load that file
 (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/emacs-vtable-ship-mints/lisp/emacs-lisp/vtable.el")
 
 ;; Load my bespoke version before org's version of org-capture
 (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/org-mode/lisp/org-capture.el")
-
-;; I have several patches awaiting review or application.
-(krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/notmuch/emacs/notmuch.el")
-(krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/notmuch/emacs/notmuch-mua.el")
-(krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/notmuch/emacs/notmuch-tree.el")
 
 ;;; Meta-configuration
 
@@ -782,16 +782,16 @@ to if called with ARG, or any prefix argument."
             ;; is non-nil)
             (file (styles . (partial-completion)))
             (kill-ring (styles . (orderless-literal-and-prefixes)))
+            (bookmark (eager-display . t))
             (consult-outline (styles . (orderless-literal-and-prefixes)))
             (consult-location (eager-display . t))
             (consult-grep (eager-display . nil))
             (consult-info (eager-display . nil))
-            (recentf (eager-display . t))
-            (bookmark (eager-display . t))
-            ;; For tempel `citar-at-point-function's and commands
-            (tempel (eager-display . t))
             (info-menu (eager-display t))
-            (org-node (eager-display . t))))
+            (org-node (eager-display . t))
+            (recentf (eager-display . t))
+            ;; For tempel `citar-at-point-function's and commands
+            (tempel (eager-display . t))))
   
   ;; How do we want to treat case in completion?
   (setopt completion-ignore-case t
