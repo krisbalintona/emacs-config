@@ -7,3 +7,5 @@
 recipes/*.elc
 /tramp-rpc/
 /user-lisp/.user-lisp-autoloads.el
+/var/
+/var-old/
