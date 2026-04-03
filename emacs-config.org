@@ -7505,7 +7505,7 @@ HTML rendering library. Used across various Emacs packages, e.g., ~notmuch-show-
 
 *** Typescript-ts-mode: Tree-sitter major mode for Typescript
 
-#+name: shr
+#+name: typescript-ts-mode
 #+begin_src emacs-lisp
   (setup typescript-ts-mode
     
@@ -8105,6 +8105,9 @@ Using Emacs for emails involves various packages that fulfill certain roles. For
 
   ;;; Shr
   <<shr>>
+
+  ;;; Typescript-ts-mode
+  <<typescript-ts-mode>>
 
   ;;; Direnv
   <<direnv>>

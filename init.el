@@ -5672,6 +5672,12 @@ When called with `-' instead call `inspector-inspect-expression'."
 (with-eval-after-load 'shr
   (setopt shr-use-colors nil))          ; Use my theme's colors
 
+;;; Typescript-ts-mode
+(setup typescript-ts-mode
+  
+  (with-eval-after-load 'typescript-ts-mode
+    (add-hook 'typescript-ts-base-mode-hook #'subword-mode)))
+
 ;;; Direnv
 (unless (package-installed-p 'direnv)
   (package-install 'direnv))
