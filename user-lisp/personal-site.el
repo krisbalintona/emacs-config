@@ -365,7 +365,14 @@ Return file name as a string."
            ;; As a fallback, ask user
            (read-file-name "Output directory: " personal-site-destination-dir)))
          (output-directory (expand-file-name directory personal-site-destination-dir)))
-    (unless (file-exists-p output-directory)
+    (if (file-exists-p output-directory)
+        ;; Clear out OUTPUT-DIRECTORY if it already exists
+        (mapc (lambda (f)
+                (if (file-directory-p f)
+                    (delete-directory f)
+                  (delete-file f)))
+              (directory-files-recursively output-directory ".*" t))
+      ;; Make OUTPUT-DIRECTORY if it doesn't exist yet
       (make-directory output-directory))
     (expand-file-name "index.html" output-directory)))
 
