@@ -328,18 +328,17 @@ This slug is used as the directory name associated with a post (inside
      "[^a-z0-9]+" "_"
      (downcase title)))))
 
-(defun personal-site-org-output-file-name (&optional subtreep)
-  "Return the full output file path of the current post.
-Like `org-export-output-file-name' but for my personal site\\='s
-directory structure (see `personal-site-destination-dir').
+(defun personal-site-org-output-directory (&optional subtreep)
+  "Return the output directory path of the current post.
+The returned path is of the form ID-SLUG, where ID is based on the date
+property of the post and SLUG is the title of the post passed to
+`personal-site--title-to-slug'.
 
 This function is called from the point in org buffer to-be exported.
 
-With a non-nil optional argument SUBTREEP, try to determine output
-file's name by looking for \"EXPORT_FILE_NAME\" property of subtree at
-point.
-
-Return file name as a string."
+With a non-nil optional argument SUBTREEP, use the \"EXPORT_FILE_NAME\"
+property of subtree at point as the SLUG portion of the output
+directory."
   (let* ((export-environment (org-export-get-environment 'html-svelte))
          (title (org-element-interpret-data (plist-get export-environment :title)))
          (date-timestamp (car (plist-get export-environment :date)))
@@ -363,18 +362,24 @@ Return file name as a string."
            ;; Determine export file path for buffer
            (concat postid "--" (personal-site--title-to-slug title))
            ;; As a fallback, ask user
-           (read-file-name "Output directory: " personal-site-destination-dir)))
-         (output-directory (expand-file-name directory personal-site-destination-dir)))
-    (if (file-exists-p output-directory)
-        ;; Clear out OUTPUT-DIRECTORY if it already exists
-        (mapc (lambda (f)
-                (if (file-directory-p f)
-                    (delete-directory f)
-                  (delete-file f)))
-              (directory-files-recursively output-directory ".*" t))
-      ;; Make OUTPUT-DIRECTORY if it doesn't exist yet
-      (make-directory output-directory))
-    (expand-file-name "index.html" output-directory)))
+           (read-file-name "Output directory: " personal-site-destination-dir))))
+    (expand-file-name directory personal-site-destination-dir)))
+
+(defun personal-site--org-prepare-output-directory (directory)
+  "Prepare output directory for receiving exported files.
+Create DIRECTORY if it does not exist.  If it does, delete any existing
+files and directories.
+
+DIRECTORY is the targeted output directory."
+  (if (file-exists-p directory)
+      ;; Clear out DIRECTORY if it already exists
+      (mapc (lambda (f)
+              (if (file-directory-p f)
+                  (delete-directory f)
+                (delete-file f)))
+            (directory-files-recursively directory ".*" t))
+    ;; Make DIRECTORY if it doesn't exist yet
+    (make-directory output-directory)))
 
 (defun personal-site-org-export-as-html
     (&optional async subtreep visible-only body-only ext-plist)
@@ -425,9 +430,11 @@ settings.
 Return output file's name."
   (interactive)
   (let* ((org-export-coding-system org-html-coding-system)
-         (file (personal-site-org-output-file-name subtreep))
+         (output-dir (personal-site-org-output-directory subtreep))
+         (file (expand-file-name "index.html" output-dir))
          ;; Force exporting raw HTML without styling
          (org-html-htmlize-output-type nil))
+    (personal-site--org-prepare-output-directory output-dir)
     (org-export-to-file 'html-svelte file
       async subtreep visible-only body-only ext-plist)))
 
@@ -481,23 +488,20 @@ This function is used as the :publishing-function in
 `org-publish-project-alist'."
   ;; We can't use `org-publish-org-to' directly because that would use
   ;; `org-export-output-file-name' instead of our
-  ;; `personal-site-org-output-file-name' to determine the output
+  ;; `personal-site-org-output-directory' to determine the output
   ;; file.  So we define a modified version of `org-publish-org-to'
   ;; instead
   (org-with-file-buffer filename
-    (let* ((org-export-coding-system org-html-coding-system)
-           (file (personal-site-org-output-file-name)))
-      (org-export-to-file 'html-svelte file
-        nil nil nil (plist-get plist :body-only)
-        (org-combine-plists
-         plist
-         `(:crossrefs
-           ,(org-publish-cache-get-file-property
-             (file-truename filename) :crossrefs nil t)
-           :filter-final-output
-           (org-publish--store-crossrefs
-            org-publish-collect-index
-            ,@(plist-get plist :filter-final-output))))))))
+    (let* ((org-export-coding-system org-html-coding-system))
+      (personal-site-org-export-to-html
+       nil nil nil (plist-get plist :body-only)
+       (org-combine-plists
+        plist
+        `( :crossrefs ,(org-publish-cache-get-file-property
+                        (file-truename filename) :crossrefs nil t)
+           :filter-final-output (org-publish--store-crossrefs
+                                 org-publish-collect-index
+                                 ,@(plist-get plist :filter-final-output))))))))
 
 (setopt
  ;; NOTE 2026-02-12: This is set to nil as I develop, to force
