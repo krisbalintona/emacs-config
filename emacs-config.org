@@ -6051,6 +6051,19 @@ Text like =::tag_1 ::tag_2 ::tag_3= are fontified specially. I regard these are 
         prepend))))
 #+end_src
 
+**** Org-attach
+
+#+name: org-attach
+#+begin_src emacs-lisp
+  (with-eval-after-load 'org-attach
+    (setopt org-attach-id-dir (expand-file-name "resources" krisb-folio-directory)
+            org-attach-archive-delete 'query ; If subtree is deleted or archived, ask user
+            org-attach-id-to-path-function-list
+            '(org-attach-id-ts-folder-format
+              org-attach-id-uuid-folder-format
+              org-attach-id-fallback-folder-format)))
+#+end_src
+
 *** Org-ql: Query language for org-mode
 
 #+name: org-ql
@@ -7892,6 +7905,9 @@ I have minor web development needs for the purposes of developing my personal si
 
   ;;;;; Org-refile
   <<org-refile>>
+
+  ;;;;; Org-attach
+  <<org-attach>>
 
   ;;;; Other org packages
   ;;;;; Org-contrib

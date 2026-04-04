@@ -2432,6 +2432,15 @@ inserted with e.g. `org-insert-last-stored-link' or
           (apply args)))
       (advice-add #'org-olpath-completing-read :around #'krisb-vertico-enforce-basic-completion))))
 
+;;;;; Org-attach
+(with-eval-after-load 'org-attach
+  (setopt org-attach-id-dir (expand-file-name "resources" krisb-folio-directory)
+          org-attach-archive-delete 'query ; If subtree is deleted or archived, ask user
+          org-attach-id-to-path-function-list
+          '(org-attach-id-ts-folder-format
+            org-attach-id-uuid-folder-format
+            org-attach-id-fallback-folder-format)))
+
 ;;;; Other org packages
 ;;;;; Org-contrib
 ;; Collection of org packages
