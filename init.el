@@ -5727,16 +5727,17 @@ When called with `-' instead call `inspector-inspect-expression'."
 ;; Ensure the astro, css, and tsx tree-sitter language grammars are
 ;; installed, according to README:
 ;; https://git.isincredibly.gay/srxl/astro-ts-mode#headline-5
-(add-to-list 'treesit-language-source-alist
-             '(astro "https://github.com/virchau13/tree-sitter-astro"))
-(unless (treesit-language-available-p 'astro)
-  (treesit-install-language-grammar 'astro))
-(unless (treesit-language-available-p 'css)
-  (treesit-install-language-grammar 'css))
-(add-to-list 'treesit-language-source-alist
-             '(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
-(unless (treesit-language-available-p 'tsx)
-  (treesit-install-language-grammar 'tsx))
+(with-eval-after-load 'treesit-language-source-alist
+  (add-to-list 'treesit-language-source-alist
+               '(astro "https://github.com/virchau13/tree-sitter-astro"))
+  (unless (treesit-language-available-p 'astro)
+    (treesit-install-language-grammar 'astro))
+  (unless (treesit-language-available-p 'css)
+    (treesit-install-language-grammar 'css))
+  (add-to-list 'treesit-language-source-alist
+               '(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+  (unless (treesit-language-available-p 'tsx)
+    (treesit-install-language-grammar 'tsx)))
 
 ;; LSP server
 (with-eval-after-load 'eglot
