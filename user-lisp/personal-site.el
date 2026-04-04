@@ -26,7 +26,6 @@
 ;; personal site (found at https://kristofferbalintona.me/).
 
 ;; TODO:
-;; 1. Figure out exporting of assets to assets post subdirectory.
 ;; 3. Ensure cross-post org id links work.
 ;; 5. Improve formatting of footnotes.
 ;; 6. Improve formatting of bibliographies.
@@ -315,6 +314,237 @@ ways:
                         ;; Lang being nil is OK.
                         lang label code))))))
 
+(defun personal-site--attachment-copy (path info)
+  "Copy asset at PATH to the post subdirectory.
+Return the path of the asset relative to the post subdirectory.
+
+PATH is the absolute path of the local asset.  INFO is a plist used as a
+communication channel."
+  (let* ((output-dir (plist-get info :personal-site-output-directory))
+         (filename (file-name-nondirectory path))
+         (asset-subdir (expand-file-name "assets" output-dir))
+         (asset-path (expand-file-name filename asset-subdir))
+         (link-path filename))
+    ;; TODO 2026-04-04: Assumes that attachments are uniquely named.
+    ;; Perhaps allow non-unique attachment file names by appending a
+    ;; number after each duplicate (like we do for element IDs in
+    ;; `personal-site--org-export-get-reference-advice')?
+    (if (file-exists-p asset-path)
+        (message "[personal-site] Asset %s already exists, not overwriting" asset-path)
+      (unless (file-exists-p asset-subdir)
+        (make-directory asset-subdir))
+      (copy-file path asset-path nil))
+    link-path))
+
+;; (el-patch-defun (el-patch-swap org-html-link personal-org-html-link)
+(defun personal-org-html-link
+    (link desc info)
+  "Transcode a LINK object from Org to HTML.
+DESC is the description part of the link, or the empty string.
+INFO is a plist holding contextual information.  See
+`org-export-data'."
+  (let* ((html-ext (plist-get info :html-extension))
+         (dot (when (> (length html-ext) 0) "."))
+         (link-org-files-as-html-maybe
+          (lambda (raw-path info)
+            ;; Treat links to `file.org' as links to `file.html', if
+            ;; needed.  See `org-html-link-org-files-as-html'.
+            (save-match-data
+              (cond
+               ((and (plist-get info :html-link-org-files-as-html)
+                     (let ((case-fold-search t))
+                       (string-match "\\(.+\\)\\.org\\(?:\\.gpg\\)?$" raw-path)))
+                (concat (match-string 1 raw-path) dot html-ext))
+               (t raw-path)))))
+         (type (org-element-property :type link))
+         (raw-path (org-element-property :path link))
+         ;; Ensure DESC really exists, or set it to nil.
+         (desc (org-string-nw-p desc))
+         (path
+          (cond
+           ((string= "file" type)
+            ;; During publishing, turn absolute file names belonging
+            ;; to base directory into relative file names.  Otherwise,
+            ;; append "file" protocol to absolute file name.
+            (setq raw-path
+                  (org-export-file-uri
+                   (org-publish-file-relative-name raw-path info)))
+            ;; Possibly append `:html-link-home' to relative file
+            ;; name.
+            (let ((home (and (plist-get info :html-link-home)
+                             (org-trim (plist-get info :html-link-home)))))
+              (when (and home
+                         (plist-get info :html-link-use-abs-url)
+                         (not (file-name-absolute-p raw-path)))
+                (setq raw-path (concat (file-name-as-directory home) raw-path))))
+            ;; Maybe turn ".org" into ".html".
+            (setq raw-path (funcall link-org-files-as-html-maybe raw-path info))
+            ;; Add search option, if any.  A search option can be
+            ;; relative to a custom-id, a headline title, a name or
+            ;; a target.
+            (let ((option (org-element-property :search-option link)))
+              (if (not option) raw-path
+                (let ((path (org-element-property :path link)))
+                  (concat raw-path
+                          "#"
+                          (org-publish-resolve-external-link option path t))))))
+           (t (url-encode-url (concat type ":" raw-path)))))
+         (attributes-plist
+          (org-combine-plists
+           ;; Extract attributes from parent's paragraph.  HACK: Only
+           ;; do this for the first link in parent (inner image link
+           ;; for inline images).  This is needed as long as
+           ;; attributes cannot be set on a per link basis.
+           (let* ((parent (org-element-parent-element link))
+                  (link (let ((container (org-element-parent link)))
+                          (if (and (org-element-type-p container 'link)
+                                   (org-html-inline-image-p link info))
+                              container
+                            link))))
+             (and (eq link (org-element-map parent 'link #'identity info t))
+                  (org-export-read-attribute :attr_html parent)))
+           ;; Also add attributes from link itself.  Currently, those
+           ;; need to be added programmatically before `org-html-link'
+           ;; is invoked, for example, by backends building upon HTML
+           ;; export.
+           (org-export-read-attribute :attr_html link)))
+         (attributes
+          (let ((attr (org-html--make-attribute-string attributes-plist)))
+            (if (org-string-nw-p attr) (concat " " attr) ""))))
+    (cond
+     ;; Link type is handled by a special function.
+     ((org-export-custom-protocol-maybe link desc 'html info))
+     ;; Image file.
+     ((and (plist-get info :html-inline-images)
+           (org-export-inline-image-p
+            link (plist-get info :html-inline-image-rules)))
+      ;; (el-patch-remove (org-html--format-image path attributes-plist info))
+      ;; (el-patch-add
+      
+      (let* ((raw-path (org-element-property :path link))
+             ;; When we are exporting to a buffer, we leave the links
+             ;; as they are.  However, when we are exporting to a
+             ;; file, we copy the asset over to the appropriate
+             ;; location and modify the link to point to the
+             ;; appropriate path on the website
+             (asset-path
+              (if (plist-get info :output-file)
+                  (personal-site--attachment-copy raw-path info)
+                path)))
+        (org-html--format-image asset-path attributes-plist info))
+      
+      ;; )
+      )
+     ;; Radio target: Transcode target's contents and use them as
+     ;; link's description.
+     ((string= type "radio")
+      (let ((destination (org-export-resolve-radio-link link info)))
+        (if (not destination) desc
+          (format "<a href=\"#%s\"%s>%s</a>"
+                  (org-html--reference destination info)
+                  attributes
+                  desc))))
+     ;; Links pointing to a headline: Find destination and build
+     ;; appropriate referencing command.
+     ((member type '("custom-id" "fuzzy" "id"))
+      (let ((destination (if (string= type "fuzzy")
+                             (org-export-resolve-fuzzy-link link info)
+                           (org-export-resolve-id-link link info))))
+        (pcase (org-element-type destination)
+          ;; ID link points to an external file.
+          (`plain-text
+           (let ((fragment (concat org-html--id-attr-prefix raw-path))
+                 ;; Treat links to ".org" files as ".html", if needed.
+                 (path (funcall link-org-files-as-html-maybe
+                                destination info)))
+             (format "<a href=\"%s#%s\"%s>%s</a>"
+                     path fragment attributes (or desc destination))))
+          ;; Fuzzy link points nowhere.
+          (`nil
+           (format "<i>%s</i>"
+                   (or desc
+                       (org-export-data
+                        (org-element-property :raw-link link) info))))
+          ;; Link points to a headline.
+          (`headline
+           (let ((href (org-html--reference destination info))
+                 ;; What description to use?
+                 (desc
+                  ;; Case 1: Headline is numbered and LINK has no
+                  ;; description.  Display section number.
+                  (if (and (org-export-numbered-headline-p destination info)
+                           (not desc))
+                      (mapconcat #'number-to-string
+                                 (org-export-get-headline-number
+                                  destination info) ".")
+                    ;; Case 2: Either the headline is un-numbered or
+                    ;; LINK has a custom description.  Display LINK's
+                    ;; description or headline's title.
+                    (or desc
+                        (org-export-data
+                         (org-element-property :title destination) info)))))
+             (format "<a href=\"#%s\"%s>%s</a>" href attributes desc)))
+          ;; Fuzzy link points to a target or an element.
+          (_
+           (require 'ox-latex)
+           (declare-function org-latex--environment-type "ox-latex" (latex-environment))
+           (if (and destination
+                    (memq (plist-get info :with-latex) '(mathjax t))
+                    (org-element-type-p destination 'latex-environment)
+                    (eq 'math (org-latex--environment-type destination)))
+               ;; Caption and labels are introduced within LaTeX
+               ;; environment.  Use "ref" or "eqref" macro, depending on user
+               ;; preference to refer to those in the document.
+               (format (plist-get info :html-equation-reference-format)
+                       (org-html--reference destination info))
+             (let* ((ref (org-html--reference destination info))
+                    (org-html-standalone-image-predicate
+                     #'org-html--has-caption-p)
+                    (counter-predicate
+                     (if (org-element-type-p destination 'latex-environment)
+                         #'org-html--math-environment-p
+                       #'org-html--has-caption-p))
+                    (number
+                     (cond
+                      (desc nil)
+                      ((org-html-standalone-image-p destination info)
+                       (org-export-get-ordinal
+                        (org-element-map destination 'link #'identity info t)
+                        info '(link) 'org-html-standalone-image-p))
+                      (t (org-export-get-ordinal
+                          destination info nil counter-predicate))))
+                    (desc
+                     (cond (desc)
+                           ((not number) "No description for this link")
+                           ((numberp number) (number-to-string number))
+                           (t (mapconcat #'number-to-string number ".")))))
+               (format "<a href=\"#%s\"%s>%s</a>" ref attributes desc)))))))
+     ;; Coderef: replace link with the reference name or the
+     ;; equivalent line number.
+     ((string= type "coderef")
+      (let ((fragment (concat "coderef-" (org-html-encode-plain-text raw-path))))
+        (format "<a href=\"#%s\" %s%s>%s</a>"
+                fragment
+                (format "class=\"coderef\" onmouseover=\"CodeHighlightOn(this, \
+'%s');\" onmouseout=\"CodeHighlightOff(this, '%s');\""
+                        fragment fragment)
+                attributes
+                (format (org-export-get-coderef-format raw-path desc)
+                        (org-export-resolve-coderef raw-path info)))))
+     ;; External link with a description part.
+     ((and path desc)
+      (format "<a href=\"%s\"%s>%s</a>"
+              (org-html-encode-plain-text path)
+              attributes
+              desc))
+     ;; External link without a description part.
+     (path
+      (let ((path (org-html-encode-plain-text path)))
+        (format "<a href=\"%s\"%s>%s</a>" path attributes path)))
+     ;; No path, only description.  Try to do something useful.
+     (t
+      (format "<i>%s</i>" desc)))))
+
 ;;;;; Exporters
 
 (defun personal-site--title-to-slug (title)
@@ -402,10 +632,14 @@ settings.
 Export is done in a buffer named \"*Org HTML Export*\", which will be
 displayed when `org-export-show-temporary-export-buffer' is non-nil."
   (interactive)
-  (let (;; Force exporting raw HTML without styling
+  (let ((output-dir (personal-site-org-output-directory subtreep))
+        ;; Force exporting raw HTML without styling
         (org-html-htmlize-output-type nil))
     (org-export-to-buffer 'html-svelte "*Org HTML Export*"
-      async subtreep visible-only body-only ext-plist
+      async subtreep visible-only body-only
+      (org-combine-plists
+       ext-plist
+       `(:personal-site-output-directory ,output-dir))
       (lambda () (set-auto-mode t)))))
 
 (defun personal-site-org-export-to-html
@@ -436,7 +670,10 @@ Return output file's name."
          (org-html-htmlize-output-type nil))
     (personal-site--org-prepare-output-directory output-dir)
     (org-export-to-file 'html-svelte file
-      async subtreep visible-only body-only ext-plist)))
+      async subtreep visible-only body-only
+      (org-combine-plists
+       ext-plist
+       `(:personal-site-output-directory ,output-dir)))))
 
 (org-export-define-derived-backend 'html-svelte 'html
   ;; Used to modify or remove org elements on export, overwriting the
@@ -449,12 +686,13 @@ Return output file's name."
   '(?p "Export to personal site HTML"
        ((?H "As HTML buffer" personal-site-org-export-as-html)
         (?h "As HTML file" personal-site-org-export-to-html)
-        (?o "As HTML file and open with Emacs"
+        (?o "As HTML file and open in Emacs"
             (lambda (async subtreep visible-only body-only)
               (if async
                   (personal-site-org-export-to-html t subtreep visible-only body-only)
-                (find-file-other-window
-                 (personal-site-org-export-to-html nil subtreep visible-only body-only)))))))
+                (pop-to-buffer
+                 (find-file-noselect
+                  (personal-site-org-export-to-html nil subtreep visible-only body-only))))))))
 
   ;; Used to define new options or overwrite those of the parent
   ;; backend
@@ -472,7 +710,8 @@ Return output file's name."
   ;; backend transcoders
   :translate-alist
   '((template . personal-site-org-html-template)
-    (src-block . personal-site-org-html-src-block)))
+    (src-block . personal-site-org-html-src-block)
+    (link . personal-org-html-link)))
 
 ;;;; Org-publish
 ;; I use org-publish to make it easier to export all my blog posts
