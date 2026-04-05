@@ -160,8 +160,8 @@ macro."
    ((and package args)
     `(unless (package-installed-p ',package)
        (condition-case-unless-debug err
-           (apply #'package-vc-install ',args)
-         (error (message "Failed `package-vc-install' with `%S': `%S'" ',args (cdr err))))))
+           (package-vc-install '(,package ,@args))
+         (error (message "Failed `package-vc-install' with `%s': `%s'" ',args (cdr err))))))
    (package
     `(progn
        (unless (package-installed-p ',package)
