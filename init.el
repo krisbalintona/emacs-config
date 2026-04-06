@@ -4712,16 +4712,13 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
                ("T" . powerthesaurus-lookup-dwim))))
 
 ;;; Wombag
-(setup wombag
-  ;; Elpaca:
-  ;; :ensure ( :repo "https://github.com/krisbalintona/wombag.git"
-  ;;           :branch "merge")
-  (:package (wombag :url "https://github.com/krisbalintona/wombag.git"
-                    :branch "merge"))
-  
-  (bind-keys :map krisb-open-keymap
-             ("w" . wombag))
-  
+(krisb-package-install wombag
+                       :url "https://github.com/karthink/wombag.git")
+
+(bind-keys :map krisb-open-keymap
+           ("w" . wombag))
+
+(with-eval-after-load 'wombag
   (setopt wombag-dir (no-littering-expand-var-file-name "wombag")
           wombag-db-file (no-littering-expand-var-file-name "wombag/wombag.sqlite")
           wombag-username "krisbalintona"
@@ -4730,24 +4727,21 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
           wombag-client-id "23882_1jzdzdd09ikgw4k8o0cog4wggk48cgc0gwk8oos0gsc44gcsco"
           wombag-client-secret (auth-source-pick-first-password :host "emacs-wombag.el")
           wombag-search-filter "")
-  
-  (with-eval-after-load 'wombag
-    (defun krisb-wombag-entry-setup ()
-      "Set up the visual for wombag-entry buffers."
-      (setq-local line-spacing 0.08)
-      (face-remap-add-relative 'default :height 1.1)
-      (when (require 'olivetti nil t)
-        (olivetti-mode 1)
-        (olivetti-set-width 120))
-      (when (require 'mixed-pitch nil t)
-        (mixed-pitch-mode 1))
-      (visual-line-mode 1))
-    (add-hook 'wombag-show-mode-hook #'krisb-wombag-entry-setup)))
 
-(setup wombag
-  (with-eval-after-load 'wombag
-    (when (package-installed-p 'org-remark)
-      (add-hook 'wombag-show-mode-hook #'org-remark-mode))))
+  (defun krisb-wombag-entry-setup ()
+    "Set up the visual for wombag-entry buffers."
+    (setq-local line-spacing 0.08)
+    (face-remap-add-relative 'default :height 1.1)
+    (when (require 'olivetti nil t)
+      (olivetti-mode 1)
+      (olivetti-set-width 120))
+    (when (require 'mixed-pitch nil t)
+      (mixed-pitch-mode 1))
+    (visual-line-mode 1))
+  (add-hook 'wombag-show-mode-hook #'krisb-wombag-entry-setup)
+
+  (when (featurep 'org-remark)
+    (add-hook 'wombag-show-mode-hook #'org-remark-mode)))
 
 ;;; Display-line-numbers
 ;; Show line numbers on the left fringe
