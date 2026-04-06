@@ -1500,7 +1500,7 @@ Then apply ARGS."
 ;; config:
 ;; - `vc-annotate-display-mode'
 ;; - `vc-revert-show-diff'
-;; - `vc-dir-hide-up-to-date-on-revert'
+;; - `vc-dir-auto-hide-up-to-date'
 (setup vc
 
   (with-eval-after-load 'vc
@@ -3523,17 +3523,13 @@ PROP is the name of the property.  See
 ;; TODO 2025-06-07: Document:
 ;; - `diff-font-lock-syntax’
 ;; - `diff-refine’
-(setup diff-mode
-
+(with-eval-after-load 'diff-mode
   (setopt diff-font-lock-prettify t ; Make diff headers look like Magit’s
           ;; 2024-10-23 TODO: Revisit this. I think it causes a bug in
           ;; vc-jj
           ;; diff-default-read-only t
           )
-
-  (:bind-keys :map diff-mode-map
-              ("v" . vc-next-action))
-
+  
   (add-hook 'diff-mode-hook #'diff-delete-empty-files)
 
   ;; TODO 2025-06-07: Revisit this.
