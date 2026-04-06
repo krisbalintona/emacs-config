@@ -6673,6 +6673,13 @@ Persid knows how to retrieve information from the following formats:
      ([remap move-past-close-and-reindent] . puni-syntactic-forward-punct)))
 #+end_src
 
+*** Reader: State-of-the-art Emacs document reader
+
+#+name: reader
+#+begin_src emacs-lisp
+  (add-to-list 'load-path (expand-file-name "~/emacs-repos/packages/emacs-reader/"))
+#+end_src
+
 *** Recentf: Keep track of recent files
 
 #+name: recentf
@@ -8203,6 +8210,9 @@ I have minor web development needs for the purposes of developing my personal si
 
   ;;; Direnv
   <<direnv>>
+
+  ;;; Reader
+  <<reader>>
 
   ;;; Load config units
   <<config-units-load>>

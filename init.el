@@ -5744,6 +5744,9 @@ When called with `-' instead call `inspector-inspect-expression'."
 
 (direnv-mode 1)
 
+;;; Reader
+(add-to-list 'load-path (expand-file-name "~/emacs-repos/packages/emacs-reader/"))
+
 ;;; Load config units
 (load-all-configs)
 
