@@ -1005,11 +1005,11 @@ Wayland specific:
 
 #+name: auto-revert-remote-files
 #+begin_src emacs-lisp
-  ;; FIXME 2025-12-29: Causing freezes when SSHing into my remote
-  ;; machine.  Look into if this is a Tramp or remote machine issue.
-  ;; ;; Revert remote files too?  See also
-  ;; ;; `remote-file-name-inhibit-auto-save-visited'
-  ;; (setopt auto-revert-remote-files t)
+  ;; Revert remote files too?
+  ;;
+  ;; See also `remote-file-name-inhibit-auto-save-visited' for
+  ;; auto-saving remote files
+  (setopt auto-revert-remote-files t)
 #+end_src
 
 *** Show current working directory ("cwd") in command prompts
