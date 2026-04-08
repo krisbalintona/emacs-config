@@ -3398,13 +3398,7 @@ PROP is the name of the property.  See
    'krisb-remote-source-profile))
 
 ;;; Tramp-hlo
-(setup tramp-hlo
-  (:pin tramp-hlo "gnu-elpa-devel")
-  (:package tramp-hlo)
-  
-  (autoload 'tramp-hlo-setup "tramp-hlo")
-  (with-eval-after-load 'tramp
-    (tramp-hlo-setup)))
+
 
 ;;; Tramp-theme
 ;; NOTE: I learned about this package from (info "(tramp) Frequently

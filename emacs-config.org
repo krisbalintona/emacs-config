@@ -6982,7 +6982,7 @@ Tempel-specific completion category overrides:
               ("Asia/Shanghai" "Beijing"))))
 #+end_src
 
-*** Tramp-hlo: "High-level operations" for tramp
+*** COMMENT Tramp-hlo: "High-level operations" for tramp
 
 A problem with Tramp is that there are certain common tasks which inevitably require many round-trips. Tramp-HLO's solution is to specially do those expensive tasks on the server side, sending the final result to the local machine---these are "high-level operations. It does this by running bash scripts that accomplish the goal of these expensive elisp functions. There are two such functions it currently replaces:
 + ~locate-dominating-file~
