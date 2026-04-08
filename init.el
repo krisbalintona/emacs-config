@@ -1522,7 +1522,13 @@ Then apply ARGS."
                '((or . ((major-mode . vc-dir-mode)
                         (major-mode . vc-git-log-view-mode)
                         (major-mode . vc-git-region-history-mode)))
-                 (display-buffer-same-window))))
+                 (display-buffer-same-window)))
+  (add-to-list 'display-buffer-alist
+               '((major-mode . vc-compilation-mode)
+                 (display-buffer-reuse-window
+                  display-buffer-reuse-mode-window
+                  display-buffer-below-selected)
+                 (post-command-select-window . t))))
 
 ;; Dispatcher between `vc-diff’ and `diff-buffer-with-file’
 (setup vc

@@ -7228,6 +7228,12 @@ I do not use this myself, but for users who don't need VC when using tramp on re
                         (major-mode . vc-git-log-view-mode)
                         (major-mode . vc-git-region-history-mode)))
                  (display-buffer-same-window)))
+  (add-to-list 'display-buffer-alist
+               '((major-mode . vc-compilation-mode)
+                 (display-buffer-reuse-window
+                  display-buffer-reuse-mode-window
+                  display-buffer-below-selected)
+                 (post-command-select-window . t)))
 #+end_src
 
 #+name: vc-auto-revert
