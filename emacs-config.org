@@ -7339,7 +7339,7 @@ I do not use this myself, but for users who don't need VC when using tramp on re
                (4 'change-log-date)))))
 #+end_src
 
-*** Vc-jj: VC with jujutsu (JJ)
+*** Vc-jj: VC with Jujutsu (jj)
 
 #+name: vc-jj
 #+begin_src emacs-lisp
