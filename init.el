@@ -489,6 +489,8 @@ package-archives, e.g. \"gnu\")."))
   ;; noticeable drawbacks (unless typing very, very fast).
   (setopt redisplay-skip-fontification-on-input t)
   
+  (setopt exchange-point-and-mark-highlight-region nil) ; Emacs 31
+  
   (setup face-remap
     
     ;; Hide `buffer-face-mode' minor-mode lighter

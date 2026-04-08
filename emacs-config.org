@@ -1094,6 +1094,12 @@ I discovered this trick in [[https://emacsredux.com/blog/2026/04/07/stealing-fro
   (setopt redisplay-skip-fontification-on-input t)
 #+end_src
 
+*** Invoking ~exchange-point-and-mark~ does not activate mark
+
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  (setopt exchange-point-and-mark-highlight-region nil) ; Emacs 31
+#+end_src
+
 ** Packages
 *** Abbrev: Inline expansion library
 
