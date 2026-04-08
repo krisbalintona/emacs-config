@@ -1620,6 +1620,34 @@ call `diff-buffer-with-file’ instead."
     ;; my diff buffers, which shows a file listing already.
     (remove-hook 'log-edit-hook #'log-edit-show-files)))
 
+(cl-macrolet
+    ((diff-mode-p ()
+       ;; Match against `diff-mode' buffers
+       `(lambda (buffer-name action)
+          (with-current-buffer (window-buffer (selected-window))
+            (derived-mode-p 'diff-mode))))
+     (vc-log-edit-buffer-p ()
+       `(cons 'or (list "\\*vc-log\\*"
+                        ;; TODO 2026-04-08: Based on how `vc-checkin'
+                        ;; calls `vc-start-logentry', I have to match
+                        ;; the buffer by name rather than by major
+                        ;; mode.  I prefer the former when possible
+                        ;; though; I might file a bug report for this.
+                        (cons 'major-mode 'log-edit-mode)))))
+  ;; I want log edit buffers opened in the same buffer (most of the
+  ;; time).  Except: when opened from `vc-next-action' and the current
+  ;; buffer is a `diff-mode' buffer
+  (add-to-list 'display-buffer-alist
+               `((and ,(vc-log-edit-buffer-p)
+                      (not (and ,(diff-mode-p) (this-command . vc-next-action))))
+                 (display-buffer-reuse-window
+                  display-buffer-same-window)))
+  (add-to-list 'display-buffer-alist
+               `((and ,(vc-log-edit-buffer-p)
+                      (and ,(diff-mode-p) (this-command . vc-next-action)))
+                 (display-buffer-reuse-window
+                  display-buffer-use-some-window))))
+
 ;;; Outline.el
 (setup outline
 
