@@ -7436,6 +7436,7 @@ Vertico provides several extensions:
 
     (setopt switch-to-buffer-obey-display-actions t
             window-resize-pixelwise t
+            window-combination-resize t ; Keep proportionality of windows after splitting
             quit-restore-window-no-switch t ; Emacs 31
             kill-buffer-quit-windows t))    ; Emacs 31
 #+end_src
