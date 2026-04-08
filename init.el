@@ -1613,7 +1613,10 @@ call `diff-buffer-with-file’ instead."
   ;; an empty hook.)
   (with-eval-after-load 'log-edit
     (add-hook 'log-edit-hook #'auto-fill-mode)
-    (add-hook 'log-edit-hook #'log-edit-maybe-show-diff)))
+    (add-hook 'log-edit-hook #'log-edit-maybe-show-diff)
+    ;; Don't find much use in the file listing since I pass --stat to
+    ;; my diff buffers, which shows a file listing already.
+    (remove-hook 'log-edit-hook #'log-edit-show-files)))
 
 ;;; Outline.el
 (setup outline
