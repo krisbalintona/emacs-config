@@ -478,6 +478,17 @@ package-archives, e.g. \"gnu\")."))
   
   (setopt shell-command-prompt-show-cwd t)
   
+  ;; If we assume the text flows left-to-right, then we can increase
+  ;; performance to a degree.  Taken from Doom Emacs.
+  (setq-default bidi-paragraph-direction 'left-to-right)
+  (setopt bidi-inhibit-bpa t)
+  
+  ;; Prevent expensive live-fontification of buffer while editing.  Has
+  ;; noticeable benefit in large buffers and in major modes that try to
+  ;; fontify as you type, like tree-sitter major modes.  Has no
+  ;; noticeable drawbacks (unless typing very, very fast).
+  (setopt redisplay-skip-fontification-on-input t)
+  
   (setup face-remap
     
     ;; Hide `buffer-face-mode' minor-mode lighter

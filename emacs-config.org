@@ -962,7 +962,8 @@ Use the right-click menu:
 *** COMMENT Clipboard
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
-  ;; Don’t wait until yanking to put clipboard text into `kill-ring’
+  ;; Save the existing clipboard content from other programs into the
+  ;; kill ring before overwriting the clipboard from Emacs
   (setopt save-interprogram-paste-before-kill t)
 
   ;; Wayland compatibility
@@ -1070,6 +1071,27 @@ Below are settings sufficient to get Emacs---with the sendmail library, in parti
                             uni-maildir)))))))
   (with-eval-after-load 'message
     (add-hook 'message-send-mail-hook #'krisb-notmuch-set-sendmail-args))
+#+end_src
+
+*** Assume left-to-right text for the sake of performance
+
+I discovered this trick initially from Doom Emacs, then later in [[https://emacsredux.com/blog/2026/04/07/stealing-from-the-best-emacs-configs/][this Emacs Redux]] article.
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; If we assume the text flows left-to-right, then we can increase
+  ;; performance to a degree.  Taken from Doom Emacs.
+  (setq-default bidi-paragraph-direction 'left-to-right)
+  (setopt bidi-inhibit-bpa t)
+#+end_src
+
+*** Wait to fontify after input
+
+I discovered this trick in [[https://emacsredux.com/blog/2026/04/07/stealing-from-the-best-emacs-configs/][this Emacs Redux]] article.
+#+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
+  ;; Prevent expensive live-fontification of buffer while editing.  Has
+  ;; noticeable benefit in large buffers and in major modes that try to
+  ;; fontify as you type, like tree-sitter major modes.  Has no
+  ;; noticeable drawbacks (unless typing very, very fast).
+  (setopt redisplay-skip-fontification-on-input t)
 #+end_src
 
 ** Packages
