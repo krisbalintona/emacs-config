@@ -1282,9 +1282,10 @@ Then apply ARGS."
 ;; TODO 2025-07-21: Document:
 ;; - `quit-window-kill-buffer'
 (setup window
-
+  
   (:bind-keys ("M-o" . other-window))
   (with-eval-after-load 'diff
+    (bind-key "C-o" (lookup-key diff-mode-shared-map (kbd "o")) diff-mode-shared-map)
     (unbind-key "o" diff-mode-shared-map))
   (with-eval-after-load 'eat
     (unbind-key "M-o" eat-semi-char-mode-map))
