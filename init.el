@@ -98,8 +98,11 @@ nothing."
                  (const :tag "Use `vertico'" vertico)))
 
 ;;;;; Directories
-(defvar krisb-blog-manuscripts-directory (expand-file-name "manuscripts/blog" krisb-notes-directory)
-  "The directory for my pre-export blog files.")
+(defvar krisb-manuscript-directory (expand-file-name "manuscripts" krisb-notes-directory)
+  "The directory containing my all manuscripts.")
+
+(defvar krisb-manuscript-blog-posts-directory (expand-file-name "blog" krisb-manuscript-directory)
+  "The directory for my blog posts.")
 
 (defvar krisb-email-directory (expand-file-name "emails/" "~/Documents/")
   "Directory that houses my local email files.")
@@ -2310,9 +2313,9 @@ org-node nodes that match all of TAGS.  It will return a candidate (see
              :hook (org-id-get-create org-expiry-insert-created)
              :before-finalize (org-node-add-refs
                                (lambda () (org-set-property "ROAM_BOX" "references"))))
-            ("b" "Blog post" plain
+            ("p" "Post" plain
              (function (lambda ()
-                         (let ((org-node-ask-directory krisb-blog-directory))
+                         (let ((org-node-ask-directory krisb-manuscript-blog-posts-directory))
                            (org-node-capture-target))))
              "#+filetags: :__blog_draft:
 #+hugo_bundle:

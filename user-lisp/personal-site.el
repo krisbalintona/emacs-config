@@ -749,7 +749,7 @@ This function is used as the :publishing-function in
  org-publish-use-timestamps-flag nil
  org-publish-project-alist
  `(("personal-site-posts"
-    :base-directory ,(expand-file-name "posts" krisb-blog-manuscripts-directory)
+    :base-directory ,krisb-manuscript-blog-posts-directory
     :publishing-directory ,personal-site-destination-dir
     :base-extension "org"
     :recursive t
