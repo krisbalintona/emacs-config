@@ -962,8 +962,8 @@ ending the minibuffer session. (This is equivalent to the behavior of
               orderless-prefixes
               orderless-initialism
               orderless-literal
+              orderless-flex
               ;; orderless-literal-prefix
-              ;; orderless-flex
               )))
   ;; Our orderless components are split by spaces (see
   ;; `orderless-component-separator') so, for convenience, make SPC
