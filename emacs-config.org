@@ -1161,6 +1161,9 @@ Apropos is a built-in library that queries the user for a regexp or word list to
 Additionally, all apropos commands will expand the subset of symbols they search when called with a universal argument. For example, ~apropos-user-option~ with a universal argument will search all variables, not just user options. (The option ~apropos-do-all~ determines whether =C-u= is required for this behavior.)
 
 *** Astro-ts-mode: Treesitter mode for Astro files
+:PROPERTIES:
+:CUSTOM_ID: h:20260409T210556.449533
+:END:
 
 #+name: astro-ts-mode
 #+begin_src emacs-lisp
@@ -7769,6 +7772,7 @@ Using Emacs for emails involves various packages that fulfill certain roles. For
 I have minor web development needs for the purposes of developing my personal site. I use several packages for this:
 + [[#h:20260403T142044.324712][Svelte-mode: Major mode for SvelteKit project files]]
 + [[#h:20260403T141907.379841][Typescript-ts-mode: Tree-sitter major mode for Typescript]]
++ [[#h:20260409T210556.449533][Astro-ts-mode: Treesitter mode for Astro files]]
 
 * Deployments
 
