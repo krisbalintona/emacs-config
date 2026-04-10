@@ -5763,37 +5763,23 @@ When called with `-' instead call `inspector-inspect-expression'."
                  . ("typescript-language-server" "--stdio"))))
 
 ;;; Astro-ts-mode
-(krisb-package-install astro-ts-mode)
 
-;; Ensure the astro, css, and tsx tree-sitter language grammars are
-;; installed, according to README:
-;; https://git.isincredibly.gay/srxl/astro-ts-mode#headline-5
-(with-eval-after-load 'treesit-language-source-alist
-  (add-to-list 'treesit-language-source-alist
-               '(astro "https://github.com/virchau13/tree-sitter-astro"))
-  (unless (treesit-language-available-p 'astro)
-    (treesit-install-language-grammar 'astro))
-  (unless (treesit-language-available-p 'css)
-    (treesit-install-language-grammar 'css))
-  (add-to-list 'treesit-language-source-alist
-               '(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
-  (unless (treesit-language-available-p 'tsx)
-    (treesit-install-language-grammar 'tsx)))
-
-;; LSP server
-(with-eval-after-load 'eglot
-  ;; Taken from
-  ;; https://medium.com/@jrmjrm/configuring-emacs-and-eglot-to-work-with-astro-language-server-9408eb709ab0
-  (add-to-list 'eglot-server-programs
-               '(astro-ts-mode . ("astro-ls" "--stdio"
-                                  :initializationOptions
-                                  (:typescript (:tsdk "./node_modules/typescript/lib"))))))
 
 ;;; Direnv
 (unless (package-installed-p 'direnv)
   (package-install 'direnv))
 
 (direnv-mode 1)
+
+;;; Web-mode
+(krisb-package-install web-mode)
+
+;; Astro
+;;
+;; Configuration suggestion taken from
+;; https://medium.com/@jrmjrm/configuring-emacs-and-eglot-to-work-with-astro-language-server-9408eb709ab0
+(define-derived-mode astro-mode web-mode "Astro")
+(add-to-list 'auto-mode-alist '(".*\\.astro\\'" . astro-mode))
 
 ;;; Load config units
 (load-all-configs)

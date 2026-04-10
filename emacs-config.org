@@ -1160,7 +1160,7 @@ Apropos is a built-in library that queries the user for a regexp or word list to
 #+end_src
 Additionally, all apropos commands will expand the subset of symbols they search when called with a universal argument. For example, ~apropos-user-option~ with a universal argument will search all variables, not just user options. (The option ~apropos-do-all~ determines whether =C-u= is required for this behavior.)
 
-*** Astro-ts-mode: Treesitter mode for Astro files
+*** COMMENT Astro-ts-mode: Treesitter mode for Astro files
 :PROPERTIES:
 :CUSTOM_ID: h:20260409T210556.449533
 :END:
@@ -1189,9 +1189,10 @@ Additionally, all apropos commands will expand the subset of symbols they search
     ;; Taken from
     ;; https://medium.com/@jrmjrm/configuring-emacs-and-eglot-to-work-with-astro-language-server-9408eb709ab0
     (add-to-list 'eglot-server-programs
-                 '(astro-ts-mode . ("astro-ls" "--stdio"
-                                    :initializationOptions
-                                    (:typescript (:tsdk "./node_modules/typescript/lib"))))))
+                 '(astro-ts-mode
+                   . ("astro-ls" "--stdio"
+                      :initializationOptions
+                      (:typescript (:tsdk "./node_modules/typescript/lib"))))))
 #+end_src
 
 *** Astute.el: Display punctuation typographically
@@ -7456,6 +7457,25 @@ Vertico provides several extensions:
                  :spacer #(" " 0 1 (cursor t))))))
 #+end_src
 
+*** Web--mode: Major mode for editing various "web templates"
+:PROPERTIES:
+:CUSTOM_ID: h:20260409T221936.483467
+:END:
+
+Web templates are HTML files embedding parts of CSS or JavaScript as well as blocks meant for pre-rendering by client or server side engines. Examples include Svelte (=.svelte=) and Astro (=.astro= files.
+
+#+name: web-mode
+#+begin_src emacs-lisp
+  (krisb-package-install web-mode)
+
+  ;; Astro
+  ;;
+  ;; Configuration suggestion taken from
+  ;; https://medium.com/@jrmjrm/configuring-emacs-and-eglot-to-work-with-astro-language-server-9408eb709ab0
+  (define-derived-mode astro-mode web-mode "Astro")
+  (add-to-list 'auto-mode-alist '(".*\\.astro\\'" . astro-mode))
+#+end_src
+
 *** Which-func: Indicator for which function I'm in
 
 #+name: which-func
@@ -7773,6 +7793,7 @@ I have minor web development needs for the purposes of developing my personal si
 + [[#h:20260403T142044.324712][Svelte-mode: Major mode for SvelteKit project files]]
 + [[#h:20260403T141907.379841][Typescript-ts-mode: Tree-sitter major mode for Typescript]]
 + [[#h:20260409T210556.449533][Astro-ts-mode: Treesitter mode for Astro files]]
++ [[#h:20260409T221936.483467][Web--mode: Major mode for editing various "web templates"]]
 
 * Deployments
 
@@ -8284,6 +8305,9 @@ I have minor web development needs for the purposes of developing my personal si
 
   ;;; Direnv
   <<direnv>>
+
+  ;;; Web-mode
+  <<web-mode>>
 
   ;;; Load config units
   <<config-units-load>>
