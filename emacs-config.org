@@ -7247,6 +7247,15 @@ I do not use this myself, but for users who don't need VC when using tramp on re
       (load-theme 'tramp)))
 #+end_src
 
+*** Treesit: Tree-sitter support
+
+#+name: treesit
+#+begin_src emacs-lisp
+  (with-eval-after-load 'treesit
+    ;; See also `treesit-extra-load-path'
+    (setopt treesit-auto-install-grammar 'ask-dir))
+#+end_src
+
 *** COMMENT Try: Try out Emacs packages
 
 2026-02-07: I favor package-x instead, developed by active contributor package.el, Philip Kaludercic.
@@ -8351,6 +8360,9 @@ I have minor web development needs for the purposes of developing my personal si
 
   ;;; Dired
   <<dired>>
+
+  ;;; Treesit
+  <<treesit>>
 
   ;;; Load config units
   <<config-units-load>>

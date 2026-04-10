@@ -5842,6 +5842,11 @@ contains the mode name."
           dired-auto-revert-buffer 'dired-directory-changed-p
           dired-dwim-target 'dired-dwim-target-recent))
 
+;;; Treesit
+(with-eval-after-load 'treesit
+  ;; See also `treesit-extra-load-path'
+  (setopt treesit-auto-install-grammar 'ask-dir))
+
 ;;; Load config units
 (load-all-configs)
 
