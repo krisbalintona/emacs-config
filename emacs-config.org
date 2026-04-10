@@ -2627,6 +2627,20 @@ Before Corfu 2.7, specifically [[https://github.com/minad/corfu/commit/4c4a41b0b
                   display-buffer-pop-up-window)))
 #+end_src
 
+*** Dired: Directory browser and editor
+
+#+name: dired
+#+begin_src emacs-lisp
+  (with-eval-after-load 'dired
+    (add-hook 'dired-mode-hook #'turn-on-gnus-dired-mode) ; Email attachment integration with dired
+
+    (setopt dired-create-destination-dirs 'ask
+            dired-vc-rename-file t
+            dired-hide-details-hide-symlink-targets nil ; Don't hide symlink targets
+            dired-auto-revert-buffer 'dired-directory-changed-p
+            dired-dwim-target 'dired-dwim-target-recent))
+#+end_src
+
 *** Direnv: Emacs integration with =direnv=
 
 #+name: direnv
@@ -8308,6 +8322,9 @@ I have minor web development needs for the purposes of developing my personal si
 
   ;;; Web-mode
   <<web-mode>>
+
+  ;;; Dired
+  <<dired>>
 
   ;;; Load config units
   <<config-units-load>>

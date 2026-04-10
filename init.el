@@ -5781,6 +5781,16 @@ When called with `-' instead call `inspector-inspect-expression'."
 (define-derived-mode astro-mode web-mode "Astro")
 (add-to-list 'auto-mode-alist '(".*\\.astro\\'" . astro-mode))
 
+;;; Dired
+(with-eval-after-load 'dired
+  (add-hook 'dired-mode-hook #'turn-on-gnus-dired-mode) ; Email attachment integration with dired
+
+  (setopt dired-create-destination-dirs 'ask
+          dired-vc-rename-file t
+          dired-hide-details-hide-symlink-targets nil ; Don't hide symlink targets
+          dired-auto-revert-buffer 'dired-directory-changed-p
+          dired-dwim-target 'dired-dwim-target-recent))
+
 ;;; Load config units
 (load-all-configs)
 
