@@ -31,16 +31,16 @@
 ;; 6. Improve formatting of bibliographies.
 
 ;;; Code:
-
 (require 'ox)
 (require 'ox-html)
 (require 'ox-publish)
 (require 'esxml)
+(require 'json)
 (require 'el-patch)
 
 ;;;; Variables and options
 
-(defcustom personal-site-root-dir "~/Documents/svelte-blog/"
+(defcustom personal-site-root-dir (expand-file-name "~/Documents/personal-site-astro/")
   "Directory of blog project.
 This option is used to define the value of other relevant paths."
   :type 'directory
@@ -52,21 +52,23 @@ This option is used to define the value of other relevant paths."
   :type 'directory
   :group 'personal-site)
 
-;;;; Org backend
-;; Define a bespoke org export backend. For a detailed description of
-;; the export process, see (info "(org) Advanced Export
-;; Configuration")
+;;;; Org backends
+;; Define two bespoke org export backends: one for the HTML and
+;; another for the post metadata.
+;;
+;; For a detailed description of the export process, see (info "(org)
+;; Advanced Export Configuration").
 
-(defconst personal-site-org-post-id-timestamp-format "%Y%m%d%H%M"
-  "Timestamp format for post IDs.
-For my site, I construct post IDs using the date of the post.")
+;;;;; HTML (contant) backend
+;; This backend outputs HTML that will be the content/body of the post
+;; (before a few possible server-side modifications to it).
 
 ;; TODO 2026-03-28: When considering export of subtrees, in which case
 ;; we would use the EXPORT_DATE subtree property
 (defun personal-site--org-get-date (info fmt)
-  "Return current post\\='s publish date as a string.
+  "Return current post's publish date as a string.
 The date is derived with this precedence:
-1. The value of the file\\='s last \"#+date\" keyword.  This date is
+1. The value of the file's last \"#+date\" keyword.  This date is
    formatted using the time format string FMT.
 
 If none of the above apply, return nil.
@@ -80,62 +82,20 @@ INFO is a plist used as a communication channel."
       (setq date (org-format-timestamp (car (last date)) fmt)))
     (org-string-nw-p date)))
 
-(defun personal-site-org-html--meta-info (info)
-  "Return meta tags for exported document.
-These meta tags store information about the post that will be used later
-by SvelteKit when ingesting the document HTML.
-
-INFO is a plist used as a communication channel."
-  (let* ((title (org-no-properties
-                 (org-html-plain-text
-                  (org-element-interpret-data (plist-get info :title)) info)))
-         ;; Set title to an invisible character instead of leaving it
-         ;; empty, which is invalid.
-         (title (if (org-string-nw-p title) title "&lrm;"))
-         (charset (or (and org-html-coding-system
-                           (symbol-name
-                            (coding-system-get org-html-coding-system 'mime-charset)))
-                      "iso-8859-1")))
-    (string-trim
-     (mapconcat
-      #'esxml-to-xml
-      (list
-       ;; Timestamp for creation of export file
-       (when (plist-get info :time-stamp-file)
-         `(comment nil ,(format-time-string (plist-get info :html-metadata-timestamp-format))))
-       
-       ;; Title
-       `(meta ((name . "title") (content . ,title)))
-
-       ;; Date
-       ;;
-       ;; We have a meta tag specifically for the date so SvelteKit can
-       ;; show the same date in different formats, if needed
-       (let ((date (personal-site--org-get-date info (plist-get info :html-metadata-timestamp-format))))
-         `(meta ((name . "date") (content . ,date))))
-
-       ;; Character encoding
-       (if (org-html-html5-p info)
-           `(meta ((charset . ,charset)))
-         `(meta ((http-equiv . "Content-Type")
-                 (content . ,(concat "text/html;charset=" charset)))))
-
-       (let* (;; We construct each post's ID using their ISO 8601 with
-              ;; all non-numeric characters removed
-              (postid (personal-site--org-get-date info personal-site-org-post-id-timestamp-format)))
-         ;; Post ID
-         `(meta ((name . "postid") (content . ,postid)))))
-      "\n"))))
-
 (defun personal-site-org-html-template (contents info)
   "Return complete document string after HTML conversion.
 CONTENTS is the transcoded contents string.  INFO is a plist holding
 export options."
   (concat
-   ;; Metadata for post (stored as meta tags prior to body tag)
-   (personal-site-org-html--meta-info info)
+   ;; Metadata
+   ;;
+   ;; Timestamp for creation of export file
+   (when-let (((plist-get info :time-stamp-file))
+              (timestamp-format (plist-get info :personal-site-metadata-timestamp-format)))
+     (esxml-to-xml
+      `(comment nil ,(format "%s" (concat "Generated on" (format-time-string timestamp-format))))))
 
-   ;; Document body (body tag)
+   ;; Document content
    (let* ((title (and (plist-get info :with-title)
                       (plist-get info :title)))
           (title-element (when title
@@ -187,16 +147,16 @@ as a plist."
 
 (defun personal-site--org-export-get-reference-advice (orig datum info)
   "Advice for `org-export-get-reference' to generate stable IDs.
-When exporting with the 'html-svelte' backend:
+When exporting with the 'personal-site-html' backend:
 - For headlines, generate a deterministic slug from the headline text,
   appending a counter only for duplicates.
 - For other elements, generate a reference of the form TYPE-N.
-When not using the 'html-svelte' backend, call
+When not using the 'personal-site-html' backend, call
 `org-export-get-reference' normally.
 
 ORIG is the original function.  See `org-export-get-reference' for a
 description of DATUM and INFO."
-  (if (not (eq (org-export-backend-name (plist-get info :back-end)) 'html-svelte))
+  (if (not (eq (org-export-backend-name (plist-get info :back-end)) 'personal-site-html))
       (funcall orig datum info)
     ;; Keep a cache in INFO like `org-export-get-reference' does
     (let ((cache (plist-get info :internal-references)))
@@ -336,9 +296,8 @@ communication channel."
       (copy-file path asset-path nil))
     link-path))
 
-;; (el-patch-defun (el-patch-swap org-html-link personal-org-html-link)
-(defun personal-org-html-link
-    (link desc info)
+(el-patch-defun (el-patch-swap org-html-link personal-org-html-link)
+  (link desc info)
   "Transcode a LINK object from Org to HTML.
 DESC is the description part of the link, or the empty string.
 INFO is a plist holding contextual information.  See
@@ -418,23 +377,19 @@ INFO is a plist holding contextual information.  See
      ((and (plist-get info :html-inline-images)
            (org-export-inline-image-p
             link (plist-get info :html-inline-image-rules)))
-      ;; (el-patch-remove (org-html--format-image path attributes-plist info))
-      ;; (el-patch-add
-      
-      (let* ((raw-path (org-element-property :path link))
-             ;; When we are exporting to a buffer, we leave the links
-             ;; as they are.  However, when we are exporting to a
-             ;; file, we copy the asset over to the appropriate
-             ;; location and modify the link to point to the
-             ;; appropriate path on the website
-             (asset-path
-              (if (plist-get info :output-file)
-                  (personal-site--attachment-copy raw-path info)
-                path)))
-        (org-html--format-image asset-path attributes-plist info))
-      
-      ;; )
-      )
+      (el-patch-remove (org-html--format-image path attributes-plist info))
+      (el-patch-add
+        (let* ((raw-path (org-element-property :path link))
+               ;; When we are exporting to a buffer, we leave the
+               ;; links as they are.  However, when we are exporting
+               ;; to a file, we copy the asset over to the appropriate
+               ;; location and modify the link to point to the
+               ;; appropriate path on the website
+               (asset-path
+                (if (plist-get info :output-file)
+                    (personal-site--attachment-copy raw-path info)
+                  path)))
+          (org-html--format-image asset-path attributes-plist info))))
      ;; Radio target: Transcode target's contents and use them as
      ;; link's description.
      ((string= type "radio")
@@ -545,7 +500,98 @@ INFO is a plist holding contextual information.  See
      (t
       (format "<i>%s</i>" desc)))))
 
+(org-export-define-derived-backend 'personal-site-html 'html
+  ;; Used to modify or remove org elements on export, overwriting the
+  ;; filters of the parent backend.  See (info "(org) Advanced Export
+  ;; Configuration") for more information on backend filters
+  ;; :filters-alist
+
+  ;; Entry for backend in the org export menu
+  :menu-entry
+  '(?p "Export to personal site"
+       ((?H "Post as HTML buffer" personal-site-org-export-as-html)
+        (?J "Post metadata as JSON buffer " personal-site-org-export-as-json)
+        (?p "Full post to directory" personal-site-org-export-to-site)
+        (?o "Full post directory and open the directory"
+            (lambda (async subtreep visible-only body-only)
+              (if async
+                  (personal-site-org-export-to-site t subtreep visible-only body-only)
+                (pop-to-buffer
+                 (find-file-noselect
+                  (personal-site-org-export-to-site nil subtreep visible-only body-only))))))))
+
+  ;; Used to define new options or overwrite those of the parent
+  ;; backend
+  :options-alist
+  '((:time-stamp-file nil nil nil)
+    ;; 2026-04-10: I don't think this backend makes use of
+    ;; `:html-metadata-timestamp-format' anymore, with what I've kept
+    ;; from 'ox-html', but I keep this here anyway, just in case but
+    ;; also as a reminder that it exists.
+    (:html-metadata-timestamp-format nil nil "%Y-%m-%dT%H:%M:%S")
+    ;; Default date set to Unix Epoch (for documents without a date)
+    (:date "DATE" nil "[1970-01-01 Thu 00:00]" parse)
+    ;; Force using the modern HTML5
+    (:html-doctype "HTML_DOCTYPE" nil "html5")
+    (:html-html5-fancy nil "html5-fancy" t)
+    ;; Personal site-specific options
+    (:personal-site-metadata-timestamp-format nil nil "%Y-%m-%dT%H:%M:%S"))
+
+  ;; Used to add new transcoders or overwrite those of the parent
+  ;; backend.  See `org-export-define-backend' for more information on
+  ;; backend transcoders
+  :translate-alist
+  '((template . personal-site-org-html-template)
+    (src-block . personal-site-org-html-src-block)
+    (link . personal-org-html-link)))
+
+;;;;; JSON (metadata) backend
+;; This backend outputs JSON that stores metadata about the post: a
+;; "metadata.json".  This JSON file is used by Astro for various
+;; purposes, such as dynamic routing.
+
+(defun personal-site-org-json-template (contents info)
+  "Return post metadata as a JSON string.
+CONTENTS is the transcoded contents string.  INFO is a plist holding
+export options."
+  (let* ((title (org-no-properties
+                 (org-html-plain-text
+                  (org-element-interpret-data (plist-get info :title)) info)))
+         ;; Set title to an invisible character instead of leaving it
+         ;; empty, which is invalid.
+         (title (if (org-string-nw-p title) title "&lrm;"))
+         (slug (personal-site--title-to-slug title))
+         (timestamp-format (plist-get info :personal-site-metadata-timestamp-format))
+         (date (personal-site--org-get-date info timestamp-format))
+         (postid (plist-get info :personal-site-postid)))
+
+    ;; Timestamp for creation of export file
+    (when-let (((plist-get info :time-stamp-file))
+               (timestamp-format (plist-get info :personal-site-metadata-timestamp-format)))
+      (concat "// Generated on " (format-time-string timestamp-format)))
+    
+    ;; Content (metadata as JSON)
+    (json-encode
+     `((postid . ,postid)
+       (title . ,title)
+       (slug . ,slug)
+       (date . ,date)))))
+
+(org-export-define-derived-backend 'personal-site-json 'personal-site-html
+  :options-alist
+  '((:time-stamp-file nil nil nil)
+    (:personal-site-metadata-timestamp-format nil nil "%Y-%m-%dT%H:%M:%S"))
+  
+  :translate-alist
+  '((template . personal-site-org-json-template)))
+
 ;;;;; Exporters
+;; Export (to file, to buffer) functions for the backends defined
+;; above.
+
+(defconst personal-site-org-post-id-timestamp-format "%Y%m%d%H%M"
+  "Timestamp format for post IDs.
+For my site, I construct post IDs using the date of the post.")
 
 (defun personal-site--title-to-slug (title)
   "Return slug associated with TITLE.
@@ -569,7 +615,7 @@ This function is called from the point in org buffer to-be exported.
 With a non-nil optional argument SUBTREEP, use the \"EXPORT_FILE_NAME\"
 property of subtree at point as the SLUG portion of the output
 directory."
-  (let* ((export-environment (org-export-get-environment 'html-svelte))
+  (let* ((export-environment (org-export-get-environment 'personal-site-html))
          (title (org-element-interpret-data (plist-get export-environment :title)))
          (date-timestamp (car (plist-get export-environment :date)))
          (postid (org-format-timestamp date-timestamp personal-site-org-post-id-timestamp-format))
@@ -595,19 +641,19 @@ directory."
            (read-file-name "Output directory: " personal-site-destination-dir))))
     (expand-file-name directory personal-site-destination-dir)))
 
-(defun personal-site--org-prepare-output-directory (directory)
+(defun personal-site--org-prepare-output-directory (output-directory)
   "Prepare output directory for receiving exported files.
-Create DIRECTORY if it does not exist.  If it does, delete any existing
-files and directories.
+Create OUTPUT-DIRECTORY if it does not exist.  If it does, delete any
+existing files and directories.
 
 DIRECTORY is the targeted output directory."
-  (if (file-exists-p directory)
+  (if (file-exists-p output-directory)
       ;; Clear out DIRECTORY if it already exists
       (mapc (lambda (f)
               (if (file-directory-p f)
                   (delete-directory f)
                 (delete-file f)))
-            (directory-files-recursively directory ".*" t))
+            (directory-files-recursively output-directory ".*" t))
     ;; Make DIRECTORY if it doesn't exist yet
     (make-directory output-directory)))
 
@@ -615,7 +661,7 @@ DIRECTORY is the targeted output directory."
     (&optional async subtreep visible-only body-only ext-plist)
   "Export current buffer to an HTML buffer.
 Behaves identically to `org-html-export-as-html' but with the
-\\='html-svelte backend.
+'personal-site-html' backend.
 
 If narrowing is active in the current buffer, only export its narrowed
 part.
@@ -635,19 +681,51 @@ displayed when `org-export-show-temporary-export-buffer' is non-nil."
   (let ((output-dir (personal-site-org-output-directory subtreep))
         ;; Force exporting raw HTML without styling
         (org-html-htmlize-output-type nil))
-    (org-export-to-buffer 'html-svelte "*Org HTML Export*"
+    (org-export-to-buffer 'personal-site-html "*Org HTML Export*"
       async subtreep visible-only body-only
       (org-combine-plists
        ext-plist
        `(:personal-site-output-directory ,output-dir))
-      (lambda () (set-auto-mode t)))))
+      #'html-mode)))
 
-(defun personal-site-org-export-to-html
+(defun personal-site-org-export-as-json
     (&optional async subtreep visible-only body-only ext-plist)
-  "Export current buffer to a HTML file.
-Behaves identically to `org-html-export-to-html', but with a bespoke
-export file destination (see `personal-site-destination-dir') and using
-the \\='html-svelte backend..
+  "Export current buffer to a JSON buffer.
+If narrowing is active in the current buffer, only export its narrowed
+part.
+
+If a region is active, export that region.
+
+See the docstring of `org-html-export-as-html' for a description of the
+ASYNC, SUBTREEP, VISIBLE-ONLY, and BODY-ONLY arguments.
+
+EXT-PLIST, when provided, is a property list with external parameters
+overriding Org default settings, but still inferior to file-local
+settings.
+
+Export is done in a buffer named \"*Org JSON Export*\", which will be
+displayed when `org-export-show-temporary-export-buffer' is non-nil."
+  (interactive)
+  (let ((output-dir (personal-site-org-output-directory subtreep))
+        (postid (org-id-get)))
+    (org-export-to-buffer 'personal-site-json "*Org JSON Export*"
+      async subtreep visible-only body-only
+      (org-combine-plists
+       ext-plist
+       `( :personal-site-output-directory ,output-dir
+          :personal-site-postid ,postid))
+      #'js-json-mode)))
+
+(defun personal-site-org-export-to-site
+    (&optional async subtreep visible-only body-only ext-plist)
+  "Export current buffer to post subdirectory.
+The post subdirectory is determined by `personal-site-destination-dir'.
+Several files will be created in this directory:
+- An \"index.html\", containing the post HTML content.
+- A \"metadata.json\", containing metadata about the post.
+- An \"assets/\" subdirectory, containing all attachments (see
+  `personal-site--attachment-copy').
+These files constitute all the files needed for the site.
 
 If narrowing is active in the current buffer, only export its
 narrowed part.
@@ -664,54 +742,26 @@ settings.
 Return output file's name."
   (interactive)
   (let* ((org-export-coding-system org-html-coding-system)
+         (org-html-htmlize-output-type nil) ; Force exporting raw HTML without styling
          (output-dir (personal-site-org-output-directory subtreep))
-         (file (expand-file-name "index.html" output-dir))
-         ;; Force exporting raw HTML without styling
-         (org-html-htmlize-output-type nil))
+         (index-file (expand-file-name "index.html" output-dir))
+         (postid (org-id-get))
+         (metadata-file (expand-file-name "metadata.json" output-dir)))
     (personal-site--org-prepare-output-directory output-dir)
-    (org-export-to-file 'html-svelte file
+    
+    ;; Metadata
+    (org-export-to-file 'personal-site-json metadata-file
+      async subtreep visible-only body-only
+      (org-combine-plists
+       ext-plist
+       `( :personal-site-output-directory ,output-dir
+          :personal-site-postid ,postid)))
+    ;; Content
+    (org-export-to-file 'personal-site-html index-file
       async subtreep visible-only body-only
       (org-combine-plists
        ext-plist
        `(:personal-site-output-directory ,output-dir)))))
-
-(org-export-define-derived-backend 'html-svelte 'html
-  ;; Used to modify or remove org elements on export, overwriting the
-  ;; filters of the parent backend.  See (info "(org) Advanced Export
-  ;; Configuration") for more information on backend filters
-  ;; :filters-alist
-
-  ;; Entry for backend in the org export menu
-  :menu-entry
-  '(?p "Export to personal site HTML"
-       ((?H "As HTML buffer" personal-site-org-export-as-html)
-        (?h "As HTML file" personal-site-org-export-to-html)
-        (?o "As HTML file and open in Emacs"
-            (lambda (async subtreep visible-only body-only)
-              (if async
-                  (personal-site-org-export-to-html t subtreep visible-only body-only)
-                (pop-to-buffer
-                 (find-file-noselect
-                  (personal-site-org-export-to-html nil subtreep visible-only body-only))))))))
-
-  ;; Used to define new options or overwrite those of the parent
-  ;; backend
-  :options-alist
-  '((:time-stamp-file nil nil nil)
-    (:html-metadata-timestamp-format nil nil "%Y-%m-%dT%H:%M:%S")
-    ;; Default date set to Unix Epoch (for documents without a date)
-    (:date "DATE" nil "[1970-01-01 Thu 00:00]" parse)
-    ;; Force using the modern HTML5
-    (:html-doctype "HTML_DOCTYPE" nil "html5")
-    (:html-html5-fancy nil "html5-fancy" t))
-
-  ;; Used to add new transcoders or overwrite those of the parent
-  ;; backend.  See `org-export-define-backend' for more information on
-  ;; backend transcoders
-  :translate-alist
-  '((template . personal-site-org-html-template)
-    (src-block . personal-site-org-html-src-block)
-    (link . personal-org-html-link)))
 
 ;;;; Org-publish
 ;; I use org-publish to make it easier to export all my blog posts
@@ -732,7 +782,7 @@ This function is used as the :publishing-function in
   ;; instead
   (org-with-file-buffer filename
     (let* ((org-export-coding-system org-html-coding-system))
-      (personal-site-org-export-to-html
+      (personal-site-org-export-to-site
        nil nil nil (plist-get plist :body-only)
        (org-combine-plists
         plist
