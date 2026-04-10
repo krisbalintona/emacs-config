@@ -1160,7 +1160,7 @@ Apropos is a built-in library that queries the user for a regexp or word list to
 #+end_src
 Additionally, all apropos commands will expand the subset of symbols they search when called with a universal argument. For example, ~apropos-user-option~ with a universal argument will search all variables, not just user options. (The option ~apropos-do-all~ determines whether =C-u= is required for this behavior.)
 
-*** COMMENT Astro-ts-mode: Treesitter mode for Astro files
+*** Astro-ts-mode: Treesitter mode for Astro files
 :PROPERTIES:
 :CUSTOM_ID: h:20260409T210556.449533
 :END:
@@ -1169,10 +1169,36 @@ Additionally, all apropos commands will expand the subset of symbols they search
 #+begin_src emacs-lisp
   (krisb-package-install astro-ts-mode)
 
+  (when (boundp 'treesit-enabled-modes)
+    (add-to-list 'treesit-enabled-modes 'astro-ts-mode))
+
+  ;; TODO 2026-04-10: Ideally, I create a PR or bug report to upstream
+  ;; astro-ts-mode for this.
+  ;;
+  ;; Conditionally use `astro-ts-mode'.  For Emacs 31, which has the
+  ;; `treesit-enabled-modes' user option.  Copy what `yaml-ts-mode' does
+  (defun astro-ts-mode-maybe ()
+    "Enable `astro-ts-mode' when its grammar is available.
+  Also propose to install the grammar when `treesit-enabled-modes' is t or
+  contains the mode name."
+    (declare-function treesit-language-available-p "treesit.c")
+    (if (or (treesit-language-available-p 'astro)
+            (eq treesit-enabled-modes t)
+            (memq 'astro-ts-mode treesit-enabled-modes))
+        (progn
+          (require 'astro-ts-mode)
+          (astro-ts-mode))
+      (fundamental-mode)))
+
+  (when (boundp 'treesit-major-mode-remap-alist)
+    (add-to-list 'auto-mode-alist '(".*\\.astro\\'" . astro-ts-mode-maybe))
+    (add-to-list 'treesit-major-mode-remap-alist
+                 '(astro-mode . astro-ts-mode)))
+
   ;; Ensure the astro, css, and tsx tree-sitter language grammars are
   ;; installed, according to README:
   ;; https://git.isincredibly.gay/srxl/astro-ts-mode#headline-5
-  (with-eval-after-load 'treesit-language-source-alist
+  (with-eval-after-load 'treesit
     (add-to-list 'treesit-language-source-alist
                  '(astro "https://github.com/virchau13/tree-sitter-astro"))
     (unless (treesit-language-available-p 'astro)
@@ -1184,7 +1210,7 @@ Additionally, all apropos commands will expand the subset of symbols they search
     (unless (treesit-language-available-p 'tsx)
       (treesit-install-language-grammar 'tsx)))
 
-  ;; LSP server
+  ;; Astro LSP server
   (with-eval-after-load 'eglot
     ;; Taken from
     ;; https://medium.com/@jrmjrm/configuring-emacs-and-eglot-to-work-with-astro-language-server-9408eb709ab0
