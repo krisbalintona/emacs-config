@@ -5847,6 +5847,13 @@ contains the mode name."
   ;; See also `treesit-extra-load-path'
   (setopt treesit-auto-install-grammar 'ask-dir))
 
+;;; Compile
+(with-eval-after-load 'compile
+  (add-hook 'compilation-filter-hook #'ansi-color-compilation-filter)
+  
+  (setopt compilation-scroll-output 'first-error ; Scroll with compile buffer
+          compilation-auto-jump-to-first-error 'if-location-known))
+
 ;;; Load config units
 (load-all-configs)
 

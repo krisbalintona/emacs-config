@@ -9121,10 +9121,7 @@ Other interesting packages:
   ;;; Compile
   (use-package compile
     :ensure nil
-    :bind ("<f5>" . recompile)
-    :custom
-    (compilation-scroll-output 'first-error) ; Scroll with compile buffer
-    (compilation-auto-jump-to-first-error 'if-location-known))
+    :bind ("<f5>" . recompile))
 
   ;;; Fancy-compilation
   ;; Make compilation outputs in compilation buffers more pleasant to see.

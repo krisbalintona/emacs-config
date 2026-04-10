@@ -2226,6 +2226,17 @@ When ~krisb-bibtex-standardize~ is called, it will move all the attachments of t
     (:hide-mode citar-org-node-mode))
 #+end_src
 
+*** Compile
+
+#+name: compile
+#+begin_src emacs-lisp
+  (with-eval-after-load 'compile
+    (add-hook 'compilation-filter-hook #'ansi-color-compilation-filter)
+    
+    (setopt compilation-scroll-output 'first-error ; Scroll with compile buffer
+            compilation-auto-jump-to-first-error 'if-location-known))
+#+end_src
+
 *** Completion-preview: Show just the next completion candidate
 
 Note that =completion-preview= is prefix-only:
@@ -8363,6 +8374,9 @@ I have minor web development needs for the purposes of developing my personal si
 
   ;;; Treesit
   <<treesit>>
+
+  ;;; Compile
+  <<compile>>
 
   ;;; Load config units
   <<config-units-load>>
