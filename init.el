@@ -5889,6 +5889,25 @@ contains the mode name."
                                     eglot-mode-line-progress
                                     eglot-mode-line-action-suggestion)))
 
+;;; Breadcrumb
+(krisb-package-install breadcrumb)
+
+(defun breadcrumb-setup-eglot ()
+  "Use `breadcrumb-local-mode' in Eglot buffers.
+Enable `breadcrumb-local-mode' when in the current buffer is managed by
+Eglot.  Disable when the current buffer is not managed by Eglot and the
+minor mode was already enabled before Eglot."
+  (when (require 'breadcrumb nil t)
+    (cond
+     ((and (eglot-managed-p)
+           (null breadcrumb-local-mode))
+      (breadcrumb-local-mode 1)
+      (setq-local krisb-breadcrumb--eglot-managed-p t))
+     ((bound-and-true-p krisb-breadcrumb--eglot-managed-p)
+      (breadcrumb-local-mode -1)))))
+(with-eval-after-load 'eglot
+  (add-hook 'eglot-managed-mode-hook #'breadcrumb-setup-eglot))
+
 ;;; Load config units
 (load-all-configs)
 
