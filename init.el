@@ -101,7 +101,7 @@ nothing."
 (defvar krisb-manuscript-directory (expand-file-name "manuscripts" krisb-notes-directory)
   "The directory containing my all manuscripts.")
 
-(defvar krisb-manuscript-blog-posts-directory (expand-file-name "blog" krisb-manuscript-directory)
+(defvar krisb-manuscript-blog-posts-directory (expand-file-name "blog/posts" krisb-manuscript-directory)
   "The directory for my blog posts.")
 
 (defvar krisb-email-directory (expand-file-name "emails/" "~/Documents/")
