@@ -5866,6 +5866,18 @@ contains the mode name."
   (setopt compilation-scroll-output 'first-error ; Scroll with compile buffer
           compilation-auto-jump-to-first-error 'if-location-known))
 
+;;; Eldoc
+;; See also:
+;; - `eldoc-echo-area-use-multiline-p'
+;; - `eldoc-print-after-edit')
+;; - `eldoc-idle-delay'
+;; - `eldoc-echo-area-display-truncation-message'
+(with-eval-after-load 'eldoc
+  (setopt eldoc-echo-area-prefer-doc-buffer t
+          eldoc-documentation-strategy
+          'eldoc-documentation-enthusiast ; All run, but only most important is shown
+          eldoc-help-at-pt t)) ; Emacs 31.1
+
 ;;; Load config units
 (load-all-configs)
 
