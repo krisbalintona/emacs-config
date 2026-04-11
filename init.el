@@ -5878,6 +5878,17 @@ contains the mode name."
           'eldoc-documentation-enthusiast ; All run, but only most important is shown
           eldoc-help-at-pt t)) ; Emacs 31.1
 
+;;; Eglot
+(with-eval-after-load 'eglot
+  (setopt eglot-code-action-indications '(mode-line margin)
+          eglot-code-action-indicator "α"
+          eglot-mode-line-format '( eglot-mode-line-menu
+                                    eglot-mode-line-session
+                                    eglot-mode-line-error
+                                    eglot-mode-line-pending-requests
+                                    eglot-mode-line-progress
+                                    eglot-mode-line-action-suggestion)))
+
 ;;; Load config units
 (load-all-configs)
 

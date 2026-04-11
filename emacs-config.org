@@ -2828,6 +2828,21 @@ Before Corfu 2.7, specifically [[https://github.com/minad/corfu/commit/4c4a41b0b
     (krisb-enable-theme-time-of-day (car ef-themes-to-toggle) (cadr ef-themes-to-toggle)))
 #+end_src
 
+*** Eglot: The built-in LSP client
+
+#+name: eglot
+#+begin_src emacs-lisp
+  (with-eval-after-load 'eglot
+    (setopt eglot-code-action-indications '(mode-line margin)
+            eglot-code-action-indicator "α"
+            eglot-mode-line-format '( eglot-mode-line-menu
+                                      eglot-mode-line-session
+                                      eglot-mode-line-error
+                                      eglot-mode-line-pending-requests
+                                      eglot-mode-line-progress
+                                      eglot-mode-line-action-suggestion)))
+#+end_src
+
 *** Eldoc: At-point help and documentation the echo area
 
 #+name: eldoc
@@ -8408,6 +8423,9 @@ I have minor web development needs for the purposes of developing my personal si
 
   ;;; Eldoc
   <<eldoc>>
+
+  ;;; Eglot
+  <<eglot>>
 
   ;;; Load config units
   <<config-units-load>>
