@@ -1307,6 +1307,8 @@ Then apply ARGS."
     (unbind-key "M-o" eat-semi-char-mode-map))
   (with-eval-after-load 'xscheme
     (unbind-key "M-o" scheme-mode-map))
+  (with-eval-after-load 'sgml-mode
+    (bind-key "M-o" #'other-window 'html-mode-map))
 
   (setopt switch-to-buffer-obey-display-actions t
           window-resize-pixelwise t
