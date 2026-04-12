@@ -1229,29 +1229,27 @@ Then apply ARGS."
 ;;; Help.el
 ;; TODO 2025-10-14: Document:
 ;; `help-at-pt-display-when-idle'
-(setup help
-
+(with-eval-after-load 'help
+  (add-hook 'help-mode-hook #'visual-line-mode)
+  (add-hook 'help-mode-hook #'visual-wrap-prefix-mode)
   (add-hook 'help-fns-describe-function-functions #'shortdoc-help-fns-examples-function)
 
-  (:bind-keys :map help-map
-              ("C-k" . describe-keymap))
+  (bind-keys :map help-map
+             ("C-k" . describe-keymap))
 
-  ;; Displaying buffer
   (setopt help-window-select t
-          help-window-keep-selected t)
+          help-window-keep-selected t
 
-  ;; Help buffers
-  (setopt help-enable-variable-value-editing t
+          help-enable-variable-value-editing t
           help-clean-buttons t
           help-enable-symbol-autoload t
 
           describe-bindings-outline t
           describe-bindings-show-prefix-commands t)
 
-  (with-eval-after-load 'help
-    (add-to-list 'display-buffer-alist
-                 '((major-mode . help-mode)
-                   (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected)))))
+  (add-to-list 'display-buffer-alist
+               '((major-mode . help-mode)
+                 (display-buffer-reuse-window display-buffer-pop-up-window display-buffer-below-selected))))
 
 ;;; Apropos
 (setup apropos)

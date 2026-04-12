@@ -3385,27 +3385,25 @@ Additionally, since ~outline-regexp~ is correctly set in org-mode buffers, the f
 #+begin_src emacs-lisp
   ;; TODO 2025-10-14: Document:
   ;; `help-at-pt-display-when-idle'
-  (setup help
-
+  (with-eval-after-load 'help
+    (add-hook 'help-mode-hook #'visual-line-mode)
+    (add-hook 'help-mode-hook #'visual-wrap-prefix-mode)
     (add-hook 'help-fns-describe-function-functions #'shortdoc-help-fns-examples-function)
 
-    (:bind-keys :map help-map
-                ("C-k" . describe-keymap))
+    (bind-keys :map help-map
+               ("C-k" . describe-keymap))
 
-    ;; Displaying buffer
     (setopt help-window-select t
-            help-window-keep-selected t)
+            help-window-keep-selected t
 
-    ;; Help buffers
-    (setopt help-enable-variable-value-editing t
+            help-enable-variable-value-editing t
             help-clean-buttons t
             help-enable-symbol-autoload t
 
             describe-bindings-outline t
             describe-bindings-show-prefix-commands t)
 
-    (with-eval-after-load 'help
-      <<help-display-buffer-alist>>))
+    <<help-display-buffer-alist>>)
 #+end_src
 
 Tell ~display-buffer-alist~ where to show help buffers:
