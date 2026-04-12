@@ -5777,6 +5777,9 @@ When called with `-' instead call `inspector-inspect-expression'."
 ;;; Astro-ts-mode
 (krisb-package-install astro-ts-mode)
 
+(with-eval-after-load 'astro-ts-mode
+  (add-hook 'astro-ts-mode-hook #'flyspell-prog-mode))
+
 (when (boundp 'treesit-enabled-modes)
   (unless (eq t treesit-enabled-modes)
     (cl-pushnew 'astro-ts-mode treesit-enabled-modes)))
