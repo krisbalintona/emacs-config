@@ -5931,10 +5931,47 @@ contains the mode name."
 
 ;;; Eglot
 (with-eval-after-load 'eglot
+
+  (defun krisb-eglot-code-actions-dispatch ()
+    "A `read-multiple-choice' UI for Eglot's code actions."
+    (interactive)
+    (let* ((choices-alist
+            '((?\s . ( :command eglot-code-actions
+                       :name "Other" :desc "Any other code action"))
+              (?i . ( :command eglot-code-action-organize-imports
+                      :name "Imports" :desc "Organize imports"))
+              (?e . ( :command eglot-code-action-extract
+                      :name "Extract" :desc "Extract active region"))
+              (?I . ( :command eglot-code-action-inline
+                      :name "Inline" :desc "Inline variable or function reference"))
+              (?r . ( :command eglot-code-action-rewrite
+                      :name "Rewrite" :desc "Other kind of rewrite"))
+              (?q . ( :command eglot-code-action-quickfix
+                      :name "Quickfix" :desc "Suggested fix"))))
+           (choices
+            (mapcar (lambda (a)
+                      (let ((p (cdr a)))
+                        (list (car a)
+                              (plist-get p :name)
+                              (plist-get p :desc))))
+                    choices-alist))
+           (user-selection
+            (car (read-multiple-choice "Code action:" choices))))
+      (call-interactively (plist-get (cdr (assoc user-selection choices-alist)) :command) t)))
+  (bind-keys ("C-c e e" . eglot)
+             :map eglot-mode-map
+             ("C-c e s" . eglot-shutdown)
+             ("C-c e S" . eglot-shutdown-all)
+             ("C-c e R" . eglot-reconnect)
+             ("C-c e r" . eglot-rename)
+             ("C-c e \\" . eglot-format)
+             ("C-c e SPC" . eglot-code-actions)
+             ("C-c e a" . krisb-eglot-code-actions-dispatch))
+  
   (defun krisb-eglot-setup ()
-  "Change various default Eglot behaviors."
-  (when (eglot-managed-p)
-    (setopt-local eldoc-echo-area-use-multiline-p nil)))
+    "Change various default Eglot behaviors."
+    (when (eglot-managed-p)
+      (setopt-local eldoc-echo-area-use-multiline-p nil)))
   (add-hook 'eglot-managed-mode-hook #'krisb-eglot-setup)
 
   ;; Eglot's markdown rendering in eldoc relies on `gfm-view-mode',
