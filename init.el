@@ -6007,6 +6007,9 @@ minor mode was already enabled before Eglot."
 (with-eval-after-load 'eglot
   (add-hook 'eglot-managed-mode-hook #'breadcrumb-setup-eglot))
 
+;;; Editorconfig
+(editorconfig-mode 1)
+
 ;;; Load config units
 (load-all-configs)
 

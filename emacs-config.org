@@ -2880,6 +2880,15 @@ Before Corfu 2.7, specifically [[https://github.com/minad/corfu/commit/4c4a41b0b
                   :key #'car)
 #+end_src
 
+*** Editorconfig: Integration with EditorConfig
+
+EditorConfig is like an editor-agnistic ~.dir-locals.el~. Read more about Emacs's integration with EditorConfig in ~(emacs) EditorConfig support~.
+
+#+name: editorconfig
+#+begin_src emacs-lisp
+  (editorconfig-mode 1)
+#+end_src
+
 *** Ef-themes
 
 #+name: ef-themes
@@ -8551,6 +8560,9 @@ I have minor web development needs for the purposes of developing my personal si
 
   ;;; Breadcrumb
   <<breadcrumb>>
+
+  ;;; Editorconfig
+  <<editorconfig>>
 
   ;;; Load config units
   <<config-units-load>>
