@@ -4462,11 +4462,12 @@ send from."
   ;; string from being visible right after we’ve just checked mail in
   ;; notmuch
   (defun krisb-notmuch-hello-update-mail-count-advice (&rest args)
-    "Update mode line mail count immediately.
+    "Update the mail count and conditionally the mode line.
   The mail count is the number stored in the variable
   `krisb-display-time-mail-count'.  It is updated by calling
-  `krisb-display-time--update-mail-count'.  We then call
-  `display-time-update' to update the mode line to reflect the new value.
+  `krisb-display-time--update-mail-count'.  Then, when calling from the
+  notmuch hello buffer, call `display-time-update' to update the mode line
+  to reflect the new value.
   
   Our approach is to call `display-time-update' at the end of the existing
   sentinel of `krisb-display-time--update-mail-count'.
@@ -4474,9 +4475,14 @@ send from."
   Meant to be added as :around advice for
   `notmuch-bury-or-kill-this-buffer'.  ARGS are the arguments passed to
   `notmuch-bury-or-kill-this-buffer'."
-    (when (equal major-mode 'notmuch-hello-mode)
-      (let* ((process (krisb-display-time--update-mail-count))
-             (initial-sentinel (process-sentinel process)))
+    (let* ((process (krisb-display-time--update-mail-count))
+           (initial-sentinel (process-sentinel process)))
+      ;; Call `display-time-update' only when in the notmuch hello
+      ;; buffer because it is an expensive blocking operation.  So: only
+      ;; immediately update the mode line to reflect the current mail
+      ;; count when we leave the hello buffer.  Otherwise, wait for the
+      ;; mode line to refresh on its own timer
+      (when (equal major-mode 'notmuch-hello-mode)
         (set-process-sentinel process
                               (lambda (proc event)
                                 (when initial-sentinel
