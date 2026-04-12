@@ -5924,10 +5924,22 @@ contains the mode name."
 
 ;;; Eglot
 (with-eval-after-load 'eglot
+  (defun krisb-eglot-setup ()
+  "Change various default Eglot behaviors."
+  (when (eglot-managed-p)
+    (setopt-local eldoc-echo-area-use-multiline-p nil)))
+  (add-hook 'eglot-managed-mode-hook #'krisb-eglot-setup)
+
+  ;; Eglot's markdown rendering in eldoc relies on `gfm-view-mode',
+  ;; which is from markdown-mode.  So install markdown-mode if
+  ;; necessary.
+  (when (krisb-package-install markdown-mode)
+    (message "[krisb] Installed `markdown-mode' for the sake of Eglot"))
+  
   (setopt eglot-code-action-indications '(mode-line margin)
           eglot-code-action-indicator "α"
           eglot-mode-line-format '( eglot-mode-line-menu
-                                    eglot-mode-line-session
+                                    ;; eglot-mode-line-session
                                     eglot-mode-line-error
                                     eglot-mode-line-pending-requests
                                     eglot-mode-line-progress
