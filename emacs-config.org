@@ -1172,6 +1172,26 @@ Additionally, all apropos commands will expand the subset of symbols they search
   (with-eval-after-load 'astro-ts-mode
     (add-hook 'astro-ts-mode-hook #'flyspell-prog-mode))
 
+  ;; Ensure the astro, css, and tsx tree-sitter language grammars are
+  ;; installed, according to README:
+  ;; https://git.isincredibly.gay/srxl/astro-ts-mode#headline-5
+  (with-eval-after-load 'treesit
+    (add-to-list 'treesit-language-source-alist
+                 '(astro "https://github.com/virchau13/tree-sitter-astro"))
+    (unless (treesit-language-available-p 'astro)
+      (treesit-install-language-grammar 'astro))
+    (unless (treesit-language-available-p 'css)
+      (treesit-install-language-grammar 'css))
+    (add-to-list 'treesit-language-source-alist
+                 '(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+    (unless (treesit-language-available-p 'tsx)
+      (treesit-install-language-grammar 'tsx)))
+
+  ;;
+  ;; Integration with `treesit-enabled-modes' and
+  ;; `treesit-major-mode-remap-alist'
+  ;;
+
   (when (boundp 'treesit-enabled-modes)
     (unless (eq t treesit-enabled-modes)
       (cl-pushnew 'astro-ts-mode treesit-enabled-modes)))
@@ -1199,30 +1219,50 @@ Additionally, all apropos commands will expand the subset of symbols they search
     (add-to-list 'treesit-major-mode-remap-alist
                  '(astro-mode . astro-ts-mode)))
 
-  ;; Ensure the astro, css, and tsx tree-sitter language grammars are
-  ;; installed, according to README:
-  ;; https://git.isincredibly.gay/srxl/astro-ts-mode#headline-5
-  (with-eval-after-load 'treesit
-    (add-to-list 'treesit-language-source-alist
-                 '(astro "https://github.com/virchau13/tree-sitter-astro"))
-    (unless (treesit-language-available-p 'astro)
-      (treesit-install-language-grammar 'astro))
-    (unless (treesit-language-available-p 'css)
-      (treesit-install-language-grammar 'css))
-    (add-to-list 'treesit-language-source-alist
-                 '(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
-    (unless (treesit-language-available-p 'tsx)
-      (treesit-install-language-grammar 'tsx)))
-
+  ;;
   ;; Astro LSP server
+  ;;
+
   (with-eval-after-load 'eglot
-    ;; Taken from
+    ;; See also
     ;; https://medium.com/@jrmjrm/configuring-emacs-and-eglot-to-work-with-astro-language-server-9408eb709ab0
     (add-to-list 'eglot-server-programs
                  '(astro-ts-mode
                    . ("astro-ls" "--stdio"
                       :initializationOptions
-                      (:typescript (:tsdk "./node_modules/typescript/lib"))))))
+                      ( :typescript (:tsdk "./node_modules/typescript/lib"))))))
+
+  ;;
+  ;;
+  ;; Compatibility with Emacs 31
+  ;;
+  ;; TODO 2026-04-12: Will contact emacs-devel or the maintainer of
+  ;; astro-ts-mode about this some time.
+  ;;
+
+  (with-eval-after-load 'astro-ts-mode
+    (el-patch-defun astro-ts-mode--prefix-font-lock-features (prefix settings)
+      "Prefix with PREFIX the font lock features in SETTINGS."
+      (mapcar (lambda (setting)
+                (list (nth 0 setting)
+                      (nth 1 setting)
+                      (intern (format "%s-%s" prefix (nth 2 setting)))
+                      (nth 3 setting)
+                      (el-patch-add
+                        (nth 4 setting)
+                        (nth 5 setting))))
+              settings))
+    
+    (add-hook 'astro-ts-mode-hook
+              ;; Instead of redefining the major mode and adding this to
+              ;; the end (which el-patch does not support, I don't
+              ;; think), we can run this on the major mode hook instead
+              (lambda ()
+                (when (version<= "31" emacs-version)
+                  (let ((tsx-parser (treesit-parser-create 'tsx)))
+                    (treesit-parser-set-included-ranges tsx-parser '((1 . 1))))
+                  (let ((css-parser (treesit-parser-create 'css)))
+                    (treesit-parser-set-included-ranges css-parser '((1 . 1))))))))
 #+end_src
 
 *** Astute.el: Display punctuation typographically
