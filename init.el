@@ -5743,8 +5743,9 @@ When called with `-' instead call `inspector-inspect-expression'."
 (global-sops-mode 1)
 
 (with-eval-after-load 'sops
-  (bind-keys :filter (sops--is-sops-file)
-             ("C-c e e" . sops-edit-file)
+  (bind-keys :map krisb-open-keymap
+             :filter (sops--is-sops-file)
+             ("S" . sops-edit-file)
              :map sops-mode-map
              ("C-c e c" . sops-save-file)
              ("C-c e C-c" . sops-save-file)
