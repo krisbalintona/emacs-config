@@ -2749,10 +2749,12 @@ Before Corfu 2.7, specifically [[https://github.com/minad/corfu/commit/4c4a41b0b
 
 #+name: direnv
 #+begin_src emacs-lisp
-  (unless (package-installed-p 'direnv)
-    (package-install 'direnv))
+  (krisb-package-install direnv)
 
   (direnv-mode 1)
+
+  (with-eval-after-load 'direnv
+    (setopt direnv-always-show-summary nil))
 #+end_src
 
 *** Display-line-numbers

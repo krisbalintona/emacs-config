@@ -5879,10 +5879,12 @@ contains the mode name."
                   (treesit-parser-set-included-ranges css-parser '((1 . 1))))))))
 
 ;;; Direnv
-(unless (package-installed-p 'direnv)
-  (package-install 'direnv))
+(krisb-package-install direnv)
 
 (direnv-mode 1)
+
+(with-eval-after-load 'direnv
+  (setopt direnv-always-show-summary nil))
 
 ;;; Web-mode
 (krisb-package-install web-mode)
