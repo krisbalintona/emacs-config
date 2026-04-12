@@ -5981,7 +5981,7 @@ contains the mode name."
   
   (setopt eglot-code-action-indications '(mode-line margin)
           eglot-code-action-indicator "α"
-          eglot-mode-line-format '( eglot-mode-line-menu
+          eglot-mode-line-format '( ;; eglot-mode-line-menu
                                     ;; eglot-mode-line-session
                                     eglot-mode-line-error
                                     eglot-mode-line-pending-requests
