@@ -5778,7 +5778,8 @@ When called with `-' instead call `inspector-inspect-expression'."
 (krisb-package-install astro-ts-mode)
 
 (when (boundp 'treesit-enabled-modes)
-  (add-to-list 'treesit-enabled-modes 'astro-ts-mode))
+  (unless (eq t treesit-enabled-modes)
+    (cl-pushnew 'astro-ts-mode treesit-enabled-modes)))
 
 ;; TODO 2026-04-10: Ideally, I create a PR or bug report to upstream
 ;; astro-ts-mode for this.
@@ -5795,7 +5796,7 @@ contains the mode name."
           (memq 'astro-ts-mode treesit-enabled-modes))
       (progn
         (require 'astro-ts-mode)
-        (astro-ts-mode))
+        (astro-ts-mode 1))
     (fundamental-mode)))
 
 (when (boundp 'treesit-major-mode-remap-alist)
