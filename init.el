@@ -5204,34 +5204,24 @@ which file on the system it backs up."
 
 ;;; Flymake
 ;; TODO 2025-05-24: Document:
-;; - `elisp-flymake-byte-compile-load-path’
+;; - `flymake-indicator-type'
 ;; - `flymake-suppress-zero-counters’
-(setup flymake
-  
-  ;; TODO 2025-05-24: Revisit this.
-  ;; (prog-mode-hook . (lambda ()
-  ;;                     (setq-local flymake-indicator-type nil
-  ;;                                 flymake-show-diagnostics-at-end-of-line 'fancy) ; Emacs 31 value
-  ;;                     (flymake-mode 1)))
-  ;; TODO 2025-11-17: Revisit this.
-  ;; (text-mode-hook . (lambda ()
-  ;;                     (setq-local flymake-indicator-type nil)
-  ;;                     (flymake-mode 1)))
+;; - `flymake-fringe-indicator-position'
+;; - `flymake-margin-indicator-position'
+;; - `elisp-flymake-byte-compile-load-path’
 
-  (add-hook 'prog-mode-hook #'flymake-mode)
-  (add-hook 'text-mode-hook #'flymake-mode)
-  
-  (setopt flymake-wrap-around nil)
-  
-  ;; TODO 2025-11-17: Revisit this.
-  ;; ;; Indicators
-  ;; (setopt flymake-indicator-type nil
-  ;;         flymake-fringe-indicator-position nil ; Position for fringe position type
-  ;;         flymake-margin-indicator-position 'right-margin ; Position for margin position type
-  ;;         flymake-show-diagnostics-at-end-of-line nil)
+(add-hook 'prog-mode-hook #'flymake-mode)
+(add-hook 'text-mode-hook #'flymake-mode)
 
-  ;; Mode line
-  (setopt flymake-mode-line-format
+(with-eval-after-load 'flymake
+  (bind-keys :map flymake-mode-map
+             ("M-p" . flymake-goto-prev-error)
+             ("M-n" . flymake-goto-next-error))
+
+  (setopt flymake-wrap-around nil
+          
+          ;; Mode line
+          flymake-mode-line-format
           '(" " flymake-mode-line-title flymake-mode-line-exception flymake-mode-line-counters)
           flymake-mode-line-counter-format
           '("["
