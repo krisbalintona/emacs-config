@@ -8979,23 +8979,6 @@ Other interesting packages:
                          :foreground 'unspecified
                          :background (modus-themes-with-colors bg-dim))))
 
-  ;;; Ediff
-  (use-package ediff
-    :ensure nil
-    :custom
-    (ediff-window-setup-function 'ediff-setup-windows-plain) ; Keep everything in the same frame
-    (ediff-split-window-function #'split-window-horizontally)
-    (ediff-highlight-all-diffs nil))      ; Only highlight currently selected diff
-
-  ;;; Vc-jj
-  ;; Best jj integration with vc currently (2025-03-13).
-  (use-package vc-jj
-    :pin gnu-elpa-devel
-    :config
-    ;; Project integration with JJ
-    (with-eval-after-load 'project
-      (require 'project-jj)))
-
   ;;; Git-share
   ;; Share a web URL to the commit responsible for the change at point or the
   ;; remote version of the file at point.

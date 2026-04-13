@@ -6034,6 +6034,12 @@ minor mode was already enabled before Eglot."
   (require 'easysession-scratch)
   (easysession-scratch-mode 1))
 
+;;; Ediff
+(with-eval-after-load 'ediff
+  (setopt ediff-split-window-function #'split-window-horizontally
+          ediff-window-setup-function 'ediff-setup-windows-plain ; Keep all windows in the same frame
+          ediff-highlight-all-diffs nil))
+
 ;;; Load config units
 (load-all-configs)
 

@@ -2953,6 +2953,16 @@ Before Corfu 2.7, specifically [[https://github.com/minad/corfu/commit/4c4a41b0b
                   :key #'car)
 #+end_src
 
+*** Ediff: UI to view and resolve merge conflicts
+
+#+name: ediff
+#+begin_src emacs-lisp
+  (with-eval-after-load 'ediff
+    (setopt ediff-split-window-function #'split-window-horizontally
+            ediff-window-setup-function 'ediff-setup-windows-plain ; Keep all windows in the same frame
+            ediff-highlight-all-diffs nil))
+#+end_src
+
 *** Editorconfig: Integration with EditorConfig
 
 EditorConfig is like an editor-agnistic ~.dir-locals.el~. Read more about Emacs's integration with EditorConfig in ~(emacs) EditorConfig support~.
@@ -8702,6 +8712,9 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   ;;; Easysession
   <<easysession>>
+
+  ;;; Ediff
+  <<ediff>>
 
   ;;; Load config units
   <<config-units-load>>
