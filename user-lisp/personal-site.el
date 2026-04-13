@@ -63,6 +63,19 @@ This option is used to define the value of other relevant paths."
 ;; This backend outputs HTML that will be the content/body of the post
 ;; (before a few possible server-side modifications to it).
 
+(defun personal-site--org-title-to-utf8 (info)
+  "Return the document title as a plain UTF-8 string.
+Convert the document title to a plain-text UTF-8 string via the ASCII
+exporter.  Returns nil if :with-title is not set in INFO
+
+INFO is a plist holding export options."
+  (string-trim
+   (org-export-string-as
+    (org-element-interpret-data
+     (when (plist-get info :with-title)
+       (plist-get info :title)))
+    'ascii t '(:ascii-charset utf-8))))
+
 ;; TODO 2026-03-28: When considering export of subtrees, in which case
 ;; we would use the EXPORT_DATE subtree property
 (defun personal-site--org-get-date (info fmt)
@@ -96,8 +109,7 @@ export options."
       `(comment nil ,(format "%s" (concat "Generated on" (format-time-string timestamp-format))))))
 
    ;; Document content
-   (let* ((title (and (plist-get info :with-title)
-                      (plist-get info :title)))
+   (let* ((title (personal-site--org-title-to-utf8 info))
           (title-element (when title
                            `(h1 ((class . "title")) ,(org-export-data title info))))
           (subtitle (plist-get info :subtitle))
@@ -566,9 +578,7 @@ WCAG 2.4.4 and 4.1.2 (Web Content Accessibility Guidelines)."
   "Return post metadata as a JSON string.
 CONTENTS is the transcoded contents string.  INFO is a plist holding
 export options."
-  (let* ((title (org-no-properties
-                 (org-html-plain-text
-                  (org-element-interpret-data (plist-get info :title)) info)))
+  (let* ((title (personal-site--org-title-to-utf8 info))
          ;; Set title to an invisible character instead of leaving it
          ;; empty, which is invalid.
          (title (if (org-string-nw-p title) title "&lrm;"))
