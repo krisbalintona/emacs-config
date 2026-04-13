@@ -173,6 +173,21 @@ macro."
              (package-install ',package)
            (error (message "Cannot install `%s'; try `M-x package-refresh-contents' first" ',package))))))))
 
+(defmacro krisb-mode-line-collapse-minor-mode (&optional mode)
+  "Hide minor mode MODE in mode line.
+MODE is an unquoted major mode symbol.
+
+When using Emacs 31, add MODE to `mode-line-collapse-minor-modes'.  When
+using an earlier version of Emacs, remove from `minor-mode-alist'."
+  (let* ((mode (if (string-match-p "-mode\\'" (symbol-name mode))
+                   mode
+                 (intern (format "%s-mode" mode)))))
+    (if (boundp 'mode-line-collapse-minor-modes) ; Added in Emacs 31.1
+        `(add-to-list 'mode-line-collapse-minor-modes ',mode)
+      `(setq minor-mode-alist
+             (delq (assq ',mode minor-mode-alist)
+                   minor-mode-alist)))))
+
 ;;;; Setup.el
 (unless (package-installed-p 'setup)
   (package-install 'setup))
@@ -5933,6 +5948,8 @@ contains the mode name."
           eldoc-documentation-strategy
           'eldoc-documentation-enthusiast ; All run, but only most important is shown
           eldoc-help-at-pt t)) ; Emacs 31.1
+
+(krisb-mode-line-collapse-minor-mode eldoc-mode)
 
 ;;; Eglot
 (with-eval-after-load 'eglot

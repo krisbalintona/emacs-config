@@ -3015,6 +3015,8 @@ For major modes to support indentation size judged from ~editorconfig-mode~, the
             eldoc-documentation-strategy
             'eldoc-documentation-enthusiast ; All run, but only most important is shown
             eldoc-help-at-pt t)) ; Emacs 31.1
+
+  (krisb-mode-line-collapse-minor-mode eldoc-mode)
 #+end_src
 
 *** Electric: Auto-insert delimiters
@@ -6796,6 +6798,21 @@ Below is a bespoke macro I use for package installation.
            (condition-case-unless-debug nil
                (package-install ',package)
              (error (message "Cannot install `%s'; try `M-x package-refresh-contents' first" ',package))))))))
+
+  (defmacro krisb-mode-line-collapse-minor-mode (&optional mode)
+    "Hide minor mode MODE in mode line.
+  MODE is an unquoted major mode symbol.
+
+  When using Emacs 31, add MODE to `mode-line-collapse-minor-modes'.  When
+  using an earlier version of Emacs, remove from `minor-mode-alist'."
+    (let* ((mode (if (string-match-p "-mode\\'" (symbol-name mode))
+                     mode
+                   (intern (format "%s-mode" mode)))))
+      (if (boundp 'mode-line-collapse-minor-modes) ; Added in Emacs 31.1
+          `(add-to-list 'mode-line-collapse-minor-modes ',mode)
+        `(setq minor-mode-alist
+               (delq (assq ',mode minor-mode-alist)
+                     minor-mode-alist)))))
 #+end_src
 
 [fn:1] See also [[https://github.com/kn66/package-upgrade-guard.el][package-upgrade-guard.el]], which I used prior to the implementation of this feature into Emacs.
