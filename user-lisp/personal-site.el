@@ -103,8 +103,8 @@ export options."
    ;; Metadata
    ;;
    ;; Timestamp for creation of export file
-   (when-let (((plist-get info :time-stamp-file))
-              (timestamp-format (plist-get info :personal-site-metadata-timestamp-format)))
+   (when-let* (((plist-get info :time-stamp-file))
+               (timestamp-format (plist-get info :personal-site-metadata-timestamp-format)))
      (esxml-to-xml
       `(comment nil ,(format "%s" (concat "Generated on" (format-time-string timestamp-format))))))
 
@@ -159,11 +159,11 @@ as a plist."
 
 (defun personal-site--org-export-get-reference-advice (orig datum info)
   "Advice for `org-export-get-reference' to generate stable IDs.
-When exporting with the 'personal-site-html' backend:
+When exporting with the `personal-site-html' backend:
 - For headlines, generate a deterministic slug from the headline text,
   appending a counter only for duplicates.
 - For other elements, generate a reference of the form TYPE-N.
-When not using the 'personal-site-html' backend, call
+When not using the `personal-site-html' backend, call
 `org-export-get-reference' normally.
 
 ORIG is the original function.  See `org-export-get-reference' for a
@@ -515,8 +515,8 @@ INFO is a plist holding contextual information.  See
 (defun personal-site--fix-empty-anchors (text _backend _info)
   "Replace all empty anchor elements with spans in TEXT.
 In Org's export output, empty anchors (i.e., `<a id=\"...\"></a>') are
-sometimes emitted, being used merely as targets.  Replacing the 'a' tags
-with 'span' tags is semantically cleaner while avoiding violations of
+sometimes emitted, being used merely as targets.  Replacing the `a' tags
+with `span' tags is semantically cleaner while avoiding violations of
 WCAG 2.4.4 and 4.1.2 (Web Content Accessibility Guidelines)."
   (replace-regexp-in-string
    (rx "<a id=\"" (group (one-or-more (not "\""))) "\"></a>")
@@ -574,7 +574,7 @@ WCAG 2.4.4 and 4.1.2 (Web Content Accessibility Guidelines)."
 ;; "metadata.json".  This JSON file is used by Astro for various
 ;; purposes, such as dynamic routing.
 
-(defun personal-site-org-json-template (contents info)
+(defun personal-site-org-json-template (_contents info)
   "Return post metadata as a JSON string.
 CONTENTS is the transcoded contents string.  INFO is a plist holding
 export options."
@@ -586,18 +586,20 @@ export options."
          (timestamp-format (plist-get info :personal-site-metadata-timestamp-format))
          (date (personal-site--org-get-date info timestamp-format))
          (postid (plist-get info :personal-site-postid)))
-
-    ;; Timestamp for creation of export file
-    (when-let (((plist-get info :time-stamp-file))
-               (timestamp-format (plist-get info :personal-site-metadata-timestamp-format)))
-      (concat "// Generated on " (format-time-string timestamp-format)))
-    
-    ;; Content (metadata as JSON)
-    (json-encode
-     `((postid . ,postid)
-       (title . ,title)
-       (slug . ,slug)
-       (date . ,date)))))
+    (string-join
+     (list
+      ;; Timestamp for creation of export file
+      (when-let* (((plist-get info :time-stamp-file))
+                  (timestamp-format (plist-get info :personal-site-metadata-timestamp-format)))
+        (format "// Generated on %s" (format-time-string timestamp-format)))
+      
+      ;; Content (metadata as JSON)
+      (json-encode
+       `((postid . ,postid)
+         (title . ,title)
+         (slug . ,slug)
+         (date . ,date))))
+     "\n")))
 
 (org-export-define-derived-backend 'personal-site-json 'personal-site-html
   :options-alist
@@ -683,7 +685,7 @@ DIRECTORY is the targeted output directory."
     (&optional async subtreep visible-only body-only ext-plist)
   "Export current buffer to an HTML buffer.
 Behaves identically to `org-html-export-as-html' but with the
-'personal-site-html' backend.
+`personal-site-html' backend.
 
 If narrowing is active in the current buffer, only export its narrowed
 part.
@@ -813,6 +815,9 @@ This function is used as the :publishing-function in
            :filter-final-output (org-publish--store-crossrefs
                                  org-publish-collect-index
                                  ,@(plist-get plist :filter-final-output))))))))
+
+;; Make compiler happy
+(defvar krisb-manuscript-blog-posts-directory)
 
 (setopt
  ;; NOTE 2026-02-12: This is set to nil as I develop, to force
