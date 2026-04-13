@@ -1086,7 +1086,9 @@ I discovered this trick initially from Doom Emacs, then later in [[https://emacs
   (setopt bidi-inhibit-bpa t)
 #+end_src
 
-*** Wait to fontify after input
+*** COMMENT Wait to fontify after input
+
+[2026-04-13 Mon]: I found that buffer visual updates are instant, I did not find the momentary un-fontified text worth the trade-off.
 
 I discovered this trick in [[https://emacsredux.com/blog/2026/04/07/stealing-from-the-best-emacs-configs/][this Emacs Redux]] article.
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"

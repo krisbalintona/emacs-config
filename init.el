@@ -501,12 +501,6 @@ package-archives, e.g. \"gnu\")."))
   (setq-default bidi-paragraph-direction 'left-to-right)
   (setopt bidi-inhibit-bpa t)
   
-  ;; Prevent expensive live-fontification of buffer while editing.  Has
-  ;; noticeable benefit in large buffers and in major modes that try to
-  ;; fontify as you type, like tree-sitter major modes.  Has no
-  ;; noticeable drawbacks (unless typing very, very fast).
-  (setopt redisplay-skip-fontification-on-input t)
-  
   (setopt exchange-point-and-mark-highlight-region nil) ; Emacs 31
   
   (setup face-remap
