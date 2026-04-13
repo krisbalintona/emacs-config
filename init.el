@@ -3861,79 +3861,7 @@ PROP is the name of the property.  See
                (display-buffer-in-new-tab)))
 
 ;;; Desktop
-;; TODO 2025-05-20: Document in literate configuration prose.
-;; See also `desktop-locals-to-save'
-;; Save buffers across Emacs sessions
-(setup desktop
-  ;; ;; 2025-05-22: This is a workaround for elpaca.  Look at the bottom
-  ;; ;; of desktop.el’s file: we must avoid enabling `desktop-save-mode’
-  ;; ;; immediately when desktop is loaded because the desktop.el file
-  ;; ;; automatically adds to `after-init-hook’ to call `desktop-read’ if
-  ;; ;; `desktop-save-mode’ is enabled. This is problematic because, on
-  ;; ;; account of elpaca’s asynchronicity, some packages will end up not
-  ;; ;; being ready by the time desktop loads a buffer relevant to its
-  ;; ;; behavior.  For example, outli is not enabled in buffers it should
-  ;; ;; be because desktop opened them before outli could load.  Another
-  ;; ;; example is org: if desktop loads an org buffer before the org
-  ;; ;; declaration for elpaca, the built-in version is loaded before the
-  ;; ;; use-package declarataion for org, meaning that elpaca will
-  ;; ;; recognize the package as already available and therefore not
-  ;; ;; install and use a more upgraded version.
-  ;; ;;
-  ;; ;; So we should avoid having desktop open buffers before elpaca is
-  ;; ;; done initializing the packages.  One solution would be to just
-  ;; ;; enable `desktop-save-hook’ after elpaca initializes, then call
-  ;; ;; `desktop-read’ manually.  However, this would ignore the
-  ;; ;; --no-desktop flag called with Emacs.  Instead, we opt to enabl
-  ;; ;; `desktop-save-mode’ then add the very hook that desktop adds to
-  ;; ;; `after-init-hook’ `elpaca-after-init-hook’.
-  ;; (elpaca-after-init-hook
-  ;;  . (lambda ()
-  ;;      (desktop-save-mode 1)
-  ;;      (let ((key "--no-desktop"))
-  ;;        (when (member key command-line-args)
-  ;;          (setq command-line-args (delete key command-line-args))
-  ;;          (desktop-save-mode 0)))
-  ;;      (when desktop-save-mode
-  ;;        (desktop-read)
-  ;;        (setq inhibit-startup-screen t))))
-  (desktop-save-mode 1)
 
-  (with-eval-after-load 'desktop
-    (setopt desktop-load-locked-desktop 'check-pid
-            desktop-save 'ask-if-new
-            desktop-auto-save-timeout 10))
-  ;; TODO 2025-05-19: Revisit this.
-  ;; (desktop-files-not-to-save
-  ;;  (rx (or (regexp "\\(\\`/[^/:]*:\\|(ftp)\\'\\)")
-  ;;          ;; Don't save files from other Emacs repos because sometimes they
-  ;;          ;; have local variables that mess with desktop's loading of files
-  ;;          (literal (expand-file-name "emacs-repos/" "~"))
-  ;;          ;; Don't want to open my large org-agenda files which I'll open
-  ;;          ;; eventually anyway
-  ;;          (literal krisb-org-agenda-directory))))
-  (setopt desktop-restore-eager t
-          desktop-restore-forces-onscreen nil
-          desktop-restore-frames t
-          desktop-restore-in-current-display nil)
-  (add-to-list 'desktop-globals-to-save '(kill-ring . 5000)))
-
-;; Also save and restore narrowing state.  Taken from
-;; https://www.reddit.com/r/emacs/comments/162cjki/comment/jxzrthx/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
-(setup desktop
-  (defun krisb-desktop--save-narrowing ()
-    "Save narrowed information."
-    (setq-local desktop-save-buffer
-                (lambda (_desktop-dirname)
-                  (when (buffer-narrowed-p) (list 'narrowed (point-min) (point-max))))))
-  (dolist (hook '(text-mode-hook prog-mode-hook conf-mode-hook))
-    (add-hook hook #'krisb-desktop--save-narrowing))
-
-  (defun krisb-desktop--restore-narrowing (_f n misc &rest _)
-    "Restore narrowing of buffer."
-    (when (and misc (eq (car misc) 'narrowed))
-      (apply #'narrow-to-region (cdr misc))))
-  (advice-add 'desktop-restore-file-buffer :after #'krisb-desktop--restore-narrowing))
 
 ;;; Smart-mark
 ;; When pressing C-g while marking a region, move point to the
@@ -6071,6 +5999,40 @@ minor mode was already enabled before Eglot."
 (with-eval-after-load 'ben
   (setopt ben-add-to-mode-line-misc-info nil
           ben-remote t))      ; See also `ben-supported-tramp-methods'
+
+;;; Easysession
+(krisb-package-install easysession)
+
+(easysession-setup)
+(krisb-mode-line-collapse-minor-mode easysession-save-mode)
+
+(with-eval-after-load 'easysession
+  (bind-keys ("C-c S s" . easysession-save)
+             ("C-c S l" . easysession-switch-to)
+             ("C-c S L" . easysession-switch-to-and-restore-geometry)
+             ("C-c S r" . easysession-rename)
+             ("C-c S R" . easysession-reset)
+             ("C-c S u" . easysession-unload)
+             ("C-c S d" . easysession-delete))
+  
+  ;; See also:
+  ;; - `easysession-switch-to-save-session'
+  ;; - `easysession-setup-load-session'
+  ;; - `easysession-save-mode-predicate'
+  ;; - `easysession-save-mode-lighter-show-session-name'
+  (setopt easysession-directory (no-littering-expand-var-file-name "easysession")
+          easysession-save-interval (* 2 60)
+          easysession-buffer-list-function 'easysession-visible-buffer-list
+          easysession-switch-to-exclude-current t
+          easysession-mode-line-misc-info nil)
+
+  ;; Save and restore the current session name
+  (with-eval-after-load 'savehist
+    (add-to-list 'savehist-additional-variables 'easysession--current-session-name))
+
+  ;; Save the scratch buffer, too
+  (require 'easysession-scratch)
+  (easysession-scratch-mode 1))
 
 ;;; Load config units
 (load-all-configs)

@@ -2604,7 +2604,7 @@ Before Corfu 2.7, specifically [[https://github.com/minad/corfu/commit/4c4a41b0b
     (delete-selection-mode t))
 #+end_src
 
-*** Desktop: Reopen buffers
+*** COMMENT Desktop: Reopen buffers
 
 #+name: desktop
 #+begin_src emacs-lisp
@@ -2815,6 +2815,44 @@ Before Corfu 2.7, specifically [[https://github.com/minad/corfu/commit/4c4a41b0b
 
     (with-eval-after-load 'do-at-point
       <<do-at-point-user-actions>>))
+#+end_src
+
+*** Easysession: A faster desktop.el session-management alternative
+
+#+name: easysession
+#+begin_src emacs-lisp
+  (krisb-package-install easysession)
+
+  (easysession-setup)
+  (krisb-mode-line-collapse-minor-mode easysession-save-mode)
+
+  (with-eval-after-load 'easysession
+    (bind-keys ("C-c S s" . easysession-save)
+               ("C-c S l" . easysession-switch-to)
+               ("C-c S L" . easysession-switch-to-and-restore-geometry)
+               ("C-c S r" . easysession-rename)
+               ("C-c S R" . easysession-reset)
+               ("C-c S u" . easysession-unload)
+               ("C-c S d" . easysession-delete))
+    
+    ;; See also:
+    ;; - `easysession-switch-to-save-session'
+    ;; - `easysession-setup-load-session'
+    ;; - `easysession-save-mode-predicate'
+    ;; - `easysession-save-mode-lighter-show-session-name'
+    (setopt easysession-directory (no-littering-expand-var-file-name "easysession")
+            easysession-save-interval (* 2 60)
+            easysession-buffer-list-function 'easysession-visible-buffer-list
+            easysession-switch-to-exclude-current t
+            easysession-mode-line-misc-info nil)
+
+    ;; Save and restore the current session name
+    (with-eval-after-load 'savehist
+      (add-to-list 'savehist-additional-variables 'easysession--current-session-name))
+
+    ;; Save the scratch buffer, too
+    (require 'easysession-scratch)
+    (easysession-scratch-mode 1))
 #+end_src
 
 *** EAT: Best terminal emulator
@@ -8661,6 +8699,9 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   ;;; Ben
   <<ben>>
+
+  ;;; Easysession
+  <<easysession>>
 
   ;;; Load config units
   <<config-units-load>>
