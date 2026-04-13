@@ -1455,8 +1455,12 @@ Additionally, all apropos commands will expand the subset of symbols they search
     (advice-add 'make-backup-file-name-1 :around #'krisb-backup-file-name-hash))
 #+end_src
 
-*** Ben: An async version of direnv.el with some additional tweaks
+*** Ben: Async direnv integration
+:PROPERTIES:
+:CUSTOM_ID: h:20260413T011647.415154
+:END:
 
+An async successor to [[https://github.com/purcell/envrc][envrc]].
 #+name: ben
 #+begin_src emacs-lisp
   (krisb-package-install ben)
@@ -2770,6 +2774,9 @@ Before Corfu 2.7, specifically [[https://github.com/minad/corfu/commit/4c4a41b0b
 #+end_src
 
 *** COMMENT Direnv: Emacs integration with =direnv=
+:PROPERTIES:
+:CUSTOM_ID: h:20260413T011705.091192
+:END:
 
 #+name: direnv
 #+begin_src emacs-lisp
@@ -8055,6 +8062,15 @@ I have minor web development needs for the purposes of developing my personal si
 + [[#h:20260409T210556.449533][Astro-ts-mode: Treesitter mode for Astro files]]
 + [[#h:20260409T221936.483467][Web--mode: Major mode for editing various "web templates"]]
 
+** Direnv integration
+
+There are several packages that integrate with [[https://direnv.net/][direnv]] and .envrc files. Here are the ones I am aware of and have tried, at least briefly:
++ [[https://github.com/wbolster/emacs-direnv][GitHub - wbolster/emacs-direnv: direnv integration for emacs · GitHub]]
++ [[https://github.com/purcell/envrc][GitHub - purcell/envrc: Emacs support for direnv which operates buffer-locally · GitHub]]
++ [[https://github.com/astoff/buffer-env][GitHub - astoff/buffer-env: Buffer-local process environments for Emacs · GitHub]]
++ [[https://codeberg.org/pastor/ben.el][pastor/ben.el: Asynchronous fork of envrc: https://github.com/purcell/envrc - Codeberg.org]]
+You will find in the READMEs of most of the above comparisons between each. I am currently using the most recent installment of the bunch: ben.el.
+  
 * Deployments
 
 ** PC
