@@ -500,12 +500,24 @@ INFO is a plist holding contextual information.  See
      (t
       (format "<i>%s</i>" desc)))))
 
+(defun personal-site--fix-empty-anchors (text _backend _info)
+  "Replace all empty anchor elements with spans in TEXT.
+In Org's export output, empty anchors (i.e., `<a id=\"...\"></a>') are
+sometimes emitted, being used merely as targets.  Replacing the 'a' tags
+with 'span' tags is semantically cleaner while avoiding violations of
+WCAG 2.4.4 and 4.1.2 (Web Content Accessibility Guidelines)."
+  (replace-regexp-in-string
+   (rx "<a id=\"" (group (one-or-more (not "\""))) "\"></a>")
+   "<span id=\"\\1\"></span>"
+   text))
+
 (org-export-define-derived-backend 'personal-site-html 'html
   ;; Used to modify or remove org elements on export, overwriting the
   ;; filters of the parent backend.  See (info "(org) Advanced Export
   ;; Configuration") for more information on backend filters
-  ;; :filters-alist
-
+  :filters-alist
+  '((:filter-final-output . personal-site--fix-empty-anchors))
+  
   ;; Entry for backend in the org export menu
   :menu-entry
   '(?p "Export to personal site"
