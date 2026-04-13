@@ -6017,12 +6017,12 @@ minor mode was already enabled before Eglot."
   
   ;; See also:
   ;; - `easysession-switch-to-save-session'
-  ;; - `easysession-setup-load-session'
   ;; - `easysession-save-mode-predicate'
   ;; - `easysession-save-mode-lighter-show-session-name'
   (setopt easysession-directory (no-littering-expand-var-file-name "easysession")
           easysession-save-interval (* 2 60)
           easysession-buffer-list-function 'easysession-visible-buffer-list
+          easysession-setup-load-session nil
           easysession-switch-to-exclude-current t
           easysession-mode-line-misc-info nil)
 
