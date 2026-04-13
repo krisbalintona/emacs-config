@@ -1263,6 +1263,15 @@ Additionally, all apropos commands will expand the subset of symbols they search
                     (treesit-parser-set-included-ranges tsx-parser '((1 . 1))))
                   (let ((css-parser (treesit-parser-create 'css)))
                     (treesit-parser-set-included-ranges css-parser '((1 . 1))))))))
+
+  ;;
+  ;; Compatibility with `editorconfig-mode'
+  ;;
+
+  (with-eval-after-load 'editorconfig
+    (setopt editorconfig-indentation-alist
+            (cons '(astro-ts-mode astro-ts-mode-indent-offset)
+                  editorconfig-indentation-alist)))
 #+end_src
 
 *** Astute.el: Display punctuation typographically
@@ -2900,11 +2909,11 @@ Before Corfu 2.7, specifically [[https://github.com/minad/corfu/commit/4c4a41b0b
 *** Editorconfig: Integration with EditorConfig
 
 EditorConfig is like an editor-agnistic ~.dir-locals.el~. Read more about Emacs's integration with EditorConfig in ~(emacs) EditorConfig support~.
-
 #+name: editorconfig
 #+begin_src emacs-lisp
   (editorconfig-mode 1)
 #+end_src
+For major modes to support indentation size judged from ~editorconfig-mode~, they should preferably set ~editorconfig-indent-size-vars~. However, as a band-aid for major modes that do not do this, the user should alternatively customize ~editorconfig-indentation-alist~.
 
 *** Ef-themes
 

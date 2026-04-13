@@ -5878,6 +5878,15 @@ contains the mode name."
                 (let ((css-parser (treesit-parser-create 'css)))
                   (treesit-parser-set-included-ranges css-parser '((1 . 1))))))))
 
+;;
+;; Compatibility with `editorconfig-mode'
+;;
+
+(with-eval-after-load 'editorconfig
+  (setopt editorconfig-indentation-alist
+          (cons '(astro-ts-mode astro-ts-mode-indent-offset)
+                editorconfig-indentation-alist)))
+
 ;;; Direnv
 
 
