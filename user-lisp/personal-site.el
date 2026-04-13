@@ -74,7 +74,12 @@ INFO is a plist holding export options."
     (org-element-interpret-data
      (when (plist-get info :with-title)
        (plist-get info :title)))
-    'ascii t '(:ascii-charset utf-8))))
+    'ascii t `(;; Export to UTF-8, as opposed to e.g. ASCII
+               :ascii-charset utf-8
+               ;; Newlines may be inserted to wrap the text according
+               ;; to :ascii-text-width or `org-ascii-text-width.'
+               ;; Prevent this
+               :ascii-text-width ,most-positive-fixnum))))
 
 ;; TODO 2026-03-28: When considering export of subtrees, in which case
 ;; we would use the EXPORT_DATE subtree property
@@ -286,9 +291,10 @@ ways:
                         ;; Lang being nil is OK.
                         lang label code))))))
 
-(defun personal-site--attachment-copy (path info)
+(defun personal-site--copy-attachment (path info)
   "Copy asset at PATH to the post subdirectory.
-Return the path of the asset relative to the post subdirectory.
+Use the value of the `:personal-site-output-directory' property in INFO
+to return the path of the asset relative to the post subdirectory.
 
 PATH is the absolute path of the local asset.  INFO is a plist used as a
 communication channel."
@@ -399,7 +405,7 @@ INFO is a plist holding contextual information.  See
                ;; appropriate path on the website
                (asset-path
                 (if (plist-get info :output-file)
-                    (personal-site--attachment-copy raw-path info)
+                    (personal-site--copy-attachment raw-path info)
                   path)))
           (org-html--format-image asset-path attributes-plist info))))
      ;; Radio target: Transcode target's contents and use them as
@@ -574,14 +580,19 @@ WCAG 2.4.4 and 4.1.2 (Web Content Accessibility Guidelines)."
 ;; "metadata.json".  This JSON file is used by Astro for various
 ;; purposes, such as dynamic routing.
 
+(defun personal-site--org-get-post-id ()
+  "Return post ID of current buffer.
+The post ID of a post is the current buffer's top-level value for the
+\"ID\" property."
+  (save-restriction
+    (save-excursion
+      (org-id-get (point-min)))))
+
 (defun personal-site-org-json-template (_contents info)
   "Return post metadata as a JSON string.
 CONTENTS is the transcoded contents string.  INFO is a plist holding
 export options."
   (let* ((title (personal-site--org-title-to-utf8 info))
-         ;; Set title to an invisible character instead of leaving it
-         ;; empty, which is invalid.
-         (title (if (org-string-nw-p title) title "&lrm;"))
          (slug (personal-site--title-to-slug title))
          (timestamp-format (plist-get info :personal-site-metadata-timestamp-format))
          (date (personal-site--org-get-date info timestamp-format))
@@ -611,7 +622,11 @@ export options."
 
 ;;;;; Exporters
 ;; Export (to file, to buffer) functions for the backends defined
-;; above.
+;; above.  For each backend there is an export function to a buffer
+;; (`personal-site-org-export-as-html' and
+;; `personal-site-org-export-as-json').  Then there is a single export
+;; function that outputs to a complete post subdirectory with multiple
+;; files (`personal-site-org-export-to-site').
 
 (defconst personal-site-org-post-id-timestamp-format "%Y%m%d%H%M"
   "Timestamp format for post IDs.
@@ -628,10 +643,11 @@ This slug is used as the directory name associated with a post (inside
      "[^a-z0-9]+" "_"
      (downcase title)))))
 
-(defun personal-site-org-output-directory (&optional subtreep)
+(defun personal-site--org-output-directory (&optional subtreep)
   "Return the output directory path of the current post.
-The returned path is of the form ID-SLUG, where ID is based on the date
-property of the post and SLUG is the title of the post passed to
+Return a path relative to the `default-directory'.  The returned path is
+of the form ID-SLUG, where ID is based on the date property of the post
+and SLUG is the title of the post passed to
 `personal-site--title-to-slug'.
 
 This function is called from the point in org buffer to-be exported.
@@ -639,9 +655,9 @@ This function is called from the point in org buffer to-be exported.
 With a non-nil optional argument SUBTREEP, use the \"EXPORT_FILE_NAME\"
 property of subtree at point as the SLUG portion of the output
 directory."
-  (let* ((export-environment (org-export-get-environment 'personal-site-html))
-         (title (org-element-interpret-data (plist-get export-environment :title)))
-         (date-timestamp (car (plist-get export-environment :date)))
+  (let* ((info (org-export-get-environment 'personal-site-html))
+         (title (personal-site--org-title-to-utf8 info))
+         (date-timestamp (car (plist-get info :date)))
          (postid (org-format-timestamp date-timestamp personal-site-org-post-id-timestamp-format))
          (directory
           (or
@@ -663,14 +679,19 @@ directory."
            (concat postid "--" (personal-site--title-to-slug title))
            ;; As a fallback, ask user
            (read-file-name "Output directory: " personal-site-destination-dir))))
-    (expand-file-name directory personal-site-destination-dir)))
+    directory))
 
 (defun personal-site--org-prepare-output-directory (output-directory)
   "Prepare output directory for receiving exported files.
 Create OUTPUT-DIRECTORY if it does not exist.  If it does, delete any
 existing files and directories.
 
-DIRECTORY is the targeted output directory."
+DIRECTORY is the targeted output directory.
+
+This function should be used in any export function that outputs to a
+file on disk (as opposed to just a buffer).  See
+`personal-site-org-export-to-site' and
+`personal-site-org-publish-to-site'."
   (if (file-exists-p output-directory)
       ;; Clear out DIRECTORY if it already exists
       (mapc (lambda (f)
@@ -702,7 +723,7 @@ settings.
 Export is done in a buffer named \"*Org HTML Export*\", which will be
 displayed when `org-export-show-temporary-export-buffer' is non-nil."
   (interactive)
-  (let ((output-dir (personal-site-org-output-directory subtreep))
+  (let ((output-dir (personal-site--org-output-directory subtreep))
         ;; Force exporting raw HTML without styling
         (org-html-htmlize-output-type nil))
     (org-export-to-buffer 'personal-site-html "*Org HTML Export*"
@@ -730,8 +751,8 @@ settings.
 Export is done in a buffer named \"*Org JSON Export*\", which will be
 displayed when `org-export-show-temporary-export-buffer' is non-nil."
   (interactive)
-  (let ((output-dir (personal-site-org-output-directory subtreep))
-        (postid (org-id-get)))
+  (let ((output-dir (personal-site--org-output-directory subtreep))
+        (postid (personal-site--org-get-post-id)))
     (org-export-to-buffer 'personal-site-json "*Org JSON Export*"
       async subtreep visible-only body-only
       (org-combine-plists
@@ -748,7 +769,7 @@ Several files will be created in this directory:
 - An \"index.html\", containing the post HTML content.
 - A \"metadata.json\", containing metadata about the post.
 - An \"assets/\" subdirectory, containing all attachments (see
-  `personal-site--attachment-copy').
+  `personal-site--copy-attachment').
 These files constitute all the files needed for the site.
 
 If narrowing is active in the current buffer, only export its
@@ -763,13 +784,17 @@ EXT-PLIST, when provided, is a property list with external parameters
 overriding Org default settings, but still inferior to file-local
 settings.
 
-Return output file's name."
+Return the output directory's name."
   (interactive)
   (let* ((org-export-coding-system org-html-coding-system)
          (org-html-htmlize-output-type nil) ; Force exporting raw HTML without styling
-         (output-dir (personal-site-org-output-directory subtreep))
+         (output-dir
+          ;; Use the value of the existing property (like in
+          ;; `personal-site-org-publish-to-site') if it exists
+          (or (plist-get ext-plist :personal-site-output-directory)
+              (personal-site--org-output-directory subtreep)))
          (index-file (expand-file-name "index.html" output-dir))
-         (postid (org-id-get))
+         (postid (personal-site--org-get-post-id))
          (metadata-file (expand-file-name "metadata.json" output-dir)))
     (personal-site--org-prepare-output-directory output-dir)
     
@@ -785,13 +810,17 @@ Return output file's name."
       async subtreep visible-only body-only
       (org-combine-plists
        ext-plist
-       `(:personal-site-output-directory ,output-dir)))))
+       `(:personal-site-output-directory ,output-dir)))
+    
+    ;; Return val
+    output-dir))
 
 ;;;; Org-publish
 ;; I use org-publish to make it easier to export all my blog posts
-;; altogether.
+;; altogether.  The export function `personal-site-org-export-to-site'
+;; does all the heavy lifting for export.
 
-(defun personal-site-org-publish-to-html (plist filename pub-dir)
+(defun personal-site-org-publish-to-site (plist filename pub-dir)
   "Publish an org file to HTML for the personal site.
 PLIST is the property list for the current project.  FILENAME is the
 filename of the org file to be published.  PUB-DIR is the publishing
@@ -801,16 +830,21 @@ This function is used as the :publishing-function in
 `org-publish-project-alist'."
   ;; We can't use `org-publish-org-to' directly because that would use
   ;; `org-export-output-file-name' instead of our
-  ;; `personal-site-org-output-directory' to determine the output
+  ;; `personal-site--org-output-directory' to determine the output
   ;; file.  So we define a modified version of `org-publish-org-to'
   ;; instead
   (org-with-file-buffer filename
-    (let* ((org-export-coding-system org-html-coding-system))
+    (let* ((output-dir
+            (expand-file-name (personal-site--org-output-directory) pub-dir))
+           (org-export-coding-system org-html-coding-system))
+      (personal-site--org-prepare-output-directory output-dir)
+      
       (personal-site-org-export-to-site
        nil nil nil (plist-get plist :body-only)
        (org-combine-plists
         plist
-        `( :crossrefs ,(org-publish-cache-get-file-property
+        `( :personal-site-output-directory ,output-dir
+           :crossrefs ,(org-publish-cache-get-file-property
                         (file-truename filename) :crossrefs nil t)
            :filter-final-output (org-publish--store-crossrefs
                                  org-publish-collect-index
@@ -830,7 +864,7 @@ This function is used as the :publishing-function in
     :publishing-directory ,personal-site-destination-dir
     :base-extension "org"
     :recursive t
-    :publishing-function personal-site-org-publish-to-html
+    :publishing-function personal-site-org-publish-to-site
     :html-head-include-default-style nil
     :html-prefer-user-labels nil
     :with-toc nil
