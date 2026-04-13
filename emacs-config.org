@@ -1446,6 +1446,21 @@ Additionally, all apropos commands will expand the subset of symbols they search
     (advice-add 'make-backup-file-name-1 :around #'krisb-backup-file-name-hash))
 #+end_src
 
+*** Ben: An async version of direnv.el with some additional tweaks
+
+#+name: ben
+#+begin_src emacs-lisp
+  (krisb-package-install ben)
+
+  ;; Add very late in initialization, as instructed in the package
+  ;; description
+  (add-hook 'after-init-hook #'ben-global-mode 99)
+
+  (with-eval-after-load 'ben
+    (setopt ben-add-to-mode-line-misc-info nil
+            ben-remote t))      ; See also `ben-supported-tramp-methods'
+#+end_src
+
 *** Bibtex: Built-in mode for =.bib= files
 
 Bibtex.el is the built-in library for parsing =.bib= files---these are BibTex files and biblatex files.[fn:3] It provides its own major mode and various helpful commands and helper functions. (See also [[#h:20251119T003610.792256][Persid: Compact library for creating bibtex entries from bibliographic information]].)
@@ -2745,7 +2760,7 @@ Before Corfu 2.7, specifically [[https://github.com/minad/corfu/commit/4c4a41b0b
             dired-dwim-target 'dired-dwim-target-recent))
 #+end_src
 
-*** Direnv: Emacs integration with =direnv=
+*** COMMENT Direnv: Emacs integration with =direnv=
 
 #+name: direnv
 #+begin_src emacs-lisp
@@ -8565,6 +8580,9 @@ I have minor web development needs for the purposes of developing my personal si
 
   ;;; Editorconfig
   <<editorconfig>>
+
+  ;;; Ben
+  <<ben>>
 
   ;;; Load config units
   <<config-units-load>>

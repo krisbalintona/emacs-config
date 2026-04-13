@@ -5879,12 +5879,7 @@ contains the mode name."
                   (treesit-parser-set-included-ranges css-parser '((1 . 1))))))))
 
 ;;; Direnv
-(krisb-package-install direnv)
 
-(direnv-mode 1)
-
-(with-eval-after-load 'direnv
-  (setopt direnv-always-show-summary nil))
 
 ;;; Web-mode
 (krisb-package-install web-mode)
@@ -6011,6 +6006,17 @@ minor mode was already enabled before Eglot."
 
 ;;; Editorconfig
 (editorconfig-mode 1)
+
+;;; Ben
+(krisb-package-install ben)
+
+;; Add very late in initialization, as instructed in the package
+;; description
+(add-hook 'after-init-hook #'ben-global-mode 99)
+
+(with-eval-after-load 'ben
+  (setopt ben-add-to-mode-line-misc-info nil
+          ben-remote t))      ; See also `ben-supported-tramp-methods'
 
 ;;; Load config units
 (load-all-configs)
