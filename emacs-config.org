@@ -3012,13 +3012,55 @@ For major modes to support indentation size judged from ~editorconfig-mode~, the
   ;; - `eldoc-print-after-edit')
   ;; - `eldoc-idle-delay'
   ;; - `eldoc-echo-area-display-truncation-message'
+  (krisb-mode-line-collapse-minor-mode eldoc-mode)
+
   (with-eval-after-load 'eldoc
     (setopt eldoc-echo-area-prefer-doc-buffer t
             eldoc-documentation-strategy
             'eldoc-documentation-enthusiast ; All run, but only most important is shown
-            eldoc-help-at-pt t)) ; Emacs 31.1
-
-  (krisb-mode-line-collapse-minor-mode eldoc-mode)
+            eldoc-help-at-pt t) ; Emacs 31.1
+    
+    (el-patch-defun eldoc--format-doc-buffer (docs)
+      "Ensure DOCS are displayed in an *eldoc* buffer."
+      (with-current-buffer (if (buffer-live-p eldoc--doc-buffer)
+                               eldoc--doc-buffer
+                             (setq eldoc--doc-buffer
+                                   (get-buffer-create " *eldoc*")))
+        (let ((inhibit-read-only t)
+              (things-reported-on))
+          (special-mode)
+          (erase-buffer)
+          (el-patch-add
+            (visual-line-mode 1)
+            (visual-wrap-prefix-mode 1))
+          (setq-local nobreak-char-display nil)
+          (cl-loop for (docs . rest) on docs
+                   for (this-doc . plist) = docs
+                   for thing = (plist-get plist :thing)
+                   when thing do
+                   (cl-pushnew thing things-reported-on)
+                   (setq this-doc
+                         (concat
+                          (propertize (format "%s" thing)
+                                      'face (plist-get plist :face))
+                          ": "
+                          this-doc))
+                   do (insert this-doc)
+                   when rest do
+                   (insert eldoc-doc-buffer-separator)
+                   finally (goto-char (point-min)))
+          ;; Rename the buffer, taking into account whether it was
+          ;; hidden or not
+          (rename-buffer (format "%s*eldoc%s*"
+                                 (if (string-match "^ " (buffer-name)) " " "")
+                                 (if things-reported-on
+                                     (format " for %s"
+                                             (mapconcat
+                                              (lambda (s) (format "%s" s))
+                                              things-reported-on
+                                              ", "))
+                                   "")))))
+      eldoc--doc-buffer))
 #+end_src
 
 *** Electric: Auto-insert delimiters
