@@ -823,30 +823,29 @@ to if called with ARG, or any prefix argument."
           read-file-name-completion-ignore-case t
           read-buffer-completion-ignore-case t))
 
-(setup minibuffer
-  
-  ;; Minibuffer movement.  See also `minibuffer-visible-completions'
-  ;; and the commands bound to `minibuffer-visible-completions-map'
-  (setopt minibuffer-beginning-of-buffer-movement t)
-  
-  ;; Let a minibuffer be created from within a minibuffer
-  (setopt enable-recursive-minibuffers t)
-  ;; And indicate the current recursion level in the minibuffer prompt
-  (minibuffer-depth-indicate-mode 1)
+;; Minibuffer movement.  See also `minibuffer-visible-completions'
+;; and the commands bound to `minibuffer-visible-completions-map'
+(setopt minibuffer-beginning-of-buffer-movement t)
 
-  ;; TODO 2025-10-14: Document:
-  ;; `history-delete-duplicates'
-  (setopt history-length 1000)
+;; Let a minibuffer be created from within a minibuffer
+(setopt enable-recursive-minibuffers t)
+;; And indicate the current recursion level in the minibuffer prompt
+(minibuffer-depth-indicate-mode 1)
 
-  ;; Minibuffer prompts
-  (setopt minibuffer-default-prompt-format " [%s]")
-  (minibuffer-electric-default-mode 1)  ; Show default value
-  (setopt minibuffer-prompt-properties
-          ;; Don't let point enter the minibuffer prompt
-          '(read-only t cursor-intangible t face minibuffer-prompt))
+;; TODO 2025-10-14: Document:
+;; `history-delete-duplicates'
+(setopt history-length 1000)
 
-  ;; Don't show mode line
-  (add-hook 'completion-list-mode-hook #'mode-line-invisible-mode)) ; Emacs 31.1
+;; Minibuffer prompts
+(setopt minibuffer-default-prompt-format " [%s]")
+(minibuffer-electric-default-mode 1)  ; Show default value
+(setopt minibuffer-prompt-properties
+        ;; Don't let point enter the minibuffer prompt
+        '(read-only t cursor-intangible t face minibuffer-prompt))
+
+;; If a minibuffer prompt matches `minibuffer-regexp-prompts',
+;; highlight matches in the buffer for that regexp
+(minibuffer-regexp-mode 1)
 
 ;;;; Completion-list (*Completions* buffer)
 ;; TODO 2025-05-20: Document the following options below in the
@@ -855,7 +854,7 @@ to if called with ARG, or any prefix argument."
 ;;   attempts insert the next completion candidate into the minibuffer
 ;; - `completion-flex-nospace’
 (setup minibuffer
-
+  
   ;; Completions format
   (setopt completion-show-help nil
           completions-max-height 10 ; Otherwise the completions buffer can grow to fill the entire frame
@@ -927,7 +926,10 @@ distance + `string-lessp' first rather than using only `string-lessp'."
               (minibuffer-visible-completions--bind #'minibuffer-next-line-completion))
   (define-key minibuffer-visible-completions-map
               (kbd "C-p")
-              (minibuffer-visible-completions--bind #'minibuffer-previous-line-completion)))
+              (minibuffer-visible-completions--bind #'minibuffer-previous-line-completion))
+  
+  ;; Don't show mode line in *completions* buffer
+  (add-hook 'completion-list-mode-hook #'mode-line-invisible-mode)) ; Emacs 31.1
 
 ;; Bespoke extensions
 (setup minibuffer

@@ -4052,37 +4052,36 @@ Jinx is an alternative to the built-in flyspell (see [[#h:20251118T184517.526538
       (add-hook 'message-send-hook #'krisb-message-check-from)))
 #+end_src
 
-*** Minibuffer.el
+*** Minibuffer.el: All things minibuffer
 :PROPERTIES:
 :CUSTOM_ID: h:20260219T023244.709419
 :END:
 
 #+name: minibuffer
 #+begin_src emacs-lisp
-  (setup minibuffer
-    
-    ;; Minibuffer movement.  See also `minibuffer-visible-completions'
-    ;; and the commands bound to `minibuffer-visible-completions-map'
-    (setopt minibuffer-beginning-of-buffer-movement t)
-    
-    ;; Let a minibuffer be created from within a minibuffer
-    (setopt enable-recursive-minibuffers t)
-    ;; And indicate the current recursion level in the minibuffer prompt
-    (minibuffer-depth-indicate-mode 1)
+  ;; Minibuffer movement.  See also `minibuffer-visible-completions'
+  ;; and the commands bound to `minibuffer-visible-completions-map'
+  (setopt minibuffer-beginning-of-buffer-movement t)
 
-    ;; TODO 2025-10-14: Document:
-    ;; `history-delete-duplicates'
-    (setopt history-length 1000)
+  ;; Let a minibuffer be created from within a minibuffer
+  (setopt enable-recursive-minibuffers t)
+  ;; And indicate the current recursion level in the minibuffer prompt
+  (minibuffer-depth-indicate-mode 1)
 
-    ;; Minibuffer prompts
-    (setopt minibuffer-default-prompt-format " [%s]")
-    (minibuffer-electric-default-mode 1)  ; Show default value
-    (setopt minibuffer-prompt-properties
-            ;; Don't let point enter the minibuffer prompt
-            '(read-only t cursor-intangible t face minibuffer-prompt))
+  ;; TODO 2025-10-14: Document:
+  ;; `history-delete-duplicates'
+  (setopt history-length 1000)
 
-    ;; Don't show mode line
-    (add-hook 'completion-list-mode-hook #'mode-line-invisible-mode)) ; Emacs 31.1
+  ;; Minibuffer prompts
+  (setopt minibuffer-default-prompt-format " [%s]")
+  (minibuffer-electric-default-mode 1)  ; Show default value
+  (setopt minibuffer-prompt-properties
+          ;; Don't let point enter the minibuffer prompt
+          '(read-only t cursor-intangible t face minibuffer-prompt))
+
+  ;; If a minibuffer prompt matches `minibuffer-regexp-prompts',
+  ;; highlight matches in the buffer for that regexp
+  (minibuffer-regexp-mode 1)
 #+end_src
 
 Settings for the filtering of completion candidates, regardless of the completion UI (see also ~krisb-completion-paradigm~).
@@ -4145,7 +4144,7 @@ Configure ~completion-list-mode~ UI:
   ;;   attempts insert the next completion candidate into the minibuffer
   ;; - `completion-flex-nospace’
   (setup minibuffer
-
+    
     ;; Completions format
     (setopt completion-show-help nil
             completions-max-height 10 ; Otherwise the completions buffer can grow to fill the entire frame
@@ -4217,7 +4216,10 @@ Configure ~completion-list-mode~ UI:
                 (minibuffer-visible-completions--bind #'minibuffer-next-line-completion))
     (define-key minibuffer-visible-completions-map
                 (kbd "C-p")
-                (minibuffer-visible-completions--bind #'minibuffer-previous-line-completion)))
+                (minibuffer-visible-completions--bind #'minibuffer-previous-line-completion))
+    
+    ;; Don't show mode line in *completions* buffer
+    (add-hook 'completion-list-mode-hook #'mode-line-invisible-mode)) ; Emacs 31.1
 
   ;; Bespoke extensions
   (setup minibuffer
