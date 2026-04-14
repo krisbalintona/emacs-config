@@ -1153,6 +1153,24 @@ I discovered this trick in [[https://emacsredux.com/blog/2026/04/07/stealing-fro
               activities-mode-idle-frequency 7)))
 #+end_src
 
+*** Apheleia: Asynchronously format buffers
+
+#+name: apheleia
+#+begin_src emacs-lisp
+  (krisb-package-install apheleia)
+
+  (krisb-mode-line-collapse-minor-mode apheleia-mode)
+
+  (with-eval-after-load 'apheleia
+    ;; See also:
+    ;; - `apheleia-log-only-errors'
+    ;; - `apheleia-log-debug-info'
+    ;; - `apheleia-hide-log-buffers'
+    ;; - `apheleia-formatters-respect-indent-level'
+    (setopt apheleia-formatters-respect-fill-column t
+            apheleia-remote-algorithm 'remote))
+#+end_src
+
 *** Apropos: Discover meaningful lisp symbols
 
 Apropos is a built-in library that queries the user for a regexp or word list to search existing symbols for. For example, ~apropos-user-option~ will search all user options (i.e., symbols defined by ~defcustom~). Evaluate ~M-x apropos-command ^apropos RET~ to see all the helpful commands apropos offers.
@@ -8718,6 +8736,9 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   ;;; Ediff
   <<ediff>>
+
+  ;;; Apheleia
+  <<apheleia>>
 
   ;;; Load config units
   <<config-units-load>>

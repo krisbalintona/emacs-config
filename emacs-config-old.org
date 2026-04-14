@@ -2852,26 +2852,6 @@ Configuration related to "saving a state," that is, storing or restoring anythin
   ;;; Apheleia
   ;; Quality code formatting for (arbitrarily) many languages
   (use-package apheleia
-    ;; For AUR:
-    ;; :ensure-system-package ((black . python-black)
-    ;;                         (prettier)
-    ;;                         (clang-format . clang-format-all-git)
-    ;;                         (latexindent . texlive-binextra)
-    ;;                         (stylua)
-    ;;                         (google-java-format)
-    ;;                         (shfmt)
-    ;;                         (rustfmt))
-    :hook (apheleia-post-format . delete-trailing-whitespace)
-    :custom
-    (apheleia-mode-lighter "")
-    (apheleia-remote-algorithm 'local)
-
-    (apheleia-log-only-errors t)
-    (apheleia-log-debug-info nil)         ; Can be useful to set to non-nil in order to temporarily debug
-    (apheleia-hide-log-buffers nil)
-
-    (apheleia-formatters-respect-fill-column t)
-    (apheleia-formatters-respect-indent-level t)
     :config
     ;; Configure `apheleia-formatters' and `apheleia-mode-alist' here. I use setf
     ;; instead of defining the variables directly so that it is agnostic to any
@@ -2922,8 +2902,7 @@ Configuration related to "saving a state," that is, storing or restoring anythin
        "--cruft=/tmp/" "--logfile" "indent.log"))
 
     ;; Custom formatters
-    (cl-defun krisb-apheleia-format-org-buffer
-        (&key buffer scratch callback &allow-other-keys)
+    (cl-defun krisb-apheleia-format-org-buffer (&key buffer scratch callback &allow-other-keys)
       "Format an Org BUFFER.
   Use SCRATCH as a temporary buffer and CALLBACK to apply the
   transformation.

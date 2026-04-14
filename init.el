@@ -6043,6 +6043,20 @@ minor mode was already enabled before Eglot."
           ediff-window-setup-function 'ediff-setup-windows-plain ; Keep all windows in the same frame
           ediff-highlight-all-diffs nil))
 
+;;; Apheleia
+(krisb-package-install apheleia)
+
+(krisb-mode-line-collapse-minor-mode apheleia-mode)
+
+(with-eval-after-load 'apheleia
+  ;; See also:
+  ;; - `apheleia-log-only-errors'
+  ;; - `apheleia-log-debug-info'
+  ;; - `apheleia-hide-log-buffers'
+  ;; - `apheleia-formatters-respect-indent-level'
+  (setopt apheleia-formatters-respect-fill-column t
+          apheleia-remote-algorithm 'remote))
+
 ;;; Load config units
 (load-all-configs)
 
