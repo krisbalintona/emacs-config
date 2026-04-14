@@ -5784,6 +5784,8 @@ contains the mode name."
 ;;
 
 (with-eval-after-load 'astro-ts-mode
+  ;; This isn't necessary, and may not even have an effect, but it
+  ;; explicitly provides 6 elements like Emacs 31 can take
   (el-patch-defun astro-ts-mode--prefix-font-lock-features (prefix settings)
     "Prefix with PREFIX the font lock features in SETTINGS."
     (mapcar (lambda (setting)
@@ -5848,8 +5850,9 @@ contains the mode name."
 (with-eval-after-load 'compile
   (add-hook 'compilation-filter-hook #'ansi-color-compilation-filter)
   
-  (setopt compilation-scroll-output 'first-error ; Scroll with compile buffer
-          compilation-auto-jump-to-first-error 'if-location-known))
+  ;; See also:
+  ;; - `compilation-auto-jump-to-first-error'
+  (setopt compilation-scroll-output 'first-error)) ; Scroll with compile buffer
 
 ;;; Eldoc
 ;; See also:
