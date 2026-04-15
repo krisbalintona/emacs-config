@@ -6006,6 +6006,7 @@ minor mode was already enabled before Eglot."
 ;;; Easysession
 (krisb-package-install easysession)
 
+(setopt easysession-setup-load-session nil)
 (easysession-setup)
 (krisb-mode-line-collapse-minor-mode easysession-save-mode)
 
@@ -6024,8 +6025,7 @@ minor mode was already enabled before Eglot."
   ;; - `easysession-save-mode-lighter-show-session-name'
   (setopt easysession-directory (no-littering-expand-var-file-name "easysession")
           easysession-save-interval (* 2 60)
-          easysession-buffer-list-function 'easysession-visible-buffer-list
-          easysession-setup-load-session nil
+          easysession-buffer-list-function #'easysession-visible-buffer-list
           easysession-switch-to-exclude-current t
           easysession-mode-line-misc-info nil)
 
