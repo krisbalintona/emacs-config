@@ -5736,8 +5736,7 @@ When called with `-' instead call `inspector-inspect-expression'."
 ;;
 
 (when (boundp 'treesit-enabled-modes)
-  (unless (eq t treesit-enabled-modes)
-    (cl-pushnew 'astro-ts-mode treesit-enabled-modes)))
+  (setopt treesit-enabled-modes (cons 'astro-ts-mode treesit-enabled-modes)))
 
 ;; TODO 2026-04-10: Ideally, I create a PR or bug report to upstream
 ;; astro-ts-mode for this.
