@@ -6838,6 +6838,13 @@ Instead of adding ~outline-minor-mode~ directly to major mode hooks, I utilize o
 
 [fn:2] The reason we cannot add ~outline-minor-mode~ to major mode hooks then call ~outli-mode~ through ~outline-minor-mode-hook~ is because ~outli-mode~ internally calls ~outline-minor-mode~, meaning the above method creates an infinite recursion loop.
 
+*** Ox-mdx: Org-mode export backend for my personal site
+
+#+name: ox-mdx
+#+begin_src emacs-lisp
+  (add-to-list 'load-path (expand-file-name "~/Documents/personal-site-astro/src/lib/org-exporter/ox-mdx.el"))
+#+end_src
+
 *** Package.el: The built-in Emacs package manager
 
 #+name: package.el
@@ -8750,6 +8757,9 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   ;;; Js
   <<js>>
+
+  ;;; Ox-mdx
+  <<ox-mdx>>
 
   ;;; Load config units
   <<config-units-load>>
