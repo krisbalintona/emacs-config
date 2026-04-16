@@ -3884,6 +3884,15 @@ Jinx is an alternative to the built-in flyspell (see [[#h:20251118T184517.526538
       (setf (alist-get ?* jinx--save-keys) #'krisb-jinx-save-as-ispell-localword)))
 #+end_src
 
+*** Js.el: Javascript and Javascript-like major modes
+
+#+name: js
+#+begin_src emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.mjs\\'" . javascript-mode))
+  (when (boundp 'treesit-enabled-modes)
+    (setopt treesit-enabled-modes (cons 'js-ts-mode treesit-enabled-modes)))
+#+end_src
+
 *** Lin: Stylistic enhancement to ~hl-line-mode~
 
 #+name: lin
@@ -8738,6 +8747,9 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   ;;; Apheleia
   <<apheleia>>
+
+  ;;; Js
+  <<js>>
 
   ;;; Load config units
   <<config-units-load>>

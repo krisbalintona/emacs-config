@@ -6056,6 +6056,11 @@ minor mode was already enabled before Eglot."
   (setopt apheleia-formatters-respect-fill-column t
           apheleia-remote-algorithm 'remote))
 
+;;; Js
+(add-to-list 'auto-mode-alist '("\\.mjs\\'" . javascript-mode))
+(when (boundp 'treesit-enabled-modes)
+  (setopt treesit-enabled-modes (cons 'js-ts-mode treesit-enabled-modes)))
+
 ;;; Load config units
 (load-all-configs)
 
