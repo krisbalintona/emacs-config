@@ -6064,6 +6064,26 @@ minor mode was already enabled before Eglot."
 ;;; Ox-mdx
 (add-to-list 'load-path (expand-file-name "~/Documents/personal-site-astro/src/lib/org-exporter/ox-mdx.el"))
 
+;;; Json-ts-mode
+(when (boundp 'treesit-enabled-modes)
+  (setopt treesit-enabled-modes (cons 'json-ts-mode treesit-enabled-modes)))
+
+(defun json-ts-mode-maybe ()
+  "Enable `json-ts-mode' when its grammar is available.
+Also propose to install the grammar when `treesit-enabled-modes'
+is t or contains the mode name."
+  (declare-function treesit-language-available-p "treesit.c")
+  (if (or (treesit-language-available-p 'json)
+          (eq treesit-enabled-modes t)
+          (memq 'json-ts-mode treesit-enabled-modes))
+      (json-ts-mode)
+    (fundamental-mode)))
+
+;;;###autoload
+(when (boundp 'treesit-major-mode-remap-alist)
+  (add-to-list 'auto-mode-alist '("\\.json\\w*\\'" . json-ts-mode-maybe))
+  (add-to-list 'treesit-major-mode-remap-alist '(js-json-mode . json-ts-mode-maybe)))
+
 ;;; Load config units
 (load-all-configs)
 
