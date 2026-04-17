@@ -1123,7 +1123,6 @@ I discovered this trick in [[https://emacsredux.com/blog/2026/04/07/stealing-fro
     ;; Enable the mode globally
     (setopt abbrev-mode t))
 #+end_src
-
 *** COMMENT Activities: Bookmarks for window configurations
 
 *Note 2025-12-03:* I've discovered =tab-bookmarks= and now favor its simpler solution (I realized that bookmarking window configurations/tabs was all I wanted). See [[#h:20251203T041255.447488][Tab-bookmark: Bookmarks for tabs!]].
@@ -1293,6 +1292,15 @@ Additionally, all apropos commands will expand the subset of symbols they search
     (setopt editorconfig-indentation-alist
             (cons '(astro-ts-mode astro-ts-mode-indent-offset)
                   editorconfig-indentation-alist)))
+
+  ;;
+  ;; Work with `devdocs-browser'
+  ;;
+
+  (with-eval-after-load 'astro-ts-mode
+    (with-eval-after-load 'devdocs-browser
+      (setopt devdocs-browser-major-mode-docs-alist
+              (cons '(astro-ts-mode . ("astro")) devdocs-browser-major-mode-docs-alist))))
 #+end_src
 
 *** Astute.el: Display punctuation typographically
@@ -2702,6 +2710,25 @@ Before Corfu 2.7, specifically [[https://github.com/minad/corfu/commit/4c4a41b0b
         (apply #'narrow-to-region (cdr misc))))
     (advice-add 'desktop-restore-file-buffer :after #'krisb-desktop--restore-narrowing))
 #+end_src
+
+*** Devdocs-browser: Devdocs.io shown in EWW
+:PROPERTIES:
+:CUSTOM_ID: h:20260416T225546.843556
+:END:
+
+See also the more popular [[https://github.com/astoff/devdocs.el][astoff/devdocs.el]], which does not use EWW (though it uses shr.el to render the pages).
+#+name: devdocs-browser
+#+begin_src emacs-lisp
+  (krisb-package-install devdocs-browser)
+
+  (with-eval-after-load 'devdocs-browser
+    ;; See also:
+    ;; - `devdocs-browser-major-mode-docs-alist'
+    ;; - `devdocs-browser-highlight-lang-mode-alist'
+    (setopt devdocs-browser-data-directory
+            (no-littering-expand-var-file-name "devdocs-browser")))
+#+end_src
+
 
 *** Dictionary.el: Built-in dictionary
 
@@ -8247,6 +8274,7 @@ I have minor web development needs for the purposes of developing my personal si
 + [[#h:20260403T141907.379841][Typescript-ts-mode: Tree-sitter major mode for Typescript]]
 + [[#h:20260409T210556.449533][Astro-ts-mode: Treesitter mode for Astro files]]
 + [[#h:20260409T221936.483467][Web--mode: Major mode for editing various "web templates"]]
++ [[#h:20260416T225546.843556][Devdocs-browser: Devdocs.io shown in EWW]]
 I also have a bespoke Org-mode exporter for content on my personal site: [[#h:20260416T222856.536347][ox-mdx]].
 
 ** Direnv integration

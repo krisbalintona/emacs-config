@@ -5821,6 +5821,15 @@ contains the mode name."
           (cons '(astro-ts-mode astro-ts-mode-indent-offset)
                 editorconfig-indentation-alist)))
 
+;;
+;; Work with `devdocs-browser'
+;;
+
+(with-eval-after-load 'astro-ts-mode
+  (with-eval-after-load 'devdocs-browser
+    (setopt devdocs-browser-major-mode-docs-alist
+            (cons '(astro-ts-mode . ("astro")) devdocs-browser-major-mode-docs-alist))))
+
 ;;; Direnv
 
 
