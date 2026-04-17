@@ -5702,7 +5702,17 @@ When called with `-' instead call `inspector-inspect-expression'."
 
 ;;; Shr
 (with-eval-after-load 'shr
-  (setopt shr-use-colors nil))          ; Use my theme's colors
+  (setopt shr-use-colors nil            ; Use my theme's colors
+          shr-discard-aria-hidden t
+          shr-fill-text nil ; I prefer `visual-line-mode', when possible
+          shr-max-image-proportion 0.6) ; How big can images be?
+
+  ;; Use a particular variable pitch font for Shr, since this mode of
+  ;; reading is almost always unlike other modes of reading in Emacs
+  ;; for me: non-writing reading for large blocks of prose
+  (setopt shr-use-fonts t)              ; Use the `shr-text' face
+  (set-face-attribute 'shr-text nil :family "Source Sans Pro")
+  (add-to-list 'face-font-rescale-alist '("Source Sans Pro" . 1.2)))
 
 ;;; Typescript-ts-mode
 (with-eval-after-load 'typescript-ts-mode
