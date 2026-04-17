@@ -4747,7 +4747,8 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
       (olivetti-set-width 120))
     (when (require 'mixed-pitch nil t)
       (mixed-pitch-mode 1))
-    (visual-line-mode 1))
+    (visual-line-mode 1)
+    (text-scale-set 0.7))
   (add-hook 'wombag-show-mode-hook #'krisb-wombag-entry-setup)
 
   (when (featurep 'org-remark)
@@ -6119,6 +6120,7 @@ is t or contains the mode name."
   
   ;; I prefer my reading area centered
   (when (require 'olivetti nil t)
+    (add-hook 'eww-mode-hook (lambda () (text-scale-set 0.7)))
     (add-hook 'eww-after-render-hook #'olivetti-mode)))
 
 ;;; Load config units

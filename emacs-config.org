@@ -8057,7 +8057,8 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
         (olivetti-set-width 120))
       (when (require 'mixed-pitch nil t)
         (mixed-pitch-mode 1))
-      (visual-line-mode 1))
+      (visual-line-mode 1)
+      (text-scale-set 0.7))
     (add-hook 'wombag-show-mode-hook #'krisb-wombag-entry-setup)
 
     (when (featurep 'org-remark)
