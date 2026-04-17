@@ -6867,6 +6867,9 @@ Instead of adding ~outline-minor-mode~ directly to major mode hooks, I utilize o
 [fn:2] The reason we cannot add ~outline-minor-mode~ to major mode hooks then call ~outli-mode~ through ~outline-minor-mode-hook~ is because ~outli-mode~ internally calls ~outline-minor-mode~, meaning the above method creates an infinite recursion loop.
 
 *** Ox-mdx: Org-mode export backend for my personal site
+:PROPERTIES:
+:CUSTOM_ID: h:20260416T222856.536347
+:END:
 
 #+name: ox-mdx
 #+begin_src emacs-lisp
@@ -8226,6 +8229,7 @@ I have minor web development needs for the purposes of developing my personal si
 + [[#h:20260403T141907.379841][Typescript-ts-mode: Tree-sitter major mode for Typescript]]
 + [[#h:20260409T210556.449533][Astro-ts-mode: Treesitter mode for Astro files]]
 + [[#h:20260409T221936.483467][Web--mode: Major mode for editing various "web templates"]]
+I also have a bespoke Org-mode exporter for content on my personal site: [[#h:20260416T222856.536347][ox-mdx]].
 
 ** Direnv integration
 
