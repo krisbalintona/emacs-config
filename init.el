@@ -6088,6 +6088,20 @@ is t or contains the mode name."
   (add-to-list 'auto-mode-alist '("\\.json\\w*\\'" . json-ts-mode-maybe))
   (add-to-list 'treesit-major-mode-remap-alist '(js-json-mode . json-ts-mode-maybe)))
 
+;;; Eww
+(with-eval-after-load 'eww
+
+  ;; See also:
+  ;; - `eww-browse-url-new-window-is-tab'
+  (setopt eww-restore-desktop t
+          eww-history-limit 150
+          eww-readable-adds-to-history nil
+          eww-auto-rename-buffer 'title)
+  
+  ;; I prefer my reading area centered
+  (when (require 'olivetti nil t)
+    (add-hook 'eww-after-render-hook #'olivetti-mode)))
+
 ;;; Load config units
 (load-all-configs)
 

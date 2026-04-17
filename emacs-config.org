@@ -3192,6 +3192,24 @@ For major modes to support indentation size judged from ~editorconfig-mode~, the
       (add-to-list 'trusted-content "~/emacs-repos/")))
 #+end_src
 
+*** EWW: Emacs's built-in text-only web browser
+
+#+name: eww
+#+begin_src emacs-lisp
+  (with-eval-after-load 'eww
+
+    ;; See also:
+    ;; - `eww-browse-url-new-window-is-tab'
+    (setopt eww-restore-desktop t
+            eww-history-limit 150
+            eww-readable-adds-to-history nil
+            eww-auto-rename-buffer 'title)
+    
+    ;; I prefer my reading area centered
+    (when (require 'olivetti nil t)
+      (add-hook 'eww-after-render-hook #'olivetti-mode)))
+#+end_src
+
 *** Face-remap
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
@@ -8795,6 +8813,9 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   ;;; Json-ts-mode
   <<json-ts-mode>>
+
+  ;;; Eww
+  <<eww>>
 
   ;;; Load config units
   <<config-units-load>>
