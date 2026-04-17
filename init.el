@@ -2427,6 +2427,21 @@ inserted with e.g. `org-insert-last-stored-link' or
   (setopt org-footnote-section nil    ; Don't create footnote headline
           org-footnote-auto-adjust t))
 
+;;;;; Ox
+(with-eval-after-load 'ox
+  ;; See also:
+  ;; - `org-display-custom-times'
+  ;; - `org-image-actual-width'
+  (setopt org-export-coding-system 'utf-8
+          org-export-with-tags t
+          org-export-with-smart-quotes t
+          org-export-with-sub-superscripts '{} ; Brackets to recognize super and subscripts
+          org-export-with-section-numbers nil
+          org-time-stamp-formats   ; Format of timestamps in the file
+          '("%Y-%m-%d %a" . "%Y-%m-%d %a %H:%M")
+          org-time-stamp-custom-formats ; Format of exported time stamps
+          '("%a, %b %-d" . "%a, %b %-d (%-H:%M%p)")))
+
 ;;;;; Org-src
 ;; TODO 2025-05-23: Document:
 ;; - `org-edit-src-turn-on-auto-save'

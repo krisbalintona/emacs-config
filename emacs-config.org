@@ -5446,6 +5446,25 @@ This section is for the major mode
             org-footnote-auto-adjust t))
 #+end_src
 
+**** Ox (org-export)
+
+#+name: ox
+#+begin_src emacs-lisp
+  (with-eval-after-load 'ox
+    ;; See also:
+    ;; - `org-display-custom-times'
+    ;; - `org-image-actual-width'
+    (setopt org-export-coding-system 'utf-8
+            org-export-with-tags t
+            org-export-with-smart-quotes t
+            org-export-with-sub-superscripts '{} ; Brackets to recognize super and subscripts
+            org-export-with-section-numbers nil
+            org-time-stamp-formats   ; Format of timestamps in the file
+            '("%Y-%m-%d %a" . "%Y-%m-%d %a %H:%M")
+            org-time-stamp-custom-formats ; Format of exported time stamps
+            '("%a, %b %-d" . "%a, %b %-d (%-H:%M%p)")))
+#+end_src
+
 **** Org-src: Programming in org-mode
 
 #+name: org-src
@@ -8521,6 +8540,9 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   ;;;;; Org-footnote
   <<org-footnote>>
+
+  ;;;;; Ox
+  <<ox>>
 
   ;;;;; Org-src
   <<org-src>>

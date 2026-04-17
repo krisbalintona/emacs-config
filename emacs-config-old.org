@@ -5041,19 +5041,6 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
   (use-package ox
     :ensure nil
     :custom
-    (org-export-coding-system 'utf-8)
-    (org-export-with-tags t)
-    (org-export-with-smart-quotes t)
-    (org-export-with-sub-superscripts '{}) ; Requires brackets to recognize superscripts and subscripts
-    (org-export-with-section-numbers nil)
-    (org-time-stamp-formats               ; Format of time stamps in the file
-     '("%Y-%m-%d %a" . "%Y-%m-%d %a %H:%M"))
-    (org-display-custom-times t)          ; Export with custom time stamps?
-    (org-time-stamp-custom-formats        ; Format of exported time stamps
-     '("%a, %b %-d" . "%a, %b %-d (%-H:%M%p)"))
-
-    (org-image-actual-width 700)          ; Image widths on export
-
     ;; Asynchronous
     (org-export-in-background nil)        ; Default?
     (org-export-async-debug t)
