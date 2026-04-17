@@ -1754,7 +1754,11 @@ call `diff-buffer-with-file’ instead."
             isearch-wrap-pause 'no-ding)
 
     (setopt isearch-lazy-count t
-            lazy-highlight-no-delay-length 5))
+            lazy-highlight-no-delay-length 5)
+    
+    ;; When calling `isearch-occur' from an isearch session, exit
+    ;; isearch before running `occur'
+    (put 'isearch-occur 'isearch-exit t)) ; Emacs 31
   
   ;; Treatment of whitespace.  Also be aware of the
   ;; `isearch-toggle-lax-whitespace' command during isearch searches
