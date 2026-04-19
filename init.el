@@ -6142,6 +6142,31 @@ is t or contains the mode name."
 (with-eval-after-load 'browse-url
   (setopt browse-url-secondary-browser-function #'eww-browse-url))
 
+;;; Devdocs-browser
+(krisb-package-install devdocs-browser)
+
+(with-eval-after-load 'devdocs-browser
+  ;; See also:
+  ;; - `devdocs-browser-major-mode-docs-alist'
+  ;; - `devdocs-browser-highlight-lang-mode-alist'
+  (setopt devdocs-browser-data-directory
+          (no-littering-expand-var-file-name "devdocs-browser"))
+  
+  (bind-keys :map devdocs-browser-eww-mode-map
+             ("i" . devdocs-browser-open))
+
+  ;; Upon following a Devdocs link, scroll such that the point is at
+  ;; the very top of the window
+  (advice-add #'devdocs-browser--follow-link
+              :after (lambda () (recenter-top-bottom 0)))
+  
+  ;; Make Devdocs headings more visually prominent
+  (set-face-attribute 'devdocs-browser-h1 nil :height 1.8 :box t)
+  (set-face-attribute 'devdocs-browser-h2 nil :height 1.7 :box t)
+  (set-face-attribute 'devdocs-browser-h3 nil :height 1.6 :box t)
+  (set-face-attribute 'devdocs-browser-h4 nil :height 1.5 :box t)
+  (set-face-attribute 'devdocs-browser-h5 nil :height 1.4 :box t))
+
 ;;; Load config units
 (load-all-configs)
 
