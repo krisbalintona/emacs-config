@@ -2133,6 +2133,15 @@ When ~krisb-bibtex-standardize~ is called, it will move all the attachments of t
     (add-hook 'eglot-managed-mode-hook #'breadcrumb-setup-eglot))
 #+end_src
 
+*** Browse-url: Functions for opening URLs
+
+EWW and other packages that open URLs use this library.
+#+name: browse-url
+#+begin_src emacs-lisp
+  (with-eval-after-load 'browse-url
+    (setopt browse-url-secondary-browser-function #'eww-browse-url))
+#+end_src
+
 *** Buff-menu: Simplest UI for listing buffers
 
 #+name: buff-menu
@@ -8878,6 +8887,9 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   ;;; Eww
   <<eww>>
+
+  ;;; Browse-url
+  <<browse-url>>
 
   ;;; Load config units
   <<config-units-load>>

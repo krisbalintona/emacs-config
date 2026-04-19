@@ -6138,6 +6138,10 @@ is t or contains the mode name."
     (add-hook 'eww-mode-hook (lambda () (text-scale-set 0.8)))
     (add-hook 'eww-after-render-hook #'olivetti-mode)))
 
+;;; Browse-url
+(with-eval-after-load 'browse-url
+  (setopt browse-url-secondary-browser-function #'eww-browse-url))
+
 ;;; Load config units
 (load-all-configs)
 
