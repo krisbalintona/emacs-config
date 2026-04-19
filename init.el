@@ -5727,7 +5727,7 @@ When called with `-' instead call `inspector-inspect-expression'."
   ;; reading is almost always unlike other modes of reading in Emacs
   ;; for me: non-writing reading for large blocks of prose
   (setopt shr-use-fonts t)              ; Use the `shr-text' face
-  (set-face-attribute 'shr-text nil :family "Source Sans Pro")
+  (set-face-attribute 'shr-text nil :family "Source Sans Pro" :inherit 'unspecified)
   (add-to-list 'face-font-rescale-alist '("Source Sans Pro" . 1.2)))
 
 ;;; Typescript-ts-mode
@@ -6135,7 +6135,7 @@ is t or contains the mode name."
   
   ;; I prefer my reading area centered
   (when (require 'olivetti nil t)
-    (add-hook 'eww-mode-hook (lambda () (text-scale-set 0.7)))
+    (add-hook 'eww-mode-hook (lambda () (text-scale-set 0.8)))
     (add-hook 'eww-after-render-hook #'olivetti-mode)))
 
 ;;; Load config units

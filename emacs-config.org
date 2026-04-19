@@ -3234,6 +3234,7 @@ For major modes to support indentation size judged from ~editorconfig-mode~, the
     
     ;; I prefer my reading area centered
     (when (require 'olivetti nil t)
+      (add-hook 'eww-mode-hook (lambda () (text-scale-set 0.8)))
       (add-hook 'eww-after-render-hook #'olivetti-mode)))
 #+end_src
 
@@ -7333,7 +7334,7 @@ HTML rendering library. Used across various Emacs packages, e.g., ~notmuch-show-
     ;; reading is almost always unlike other modes of reading in Emacs
     ;; for me: non-writing reading for large blocks of prose
     (setopt shr-use-fonts t)              ; Use the `shr-text' face
-    (set-face-attribute 'shr-text nil :family "Source Sans Pro")
+    (set-face-attribute 'shr-text nil :family "Source Sans Pro" :inherit 'unspecified)
     (add-to-list 'face-font-rescale-alist '("Source Sans Pro" . 1.2)))
 #+end_src
 
