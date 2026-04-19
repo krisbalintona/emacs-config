@@ -6937,7 +6937,7 @@ Instead of adding ~outline-minor-mode~ directly to major mode hooks, I utilize o
 
 #+name: ox-mdx
 #+begin_src emacs-lisp
-  (add-to-list 'load-path (expand-file-name "~/Documents/personal-site-astro/src/lib/org-exporter/ox-mdx.el"))
+  (add-to-list 'load-path (expand-file-name "~/Documents/personal-site-astro/src/lib/org-exporter/"))
 #+end_src
 
 *** Package.el: The built-in Emacs package manager

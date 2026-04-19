@@ -6101,7 +6101,7 @@ minor mode was already enabled before Eglot."
   (setopt treesit-enabled-modes (cons 'js-ts-mode treesit-enabled-modes)))
 
 ;;; Ox-mdx
-(add-to-list 'load-path (expand-file-name "~/Documents/personal-site-astro/src/lib/org-exporter/ox-mdx.el"))
+(add-to-list 'load-path (expand-file-name "~/Documents/personal-site-astro/src/lib/org-exporter/"))
 
 ;;; Json-ts-mode
 (when (boundp 'treesit-enabled-modes)
