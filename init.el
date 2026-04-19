@@ -2433,7 +2433,7 @@ inserted with e.g. `org-insert-last-stored-link' or
   ;; - `org-display-custom-times'
   ;; - `org-image-actual-width'
   (setopt org-export-coding-system 'utf-8
-          org-export-with-tags t
+          org-export-with-tags nil
           org-export-with-smart-quotes t
           org-export-with-sub-superscripts '{} ; Brackets to recognize super and subscripts
           org-export-with-section-numbers nil
