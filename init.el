@@ -4106,7 +4106,7 @@ send from."
                   :sort-order oldest-first
                   :key "i")
                 ( :name "Emacs mailing lists"
-                  :query ,(format "(%s or %s or %s) and tag:inbox"
+                  :query ,(format "(%s or %s or %s or %s) and tag:inbox"
                                   emacs-devel emacs-help emacs-bugs emacs-org-mode)
                   :sort-order newest-first
                   :key "e")
