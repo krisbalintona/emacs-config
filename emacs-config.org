@@ -1297,8 +1297,11 @@ Additionally, all apropos commands will expand the subset of symbols they search
   ;; Work with `devdocs-browser'
   ;;
 
-  (with-eval-after-load 'astro-ts-mode
-    (with-eval-after-load 'devdocs-browser
+  (with-eval-after-load 'devdocs-browser
+    (setopt devdocs-browser-highlight-lang-mode-alist
+            (cons ("astro" . astro-ts-mode) devdocs-browser-highlight-lang-mode-alist))
+    
+    (with-eval-after-load 'astro-ts-mode
       (setopt devdocs-browser-major-mode-docs-alist
               (cons '(astro-ts-mode . ("astro")) devdocs-browser-major-mode-docs-alist))))
 #+end_src
@@ -7762,6 +7765,10 @@ I do not use this myself, but for users who don't need VC when using tramp on re
     (add-to-list 'eglot-server-programs
                  '((typescript-mode typescript-ts-mode)
                    . ("typescript-language-server" "--stdio"))))
+
+  (with-eval-after-load 'devdocs-browser
+    (setopt devdocs-browser-highlight-lang-mode-alist
+            (cons '("ts" . typescript-ts-mode) devdocs-browser-highlight-lang-mode-alist)))
 #+end_src
 
 *** Uniquify: Ensure buffer names are unique

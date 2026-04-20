@@ -5739,6 +5739,10 @@ When called with `-' instead call `inspector-inspect-expression'."
                '((typescript-mode typescript-ts-mode)
                  . ("typescript-language-server" "--stdio"))))
 
+(with-eval-after-load 'devdocs-browser
+  (setopt devdocs-browser-highlight-lang-mode-alist
+          (cons '("ts" . typescript-ts-mode) devdocs-browser-highlight-lang-mode-alist)))
+
 ;;; Astro-ts-mode
 (krisb-package-install astro-ts-mode)
 
@@ -5851,8 +5855,11 @@ contains the mode name."
 ;; Work with `devdocs-browser'
 ;;
 
-(with-eval-after-load 'astro-ts-mode
-  (with-eval-after-load 'devdocs-browser
+(with-eval-after-load 'devdocs-browser
+  (setopt devdocs-browser-highlight-lang-mode-alist
+          (cons ("astro" . astro-ts-mode) devdocs-browser-highlight-lang-mode-alist))
+  
+  (with-eval-after-load 'astro-ts-mode
     (setopt devdocs-browser-major-mode-docs-alist
             (cons '(astro-ts-mode . ("astro")) devdocs-browser-major-mode-docs-alist))))
 
