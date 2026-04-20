@@ -2530,9 +2530,12 @@ inserted with e.g. `org-insert-last-stored-link' or
 
 ;;;; Other org packages
 ;;;;; Org-contrib
-;; Collection of org packages
-(setup org-contrib
-  (:package org-contrib))
+(krisb-package-install org-contrib)
+
+(with-eval-after-load 'ox
+  (require 'ox-extra)
+  ;; See also `ox-extras'
+  (ox-extras-activate '(ignore-headlines)))
 
 ;;;;; Org-modern
 ;; TODO 2025-12-03: Document

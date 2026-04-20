@@ -6012,9 +6012,12 @@ My org-roam-folgezettel uses a yet-upstreamed version of vtable.el:
 
 #+name: org-contrib
 #+begin_src emacs-lisp
-  ;; Collection of org packages
-  (setup org-contrib
-    (:package org-contrib))
+  (krisb-package-install org-contrib)
+
+  (with-eval-after-load 'ox
+    (require 'ox-extra)
+    ;; See also `ox-extras'
+    (ox-extras-activate '(ignore-headlines)))
 #+end_src
 
 **** Log when certain properties are changed

@@ -4853,13 +4853,6 @@ Particularly useful packages for the /display/ of certain punctuation and typogr
                                          (concat "color:"
                                                  (completing-read "Choose color: " (list-colors-duplicates (defined-colors)))))))
 
-  ;;; Org-contrib
-  (use-package org-contrib
-    :after org
-    :config
-    (require 'ox-extra)
-    (ox-extras-activate '(ignore-headlines))) ; The ignore tag will export contents but ignore heading
-
   ;;; Krisb-org-ext
   (use-package krisb-org-ext
     :ensure nil
