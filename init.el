@@ -5753,6 +5753,7 @@ When called with `-' instead call `inspector-inspect-expression'."
 (krisb-package-install astro-ts-mode)
 
 (with-eval-after-load 'astro-ts-mode
+  (add-hook 'astro-ts-mode-hook #'subword-mode)
   (add-hook 'astro-ts-mode-hook #'flyspell-prog-mode))
 
 ;; Ensure the astro, css, and tsx tree-sitter language grammars are
