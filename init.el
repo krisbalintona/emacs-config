@@ -6182,6 +6182,12 @@ is t or contains the mode name."
   (set-face-attribute 'devdocs-browser-h4 nil :height 1.5 :box t)
   (set-face-attribute 'devdocs-browser-h5 nil :height 1.4 :box t))
 
+(add-to-list 'display-buffer-alist
+             `((lambda (buffer-or-name &rest args)
+                 (with-current-buffer buffer-or-name
+                   (bound-and-true-p devdocs-browser-eww-mode)))
+               (display-buffer-same-window)))
+
 ;;; Load config units
 (load-all-configs)
 

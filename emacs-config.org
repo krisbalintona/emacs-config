@@ -2759,6 +2759,17 @@ See also the more popular [[https://github.com/astoff/devdocs.el][astoff/devdocs
     (set-face-attribute 'devdocs-browser-h3 nil :height 1.6 :box t)
     (set-face-attribute 'devdocs-browser-h4 nil :height 1.5 :box t)
     (set-face-attribute 'devdocs-browser-h5 nil :height 1.4 :box t))
+
+  <<devdocs-browser-display-buffer-alist>>
+#+end_src
+
+#+name: devdocs-browser-display-buffer-alist
+#+begin_src emacs-lisp :noweb-ref display-buffer-alist
+  (add-to-list 'display-buffer-alist
+               `((lambda (buffer-or-name &rest args)
+                   (with-current-buffer buffer-or-name
+                     (bound-and-true-p devdocs-browser-eww-mode)))
+                 (display-buffer-same-window)))
 #+end_src
 
 *** Dictionary.el: Built-in dictionary
