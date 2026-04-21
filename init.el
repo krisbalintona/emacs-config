@@ -107,6 +107,9 @@ nothing."
 (defvar krisb-manuscript-blog-posts-directory (expand-file-name "posts" krisb-manuscript-blog-directory)
   "The directory for my blog posts.")
 
+(defvar krisb-manuscript-blog-tags-directory (expand-file-name "tags" krisb-manuscript-blog-directory)
+  "The directory for my blog's custom tag posts.")
+
 (defvar krisb-email-directory (expand-file-name "emails/" "~/Documents/")
   "Directory that houses my local email files.")
 
