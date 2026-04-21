@@ -6162,6 +6162,10 @@ is t or contains the mode name."
 ;;; Devdocs-browser
 (krisb-package-install devdocs-browser)
 
+(bind-keys :map krisb-open-keymap
+           ("d" . devdocs-browser-open)
+           ("D" . devdocs-browser-open-in))
+
 (with-eval-after-load 'devdocs-browser
   ;; See also:
   ;; - `devdocs-browser-major-mode-docs-alist'
