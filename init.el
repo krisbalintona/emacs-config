@@ -6163,7 +6163,8 @@ is t or contains the mode name."
           (no-littering-expand-var-file-name "devdocs-browser"))
   
   (bind-keys :map devdocs-browser-eww-mode-map
-             ("i" . devdocs-browser-open))
+             ("i" . devdocs-browser-open)
+             ("I" . devdocs-browser-open-in))
 
   ;; Upon following a Devdocs link, scroll such that the point is at
   ;; the very top of the window
