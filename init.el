@@ -5864,7 +5864,7 @@ contains the mode name."
 
 (with-eval-after-load 'devdocs-browser
   (setopt devdocs-browser-highlight-lang-mode-alist
-          (cons ("astro" . astro-ts-mode) devdocs-browser-highlight-lang-mode-alist))
+          (cons '("astro" . astro-ts-mode) devdocs-browser-highlight-lang-mode-alist))
   
   (with-eval-after-load 'astro-ts-mode
     (setopt devdocs-browser-major-mode-docs-alist
