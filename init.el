@@ -540,7 +540,7 @@ package-archives, e.g. \"gnu\")."))
   ;; https://emacsconf.org/2023/talks/gc/ for a statistically-informed
   ;; recommendation for GC variables
   (setopt gc-cons-threshold (* 16 1024 1024) ; 16 mb
-          gc-cons-percentage 0.15))
+          gc-cons-percentage 0.2))
 (add-hook 'after-init-hook #'krisb-gc-set-options)
 
 ;; Diagnose memory usage: see how Emacs is using memory. From
