@@ -4099,6 +4099,14 @@ Jinx is an alternative to the built-in flyspell (see [[#h:20251118T184517.526538
     (add-hook 'log-edit-mode-hook 'krisb-electric-setup-log-edit))
 #+end_src
 
+*** Markdown-ts-mode
+
+#+name: markdown-ts-mode
+#+begin_src emacs-lisp
+  (when (boundp 'treesit-enabled-modes)
+    (setopt treesit-enabled-modes (cons 'markdown-ts-mode treesit-enabled-modes)))
+#+end_src
+
 *** Message.el: Emacs's message composition major mode
 
 #+name: message
@@ -8934,6 +8942,9 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   ;;; Devdocs-browser
   <<devdocs-browser>>
+
+  ;;; Markdown-ts-mode
+  <<markdown-ts-mode>>
 
   ;;; Load config units
   <<config-units-load>>

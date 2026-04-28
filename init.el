@@ -6189,6 +6189,10 @@ is t or contains the mode name."
                    (bound-and-true-p devdocs-browser-eww-mode)))
                (display-buffer-same-window)))
 
+;;; Markdown-ts-mode
+(when (boundp 'treesit-enabled-modes)
+  (setopt treesit-enabled-modes (cons 'markdown-ts-mode treesit-enabled-modes)))
+
 ;;; Load config units
 (load-all-configs)
 
