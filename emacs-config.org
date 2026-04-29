@@ -3553,6 +3553,22 @@ Additionally, since ~outline-regexp~ is correctly set in org-mode buffers, the f
               footnote-prompt-before-deletion nil)))
 #+end_src
 
+*** Forgejo: Integration with the Forgejo forge
+
+Alternatives include:
++ [[https://codeberg.org/martianh/fj.el][martianh/fj.el: An Emacs client for Forgejo instances (such as Codeberg). - Codeberg.org]]
+I prefer this package because it supports AGit-Flow (which is the preference of Guix) and uses a local SQLite database.
+
+#+name: forgejo
+#+begin_src emacs-lisp
+  (krisb-package-install forgejo)
+
+  (with-eval-after-load 'forgejo
+    (setopt forgejo-db-dir (no-littering-expand-var-file-name "forgejo"))
+
+    (add-hook 'forgejo-compose-hook #'markdown-mode))
+#+end_src
+
 *** GCMH: "Garbage Collector Magic Hack"
 :PROPERTIES:
 :CUSTOM_ID: h:20260219T004705.251676
@@ -8946,6 +8962,9 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   ;;; Markdown-ts-mode
   <<markdown-ts-mode>>
+
+  ;;; Forgejo
+  <<forgejo>>
 
   ;;; Load config units
   <<config-units-load>>

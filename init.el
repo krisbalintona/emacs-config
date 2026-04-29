@@ -6194,6 +6194,14 @@ is t or contains the mode name."
 (when (boundp 'treesit-enabled-modes)
   (setopt treesit-enabled-modes (cons 'markdown-ts-mode treesit-enabled-modes)))
 
+;;; Forgejo
+(krisb-package-install forgejo)
+
+(with-eval-after-load 'forgejo
+  (setopt forgejo-db-dir (no-littering-expand-var-file-name "forgejo"))
+
+  (add-hook 'forgejo-compose-hook #'markdown-mode))
+
 ;;; Load config units
 (load-all-configs)
 
