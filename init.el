@@ -5691,12 +5691,13 @@ When called with `-' instead call `inspector-inspect-expression'."
                        :branch "devel")
 
 (global-sops-mode 1)
+(autoload #'sops--is-sops-file "sops")
+(bind-keys :map krisb-open-keymap
+           :filter (sops--is-sops-file)
+           ("S" . sops-edit-file))
 
 (with-eval-after-load 'sops
-  (bind-keys :map krisb-open-keymap
-             :filter (sops--is-sops-file)
-             ("S" . sops-edit-file)
-             :map sops-mode-map
+  (bind-keys :map sops-mode-map
              ("C-c e c" . sops-save-file)
              ("C-c e C-c" . sops-save-file)
              ("C-c e k" . sops-cancel)
