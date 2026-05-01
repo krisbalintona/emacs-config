@@ -2618,6 +2618,14 @@ Before Corfu 2.7, specifically [[https://github.com/minad/corfu/commit/4c4a41b0b
       (advice-add capf :around #'krisb-cape-elisp--around-advice)))
 #+end_src
 
+*** Css-ts-mode
+
+#+name: css-ts-mode
+#+begin_src emacs-lisp
+  (when (boundp 'treesit-enabled-modes)
+    (setopt treesit-enabled-modes (cons 'css-ts-mode treesit-enabled-modes)))
+#+end_src
+
 *** Dabbrev: Guess what I mean
 
 #+name: dabbrev
@@ -8990,6 +8998,9 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   ;;; Ghostel
   <<ghostel>>
+
+  ;;; Css-ts-mode
+  <<css-ts-mode>>
 
   ;;; Load config units
   <<config-units-load>>

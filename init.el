@@ -6129,6 +6129,10 @@ is t or contains the mode name."
 (with-eval-after-load 'vc
   (add-to-list 'vc-deduce-backend-nonvc-modes 'ghostel-mode))
 
+;;; Css-ts-mode
+(when (boundp 'treesit-enabled-modes)
+  (setopt treesit-enabled-modes (cons 'css-ts-mode treesit-enabled-modes)))
+
 ;;; Load config units
 (load-all-configs)
 
