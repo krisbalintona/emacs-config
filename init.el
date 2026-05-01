@@ -6105,8 +6105,7 @@ is t or contains the mode name."
 
 (add-to-list 'display-buffer-alist
              `((lambda (buffer-or-name &rest args)
-                 (with-current-buffer buffer-or-name
-                   (bound-and-true-p devdocs-browser-eww-mode)))
+                 (bound-and-true-p devdocs-browser-eww-mode))
                (display-buffer-same-window)))
 
 ;;; Markdown-ts-mode

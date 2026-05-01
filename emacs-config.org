@@ -2768,8 +2768,7 @@ See also the more popular [[https://github.com/astoff/devdocs.el][astoff/devdocs
 #+begin_src emacs-lisp :noweb-ref display-buffer-alist
   (add-to-list 'display-buffer-alist
                `((lambda (buffer-or-name &rest args)
-                   (with-current-buffer buffer-or-name
-                     (bound-and-true-p devdocs-browser-eww-mode)))
+                   (bound-and-true-p devdocs-browser-eww-mode))
                  (display-buffer-same-window)))
 #+end_src
 
