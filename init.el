@@ -3728,89 +3728,7 @@ PROP is the name of the property.  See
   (:hide-mode))
 
 ;;; EAT
-(setup eat
-  ;; ;; 2024-12-29: See https://codeberg.org/akib/emacs-eat/pulls/133 for why we
-  ;; ;; use this fork of eat.
-  ;; :ensure ( :repo "https://codeberg.org/vifon/emacs-eat.git"
-  ;;           :branch "fish-integration")
-  (:package eat)
 
-  (bind-keys :map krisb-open-keymap
-             ("s" . eat))
-
-  (with-eval-after-load 'eat
-    ;; Set TERM to xterm-256color in order for certain functionality
-    ;; to be match normal terminals, like avoiding "WARNING: terminal
-    ;; is not fully functional" messages.  (Haven't noticed any
-    ;; unexpected behavior from this yet.)
-    (setopt eat-term-name "xterm-256color"))
-
-  ;; 2025-04-05: This resolves the continuation lines issue in EAT
-  ;; terminal (including eat-shell in
-  ;; `eat-eshell-visual-command-mode').  The continuation line issue
-  ;; results in, I think, the default font being too wide, causing the
-  ;; width of the characters to exceed the width of the window,
-  ;; resulting in ugly continuation lines that ruin the wrapping of
-  ;; the output.
-  (defun krisb-eat--setup ()
-    "Set up an EAT terminal shell."
-    (when (featurep 'fontaine)
-      (set-face-attribute 'eat-term-font-0 nil
-                          ;; This returns the default-family of the current
-                          ;; preset, whether explicitly or implicitly set
-                          :family (fontaine--get-preset-property fontaine-current-preset :term-family))))
-  (with-eval-after-load 'eat
-    (with-eval-after-load 'fontaine
-      (add-hook 'fontaine-set-preset-hook #'krisb-eat--setup))))
-
-;; Integration with eshell
-(setup eat
-  (add-hook 'eshell-load-hook #'eat-eshell-mode)
-  (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode))
-
-;; Integration with vc.el
-(setup eat
-  (with-eval-after-load 'vc
-    ;; NOTE 2025-11-13: I've created an issue to get this into
-    ;; upstream: https://codeberg.org/akib/emacs-eat/issues/241
-    (add-to-list 'vc-deduce-backend-nonvc-modes 'eat-mode)))
-
-;; REVIEW 2025-12-11: Consider contributing upstream.  However,
-;; currently, the project author has not been active.  Many issues and
-;; PRs have gone unreviewed/unnoticed for around a year now.
-;; Fix buffer names for remote projects
-(with-eval-after-load 'project
-  (el-patch-defun project-prefixed-buffer-name (mode)
-    (concat "*"
-            (when-let* ((remote (file-remote-p default-directory 'host)))
-              ;; Similar format as `mode-line-buffer-identification'
-              ;; does for remote buffers
-              (concat remote ": "))
-            (if-let* ((proj (project-current nil)))
-                (project-name proj)
-              (file-name-nondirectory
-               (directory-file-name default-directory)))
-            "-"
-            (downcase mode)
-            "*")))
-
-;; Unbind M-<NUMBER> keybinds because I use them for switching betweeb
-;; tab-bar tabs
-(setup eat
-  (with-eval-after-load 'tab-bar
-    ;; 2025-10-23 TODO: Why not just use
-    ;; `eat-semi-char-non-bound-keys' instead?
-    (:bind-keys :map eat-semi-char-mode-map
-                ("M-1" . nil)
-                ("M-2" . nil)
-                ("M-3" . nil)
-                ("M-4" . nil)
-                ("M-5" . nil)
-                ("M-6" . nil)
-                ("M-7" . nil)
-                ("M-8" . nil)
-                ("M-9" . nil)
-                ("M-0" . nil))))
 
 ;;; Olivetti
 (setup olivetti
@@ -5029,10 +4947,11 @@ functionality."
     (add-to-list 'project-switch-commands '(project-compile "Compile"))
     (add-to-list 'project-switch-commands '(project-recompile "Recompile"))
 
+    
     ;; Overshadow `project-shell’ in keybindings with `eat-project'
     (bind-keys :map project-prefix-map
-               ("s" . eat-project))
-    (cl-nsubstitute '(eat-project "EAT") 'project-shell project-switch-commands
+               ("s" . ghostel-project))
+    (cl-nsubstitute '(ghostel-project "Ghostel") 'project-shell project-switch-commands
                     :key #'car))))
 
 ;;; Info
@@ -6201,6 +6120,15 @@ is t or contains the mode name."
   (setopt forgejo-db-dir (no-littering-expand-var-file-name "forgejo"))
 
   (add-hook 'forgejo-compose-hook #'markdown-mode))
+
+;;; Ghostel
+(krisb-package-install ghostel)
+
+(bind-keys :map krisb-open-keymap
+           ("s" . ghostel))
+
+(with-eval-after-load 'vc
+  (add-to-list 'vc-deduce-backend-nonvc-modes 'ghostel-mode))
 
 ;;; Load config units
 (load-all-configs)

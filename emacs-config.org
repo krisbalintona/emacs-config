@@ -3630,6 +3630,28 @@ I prefer this package because it supports AGit-Flow (which is the preference of 
       (advice-add 'corfu-insert :after #'krisb-gcmh-minibuffer-exit)))
 #+end_src
 
+*** Ghostel: Very fast terminal emulator built on libghostty-vt
+
+#+name: ghostel
+#+begin_src emacs-lisp
+  (krisb-package-install ghostel)
+
+  (bind-keys :map krisb-open-keymap
+             ("s" . ghostel))
+
+  (with-eval-after-load 'vc
+    (add-to-list 'vc-deduce-backend-nonvc-modes 'ghostel-mode))
+#+end_src
+
+#+name: ghostel-project-switch-commands
+#+begin_src emacs-lisp
+  ;; Overshadow `project-shell’ in keybindings with `eat-project'
+  (bind-keys :map project-prefix-map
+             ("s" . ghostel-project))
+  (cl-nsubstitute '(ghostel-project "Ghostel") 'project-shell project-switch-commands
+                  :key #'car)
+#+end_src
+
 *** Help.el: Emacs's self-documentation
 
 #+name: help.el
@@ -7246,7 +7268,8 @@ Persid knows how to retrieve information from the following formats:
       (add-to-list 'project-switch-commands '(project-compile "Compile"))
       (add-to-list 'project-switch-commands '(project-recompile "Recompile"))
 
-      <<eat-project-switch-commands>>)))
+      <<eat-project-switch-commands>>
+      <<ghostel-project-switch-commands>>)))
 #+end_src
 
 *** Pulsar: Alternative to pulse.el
@@ -8965,6 +8988,9 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   ;;; Forgejo
   <<forgejo>>
+
+  ;;; Ghostel
+  <<ghostel>>
 
   ;;; Load config units
   <<config-units-load>>
