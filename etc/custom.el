@@ -5,30 +5,31 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(activities astute caddyfile-mode cape citar-org-node cl-generic
-                compat cond-star consult corfu do-at-point eat
-                editorconfig ef-themes eglot el-job el-patch
-                elisp-demos erc exec-path-from-shell faceup
-                fancy-compilation fish-mode flymake-vale fontaine gcmh
-                geiser-guile guix highlight-function-calls hotfuzz
-                inspector jinx lin list-packages-ext magit-popup
-                mixed-pitch nftables-mode no-littering notmuch-addr
-                notmuch-bookmarks ntlm ol-notmuch olivetti on
-                orderless org org-contrib org-hide-drawers org-mem
-                org-mime org-modern org-node org-ql org-repeat-by-cron
-                org-review org-roam-folgezettel org-web-tools outli
-                package-x paren-face persid powerthesaurus project
-                pulsar puni python regexp-disasm sesman setup
-                smart-mark so-long soap-client sops svelte-mode svg
-                svlete-mode tab-bookmark tempel timeout track-changes
-                tramp-hlo tramp-rpc tramp-theme try use-package vc-jj
-                verilog-mode vertico which-key window-tool-bar
-                winpulse wombag work-timer yaml-mode))
+   '(apheleia astro-ts-mode astute ben breadcrumb caddyfile-mode cape
+              citar-org-node consult corfu devdocs-browser do-at-point
+              easysession ef-themes eglot el-job el-patch elisp-demos
+              exec-path-from-shell fancy-compilation fish-mode
+              flymake-vale fontaine forgejo gcmh geiser-guile ghostel
+              guix highlight-function-calls inspector lin
+              markdown-mode mixed-pitch nftables-mode no-littering
+              notmuch-addr notmuch-bookmarks ol-notmuch olivetti on
+              orderless org-contrib org-hide-drawers org-mem org-mime
+              org-modern org-node org-ql org-repeat-by-cron org-review
+              org-roam-folgezettel org-web-tools orgmdb outli
+              package-x paren-face persid powerthesaurus pulsar puni
+              regexp-disasm setup smart-mark sops svelte-mode
+              tab-bookmark tempel tramp-theme vc-jj vertico web-mode
+              wombag work-timer yaml-mode))
  '(package-vc-selected-packages
-   '((winpulse :vc-backend Git :url
-               "https://github.com/xenodium/winpulse")
-     (tramp-rpc :url
-                "https://github.com/ArthurHeymans/emacs-tramp-rpc.git")
+   '((keymap-popup :vc-backend Git :url
+                   "https://codeberg.org/thanosapollo/emacs-keymap-popup.git")
+     (ox-astro :vc-backend Git :url
+               "https://github.com/incandescentman/ox-astro.git")
+     (package :url "https://github.com/karthink/wombag.git")
+     (reader :url "https://codeberg.org/MonadicSheep/emacs-reader"
+             :make ("clean" "all"))
+     (winpulse :url "https://github.com/xenodium/winpulse" :vc-backend
+               Git)
      (sops :url "https://github.com/krisbalintona/sops.git" :branch
            "devel")
      (tramp-hlo :url "https://github.com/jsadusk/tramp-hlo.git")
@@ -66,7 +67,11 @@
                   "lisp/org-capture.el")))
  '(pulsar-window-change-face 'pulsar-green)
  '(safe-local-variable-directories
-   '("/rpc:sublation:/home/krisbalintona/guix-config/"
+   '("/home/krisbalintona/Documents/personal-site-astro/"
+     "/home/krisbalintona/Documents/personal-site-svelte/"
+     "/home/krisbalintona/.emacs.d/elpa/31.0/vc-jj/"
+     "/home/krisbalintona/emacs-repos/packages/vc-jj.el/"
+     "/home/krisbalintona/guix-repos/fishinthecalculator-config/"
      "/home/krisbalintona/Documents/svelte-blog/"
      "/home/krisbalintona/emacs-repos/packages/org-mode/"
      "/home/krisbalintona/guix-config/"
@@ -94,14 +99,19 @@
      "/home/krisbalintona/.config/guix/current/share/guile/site/3.0/"
      "/home/krisbalintona/nix-config/"))
  '(safe-local-variable-values
-   '((eval add-hook 'org-insert-heading-hook 'org-expiry-insert-created
-           nil t)
+   '((eval eglot-ensure)
+     (bug-reference-prog-mode . t) (bug-reference-mode . t)
+     (eval add-hook 'org-insert-heading-hook
+           'org-expiry-insert-created nil t)
      (eval add-hook 'before-save-hook 'org-make-toc)
      (org-use-tag-inheritance . t) (org-review-delay . "+3d")
      (eval add-hook 'org-insert-heading-hook
            'org-expiry-insert-created 99 t)
      (org-use-tag-inheritance)))
- '(tramp-term-host-shells '(("epoche" . bash))))
+ '(tramp-term-host-shells '(("epoche" . bash)))
+ '(trust-manager-trust-alist
+   '(("~/Documents/org-database/" . t)
+     ("~/Documents/personal-site-astro/" . t) ("~/repos/emacs/" . t))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
