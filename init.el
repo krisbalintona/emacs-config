@@ -6130,6 +6130,11 @@ is t or contains the mode name."
 (bind-keys :map krisb-open-keymap
            ("s" . ghostel))
 
+(with-eval-after-load 'ghostel
+  (setopt ghostel-keymap-exceptions
+          ;; My personal preferred `other-window' keybind
+          (cons "M-o" ghostel-keymap-exceptions)))
+
 (with-eval-after-load 'vc
   (add-to-list 'vc-deduce-backend-nonvc-modes 'ghostel-mode))
 
