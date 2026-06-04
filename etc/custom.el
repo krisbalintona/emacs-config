@@ -4,6 +4,14 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-agenda-files
+   '("/home/krisbalintona/Documents/org-database/agenda/the_audiobook_experience.org"
+     "/home/krisbalintona/Documents/org-database/agenda/coding_projects.org"
+     "/home/krisbalintona/Documents/org-database/agenda/conspire_creative.org"
+     "/home/krisbalintona/Documents/org-database/agenda/mobile.org"
+     "/home/krisbalintona/Documents/org-database/agenda/personal-site.org"
+     "/home/krisbalintona/Documents/org-database/agenda/recurring.org"
+     "/home/krisbalintona/Documents/org-database/agenda/todo.org"))
  '(package-selected-packages
    '(apheleia astro-ts-mode astute ben breadcrumb caddyfile-mode cape
               citar-org-node consult corfu devdocs-browser do-at-point
@@ -18,10 +26,12 @@
               org-roam-folgezettel org-web-tools orgmdb outli
               package-x paren-face persid powerthesaurus pulsar puni
               regexp-disasm setup smart-mark sops svelte-mode
-              tab-bookmark tempel tramp-theme vc-jj vertico web-mode
-              wombag work-timer yaml-mode))
+              tab-bookmark tempel tramp-rpc tramp-theme vc-jj vertico
+              web-mode wombag work-timer yaml-mode))
  '(package-vc-selected-packages
-   '((keymap-popup :vc-backend Git :url
+   '((tramp-rpc :url
+                "https://github.com/ArthurHeymans/emacs-tramp-rpc.git")
+     (keymap-popup :vc-backend Git :url
                    "https://codeberg.org/thanosapollo/emacs-keymap-popup.git")
      (ox-astro :vc-backend Git :url
                "https://github.com/incandescentman/ox-astro.git")
@@ -67,7 +77,8 @@
                   "lisp/org-capture.el")))
  '(pulsar-window-change-face 'pulsar-green)
  '(safe-local-variable-directories
-   '("/home/krisbalintona/Documents/personal-site-astro/"
+   '("/rpc:sublation:/home/krisbalintona/guix-config/"
+     "/home/krisbalintona/Documents/personal-site-astro/"
      "/home/krisbalintona/Documents/personal-site-svelte/"
      "/home/krisbalintona/.emacs.d/elpa/31.0/vc-jj/"
      "/home/krisbalintona/emacs-repos/packages/vc-jj.el/"
@@ -99,7 +110,7 @@
      "/home/krisbalintona/.config/guix/current/share/guile/site/3.0/"
      "/home/krisbalintona/nix-config/"))
  '(safe-local-variable-values
-   '((eval eglot-ensure)
+   '((jinx-languages . "en_US ja_JP") (eval eglot-ensure)
      (bug-reference-prog-mode . t) (bug-reference-mode . t)
      (eval add-hook 'org-insert-heading-hook
            'org-expiry-insert-created nil t)
