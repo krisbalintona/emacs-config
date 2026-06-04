@@ -7795,12 +7795,12 @@ I do not use this myself, but for users who don't need VC when using tramp on re
                     (group (regexp tramp-file-name-regexp))))))
 #+end_src
 
-*** COMMENT Tramp-RPC: Experiment with using remote RPC server instead of parsing shell command output
+*** Tramp-RPC: Experiment with using remote RPC server instead of parsing shell command output
 
 #+name: tramp-rpc
 #+begin_src emacs-lisp
-  (setup tramp-rpc
-    (:package (tramp-rpc :url "https://github.com/ArthurHeymans/emacs-tramp-rpc.git")))
+  (krisb-package-install tramp-rpc
+                         :url "https://github.com/ArthurHeymans/emacs-tramp-rpc.git")
 #+end_src
 
 *** Tramp-theme: Special theming in remote buffers
