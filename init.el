@@ -4642,7 +4642,11 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
             dictionary-read-dictionary-function 'dictionary-completing-read-dictionary)
 
     (when (package-installed-p 'hide-mode-line)
-      (add-hook 'dictionary-mode-hook #'hide-mode-line-mode))))
+      (add-hook 'dictionary-mode-hook #'hide-mode-line-mode))
+
+    (bind-keys :map dictionary-mode-map
+               ("q" . quit-window)
+               ("Q" . dictionary-close))))
 
 ;;; Powerthesaurus
 ;; Search for synonyms using an online thesaurus.

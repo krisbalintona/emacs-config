@@ -2801,7 +2801,11 @@ See also the more popular [[https://github.com/astoff/devdocs.el][astoff/devdocs
               dictionary-read-dictionary-function 'dictionary-completing-read-dictionary)
 
       (when (package-installed-p 'hide-mode-line)
-        (add-hook 'dictionary-mode-hook #'hide-mode-line-mode))))
+        (add-hook 'dictionary-mode-hook #'hide-mode-line-mode))
+
+      (bind-keys :map dictionary-mode-map
+                 ("q" . quit-window)
+                 ("Q" . dictionary-close))))
 #+end_src
 
 *** Diff-mode: Display diffs
