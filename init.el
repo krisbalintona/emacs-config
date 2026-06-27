@@ -1534,39 +1534,40 @@ Then apply ARGS."
 ;; - `vc-annotate-display-mode'
 ;; - `vc-revert-show-diff'
 ;; - `vc-dir-auto-hide-up-to-date'
-(setup vc
+(with-eval-after-load 'vc
+  (setopt vc-follow-symlinks t
+          vc-allow-rewriting-published-history 'ask ; Emacs 31
+          vc-async-checkin t                        ; Emacs 31
+          vc-allow-async-diff t                     ; Emacs 31
+          vc-allow-async-revert t
+          vc-display-failed-async-commands t    ; Emacs 31
+          vc-find-revision-no-save t            ; Emacs 31
+          vc-dir-save-some-buffers-on-revert t  ; Emacs 31
+          vc-use-incoming-outgoing-prefixes t)) ; Emacs 31
 
-  (with-eval-after-load 'vc
-    (setopt vc-follow-symlinks t
-            vc-allow-rewriting-published-history 'ask ; Emacs 31
-            vc-async-checkin t                        ; Emacs 31
-            vc-allow-async-diff t                     ; Emacs 31
-            vc-allow-async-revert t
-            vc-display-failed-async-commands t        ; Emacs 31
-            vc-find-revision-no-save t            ; Emacs 31
-            vc-dir-save-some-buffers-on-revert t  ; Emacs 31
-            vc-use-incoming-outgoing-prefixes t)) ; Emacs 31
+(with-eval-after-load 'vc-dir
+  (add-hook 'vc-dir-mode-hook (lambda () (setq-local truncate-lines t))))
 
-  ;; I dislike this default
-  (with-eval-after-load 'vc
-    (remove-hook 'vc-log-finish-functions 'vc-shrink-buffer-window))
-  
-  (add-to-list 'display-buffer-alist
-               '((or . ((major-mode . vc-dir-mode)
-                        (major-mode . vc-git-log-view-mode)
-                        (major-mode . vc-git-region-history-mode)))
-                 (display-buffer-reuse-window
-                  display-buffer-reuse-mode-window
-                  display-buffer-same-window)))
-  (add-to-list 'display-buffer-alist
-               '((major-mode . vc-compilation-mode)
-                 (display-buffer-reuse-window
-                  display-buffer-reuse-mode-window
-                  display-buffer-below-selected)
-                 (post-command-select-window . t))))
+;; I dislike this default
+(with-eval-after-load 'vc
+  (remove-hook 'vc-log-finish-functions 'vc-shrink-buffer-window))
 
-;; Dispatcher between `vc-diff’ and `diff-buffer-with-file’
-(setup vc
+(add-to-list 'display-buffer-alist
+             '((or . ((major-mode . vc-dir-mode)
+                      (major-mode . vc-git-log-view-mode)
+                      (major-mode . vc-git-region-history-mode)))
+               (display-buffer-reuse-window
+                display-buffer-reuse-mode-window
+                display-buffer-same-window)))
+(add-to-list 'display-buffer-alist
+             '((major-mode . vc-compilation-mode)
+               (display-buffer-reuse-window
+                display-buffer-reuse-mode-window
+                display-buffer-below-selected)
+               (post-command-select-window . t)))
+
+;; Bespoke dispatcher between `vc-diff’ and `diff-buffer-with-file’
+(with-eval-after-load 'vc
   (defun krisb-vc-diff-dwim ()
     "Call `vc-diff’ or `diff-buffer-with-file’.
 Calls `vc-diff’ if the buffer is unmodified.  If buffer is modified,
@@ -1575,7 +1576,7 @@ call `diff-buffer-with-file’ instead."
     (if (and (not (eq major-mode 'vc-dir-mode)) (buffer-modified-p))
         (diff-buffer-with-file (current-buffer))
       (vc-diff)))
-  (:bind-keys ([remap vc-diff] . krisb-vc-diff-dwim)))
+  (bind-keys ([remap vc-diff] . krisb-vc-diff-dwim)))
 
 ;;;; Vc-git
 ;; TODO 2025-07-10: Document:
