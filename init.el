@@ -494,6 +494,10 @@ package-archives, e.g. \"gnu\")."))
   ;; Show context menu from right-click
   (when (display-graphic-p) (context-menu-mode 1))
   
+  ;; Save the existing clipboard content from other programs into the
+  ;; kill ring before overwriting the clipboard from Emacs
+  (setopt save-interprogram-paste-before-kill t)
+  
   (setopt shell-command-prompt-show-cwd t)
   
   ;; If we assume the text flows left-to-right, then we can increase

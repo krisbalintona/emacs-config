@@ -962,25 +962,12 @@ Use the right-click menu:
                  (post-command-select-window . t)))
 #+end_src
 
-*** COMMENT Clipboard
+*** Clipboard
 
 #+begin_src emacs-lisp :noweb-ref emacs-misc :noweb-sep "\n\n"
   ;; Save the existing clipboard content from other programs into the
   ;; kill ring before overwriting the clipboard from Emacs
   (setopt save-interprogram-paste-before-kill t)
-
-  ;; Wayland compatibility
-  <<clipboard-wayland>>
-#+end_src
-
-Wayland specific:
-#+name: clipboard-wayland
-#+begin_src emacs-lisp
-  (when (krisb-wayland-p)
-    (setopt interprogram-cut-function
-            (lambda (text)
-              (start-process "wl-copy" nil "wl-copy"
-                             "--trim-newline" "--type" "text/plain;charset=utf-8" text))))
 #+end_src
 
 *** Editing remote files
