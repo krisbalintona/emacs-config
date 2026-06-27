@@ -5762,18 +5762,7 @@ contains the mode name."
                     (el-patch-add
                       (nth 4 setting)
                       (nth 5 setting))))
-            settings))
-  
-  (add-hook 'astro-ts-mode-hook
-            ;; Instead of redefining the major mode and adding this to
-            ;; the end (which el-patch does not support, I don't
-            ;; think), we can run this on the major mode hook instead
-            (lambda ()
-              (when (version<= "31" emacs-version)
-                (let ((tsx-parser (treesit-parser-create 'tsx)))
-                  (treesit-parser-set-included-ranges tsx-parser '((1 . 1))))
-                (let ((css-parser (treesit-parser-create 'css)))
-                  (treesit-parser-set-included-ranges css-parser '((1 . 1))))))))
+            settings)))
 
 ;;
 ;; Compatibility with `editorconfig-mode'
