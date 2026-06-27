@@ -5642,399 +5642,6 @@ This section is for the major mode
       (require 'oc-biblatex)))
 #+end_src
 
-**** Org-mem
-
-#+name: org-mem
-#+begin_src emacs-lisp
-  ;; FIXME 2025-10-17: Document also:
-  ;; - `org-mem-db1-mode'
-  (setup org-mem
-    (:package org-mem)
-    (:if-package org)
-
-    (setopt org-mem-do-sync-with-org-id t
-            org-mem-watch-dirs (list krisb-folio-directory)
-            org-mem-do-warn-title-collisions nil)
-    (with-eval-after-load 'org-mem
-      (cl-pushnew
-       (file-name-as-directory (file-relative-name krisb-org-archive-directory krisb-folio-directory))
-       org-mem-exclude))
-    (org-mem-updater-mode 1)
-
-    ;; FIXME 2025-05-27: Figure out which org-node update is breaking
-    ;; org-roam database compatibility.
-    (:with-local-quit
-     (:quit)
-     ;; Load things related to org-mem’s interaction with org-roam
-     (with-eval-after-load 'org-roam
-       ;; End dependence on `org-roam-db-sync'
-       (setopt org-roam-db-update-on-save nil
-               org-mem-roamy-do-overwrite-real-db t)
-       (org-roam-db-autosync-mode -1)
-       (org-mem-roamy-db-mode 1))))
-#+end_src
-
-**** Org-node
-
-#+name: org-node
-#+begin_src emacs-lisp
-  (setup org-node
-    (:package org-node)
-    (:if-package org)
-
-    (:bind-keys :map krisb-note-keymap
-                ("l" . org-node-context-toggle)
-                ([remap org-roam-buffer-toggle] . org-node-context-toggle)
-                ("f" . org-node-find)
-                ("i" . org-node-insert-link)
-                ("t" . org-node-set-tags-here))
-
-    (setopt org-node-file-directory-ask t
-            org-node-file-timestamp-format "%Y%m%dT%H%M%S--"
-            org-node-renames-allowed-dirs (list krisb-notes-directory))
-    (setopt org-node-alter-candidates t
-            org-node-blank-input-hint nil)
-    (setopt org-node-do-filter-tags t
-            org-node-warn-title-collisions nil)
-
-    (org-node-cache-mode 1)
-
-    (setopt org-node-context-persist-on-disk t)
-    (org-node-context-follow-mode 1)
-
-    ;; Bespoke filtering (exclusion) function.
-    (defun krisb-org-node-filter-fn (node)
-      "Predicate for whether to include NODE.
-  If non-nil, include.  If nil, exclude.  This predicate excludes these
-  nodes:
-  - With non-nil ROAM_EXCLUDE property value."
-      (let ((exclude-val (cdr (assoc "ROAM_EXCLUDE" (org-mem-properties node)))))
-        (not (or (when exclude-val (string= "t" (string-trim exclude-val)))))))
-    (setopt org-node-filter-fn #'krisb-org-node-filter-fn)
-
-    ;; Bespoke `org-node-custom-link-format-fn' function
-    (cl-defmethod krisb-org-node-custom-link-format-fn ((node org-mem-entry))
-      "Bespoke function for `org-node-custom-link-format-fn'."
-      (if (or (file-in-directory-p (org-mem-file node) krisb-org-agenda-directory)
-              (file-in-directory-p (org-mem-file node) krisb-org-archive-directory))
-          (org-mem-entry-title node)
-        (let* ((place (krisb-org-node-get-place node))
-               (type (krisb-org-node-get-type node))
-               (title (org-mem-entry-title node))
-               (file-title (org-mem-file-title-strict node)))
-          (concat (when place (format "(%s) " place))
-                  (when type (format "{%s} " type))
-                  title
-                  (when (or (not (string= title file-title))
-                            (not file-title))
-                    (propertize (concat " (" file-title ")") 'face 'shadow))))))
-    (setopt org-node-custom-link-format-fn #'krisb-org-node-custom-link-format-fn)
-
-    ;; Bespoke org-node node accessors
-    (cl-defmacro krisb-org-node--get-property (property node)
-      "Get value of PROPERTY from NODE.
-  NODE is an org-mem-entry."
-      `(cdr (assoc ,property (org-mem-properties ,node) #'string-equal)))
-
-    (cl-defmethod krisb-org-node-get-box ((node org-mem-entry))
-      "Return the value of the ROAM_BOX property of NODE."
-      (krisb-org-node--get-property "ROAM_BOX" node))
-
-    (cl-defmethod krisb-org-node-box-or-dir ((node org-mem-entry))
-      "Return a fontified value of the ROAM_BOX property of NODE.
-  If the ROAM_BOX property of NODE is nil, returns the directory name
-  containing NODE instead."
-      (let ((box (krisb-org-node-get-box node))
-            (dir (file-name-nondirectory
-                  (directory-file-name
-                   (file-name-directory (org-mem-file node))))))
-        (propertize (or box (concat "/" dir)) 'face 'shadow)))
-
-    (cl-defmethod krisb-org-node-get-place ((node org-mem-entry))
-      "Return the value of the ROAM_PLACE property of NODE."
-      (krisb-org-node--get-property "ROAM_PLACE" node))
-
-    (cl-defmethod krisb-org-node-get-type ((node org-mem-entry))
-      "Return the value of the ROAM_TYPE property of NODE."
-      (krisb-org-node--get-property "ROAM_TYPE" node))
-
-    (cl-defmethod krisb-org-node-get-person ((node org-mem-entry))
-      "Return the value of the ROAM_PERSON property of NODE."
-      (krisb-org-node--get-property "ROAM_PERSON" node))
-
-    (cl-defmethod krisb-org-node-olp-full-propertized ((node org-mem-entry))
-      "Return the full outline path of NODE fontified.
-  The full outline path of NODE (given by `org-node-get-olp-full')
-  surrounded by parentheses and whose parts are separated by \" > \".
-  Additionally, the entire string is fontified to the shadow face."
-      (let ((olp (propertize (string-join (org-mem-olpath-with-file-title node) " > ") 'face 'shadow)))
-        (unless (string-empty-p olp)
-          (concat
-           (propertize "(" 'face 'shadow)
-           olp
-           (propertize ")" 'face 'shadow)))))
-
-    (cl-defmethod krisb-org-node-tags-propertized ((node org-mem-entry))
-      "Return the full outline path of NODE fontified."
-      (when-let ((tags (org-mem-tags node)))
-        (propertize (concat "#" (string-join tags " #")) 'face 'org-tag)))
-
-    ;; Bespoke `org-node-find' format
-    (defun krisb-org-node-affixation-fn (node title)
-      "Given NODE and TITLE, add a bespoke prefix and suffix.
-  For use as `org-node-affixation-fn'."
-      (let ((box-or-dir (krisb-org-node-box-or-dir node))
-            (place (krisb-org-node-get-place node))
-            (type (krisb-org-node-get-type node))
-            (person (krisb-org-node-get-person node))
-            (olp-full (krisb-org-node-olp-full-propertized node))
-            (tags (krisb-org-node-tags-propertized node)))
-        (list title
-              ;; Prefix
-              (concat (when box-or-dir (concat box-or-dir " "))
-                      (when place (propertize (concat place " ") 'face 'shadow))
-                      (when type (propertize (concat "&" type " ") 'face 'font-lock-doc-face))
-                      (when person (propertize (concat "@" person " ") 'face 'font-lock-keyword-face)))
-              ;; Suffix
-              (concat " "
-                      (when olp-full (concat olp-full " "))
-                      tags))))
-    (setopt org-node-affixation-fn #'krisb-org-node-affixation-fn))
-
-  ;; Rename buffer to the file's title if the file is an org-node node.
-  (with-eval-after-load 'org-node
-    (defun krisb-org-node-rename-buffer-name-to-title ()
-      "Rename org buffer to its #+TITLE property.
-  This only occurs when the file is an org-mem entry.  (See
-  `org-mem-watch-dirs' for files may contain entries.)
-
-  This function is written such that it calls org-mem and org-node as late
-  as possible, which is useful for ensuring those packages are lazy
-  loaded."
-      ;; Our strategy for keeping org-mem and org-node lazy loaded is as
-      ;; follows:
-      ;; 1. Check if there is an ID at the top-level.
-      ;; 2. Check if the ID has an associated org-mem entry (see
-      ;;    `org-mem-watch-dirs'’).
-      ;; 3. Check if entry is would be filter by `org-node-filter-fn’.
-      (when-let* (((eq major-mode 'org-mode)) ; Guard
-                  ;; First check if there is an ID
-                  (id (save-excursion (widen) (org-id-get (point-min))))
-                  ((require 'org-mem))
-                  (entry (org-mem-entry-by-id id))
-                  ((require 'org-node))
-                  ((org-node-p entry))
-                  (title (org-mem-file-title-strict entry)))
-        (rename-buffer (generate-new-buffer-name title (buffer-name)))))
-    ;; The reason we add `krisb-org-node-rename-buffer-name-to-title’ to
-    ;; `org-mode-hook’ here is because we do not want org-node being
-    ;; loaded when we opn just any org-mode buffer.  Instead, we require
-    ;; org-mem and org-node only when we need.  This helps keep org-mem
-    ;; and org-node deferred as late as possible.
-    (add-hook 'org-mode-hook #'krisb-org-node-rename-buffer-name-to-title))
-
-  ;; Bespoke commands
-  (with-eval-after-load 'org-node
-    (defun krisb-org-node-add-source-or-context ()
-      "Set ROAM_CONTEXT or ROAM_SOURCE automatically.
-  Prompt the user for ROAM_CONTEXT or ROAM_SOURCE.  Set that property to
-  the value of the ROAM_REFS property of the nearest parent of the current
-  headline."
-      (interactive)
-      (org-set-property
-       (completing-read "Type: " '("ROAM_CONTEXT" "ROAM_SOURCE"))
-       (org-entry-get nil "ROAM_REFS" 'inherit))))
-#+end_src
-
-
-#+begin_src emacs-lisp :noweb-ref completion-category-overrides
-  (org-node (eager-display . t))
-#+end_src
-
-**** Org-web-tools
-
-#+name: org-web-tools
-#+begin_src emacs-lisp
-  (setup org-web-tools
-    (:if-package org)
-    (:package org-web-tools)
-
-    (with-eval-after-load 'org
-      (autoload 'krisb-org-web-tools-insert-link-for-url "org-web-tools")
-      (bind-keys :map org-mode-map
-                 ("C-c u" . krisb-org-web-tools-insert-link-for-url)))
-
-    (with-eval-after-load 'org-web-tools
-      (defcustom krisb-org-web-tools-strip-regexp
-        (rx (or "tiktok.com" "youtube.com/shorts"))
-        "Special sites to strip query parameters for."
-        :type 'regexp
-        :group 'org)
-
-      (defun krisb-url-strip-query (url)
-        "Strip the query string from URL.
-
-  For example, turn:
-
-    https://www.youtube.com/shorts/qvOf7jWTmqY?app=desktop
-
-  into:
-
-    https://www.youtube.com/shorts/qvOf7jWTmqY
-
-
-  This is only for the URLs whose hosts match the regexp
-  `krisb-org-web-tools-strip-regexp'."
-        (let* ((parsed (url-generic-parse-url url))
-               (stripp
-                (string-match krisb-org-web-tools-strip-regexp (url-host parsed))))
-          (when stripp
-            (setf (url-filename parsed) (car (url-path-and-query parsed))))
-          (url-recreate-url parsed)))
-      
-      (defun krisb-org-web-tools-insert-link-for-url (url)
-        "Like `org-web-tools-insert-link-for-url' but strings query parameters from URL.
-  See `krisb-url-strip-query' for what this means."
-        (interactive (list (krisb-url-strip-query (org-web-tools--get-first-url))))
-        (insert (org-web-tools--org-link-for-url url)))
-      
-      (setopt org-web-tools-pandoc-replacements
-              (add-to-list 'org-web-tools-pandoc-replacements
-                           `(,(rx "·") . "|"))))
-
-    ;; Open then go into `view-mode'
-    (with-eval-after-load 'org-web-tools
-      (advice-add 'org-web-tools-read-url-as-org :after #'view-mode))
-
-    ;; Add an org-attach entry for `org-web-tools-archive-attach’
-    (with-eval-after-load 'org-attach
-      (add-to-list 'org-attach-commands
-                   '((?w) org-web-tools-archive-attach
-                     "Download then attach an archive of a webpage using `org-web-tools'\n"))))
-#+end_src
-
-**** Org-roam
-
-#+name: org-roam
-#+begin_src emacs-lisp
-  (setup org-roam
-    (:package org-roam)
-    
-    ;; Bind these keys only when I'm not using org-mem + org-node
-    (unless (bound-and-true-p org-mem-updater-mode)
-      (bind-keys :map krisb-note-keymap
-                 ("f" . org-roam-node-find)
-                 ("i" . org-roam-node-insert)
-                 ("c" . org-roam-capture)
-                 ("l" . org-roam-buffer-toggle)
-                 ("ta" . org-roam-tag-add)
-                 ("tr" . org-roam-tag-remove)
-                 ("g" . org-roam-graph)))
-
-    (with-eval-after-load 'org-roam
-      (setopt org-roam-directory krisb-notes-directory
-              ;; org-roam-db-gc-threshold most-positive-fixnum
-              org-roam-db-node-include-function
-              (lambda () (not (member "ATTACH" (org-get-tags))))
-              org-roam-mode-sections
-              '((org-roam-backlinks-section :unique t)
-                org-roam-reflinks-section))
-      
-      ;; Fold headings by default
-      (add-to-list 'org-roam-buffer-postrender-functions #'magit-section-show-level-2)
-
-      ;; Having set user options, sync database when org-roam loads
-      (org-roam-db-autosync-mode 1))
-    
-    ;; TODO 2025-05-27: Revisit this.
-    ;; ;; Custom face for ID links to org-roam-nodes.  I prefer to change
-    ;; ;; their foreground color to differentiate them from other types of
-    ;; ;; links as well as to use a lighter face because a buffer
-    ;; ;; packed-full of org links can become visually distracting and
-    ;; ;; cluttered otherwise.
-    ;; (org-link-set-parameters
-    ;;  "id"
-    ;;  :face (lambda (id)
-    ;;          (if (org-roam-node-from-id id)
-    ;;              '(:weight light :inherit font-lock-keyword-face)
-    ;;            'org-link)))
-    ;;
-    ;; ;; Custom stored description
-    ;; (org-link-set-parameters
-    ;;  "id"
-    ;;  :store (lambda (&optional interactive?)
-    ;;           (let* ((id (org-id-get))
-    ;;                  (node (org-roam-node-from-id id)))
-    ;;             (if (and (equal major-mode 'org-mode)
-    ;;                      ;; We want to check more than if there is a node at
-    ;;                      ;; point; we want to make sure ID corresponds to an
-    ;;                      ;; existing node
-    ;;                      node)
-    ;;                 (org-link-store-props :type "id"
-    ;;                                       :link (concat "id:" id)
-    ;;                                       :description (org-roam-node-formatted node))
-    ;;               (funcall 'org-id-store-link-maybe interactive?)))))
-    )
-#+end_src
-
-**** Org-roam-folgezettel
-
-#+name: org-roam-folgezettel
-#+begin_src emacs-lisp
-  (setup org-roam-folgezettel
-    (:if-package org-roam)
-    (:package (org-roam-folgezettel :url "https://github.com/krisbalintona/org-roam-folgezettel.git"
-                                    :branch "vtable-unstable"))
-
-    (add-hook 'org-roam-folgezettel-mode-hook #'hl-line-mode)
-    (add-hook 'org-roam-folgezettel-mode-hook (lambda () (setq-local line-spacing 0.2)))
-
-    (bind-keys :map krisb-note-keymap
-               ("m" . org-roam-folgezettel-list)
-               ;; TODO 2025-10-30: Bind only in org-mode buffers
-               ("s" . org-roam-folgezettel-show-node-in-list))
-
-    (setopt org-roam-folgezettel-default-filter-query '(box "main"))
-
-    ;; FIXME 2025-06-30: Eventually upstream contents of
-    ;; krisb-org-roam-ext once I figure out a generalizable zettelkasten
-    ;; workflow for most/all users.
-    (with-eval-after-load 'org-roam
-      (require 'krisb-org-roam-ext))
-
-    ;; Load embark integration
-    (with-eval-after-load 'org-roam
-      (with-eval-after-load 'embark
-        (require 'org-roam-folgezettel-embark))))
-
-  (setup org-roam-folgezettel
-    ;; We must add these after their default values are set by org
-    (with-eval-after-load 'org
-      (with-eval-after-load 'org-roam-folgezettel
-        ;; Add ROAM_* properties to properties completing-read interface
-        ;; completions
-        (dolist (prop '("ROAM_EXCLUDE"
-                        "ROAM_PLACE"
-                        "ROAM_PERSON"
-                        "ROAM_SOURCE"
-                        "ROAM_CONTEXT"
-                        "ROAM_REFS"
-                        "ROAM_TYPE"
-                        "ROAM_BOX"))
-          (add-to-list 'org-default-properties prop))
-
-        ;; Set inherited default values for some ROAM_* properties
-        (add-to-list 'org-global-properties '("ROAM_TYPE" . "source collection pointer"))
-        (add-to-list 'org-use-property-inheritance "ROAM_BOX"))))
-#+end_src
-
-My org-roam-folgezettel uses a yet-upstreamed version of vtable.el:
-#+begin_src emacs-lisp :noweb-ref link-monkeypatches :noweb-sep "\n\n"
-  ;; Until the vtable work I’ve been testing is upstreamed, we manually
-  ;; load that file
-  (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/emacs-vtable-ship-mints/lisp/emacs-lisp/vtable.el")
-#+end_src
-
 **** Org-contrib: Collection of org extensions
 
 #+name: org-contrib
@@ -6647,7 +6254,7 @@ I have a patch awaiting application upstream: [[https://lists.gnu.org/archive/ht
             org-clock-out-remove-zero-time-clocks t))
 #+end_src
 
-**** Org-inline-tags: Bespoke inline tagging
+**** Bespoke "inline tagging"
 
 Text like =::tag_1 ::tag_2 ::tag_3= are fontified specially. I regard these are "inline tags." They have no integration with other org-mode functionality. Their only utility is for convenient searching. I have specialized use cases for them: when I want to tag certain lines/elements without elevating that text to a full headline (to use org-mode tags proper).
 #+name: org-inline-tags
@@ -6678,6 +6285,399 @@ Text like =::tag_1 ::tag_2 ::tag_3= are fontified specially. I regard these are 
             '(org-attach-id-ts-folder-format
               org-attach-id-uuid-folder-format
               org-attach-id-fallback-folder-format)))
+#+end_src
+
+*** Org-mem
+
+#+name: org-mem
+#+begin_src emacs-lisp
+  ;; FIXME 2025-10-17: Document also:
+  ;; - `org-mem-db1-mode'
+  (setup org-mem
+    (:package org-mem)
+    (:if-package org)
+
+    (setopt org-mem-do-sync-with-org-id t
+            org-mem-watch-dirs (list krisb-folio-directory)
+            org-mem-do-warn-title-collisions nil)
+    (with-eval-after-load 'org-mem
+      (cl-pushnew
+       (file-name-as-directory (file-relative-name krisb-org-archive-directory krisb-folio-directory))
+       org-mem-exclude))
+    (org-mem-updater-mode 1)
+
+    ;; FIXME 2025-05-27: Figure out which org-node update is breaking
+    ;; org-roam database compatibility.
+    (:with-local-quit
+     (:quit)
+     ;; Load things related to org-mem’s interaction with org-roam
+     (with-eval-after-load 'org-roam
+       ;; End dependence on `org-roam-db-sync'
+       (setopt org-roam-db-update-on-save nil
+               org-mem-roamy-do-overwrite-real-db t)
+       (org-roam-db-autosync-mode -1)
+       (org-mem-roamy-db-mode 1))))
+#+end_src
+
+*** Org-node
+
+#+name: org-node
+#+begin_src emacs-lisp
+  (setup org-node
+    (:package org-node)
+    (:if-package org)
+
+    (:bind-keys :map krisb-note-keymap
+                ("l" . org-node-context-toggle)
+                ([remap org-roam-buffer-toggle] . org-node-context-toggle)
+                ("f" . org-node-find)
+                ("i" . org-node-insert-link)
+                ("t" . org-node-set-tags-here))
+
+    (setopt org-node-file-directory-ask t
+            org-node-file-timestamp-format "%Y%m%dT%H%M%S--"
+            org-node-renames-allowed-dirs (list krisb-notes-directory))
+    (setopt org-node-alter-candidates t
+            org-node-blank-input-hint nil)
+    (setopt org-node-do-filter-tags t
+            org-node-warn-title-collisions nil)
+
+    (org-node-cache-mode 1)
+
+    (setopt org-node-context-persist-on-disk t)
+    (org-node-context-follow-mode 1)
+
+    ;; Bespoke filtering (exclusion) function.
+    (defun krisb-org-node-filter-fn (node)
+      "Predicate for whether to include NODE.
+  If non-nil, include.  If nil, exclude.  This predicate excludes these
+  nodes:
+  - With non-nil ROAM_EXCLUDE property value."
+      (let ((exclude-val (cdr (assoc "ROAM_EXCLUDE" (org-mem-properties node)))))
+        (not (or (when exclude-val (string= "t" (string-trim exclude-val)))))))
+    (setopt org-node-filter-fn #'krisb-org-node-filter-fn)
+
+    ;; Bespoke `org-node-custom-link-format-fn' function
+    (cl-defmethod krisb-org-node-custom-link-format-fn ((node org-mem-entry))
+      "Bespoke function for `org-node-custom-link-format-fn'."
+      (if (or (file-in-directory-p (org-mem-file node) krisb-org-agenda-directory)
+              (file-in-directory-p (org-mem-file node) krisb-org-archive-directory))
+          (org-mem-entry-title node)
+        (let* ((place (krisb-org-node-get-place node))
+               (type (krisb-org-node-get-type node))
+               (title (org-mem-entry-title node))
+               (file-title (org-mem-file-title-strict node)))
+          (concat (when place (format "(%s) " place))
+                  (when type (format "{%s} " type))
+                  title
+                  (when (or (not (string= title file-title))
+                            (not file-title))
+                    (propertize (concat " (" file-title ")") 'face 'shadow))))))
+    (setopt org-node-custom-link-format-fn #'krisb-org-node-custom-link-format-fn)
+
+    ;; Bespoke org-node node accessors
+    (cl-defmacro krisb-org-node--get-property (property node)
+      "Get value of PROPERTY from NODE.
+  NODE is an org-mem-entry."
+      `(cdr (assoc ,property (org-mem-properties ,node) #'string-equal)))
+
+    (cl-defmethod krisb-org-node-get-box ((node org-mem-entry))
+      "Return the value of the ROAM_BOX property of NODE."
+      (krisb-org-node--get-property "ROAM_BOX" node))
+
+    (cl-defmethod krisb-org-node-box-or-dir ((node org-mem-entry))
+      "Return a fontified value of the ROAM_BOX property of NODE.
+  If the ROAM_BOX property of NODE is nil, returns the directory name
+  containing NODE instead."
+      (let ((box (krisb-org-node-get-box node))
+            (dir (file-name-nondirectory
+                  (directory-file-name
+                   (file-name-directory (org-mem-file node))))))
+        (propertize (or box (concat "/" dir)) 'face 'shadow)))
+
+    (cl-defmethod krisb-org-node-get-place ((node org-mem-entry))
+      "Return the value of the ROAM_PLACE property of NODE."
+      (krisb-org-node--get-property "ROAM_PLACE" node))
+
+    (cl-defmethod krisb-org-node-get-type ((node org-mem-entry))
+      "Return the value of the ROAM_TYPE property of NODE."
+      (krisb-org-node--get-property "ROAM_TYPE" node))
+
+    (cl-defmethod krisb-org-node-get-person ((node org-mem-entry))
+      "Return the value of the ROAM_PERSON property of NODE."
+      (krisb-org-node--get-property "ROAM_PERSON" node))
+
+    (cl-defmethod krisb-org-node-olp-full-propertized ((node org-mem-entry))
+      "Return the full outline path of NODE fontified.
+  The full outline path of NODE (given by `org-node-get-olp-full')
+  surrounded by parentheses and whose parts are separated by \" > \".
+  Additionally, the entire string is fontified to the shadow face."
+      (let ((olp (propertize (string-join (org-mem-olpath-with-file-title node) " > ") 'face 'shadow)))
+        (unless (string-empty-p olp)
+          (concat
+           (propertize "(" 'face 'shadow)
+           olp
+           (propertize ")" 'face 'shadow)))))
+
+    (cl-defmethod krisb-org-node-tags-propertized ((node org-mem-entry))
+      "Return the full outline path of NODE fontified."
+      (when-let ((tags (org-mem-tags node)))
+        (propertize (concat "#" (string-join tags " #")) 'face 'org-tag)))
+
+    ;; Bespoke `org-node-find' format
+    (defun krisb-org-node-affixation-fn (node title)
+      "Given NODE and TITLE, add a bespoke prefix and suffix.
+  For use as `org-node-affixation-fn'."
+      (let ((box-or-dir (krisb-org-node-box-or-dir node))
+            (place (krisb-org-node-get-place node))
+            (type (krisb-org-node-get-type node))
+            (person (krisb-org-node-get-person node))
+            (olp-full (krisb-org-node-olp-full-propertized node))
+            (tags (krisb-org-node-tags-propertized node)))
+        (list title
+              ;; Prefix
+              (concat (when box-or-dir (concat box-or-dir " "))
+                      (when place (propertize (concat place " ") 'face 'shadow))
+                      (when type (propertize (concat "&" type " ") 'face 'font-lock-doc-face))
+                      (when person (propertize (concat "@" person " ") 'face 'font-lock-keyword-face)))
+              ;; Suffix
+              (concat " "
+                      (when olp-full (concat olp-full " "))
+                      tags))))
+    (setopt org-node-affixation-fn #'krisb-org-node-affixation-fn))
+
+  ;; Rename buffer to the file's title if the file is an org-node node.
+  (with-eval-after-load 'org-node
+    (defun krisb-org-node-rename-buffer-name-to-title ()
+      "Rename org buffer to its #+TITLE property.
+  This only occurs when the file is an org-mem entry.  (See
+  `org-mem-watch-dirs' for files may contain entries.)
+
+  This function is written such that it calls org-mem and org-node as late
+  as possible, which is useful for ensuring those packages are lazy
+  loaded."
+      ;; Our strategy for keeping org-mem and org-node lazy loaded is as
+      ;; follows:
+      ;; 1. Check if there is an ID at the top-level.
+      ;; 2. Check if the ID has an associated org-mem entry (see
+      ;;    `org-mem-watch-dirs'’).
+      ;; 3. Check if entry is would be filter by `org-node-filter-fn’.
+      (when-let* (((eq major-mode 'org-mode)) ; Guard
+                  ;; First check if there is an ID
+                  (id (save-excursion (widen) (org-id-get (point-min))))
+                  ((require 'org-mem))
+                  (entry (org-mem-entry-by-id id))
+                  ((require 'org-node))
+                  ((org-node-p entry))
+                  (title (org-mem-file-title-strict entry)))
+        (rename-buffer (generate-new-buffer-name title (buffer-name)))))
+    ;; The reason we add `krisb-org-node-rename-buffer-name-to-title’ to
+    ;; `org-mode-hook’ here is because we do not want org-node being
+    ;; loaded when we opn just any org-mode buffer.  Instead, we require
+    ;; org-mem and org-node only when we need.  This helps keep org-mem
+    ;; and org-node deferred as late as possible.
+    (add-hook 'org-mode-hook #'krisb-org-node-rename-buffer-name-to-title))
+
+  ;; Bespoke commands
+  (with-eval-after-load 'org-node
+    (defun krisb-org-node-add-source-or-context ()
+      "Set ROAM_CONTEXT or ROAM_SOURCE automatically.
+  Prompt the user for ROAM_CONTEXT or ROAM_SOURCE.  Set that property to
+  the value of the ROAM_REFS property of the nearest parent of the current
+  headline."
+      (interactive)
+      (org-set-property
+       (completing-read "Type: " '("ROAM_CONTEXT" "ROAM_SOURCE"))
+       (org-entry-get nil "ROAM_REFS" 'inherit))))
+#+end_src
+
+
+#+begin_src emacs-lisp :noweb-ref completion-category-overrides
+  (org-node (eager-display . t))
+#+end_src
+
+*** Org-web-tools
+
+#+name: org-web-tools
+#+begin_src emacs-lisp
+  (setup org-web-tools
+    (:if-package org)
+    (:package org-web-tools)
+
+    (with-eval-after-load 'org
+      (autoload 'krisb-org-web-tools-insert-link-for-url "org-web-tools")
+      (bind-keys :map org-mode-map
+                 ("C-c u" . krisb-org-web-tools-insert-link-for-url)))
+
+    (with-eval-after-load 'org-web-tools
+      (defcustom krisb-org-web-tools-strip-regexp
+        (rx (or "tiktok.com" "youtube.com/shorts"))
+        "Special sites to strip query parameters for."
+        :type 'regexp
+        :group 'org)
+
+      (defun krisb-url-strip-query (url)
+        "Strip the query string from URL.
+
+  For example, turn:
+
+    https://www.youtube.com/shorts/qvOf7jWTmqY?app=desktop
+
+  into:
+
+    https://www.youtube.com/shorts/qvOf7jWTmqY
+
+
+  This is only for the URLs whose hosts match the regexp
+  `krisb-org-web-tools-strip-regexp'."
+        (let* ((parsed (url-generic-parse-url url))
+               (stripp
+                (string-match krisb-org-web-tools-strip-regexp (url-host parsed))))
+          (when stripp
+            (setf (url-filename parsed) (car (url-path-and-query parsed))))
+          (url-recreate-url parsed)))
+      
+      (defun krisb-org-web-tools-insert-link-for-url (url)
+        "Like `org-web-tools-insert-link-for-url' but strings query parameters from URL.
+  See `krisb-url-strip-query' for what this means."
+        (interactive (list (krisb-url-strip-query (org-web-tools--get-first-url))))
+        (insert (org-web-tools--org-link-for-url url)))
+      
+      (setopt org-web-tools-pandoc-replacements
+              (add-to-list 'org-web-tools-pandoc-replacements
+                           `(,(rx "·") . "|"))))
+
+    ;; Open then go into `view-mode'
+    (with-eval-after-load 'org-web-tools
+      (advice-add 'org-web-tools-read-url-as-org :after #'view-mode))
+
+    ;; Add an org-attach entry for `org-web-tools-archive-attach’
+    (with-eval-after-load 'org-attach
+      (add-to-list 'org-attach-commands
+                   '((?w) org-web-tools-archive-attach
+                     "Download then attach an archive of a webpage using `org-web-tools'\n"))))
+#+end_src
+
+*** Org-roam
+
+#+name: org-roam
+#+begin_src emacs-lisp
+  (setup org-roam
+    (:package org-roam)
+    
+    ;; Bind these keys only when I'm not using org-mem + org-node
+    (unless (bound-and-true-p org-mem-updater-mode)
+      (bind-keys :map krisb-note-keymap
+                 ("f" . org-roam-node-find)
+                 ("i" . org-roam-node-insert)
+                 ("c" . org-roam-capture)
+                 ("l" . org-roam-buffer-toggle)
+                 ("ta" . org-roam-tag-add)
+                 ("tr" . org-roam-tag-remove)
+                 ("g" . org-roam-graph)))
+
+    (with-eval-after-load 'org-roam
+      (setopt org-roam-directory krisb-notes-directory
+              ;; org-roam-db-gc-threshold most-positive-fixnum
+              org-roam-db-node-include-function
+              (lambda () (not (member "ATTACH" (org-get-tags))))
+              org-roam-mode-sections
+              '((org-roam-backlinks-section :unique t)
+                org-roam-reflinks-section))
+      
+      ;; Fold headings by default
+      (add-to-list 'org-roam-buffer-postrender-functions #'magit-section-show-level-2)
+
+      ;; Having set user options, sync database when org-roam loads
+      (org-roam-db-autosync-mode 1))
+    
+    ;; TODO 2025-05-27: Revisit this.
+    ;; ;; Custom face for ID links to org-roam-nodes.  I prefer to change
+    ;; ;; their foreground color to differentiate them from other types of
+    ;; ;; links as well as to use a lighter face because a buffer
+    ;; ;; packed-full of org links can become visually distracting and
+    ;; ;; cluttered otherwise.
+    ;; (org-link-set-parameters
+    ;;  "id"
+    ;;  :face (lambda (id)
+    ;;          (if (org-roam-node-from-id id)
+    ;;              '(:weight light :inherit font-lock-keyword-face)
+    ;;            'org-link)))
+    ;;
+    ;; ;; Custom stored description
+    ;; (org-link-set-parameters
+    ;;  "id"
+    ;;  :store (lambda (&optional interactive?)
+    ;;           (let* ((id (org-id-get))
+    ;;                  (node (org-roam-node-from-id id)))
+    ;;             (if (and (equal major-mode 'org-mode)
+    ;;                      ;; We want to check more than if there is a node at
+    ;;                      ;; point; we want to make sure ID corresponds to an
+    ;;                      ;; existing node
+    ;;                      node)
+    ;;                 (org-link-store-props :type "id"
+    ;;                                       :link (concat "id:" id)
+    ;;                                       :description (org-roam-node-formatted node))
+    ;;               (funcall 'org-id-store-link-maybe interactive?)))))
+    )
+#+end_src
+
+*** Org-roam-folgezettel
+
+#+name: org-roam-folgezettel
+#+begin_src emacs-lisp
+  (setup org-roam-folgezettel
+    (:if-package org-roam)
+    (:package (org-roam-folgezettel :url "https://github.com/krisbalintona/org-roam-folgezettel.git"
+                                    :branch "vtable-unstable"))
+
+    (add-hook 'org-roam-folgezettel-mode-hook #'hl-line-mode)
+    (add-hook 'org-roam-folgezettel-mode-hook (lambda () (setq-local line-spacing 0.2)))
+
+    (bind-keys :map krisb-note-keymap
+               ("m" . org-roam-folgezettel-list)
+               ;; TODO 2025-10-30: Bind only in org-mode buffers
+               ("s" . org-roam-folgezettel-show-node-in-list))
+
+    (setopt org-roam-folgezettel-default-filter-query '(box "main"))
+
+    ;; FIXME 2025-06-30: Eventually upstream contents of
+    ;; krisb-org-roam-ext once I figure out a generalizable zettelkasten
+    ;; workflow for most/all users.
+    (with-eval-after-load 'org-roam
+      (require 'krisb-org-roam-ext))
+
+    ;; Load embark integration
+    (with-eval-after-load 'org-roam
+      (with-eval-after-load 'embark
+        (require 'org-roam-folgezettel-embark))))
+
+  (setup org-roam-folgezettel
+    ;; We must add these after their default values are set by org
+    (with-eval-after-load 'org
+      (with-eval-after-load 'org-roam-folgezettel
+        ;; Add ROAM_* properties to properties completing-read interface
+        ;; completions
+        (dolist (prop '("ROAM_EXCLUDE"
+                        "ROAM_PLACE"
+                        "ROAM_PERSON"
+                        "ROAM_SOURCE"
+                        "ROAM_CONTEXT"
+                        "ROAM_REFS"
+                        "ROAM_TYPE"
+                        "ROAM_BOX"))
+          (add-to-list 'org-default-properties prop))
+
+        ;; Set inherited default values for some ROAM_* properties
+        (add-to-list 'org-global-properties '("ROAM_TYPE" . "source collection pointer"))
+        (add-to-list 'org-use-property-inheritance "ROAM_BOX"))))
+#+end_src
+
+My org-roam-folgezettel uses a yet-upstreamed version of vtable.el:
+#+begin_src emacs-lisp :noweb-ref link-monkeypatches :noweb-sep "\n\n"
+  ;; Until the vtable work I’ve been testing is upstreamed, we manually
+  ;; load that file
+  (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/emacs-vtable-ship-mints/lisp/emacs-lisp/vtable.el")
 #+end_src
 
 *** Org-ql: Query language for org-mode

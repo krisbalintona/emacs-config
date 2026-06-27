@@ -54,12 +54,12 @@ nothing."
 (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/notmuch/emacs/notmuch-mua.el")
 (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/notmuch/emacs/notmuch-tree.el")
 
+;; Load my bespoke version before org's version of org-capture
+(krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/org-mode/lisp/org-capture.el")
+
 ;; Until the vtable work I’ve been testing is upstreamed, we manually
 ;; load that file
 (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/emacs-vtable-ship-mints/lisp/emacs-lisp/vtable.el")
-
-;; Load my bespoke version before org's version of org-capture
-(krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/org-mode/lisp/org-capture.el")
 
 ;;; Meta-configuration
 
