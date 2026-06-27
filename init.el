@@ -5998,11 +5998,7 @@ minor mode was already enabled before Eglot."
 
   ;; Save and restore the current session name
   (with-eval-after-load 'savehist
-    (add-to-list 'savehist-additional-variables 'easysession--current-session-name))
-
-  ;; Save the scratch buffer, too
-  (require 'easysession-scratch)
-  (easysession-scratch-mode 1))
+    (add-to-list 'savehist-additional-variables 'easysession--current-session-name)))
 
 ;;; Ediff
 (with-eval-after-load 'ediff

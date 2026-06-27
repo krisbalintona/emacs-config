@@ -2925,14 +2925,10 @@ See also the more popular [[https://github.com/astoff/devdocs.el][astoff/devdocs
 
     ;; Save and restore the current session name
     (with-eval-after-load 'savehist
-      (add-to-list 'savehist-additional-variables 'easysession--current-session-name))
-
-    ;; Save the scratch buffer, too
-    (require 'easysession-scratch)
-    (easysession-scratch-mode 1))
+      (add-to-list 'savehist-additional-variables 'easysession--current-session-name)))
 #+end_src
 
-*** EAT: Best terminal emulator
+*** COMMENT EAT: A fast terminal emulator with several input modes to feel at-home
 
 #+name: eat
 #+begin_src emacs-lisp
