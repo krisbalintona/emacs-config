@@ -2468,10 +2468,10 @@ inserted with e.g. `org-insert-last-stored-link' or
           org-cite-csl-styles-dir (expand-file-name "~/Zotero/styles/"))
 
   (setopt org-cite-export-processors
-          '((md . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
+          '((md . (csl "chicago-notes-bibliography.csl")) ; Footnote reliant
             (latex biblatex)            ; For humanities
-            (odt . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
-            (docx . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
+            (odt . (csl "chicago-notes-bibliography.csl")) ; Footnote reliant
+            (docx . (csl "chicago-notes-bibliography.csl")) ; Footnote reliant
             (t . (csl "modern-language-association.csl")))) ; Fallback
 
   ;; Have citation link faces look closer to as they were for
