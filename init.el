@@ -3600,10 +3600,9 @@ PROP is the name of the property.  See
              ("F" . consult-flymake)
              :map search-map            ; The `M-s' prefix
              ("i" . consult-info)
-             ("g" . consult-git-grep)
-             ("G" . consult-grep)
-             ("r" . consult-ripgrep)
-             ("f" . consult-find)
+             ("g" . consult-ripgrep)
+             ("G" . consult-git-grep)
+             ("f" . consult-fd)
              ("F" . consult-locate))
   (with-eval-after-load 'org
     (bind-key [remap consult-outline] #'consult-org-heading org-mode-map))
