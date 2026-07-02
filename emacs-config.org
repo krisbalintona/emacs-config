@@ -2628,7 +2628,7 @@ Before Corfu 2.7, specifically [[https://github.com/minad/corfu/commit/4c4a41b0b
     (delete-selection-mode t))
 #+end_src
 
-*** COMMENT Desktop: Reopen buffers
+*** Desktop: Reopen buffers
 
 #+name: desktop
 #+begin_src emacs-lisp
@@ -2893,7 +2893,7 @@ See also the more popular [[https://github.com/astoff/devdocs.el][astoff/devdocs
       <<do-at-point-user-actions>>))
 #+end_src
 
-*** Easysession: A faster desktop.el session-management alternative
+*** COMMENT Easysession: A faster desktop.el session-management alternative
 
 #+name: easysession
 #+begin_src emacs-lisp
