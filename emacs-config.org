@@ -8415,6 +8415,129 @@ Consequently, the elisp backend is used if there is no other local backend to us
     (:package yaml-mode))
 #+end_src
 
+*** ERC: Featureful IRC client
+
+#+name: erc
+#+begin_src emacs-lisp
+  (with-eval-after-load 'erc
+    (when (featurep 'olivetti)
+      (add-hook 'erc-mode-hook #'olivetti-mode))
+
+    (setopt erc-modules '(autoaway
+                          autojoin
+                          button
+                          completion
+                          fill
+                          imenu
+                          irccontrols
+                          keep-place
+                          list
+                          match
+                          menu
+                          move-to-prompt
+                          netsplit
+                          networks
+                          nicks
+                          readonly
+                          ring
+                          sasl
+                          services
+                          spelling
+                          stamp
+                          track
+                          truncate)
+
+            ;; Tracking channels in the mode line
+            erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
+                                      "324" ; Channel modes on join
+                                      "329" ; Channel creation
+                                      "332" ; Chanel topic on join
+                                      "333" ; Topic author and time on join
+                                      "353") ; Channel member names
+
+            ;; Auto-join
+            erc-autojoin-timing 'ident
+
+            ;; Display of buffers
+            erc-interactive-display 'display-buffer
+            erc-receive-query-display 'display-buffer-at-bottom
+
+            ;; Filling messages
+            erc-fill-function 'erc-fill-static
+            erc-fill-static-center 15
+
+            ;; Hiding messages
+            erc-hide-list '("JOIN" "PART" "QUIT")
+            erc-lurker-threshold-time 43200
+            erc-lurker-hide-list '("JOIN" "PART" "QUIT"))
+    (erc-update-modules)
+
+    (set-face-attribute 'erc-notice-face nil ; Make notices less visually prominent
+                        :foreground 'unspecified
+                        :inherit (delete-dups (cons 'shadow (ensure-list (face-attribute 'erc-notice-face :inherit)))))
+
+    (defun krisb-erc-part-reason (&optional reason)
+      "Return \"detach\" when parting on my bouncer connection.
+  As per the Soju (my bouncer) docs:
+
+    When parting a channel with the reason \"detach\", the channel will be
+    detached instead of being left.
+
+  To instruct Soju to detach rather than leave the channel, the /PART
+  reason must be \"detach\".  When this happens, from the point of view of
+  the network, I am still connected.  Do this when I am departing from a
+  network connected to via my bouncer.  Otherwise, return nil (no reason;
+  show nothing special in the channel chat).
+
+  When REASON is non-nil, it is a string.  When it is a non-empty string,
+  it is returned.  When it is an empty string, return \"detach\"."
+      (let ((detachp
+             (when (and (boundp 'erc-session-server)
+                        (equal erc-session-server "irc.home.kristofferbalintona.me"))
+               "detach"))))
+      
+      (if (not (string-empty-p reason))
+          detach
+        reason))
+    (setopt erc-part-reason #'krisb-erc-part-reason))
+
+  (defun krisb-erc ()
+    "Connect to my IRC bouncer."
+    (interactive)
+    (erc-tls :server "irc.home.kristofferbalintona.me"
+             :nick "krisbalintona"
+             :user "krisbalintona/irc.libera.chat"
+             :id 'soju))
+
+  (defun krisb-erc-switch-to-buffer (&optional arg)
+    "Switch to an ERC buffer.
+  When called with ARG, interactively the prefix argument, call
+  `erc-track-switch-buffer'.  Otherwise, call `erc-switch-to-buffer'."
+    (interactive "P")
+    (unless (featurep 'erc) (krisb-erc))
+    (call-interactively (if (and arg erc-track-mode)
+                            #'erc-track-switch-buffer
+                          #'erc-switch-to-buffer)))
+
+  (bind-keys :map krisb-open-keymap
+             ("i" . krisb-erc-switch-to-buffer)
+             ("I" . krisb-erc))
+
+  <<erc-display-buffer-alist>>
+#+end_src
+#+name: erc-display-buffer-alist
+#+begin_src emacs-lisp :noweb-ref display-buffer-alist
+  (add-to-list 'display-buffer-alist
+               `((or (this-command . erc-track-switch-buffer)
+                     (this-command . erc-switch-to-buffer)
+                     (this-command . krisb-erc-switch-to-buffer))
+                 (display-buffer-in-tab)
+                 (tab-name . (lambda (buffer _alist)
+                               (with-current-buffer buffer
+                                 (erc-default-target))))
+                 (tab-group . "media")))
+#+end_src
+
 ** Platform- and system-specific configuration
 
 *** Guix
@@ -9100,6 +9223,9 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   ;;; Css-ts-mode
   <<css-ts-mode>>
+
+  ;;; ERC
+  <<erc>>
 
   ;;; Load config units
   <<config-units-load>>
