@@ -3244,6 +3244,129 @@ For major modes to support indentation size judged from ~editorconfig-mode~, the
       (add-to-list 'trusted-content "~/emacs-repos/")))
 #+end_src
 
+*** ERC: Featureful IRC client
+
+#+name: erc
+#+begin_src emacs-lisp
+  (with-eval-after-load 'erc
+    (when (featurep 'olivetti)
+      (add-hook 'erc-mode-hook #'olivetti-mode))
+
+    (setopt erc-modules '(autoaway
+                          autojoin
+                          button
+                          completion
+                          fill
+                          imenu
+                          irccontrols
+                          keep-place
+                          list
+                          match
+                          menu
+                          move-to-prompt
+                          netsplit
+                          networks
+                          nicks
+                          readonly
+                          ring
+                          sasl
+                          services
+                          spelling
+                          stamp
+                          track
+                          truncate)
+
+            ;; Tracking channels in the mode line
+            erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
+                                      "324" ; Channel modes on join
+                                      "329" ; Channel creation
+                                      "332" ; Chanel topic on join
+                                      "333" ; Topic author and time on join
+                                      "353") ; Channel member names
+
+            ;; Auto-join
+            erc-autojoin-timing 'ident
+
+            ;; Display of buffers
+            erc-interactive-display 'display-buffer
+            erc-receive-query-display 'display-buffer-at-bottom
+
+            ;; Filling messages
+            erc-fill-function 'erc-fill-static
+            erc-fill-static-center 15
+
+            ;; Hiding messages
+            erc-hide-list '("JOIN" "PART" "QUIT")
+            erc-lurker-threshold-time 43200
+            erc-lurker-hide-list '("JOIN" "PART" "QUIT"))
+    (erc-update-modules)
+
+    (set-face-attribute 'erc-notice-face nil ; Make notices less visually prominent
+                        :foreground 'unspecified
+                        :inherit (delete-dups (cons 'shadow (ensure-list (face-attribute 'erc-notice-face :inherit)))))
+
+    (defun krisb-erc-part-reason (&optional reason)
+      "Return \"detach\" when parting on my bouncer connection.
+  As per the Soju (my bouncer) docs:
+
+    When parting a channel with the reason \"detach\", the channel will be
+    detached instead of being left.
+
+  To instruct Soju to detach rather than leave the channel, the /PART
+  reason must be \"detach\".  When this happens, from the point of view of
+  the network, I am still connected.  Do this when I am departing from a
+  network connected to via my bouncer.  Otherwise, return nil (no reason;
+  show nothing special in the channel chat).
+
+  When REASON is non-nil, it is a string.  When it is a non-empty string,
+  it is returned.  When it is an empty string, return \"detach\"."
+      (let ((detachp
+             (when (and (boundp 'erc-session-server)
+                        (equal erc-session-server "irc.home.kristofferbalintona.me"))
+               "detach"))))
+      
+      (if (not (string-empty-p reason))
+          detach
+        reason))
+    (setopt erc-part-reason #'krisb-erc-part-reason))
+
+  (defun krisb-erc ()
+    "Connect to my IRC bouncer."
+    (interactive)
+    (erc-tls :server "irc.home.kristofferbalintona.me"
+             :nick "krisbalintona"
+             :user "krisbalintona/irc.libera.chat"
+             :id 'soju))
+
+  (defun krisb-erc-switch-to-buffer (&optional arg)
+    "Switch to an ERC buffer.
+  When called with ARG, interactively the prefix argument, call
+  `erc-track-switch-buffer'.  Otherwise, call `erc-switch-to-buffer'."
+    (interactive "P")
+    (unless (featurep 'erc) (krisb-erc))
+    (call-interactively (if (and arg erc-track-mode)
+                            #'erc-track-switch-buffer
+                          #'erc-switch-to-buffer)))
+
+  (bind-keys :map krisb-open-keymap
+             ("i" . krisb-erc-switch-to-buffer)
+             ("I" . krisb-erc))
+
+  <<erc-display-buffer-alist>>
+#+end_src
+#+name: erc-display-buffer-alist
+#+begin_src emacs-lisp :noweb-ref display-buffer-alist
+  (add-to-list 'display-buffer-alist
+               `((or (this-command . erc-track-switch-buffer)
+                     (this-command . erc-switch-to-buffer)
+                     (this-command . krisb-erc-switch-to-buffer))
+                 (display-buffer-in-tab)
+                 (tab-name . (lambda (buffer _alist)
+                               (with-current-buffer buffer
+                                 (erc-default-target))))
+                 (tab-group . "media")))
+#+end_src
+
 *** EWW: Emacs's built-in text-only web browser
 
 #+name: eww
@@ -4009,6 +4132,30 @@ Jinx is an alternative to the built-in flyspell (see [[#h:20251118T184517.526538
   (add-to-list 'auto-mode-alist '("\\.mjs\\'" . javascript-mode))
   (when (boundp 'treesit-enabled-modes)
     (setopt treesit-enabled-modes (cons 'js-ts-mode treesit-enabled-modes)))
+#+end_src
+
+*** Json-ts-mode: Tree-sitter major mode for JSON files
+
+#+name: json-ts-mode
+#+begin_src emacs-lisp
+  (when (boundp 'treesit-enabled-modes)
+    (setopt treesit-enabled-modes (cons 'json-ts-mode treesit-enabled-modes)))
+
+  (defun json-ts-mode-maybe ()
+    "Enable `json-ts-mode' when its grammar is available.
+  Also propose to install the grammar when `treesit-enabled-modes'
+  is t or contains the mode name."
+    (declare-function treesit-language-available-p "treesit.c")
+    (if (or (treesit-language-available-p 'json)
+            (eq treesit-enabled-modes t)
+            (memq 'json-ts-mode treesit-enabled-modes))
+        (json-ts-mode)
+      (fundamental-mode)))
+
+  ;;;###autoload
+  (when (boundp 'treesit-major-mode-remap-alist)
+    (add-to-list 'auto-mode-alist '("\\.json\\w*\\'" . json-ts-mode-maybe))
+    (add-to-list 'treesit-major-mode-remap-alist '(js-json-mode . json-ts-mode-maybe)))
 #+end_src
 
 *** Lin: Stylistic enhancement to ~hl-line-mode~
@@ -5208,6 +5355,38 @@ I have several patches awaiting review or application. They are:
                  tomatometer metascore metacritic imdb-rating))))
 #+end_src
 
+*** Org-mem
+
+#+name: org-mem
+#+begin_src emacs-lisp
+  ;; FIXME 2025-10-17: Document also:
+  ;; - `org-mem-db1-mode'
+  (setup org-mem
+    (:package org-mem)
+    (:if-package org)
+
+    (setopt org-mem-do-sync-with-org-id t
+            org-mem-watch-dirs (list krisb-folio-directory)
+            org-mem-do-warn-title-collisions nil)
+    (with-eval-after-load 'org-mem
+      (cl-pushnew
+       (file-name-as-directory (file-relative-name krisb-org-archive-directory krisb-folio-directory))
+       org-mem-exclude))
+    (org-mem-updater-mode 1)
+
+    ;; FIXME 2025-05-27: Figure out which org-node update is breaking
+    ;; org-roam database compatibility.
+    (:with-local-quit
+     (:quit)
+     ;; Load things related to org-mem’s interaction with org-roam
+     (with-eval-after-load 'org-roam
+       ;; End dependence on `org-roam-db-sync'
+       (setopt org-roam-db-update-on-save nil
+               org-mem-roamy-do-overwrite-real-db t)
+       (org-roam-db-autosync-mode -1)
+       (org-mem-roamy-db-mode 1))))
+#+end_src
+
 *** Org-mime: HTML multiparts for emails
 
 #+name: org-mime
@@ -6398,38 +6577,6 @@ These commands help do that work for me and things around it.
                ("C-c d n" . krisb-org-drafting-increment)))
 #+end_src
 
-*** Org-mem
-
-#+name: org-mem
-#+begin_src emacs-lisp
-  ;; FIXME 2025-10-17: Document also:
-  ;; - `org-mem-db1-mode'
-  (setup org-mem
-    (:package org-mem)
-    (:if-package org)
-
-    (setopt org-mem-do-sync-with-org-id t
-            org-mem-watch-dirs (list krisb-folio-directory)
-            org-mem-do-warn-title-collisions nil)
-    (with-eval-after-load 'org-mem
-      (cl-pushnew
-       (file-name-as-directory (file-relative-name krisb-org-archive-directory krisb-folio-directory))
-       org-mem-exclude))
-    (org-mem-updater-mode 1)
-
-    ;; FIXME 2025-05-27: Figure out which org-node update is breaking
-    ;; org-roam database compatibility.
-    (:with-local-quit
-     (:quit)
-     ;; Load things related to org-mem’s interaction with org-roam
-     (with-eval-after-load 'org-roam
-       ;; End dependence on `org-roam-db-sync'
-       (setopt org-roam-db-update-on-save nil
-               org-mem-roamy-do-overwrite-real-db t)
-       (org-roam-db-autosync-mode -1)
-       (org-mem-roamy-db-mode 1))))
-#+end_src
-
 *** Org-node
 
 #+name: org-node
@@ -6605,190 +6752,6 @@ These commands help do that work for me and things around it.
 
 #+begin_src emacs-lisp :noweb-ref completion-category-overrides
   (org-node (eager-display . t))
-#+end_src
-
-*** Org-web-tools
-
-#+name: org-web-tools
-#+begin_src emacs-lisp
-  (setup org-web-tools
-    (:if-package org)
-    (:package org-web-tools)
-
-    (with-eval-after-load 'org
-      (autoload 'krisb-org-web-tools-insert-link-for-url "org-web-tools")
-      (bind-keys :map org-mode-map
-                 ("C-c u" . krisb-org-web-tools-insert-link-for-url)))
-
-    (with-eval-after-load 'org-web-tools
-      (defcustom krisb-org-web-tools-strip-regexp
-        (rx (or "tiktok.com" "youtube.com/shorts"))
-        "Special sites to strip query parameters for."
-        :type 'regexp
-        :group 'org)
-
-      (defun krisb-url-strip-query (url)
-        "Strip the query string from URL.
-
-  For example, turn:
-
-    https://www.youtube.com/shorts/qvOf7jWTmqY?app=desktop
-
-  into:
-
-    https://www.youtube.com/shorts/qvOf7jWTmqY
-
-
-  This is only for the URLs whose hosts match the regexp
-  `krisb-org-web-tools-strip-regexp'."
-        (let* ((parsed (url-generic-parse-url url))
-               (stripp
-                (string-match krisb-org-web-tools-strip-regexp (url-host parsed))))
-          (when stripp
-            (setf (url-filename parsed) (car (url-path-and-query parsed))))
-          (url-recreate-url parsed)))
-      
-      (defun krisb-org-web-tools-insert-link-for-url (url)
-        "Like `org-web-tools-insert-link-for-url' but strings query parameters from URL.
-  See `krisb-url-strip-query' for what this means."
-        (interactive (list (krisb-url-strip-query (org-web-tools--get-first-url))))
-        (insert (org-web-tools--org-link-for-url url)))
-      
-      (setopt org-web-tools-pandoc-replacements
-              (add-to-list 'org-web-tools-pandoc-replacements
-                           `(,(rx "·") . "|"))))
-
-    ;; Open then go into `view-mode'
-    (with-eval-after-load 'org-web-tools
-      (advice-add 'org-web-tools-read-url-as-org :after #'view-mode))
-
-    ;; Add an org-attach entry for `org-web-tools-archive-attach’
-    (with-eval-after-load 'org-attach
-      (add-to-list 'org-attach-commands
-                   '((?w) org-web-tools-archive-attach
-                     "Download then attach an archive of a webpage using `org-web-tools'\n"))))
-#+end_src
-
-*** Org-roam
-
-#+name: org-roam
-#+begin_src emacs-lisp
-  (setup org-roam
-    (:package org-roam)
-    
-    ;; Bind these keys only when I'm not using org-mem + org-node
-    (unless (bound-and-true-p org-mem-updater-mode)
-      (bind-keys :map krisb-note-keymap
-                 ("f" . org-roam-node-find)
-                 ("i" . org-roam-node-insert)
-                 ("c" . org-roam-capture)
-                 ("l" . org-roam-buffer-toggle)
-                 ("ta" . org-roam-tag-add)
-                 ("tr" . org-roam-tag-remove)
-                 ("g" . org-roam-graph)))
-
-    (with-eval-after-load 'org-roam
-      (setopt org-roam-directory krisb-notes-directory
-              ;; org-roam-db-gc-threshold most-positive-fixnum
-              org-roam-db-node-include-function
-              (lambda () (not (member "ATTACH" (org-get-tags))))
-              org-roam-mode-sections
-              '((org-roam-backlinks-section :unique t)
-                org-roam-reflinks-section))
-      
-      ;; Fold headings by default
-      (add-to-list 'org-roam-buffer-postrender-functions #'magit-section-show-level-2)
-
-      ;; Having set user options, sync database when org-roam loads
-      (org-roam-db-autosync-mode 1))
-    
-    ;; TODO 2025-05-27: Revisit this.
-    ;; ;; Custom face for ID links to org-roam-nodes.  I prefer to change
-    ;; ;; their foreground color to differentiate them from other types of
-    ;; ;; links as well as to use a lighter face because a buffer
-    ;; ;; packed-full of org links can become visually distracting and
-    ;; ;; cluttered otherwise.
-    ;; (org-link-set-parameters
-    ;;  "id"
-    ;;  :face (lambda (id)
-    ;;          (if (org-roam-node-from-id id)
-    ;;              '(:weight light :inherit font-lock-keyword-face)
-    ;;            'org-link)))
-    ;;
-    ;; ;; Custom stored description
-    ;; (org-link-set-parameters
-    ;;  "id"
-    ;;  :store (lambda (&optional interactive?)
-    ;;           (let* ((id (org-id-get))
-    ;;                  (node (org-roam-node-from-id id)))
-    ;;             (if (and (equal major-mode 'org-mode)
-    ;;                      ;; We want to check more than if there is a node at
-    ;;                      ;; point; we want to make sure ID corresponds to an
-    ;;                      ;; existing node
-    ;;                      node)
-    ;;                 (org-link-store-props :type "id"
-    ;;                                       :link (concat "id:" id)
-    ;;                                       :description (org-roam-node-formatted node))
-    ;;               (funcall 'org-id-store-link-maybe interactive?)))))
-    )
-#+end_src
-
-*** Org-roam-folgezettel
-
-#+name: org-roam-folgezettel
-#+begin_src emacs-lisp
-  (setup org-roam-folgezettel
-    (:if-package org-roam)
-    (:package (org-roam-folgezettel :url "https://github.com/krisbalintona/org-roam-folgezettel.git"
-                                    :branch "vtable-unstable"))
-
-    (add-hook 'org-roam-folgezettel-mode-hook #'hl-line-mode)
-    (add-hook 'org-roam-folgezettel-mode-hook (lambda () (setq-local line-spacing 0.2)))
-
-    (bind-keys :map krisb-note-keymap
-               ("m" . org-roam-folgezettel-list)
-               ;; TODO 2025-10-30: Bind only in org-mode buffers
-               ("s" . org-roam-folgezettel-show-node-in-list))
-
-    (setopt org-roam-folgezettel-default-filter-query '(box "main"))
-
-    ;; FIXME 2025-06-30: Eventually upstream contents of
-    ;; krisb-org-roam-ext once I figure out a generalizable zettelkasten
-    ;; workflow for most/all users.
-    (with-eval-after-load 'org-roam
-      (require 'krisb-org-roam-ext))
-
-    ;; Load embark integration
-    (with-eval-after-load 'org-roam
-      (with-eval-after-load 'embark
-        (require 'org-roam-folgezettel-embark))))
-
-  (setup org-roam-folgezettel
-    ;; We must add these after their default values are set by org
-    (with-eval-after-load 'org
-      (with-eval-after-load 'org-roam-folgezettel
-        ;; Add ROAM_* properties to properties completing-read interface
-        ;; completions
-        (dolist (prop '("ROAM_EXCLUDE"
-                        "ROAM_PLACE"
-                        "ROAM_PERSON"
-                        "ROAM_SOURCE"
-                        "ROAM_CONTEXT"
-                        "ROAM_REFS"
-                        "ROAM_TYPE"
-                        "ROAM_BOX"))
-          (add-to-list 'org-default-properties prop))
-
-        ;; Set inherited default values for some ROAM_* properties
-        (add-to-list 'org-global-properties '("ROAM_TYPE" . "source collection pointer"))
-        (add-to-list 'org-use-property-inheritance "ROAM_BOX"))))
-#+end_src
-
-My org-roam-folgezettel uses a yet-upstreamed version of vtable.el:
-#+begin_src emacs-lisp :noweb-ref link-monkeypatches :noweb-sep "\n\n"
-  ;; Until the vtable work I’ve been testing is upstreamed, we manually
-  ;; load that file
-  (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/emacs-vtable-ship-mints/lisp/emacs-lisp/vtable.el")
 #+end_src
 
 *** Org-ql: Query language for org-mode
@@ -7035,6 +6998,190 @@ Integration with org-ql:
         :body (org-review-next-review-prop))))
 #+end_src
 
+*** Org-roam
+
+#+name: org-roam
+#+begin_src emacs-lisp
+  (setup org-roam
+    (:package org-roam)
+    
+    ;; Bind these keys only when I'm not using org-mem + org-node
+    (unless (bound-and-true-p org-mem-updater-mode)
+      (bind-keys :map krisb-note-keymap
+                 ("f" . org-roam-node-find)
+                 ("i" . org-roam-node-insert)
+                 ("c" . org-roam-capture)
+                 ("l" . org-roam-buffer-toggle)
+                 ("ta" . org-roam-tag-add)
+                 ("tr" . org-roam-tag-remove)
+                 ("g" . org-roam-graph)))
+
+    (with-eval-after-load 'org-roam
+      (setopt org-roam-directory krisb-notes-directory
+              ;; org-roam-db-gc-threshold most-positive-fixnum
+              org-roam-db-node-include-function
+              (lambda () (not (member "ATTACH" (org-get-tags))))
+              org-roam-mode-sections
+              '((org-roam-backlinks-section :unique t)
+                org-roam-reflinks-section))
+      
+      ;; Fold headings by default
+      (add-to-list 'org-roam-buffer-postrender-functions #'magit-section-show-level-2)
+
+      ;; Having set user options, sync database when org-roam loads
+      (org-roam-db-autosync-mode 1))
+    
+    ;; TODO 2025-05-27: Revisit this.
+    ;; ;; Custom face for ID links to org-roam-nodes.  I prefer to change
+    ;; ;; their foreground color to differentiate them from other types of
+    ;; ;; links as well as to use a lighter face because a buffer
+    ;; ;; packed-full of org links can become visually distracting and
+    ;; ;; cluttered otherwise.
+    ;; (org-link-set-parameters
+    ;;  "id"
+    ;;  :face (lambda (id)
+    ;;          (if (org-roam-node-from-id id)
+    ;;              '(:weight light :inherit font-lock-keyword-face)
+    ;;            'org-link)))
+    ;;
+    ;; ;; Custom stored description
+    ;; (org-link-set-parameters
+    ;;  "id"
+    ;;  :store (lambda (&optional interactive?)
+    ;;           (let* ((id (org-id-get))
+    ;;                  (node (org-roam-node-from-id id)))
+    ;;             (if (and (equal major-mode 'org-mode)
+    ;;                      ;; We want to check more than if there is a node at
+    ;;                      ;; point; we want to make sure ID corresponds to an
+    ;;                      ;; existing node
+    ;;                      node)
+    ;;                 (org-link-store-props :type "id"
+    ;;                                       :link (concat "id:" id)
+    ;;                                       :description (org-roam-node-formatted node))
+    ;;               (funcall 'org-id-store-link-maybe interactive?)))))
+    )
+#+end_src
+
+*** Org-roam-folgezettel
+
+#+name: org-roam-folgezettel
+#+begin_src emacs-lisp
+  (setup org-roam-folgezettel
+    (:if-package org-roam)
+    (:package (org-roam-folgezettel :url "https://github.com/krisbalintona/org-roam-folgezettel.git"
+                                    :branch "vtable-unstable"))
+
+    (add-hook 'org-roam-folgezettel-mode-hook #'hl-line-mode)
+    (add-hook 'org-roam-folgezettel-mode-hook (lambda () (setq-local line-spacing 0.2)))
+
+    (bind-keys :map krisb-note-keymap
+               ("m" . org-roam-folgezettel-list)
+               ;; TODO 2025-10-30: Bind only in org-mode buffers
+               ("s" . org-roam-folgezettel-show-node-in-list))
+
+    (setopt org-roam-folgezettel-default-filter-query '(box "main"))
+
+    ;; FIXME 2025-06-30: Eventually upstream contents of
+    ;; krisb-org-roam-ext once I figure out a generalizable zettelkasten
+    ;; workflow for most/all users.
+    (with-eval-after-load 'org-roam
+      (require 'krisb-org-roam-ext))
+
+    ;; Load embark integration
+    (with-eval-after-load 'org-roam
+      (with-eval-after-load 'embark
+        (require 'org-roam-folgezettel-embark))))
+
+  (setup org-roam-folgezettel
+    ;; We must add these after their default values are set by org
+    (with-eval-after-load 'org
+      (with-eval-after-load 'org-roam-folgezettel
+        ;; Add ROAM_* properties to properties completing-read interface
+        ;; completions
+        (dolist (prop '("ROAM_EXCLUDE"
+                        "ROAM_PLACE"
+                        "ROAM_PERSON"
+                        "ROAM_SOURCE"
+                        "ROAM_CONTEXT"
+                        "ROAM_REFS"
+                        "ROAM_TYPE"
+                        "ROAM_BOX"))
+          (add-to-list 'org-default-properties prop))
+
+        ;; Set inherited default values for some ROAM_* properties
+        (add-to-list 'org-global-properties '("ROAM_TYPE" . "source collection pointer"))
+        (add-to-list 'org-use-property-inheritance "ROAM_BOX"))))
+#+end_src
+
+My org-roam-folgezettel uses a yet-upstreamed version of vtable.el:
+#+begin_src emacs-lisp :noweb-ref link-monkeypatches :noweb-sep "\n\n"
+  ;; Until the vtable work I’ve been testing is upstreamed, we manually
+  ;; load that file
+  (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/emacs-vtable-ship-mints/lisp/emacs-lisp/vtable.el")
+#+end_src
+
+*** Org-web-tools
+
+#+name: org-web-tools
+#+begin_src emacs-lisp
+  (setup org-web-tools
+    (:if-package org)
+    (:package org-web-tools)
+
+    (with-eval-after-load 'org
+      (autoload 'krisb-org-web-tools-insert-link-for-url "org-web-tools")
+      (bind-keys :map org-mode-map
+                 ("C-c u" . krisb-org-web-tools-insert-link-for-url)))
+
+    (with-eval-after-load 'org-web-tools
+      (defcustom krisb-org-web-tools-strip-regexp
+        (rx (or "tiktok.com" "youtube.com/shorts"))
+        "Special sites to strip query parameters for."
+        :type 'regexp
+        :group 'org)
+
+      (defun krisb-url-strip-query (url)
+        "Strip the query string from URL.
+
+  For example, turn:
+
+    https://www.youtube.com/shorts/qvOf7jWTmqY?app=desktop
+
+  into:
+
+    https://www.youtube.com/shorts/qvOf7jWTmqY
+
+
+  This is only for the URLs whose hosts match the regexp
+  `krisb-org-web-tools-strip-regexp'."
+        (let* ((parsed (url-generic-parse-url url))
+               (stripp
+                (string-match krisb-org-web-tools-strip-regexp (url-host parsed))))
+          (when stripp
+            (setf (url-filename parsed) (car (url-path-and-query parsed))))
+          (url-recreate-url parsed)))
+      
+      (defun krisb-org-web-tools-insert-link-for-url (url)
+        "Like `org-web-tools-insert-link-for-url' but strings query parameters from URL.
+  See `krisb-url-strip-query' for what this means."
+        (interactive (list (krisb-url-strip-query (org-web-tools--get-first-url))))
+        (insert (org-web-tools--org-link-for-url url)))
+      
+      (setopt org-web-tools-pandoc-replacements
+              (add-to-list 'org-web-tools-pandoc-replacements
+                           `(,(rx "·") . "|"))))
+
+    ;; Open then go into `view-mode'
+    (with-eval-after-load 'org-web-tools
+      (advice-add 'org-web-tools-read-url-as-org :after #'view-mode))
+
+    ;; Add an org-attach entry for `org-web-tools-archive-attach’
+    (with-eval-after-load 'org-attach
+      (add-to-list 'org-attach-commands
+                   '((?w) org-web-tools-archive-attach
+                     "Download then attach an archive of a webpage using `org-web-tools'\n"))))
+#+end_src
+
 *** Outli.el: A modern wrapper around outline.el
 :PROPERTIES:
 :CUSTOM_ID: h:20251118T171202.636238
@@ -7207,30 +7354,6 @@ Below is a bespoke macro I use for package installation.
   (setup package-x
     (:pin project "gnu-elpa-devel")
     (:package package-x))
-#+end_src
-
-*** Json-ts-mode: Tree-sitter major mode for JSON files
-
-#+name: json-ts-mode
-#+begin_src emacs-lisp
-  (when (boundp 'treesit-enabled-modes)
-    (setopt treesit-enabled-modes (cons 'json-ts-mode treesit-enabled-modes)))
-
-  (defun json-ts-mode-maybe ()
-    "Enable `json-ts-mode' when its grammar is available.
-  Also propose to install the grammar when `treesit-enabled-modes'
-  is t or contains the mode name."
-    (declare-function treesit-language-available-p "treesit.c")
-    (if (or (treesit-language-available-p 'json)
-            (eq treesit-enabled-modes t)
-            (memq 'json-ts-mode treesit-enabled-modes))
-        (json-ts-mode)
-      (fundamental-mode)))
-
-  ;;;###autoload
-  (when (boundp 'treesit-major-mode-remap-alist)
-    (add-to-list 'auto-mode-alist '("\\.json\\w*\\'" . json-ts-mode-maybe))
-    (add-to-list 'treesit-major-mode-remap-alist '(js-json-mode . json-ts-mode-maybe)))
 #+end_src
 
 *** Paren-face: Special face for parentheses
@@ -8413,129 +8536,6 @@ Consequently, the elisp backend is used if there is no other local backend to us
 #+begin_src emacs-lisp
   (setup yaml-mode
     (:package yaml-mode))
-#+end_src
-
-*** ERC: Featureful IRC client
-
-#+name: erc
-#+begin_src emacs-lisp
-  (with-eval-after-load 'erc
-    (when (featurep 'olivetti)
-      (add-hook 'erc-mode-hook #'olivetti-mode))
-
-    (setopt erc-modules '(autoaway
-                          autojoin
-                          button
-                          completion
-                          fill
-                          imenu
-                          irccontrols
-                          keep-place
-                          list
-                          match
-                          menu
-                          move-to-prompt
-                          netsplit
-                          networks
-                          nicks
-                          readonly
-                          ring
-                          sasl
-                          services
-                          spelling
-                          stamp
-                          track
-                          truncate)
-
-            ;; Tracking channels in the mode line
-            erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
-                                      "324" ; Channel modes on join
-                                      "329" ; Channel creation
-                                      "332" ; Chanel topic on join
-                                      "333" ; Topic author and time on join
-                                      "353") ; Channel member names
-
-            ;; Auto-join
-            erc-autojoin-timing 'ident
-
-            ;; Display of buffers
-            erc-interactive-display 'display-buffer
-            erc-receive-query-display 'display-buffer-at-bottom
-
-            ;; Filling messages
-            erc-fill-function 'erc-fill-static
-            erc-fill-static-center 15
-
-            ;; Hiding messages
-            erc-hide-list '("JOIN" "PART" "QUIT")
-            erc-lurker-threshold-time 43200
-            erc-lurker-hide-list '("JOIN" "PART" "QUIT"))
-    (erc-update-modules)
-
-    (set-face-attribute 'erc-notice-face nil ; Make notices less visually prominent
-                        :foreground 'unspecified
-                        :inherit (delete-dups (cons 'shadow (ensure-list (face-attribute 'erc-notice-face :inherit)))))
-
-    (defun krisb-erc-part-reason (&optional reason)
-      "Return \"detach\" when parting on my bouncer connection.
-  As per the Soju (my bouncer) docs:
-
-    When parting a channel with the reason \"detach\", the channel will be
-    detached instead of being left.
-
-  To instruct Soju to detach rather than leave the channel, the /PART
-  reason must be \"detach\".  When this happens, from the point of view of
-  the network, I am still connected.  Do this when I am departing from a
-  network connected to via my bouncer.  Otherwise, return nil (no reason;
-  show nothing special in the channel chat).
-
-  When REASON is non-nil, it is a string.  When it is a non-empty string,
-  it is returned.  When it is an empty string, return \"detach\"."
-      (let ((detachp
-             (when (and (boundp 'erc-session-server)
-                        (equal erc-session-server "irc.home.kristofferbalintona.me"))
-               "detach"))))
-      
-      (if (not (string-empty-p reason))
-          detach
-        reason))
-    (setopt erc-part-reason #'krisb-erc-part-reason))
-
-  (defun krisb-erc ()
-    "Connect to my IRC bouncer."
-    (interactive)
-    (erc-tls :server "irc.home.kristofferbalintona.me"
-             :nick "krisbalintona"
-             :user "krisbalintona/irc.libera.chat"
-             :id 'soju))
-
-  (defun krisb-erc-switch-to-buffer (&optional arg)
-    "Switch to an ERC buffer.
-  When called with ARG, interactively the prefix argument, call
-  `erc-track-switch-buffer'.  Otherwise, call `erc-switch-to-buffer'."
-    (interactive "P")
-    (unless (featurep 'erc) (krisb-erc))
-    (call-interactively (if (and arg erc-track-mode)
-                            #'erc-track-switch-buffer
-                          #'erc-switch-to-buffer)))
-
-  (bind-keys :map krisb-open-keymap
-             ("i" . krisb-erc-switch-to-buffer)
-             ("I" . krisb-erc))
-
-  <<erc-display-buffer-alist>>
-#+end_src
-#+name: erc-display-buffer-alist
-#+begin_src emacs-lisp :noweb-ref display-buffer-alist
-  (add-to-list 'display-buffer-alist
-               `((or (this-command . erc-track-switch-buffer)
-                     (this-command . erc-switch-to-buffer)
-                     (this-command . krisb-erc-switch-to-buffer))
-                 (display-buffer-in-tab)
-                 (tab-name . (lambda (buffer _alist)
-                               (with-current-buffer buffer
-                                 (erc-default-target))))
-                 (tab-group . "media")))
 #+end_src
 
 ** Platform- and system-specific configuration
