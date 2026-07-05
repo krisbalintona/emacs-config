@@ -3472,9 +3472,21 @@ For major modes to support indentation size judged from ~editorconfig-mode~, the
   (add-hook 'text-mode-hook #'flymake-mode)
 
   (with-eval-after-load 'flymake
-    (bind-keys :map flymake-mode-map
-               ("M-p" . flymake-goto-prev-error)
-               ("M-n" . flymake-goto-next-error))
+    ;; Bind `flymake-goto-prev-error' and `flymake-goto-next-error' only
+    ;; if there isn't already an existing keybinding on that key.
+    ;;
+    ;; In order to do so, I use `define-key' instead of `bind-keys'
+    ;; since I need greater control of the :filter property of the
+    ;; extended menu item.  (See (info "(elisp) Extended Menu Items")
+    ;; for more information.)
+    (keymap-set flymake-mode-map "M-p"
+                '(menu-item "" flymake-goto-prev-error
+                            :filter (lambda (command)
+                                      (unless (key-binding (kbd "M-p")) command))))
+    (keymap-set flymake-mode-map "M-n"
+                '(menu-item "" flymake-goto-next-error
+                            :filter (lambda (command)
+                                      (unless (key-binding (kbd "M-p")) command))))
 
     (setopt flymake-wrap-around nil
             
