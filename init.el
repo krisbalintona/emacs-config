@@ -6321,26 +6321,43 @@ is t or contains the mode name."
                         track
                         truncate)
 
-          ;; Tracking channels in the mode line
+          ;;
+          ;; "Tracking" channels (shown in the mode line)
+          ;;
+          erc-track-enable-keybindings nil
           erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
                                     "324" ; Channel modes on join
                                     "329" ; Channel creation
                                     "332" ; Chanel topic on join
                                     "333" ; Topic author and time on join
-                                    "353") ; Channel member names
-
+                                    "353" ; Channel member names
+                                    "305" ; Self back notice
+                                    "306" ; Self away notice
+                                    )
+          erc-track-remove-disconnected-buffers t
+          ;; Non-nil means "switch to current buffer", but that poses
+          ;; an issue when `erc-track-switch-buffer' is preceded by a
+          ;; command like `other-tab-prefix'
+          erc-track-switch-from-erc nil
+          erc-track-visibility 'selected-visible
+          ;; Only indicate when something important has been sent,
+          ;; like a mention to me
+          erc-track-priority-faces-only 'all
+          
+          ;;
           ;; Auto-join
+          ;;
           erc-autojoin-timing 'ident
 
-          ;; Display of buffers
-          erc-interactive-display 'display-buffer
-          erc-receive-query-display 'display-buffer-at-bottom
-
+          ;;
           ;; Filling messages
+          ;;
           erc-fill-function 'erc-fill-static
           erc-fill-static-center 15
 
+          ;;
           ;; Hiding messages
+          ;;
           erc-hide-list '("JOIN" "PART" "QUIT")
           erc-lurker-threshold-time 43200
           erc-lurker-hide-list '("JOIN" "PART" "QUIT"))
@@ -6381,7 +6398,7 @@ it is returned.  When it is an empty string, return \"detach\"."
   (erc-tls :server "irc.home.kristofferbalintona.me"
            :nick "krisbalintona"
            :user "krisbalintona/irc.libera.chat"
-           :id 'soju))
+           :id 'soju-libera))
 
 (defun krisb-erc-switch-to-buffer (&optional arg)
   "Switch to an ERC buffer.
@@ -6397,8 +6414,20 @@ When called with ARG, interactively the prefix argument, call
            ("i" . krisb-erc-switch-to-buffer)
            ("I" . krisb-erc))
 
+;;
+;; Display of buffers
+;;
+
+;; Defer to `display-buffer' and `display-buffer-alist'
+(setopt erc-buffer-display #'display-buffer
+        erc-interactive-display #'display-buffer
+        erc-receive-query-display #'display-buffer
+        erc-auto-reconnect-display 'bury)
+
+
+
 (add-to-list 'display-buffer-alist
-             `((or (this-command . erc-track-switch-buffer)
+             '((or (this-command . erc-track-switch-buffer)
                    (this-command . erc-switch-to-buffer)
                    (this-command . krisb-erc-switch-to-buffer))
                (display-buffer-in-tab)
