@@ -3598,6 +3598,9 @@ PROP is the name of the property.  See
 (krisb-package-install tramp-rpc
                        :url "https://github.com/ArthurHeymans/emacs-tramp-rpc.git")
 
+(with-eval-after-load 'tramp-rpc
+  (setopt tramp-rpc-deploy-git-build-policy 'release))
+
 ;;; Paren-face
 ;; Creates a face just for parentheses.  Useful for lispy languages
 ;; where readers want the parentheses as unnoticeable as possible.

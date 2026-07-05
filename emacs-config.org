@@ -7881,6 +7881,9 @@ I do not use this myself, but for users who don't need VC when using tramp on re
 #+begin_src emacs-lisp
   (krisb-package-install tramp-rpc
                          :url "https://github.com/ArthurHeymans/emacs-tramp-rpc.git")
+
+  (with-eval-after-load 'tramp-rpc
+    (setopt tramp-rpc-deploy-git-build-policy 'release))
 #+end_src
 
 *** Tramp-theme: Special theming in remote buffers
