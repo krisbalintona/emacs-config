@@ -5150,7 +5150,8 @@ I have several patches awaiting review or application. They are:
   (add-to-list 'display-buffer-alist
                '((major-mode . occur-mode)
                  nil
-                 (post-command-select-window . t)))
+                 (post-command-select-window . t)
+                 (window-height . shrink-window-if-larger-than-buffer)))
 #+end_src
 
 *** Olivetti: Horizontally center buffer body

@@ -1743,7 +1743,8 @@ call `diff-buffer-with-file’ instead."
   (add-to-list 'display-buffer-alist
                '((major-mode . occur-mode)
                  nil
-                 (post-command-select-window . t))))
+                 (post-command-select-window . t)
+                 (window-height . shrink-window-if-larger-than-buffer))))
 
 ;;; Isearch
 ;; TODO 2025-11-15: Document:
