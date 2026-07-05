@@ -3286,14 +3286,13 @@ Do not use cache when FORCE is non-nil."
 
 ;;;;; Bespoke drafting commands
 (with-eval-after-load 'org
-  (defun krisb-org-drafting-new (&optional text contents insert-after)
+  (defun krisb-org-drafting--create (&optional text contents insert-after)
     "Create a new draft subtree.
 TEXT is the text of the newly created headline.  When CONTENTS is
 non-nil, insert it as the contents of the subtree.
 
 When INSERT-AFTER is non-nil, insert the heading after the current
 subtree.  Otherwise, insert it at point."
-    (interactive (list "1 draft" nil nil))
     (if insert-after
         (org-insert-heading-respect-content)
       (org-insert-heading))
@@ -3306,43 +3305,74 @@ subtree.  Otherwise, insert it at point."
         ;; Insert the contents with empty newlines padding the content
         ;; from the headline and its drawers and the following
         ;; headline, which is my preference
-        (insert "\n" (string-trim contents) "\n"))))
+        (insert "\n" (string-trim contents) "\n")
+        (delete-blank-lines))))
+
+  (defun krisb-org-drafting--skip-drawers ()
+    "Move point until not on a drawer.
+When point is on a drawer, move point until it is on the first empty
+line after the final drawer.  This is particularly useful for skipping
+the property drawers and logbooks the begin the content of a subtree."
+    (let (elt donep offset)
+      (while (org-at-drawer-p)
+        (setq elt (org-element-at-point)
+              offset (org-element-property :post-blank elt))
+        (goto-char (org-element-end elt)))
+      (backward-char offset)))
+
+  (defun krisb-org-drafting-new ()
+    "Create a new draft subtree.
+TEXT is the text of the newly created headline.  When CONTENTS is
+non-nil, insert it as the contents of the subtree.
+
+When INSERT-AFTER is non-nil, insert the heading after the current
+subtree.  Otherwise, insert it at point."
+    (interactive)
+    (save-restriction
+      (widen)
+      (let ((demotep (org-current-level)))
+        (krisb-org-drafting--create "1 draft")
+        ;; Demote heading if not at top-level
+        (when demotep (org-demote))
+        ;; Leave point inside subtree, skipping drawers (property
+        ;; drawers, logbooks)
+        (goto-char (org-element-contents-begin (org-element-at-point)))
+        (krisb-org-drafting--skip-drawers))))
 
   (defun krisb-org-drafting-increment ()
     "Create the next draft subtree.
 With point in on or under a draft subtree, create the next draft
 headline."
     (interactive)
-    (let* ((headline (save-excursion
-                       (org-back-to-heading t)
-                       (org-element-at-point)))
-           (old-draft-num
-            (car (string-split (org-element-property :title headline))))
-           (new-draft-num
-            (when old-draft-num
-              (number-to-string (1+ (string-to-number old-draft-num)))))
-           (begin (org-element-property :contents-begin headline))
-           (end (org-element-property :contents-end headline))
-           ;; Skip passed initial heading drawers
-           (true-begin (save-excursion
-                         (goto-char begin)
-                         (when (looking-at-p org-element-planning-line-re)
-                           (forward-line))
-                         (when (looking-at org-property-drawer-re)
-                           (goto-char (match-end 0)))
-                         (point)))
-           (content (string-trim-left (buffer-substring true-begin end)))
-           (id (org-entry-get headline "ID")))
-      (when id (org-delete-property "ID"))
-      (krisb-org-drafting-new (concat new-draft-num " draft") content t)
-      (when id (org-set-property "ID" id))
-      (when (org-entry-get headline "CREATED")
-        ;; TODO 2026-06-27: Ideally we don't depend on `org-expiry'
-        (org-expiry-insert-created))
-      ;; Archive old draft heading if everything has succeeded
-      (org-with-point-at headline
-        (unless (member org-archive-tag (org-get-tags nil t))
-          (org-toggle-archive-tag)))))
+    (save-restriction
+      (widen)
+      (let* ((headline (save-excursion
+                         (org-back-to-heading t)
+                         (org-element-at-point)))
+             (old-draft-num
+              (car (string-split (org-element-property :title headline))))
+             (new-draft-num
+              (when old-draft-num
+                (number-to-string (1+ (string-to-number old-draft-num)))))
+             (begin (org-element-property :contents-begin headline))
+             (end (org-element-property :contents-end headline))
+             ;; Skip passed initial heading drawers
+             (true-begin (save-excursion
+                           (goto-char begin)
+                           (krisb-org-drafting--skip-drawers)
+                           (point)))
+             (content (string-trim-left (buffer-substring true-begin end)))
+             (id (org-entry-get headline "ID")))
+        (when id (org-delete-property "ID"))
+        (krisb-org-drafting--create (concat new-draft-num " draft") content t)
+        (when id (org-set-property "ID" id))
+        (when (org-entry-get headline "CREATED")
+          ;; TODO 2026-06-27: Ideally we don't depend on `org-expiry'
+          (org-expiry-insert-created))
+        ;; Archive old draft heading if everything has succeeded
+        (org-with-point-at headline
+          (unless (member org-archive-tag (org-get-tags nil t))
+            (org-toggle-archive-tag))))))
 
   ;; Keybinds
   (bind-keys :map org-mode-map
