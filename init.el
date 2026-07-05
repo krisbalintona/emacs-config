@@ -4414,11 +4414,14 @@ send from."
 
 ;; Set `display-buffer-alist'
 (setup notmuch
-  ;; Add to `display-buffer-alist'
   (add-to-list 'display-buffer-alist
                '("\\*notmuch-hello\\*"
                  (display-buffer-in-tab display-buffer-full-frame)
-                 (tab-group . "media"))))
+                 (tab-group . "media")
+                 ;; If a notmuch-hello buffer is already open in a tab
+                 ;; in any of the visible frames, select that buffer and
+                 ;; tab (see the docstring of `display-buffer-in-tab')
+                 (reusable-frames . visible))))
 
 ;; Mode line indicator for notmuch emails
 (setup notmuch
