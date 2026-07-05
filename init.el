@@ -6394,6 +6394,77 @@ When called with ARG, interactively the prefix argument, call
                                (erc-default-target))))
                (tab-group . "media")))
 
+;;; Ibuffer
+(with-eval-after-load 'ibuffer
+  (bind-keys :map ibuffer-mode-map
+             ("SPC" . scroll-up-command)
+             ("DEL" . scroll-down-command))
+  
+  (setopt ibuffer-save-with-custom nil
+          ibuffer-default-sorting-mode 'recency
+          ibuffer-jump-offer-only-visible-buffers t
+          ibuffer-old-time 48
+          ibuffer-expert nil
+          ibuffer-show-empty-filter-groups t
+          ibuffer-filter-group-name-face '(:inherit (success bold))
+          ibuffer-formats
+          '((mark modified read-only locked
+                  " " (name 18 18 :left :elide)
+                  " " (krisb-size 9 -1 :right)
+                  " " (mode 16 16 :right :elide)
+                  " " filename-and-process)
+            (mark " " (name 16 -1) " " filename)))
+
+  ;; Custom size column
+  (define-ibuffer-column krisb-size
+    (:name "Size"
+           :inline t
+           :header-mouse-map ibuffer-size-header-map)
+    (file-size-human-readable (buffer-size)))
+
+  ;; Bespoke command for marking buffers displayed across all tab-bar
+  ;; tabs
+  (defun krisb-ibuffer--get-displayed-buffers ()
+    "Return a list of buffers visible in all windows across all tab-bar tabs."
+    (let (displayed-buffers)
+      (dolist (frame (frame-list))
+        (save-window-excursion
+          (dolist (tab (tab-bar-tabs frame))
+            ;; The current tab does not have a stored window configuration, so
+            ;; we don't need to switch to its window configuration for its
+            ;; window list
+            (when (eq 'tab (car tab))
+              (when-let* ((tab-info (cdr tab))
+                          (tab-window-conf (cdr (assq 'wc tab-info))))
+                (set-window-configuration tab-window-conf)))
+            (dolist (win (window-list nil 'never))
+              (cl-pushnew (window-buffer win) displayed-buffers)))))
+      displayed-buffers))
+
+  (defun krisb-ibuffer-mark-displayed-buffers ()
+    "Mark all buffers visible in any windows across all tab-bar tabs."
+    (interactive)
+    ;; We re-implement `ibuffer-mark-on-buffer' to call the expensive
+    ;; `krisb-ibuffer--get-displayed-buffers' only once
+    (let* ((displayed-buffers (krisb-ibuffer--get-displayed-buffers))
+           (count
+            (ibuffer-map-lines
+             (lambda (buf _mark)
+               (when (member buf displayed-buffers)
+                 (ibuffer-set-mark-1 ibuffer-marked-char)
+                 t))
+             nil nil)))
+      (ibuffer-redisplay t)
+      (message "Marked %s buffers" count)))
+
+  (bind-key "* d" #'krisb-ibuffer-mark-displayed-buffers ibuffer-mode-map))
+
+(bind-key [remap list-buffers] #'ibuffer)
+
+(add-to-list 'display-buffer-alist
+             '((major-mode . ibuffer-mode)
+               (display-buffer-in-new-tab)))
+
 ;;; Load config units
 (load-all-configs)
 
