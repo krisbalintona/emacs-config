@@ -3909,7 +3909,8 @@ PROP is the name of the property.  See
              ;; (Maybe related to how `derived-mode-p' works?)
              '((or "\\*Bookmark List\\*"
                    (major-mode . bookmark-bmenu-mode))
-               (display-buffer-in-new-tab)))
+               (display-buffer-in-tab)
+               (reusable-frames . visible)))
 
 ;;; Desktop
 ;; TODO 2025-05-20: Document in literate configuration prose.

@@ -2090,7 +2090,8 @@ When ~krisb-bibtex-standardize~ is called, it will move all the attachments of t
                ;; (Maybe related to how `derived-mode-p' works?)
                '((or "\\*Bookmark List\\*"
                      (major-mode . bookmark-bmenu-mode))
-                 (display-buffer-in-new-tab)))
+                 (display-buffer-in-tab)
+                 (reusable-frames . visible)))
 #+end_src
 
 #+begin_src emacs-lisp :noweb-ref completion-category-overrides
