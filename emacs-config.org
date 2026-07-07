@@ -3947,7 +3947,6 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
             ibuffer-old-time 48
             ibuffer-expert nil
             ibuffer-show-empty-filter-groups t
-            ibuffer-filter-group-name-face '(:inherit (success bold))
             ibuffer-formats
             '((mark modified read-only locked
                     " " (name 18 18 :left :elide)
@@ -3955,6 +3954,8 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
                     " " (mode 16 16 :right :elide)
                     " " filename-and-process)
               (mark " " (name 16 -1) " " filename)))
+
+    (set-face-attribute 'ibuffer-filter-group-name nil :inherit '(success bold))
 
     ;; Custom size column
     (define-ibuffer-column krisb-size

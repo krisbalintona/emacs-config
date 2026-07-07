@@ -6448,7 +6448,6 @@ When called with ARG, interactively the prefix argument, call
           ibuffer-old-time 48
           ibuffer-expert nil
           ibuffer-show-empty-filter-groups t
-          ibuffer-filter-group-name-face '(:inherit (success bold))
           ibuffer-formats
           '((mark modified read-only locked
                   " " (name 18 18 :left :elide)
@@ -6456,6 +6455,8 @@ When called with ARG, interactively the prefix argument, call
                   " " (mode 16 16 :right :elide)
                   " " filename-and-process)
             (mark " " (name 16 -1) " " filename)))
+
+  (set-face-attribute 'ibuffer-filter-group-name nil :inherit '(success bold))
 
   ;; Custom size column
   (define-ibuffer-column krisb-size
