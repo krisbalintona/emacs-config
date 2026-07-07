@@ -97,6 +97,12 @@ nothing."
                  (const :tag "Default Completions list UI" built-in)
                  (const :tag "Use `vertico'" vertico)))
 
+(defcustom krisb-irc-client 'clatter
+  "Choose our IRC client."
+  :type '(choice :tag "IRC client"
+                 (const :tag "ERC" erc)
+                 (const :tag "Clatter" clatter)))
+
 ;;;;; Directories
 (defvar krisb-manuscript-directory (expand-file-name "manuscripts" krisb-notes-directory)
   "The directory containing my all manuscripts.")
@@ -6390,7 +6396,27 @@ it is returned.  When it is an empty string, return \"detach\"."
     (if (not (string-empty-p reason))
         detach
       reason))
-  (setopt erc-part-reason #'krisb-erc-part-reason))
+  (setopt erc-part-reason #'krisb-erc-part-reason)
+
+
+  ;;
+  ;; Display of buffers
+  ;;
+  ;; Obey `display-buffer-alist' rules
+  (setopt erc-buffer-display #'display-buffer
+          erc-interactive-display #'display-buffer
+          erc-receive-query-display #'display-buffer
+          erc-auto-reconnect-display 'bury)
+
+  (add-to-list 'display-buffer-alist
+               '((or (this-command . erc-track-switch-buffer)
+                     (this-command . erc-switch-to-buffer)
+                     (this-command . krisb-erc-switch-to-buffer))
+                 (display-buffer-in-tab)
+                 (tab-name . (lambda (buffer _alist)
+                               (with-current-buffer buffer
+                                 (erc-default-target))))
+                 (tab-group . "media"))))
 
 (defun krisb-erc ()
   "Connect to my IRC bouncer."
@@ -6410,31 +6436,10 @@ When called with ARG, interactively the prefix argument, call
                           #'erc-track-switch-buffer
                         #'erc-switch-to-buffer)))
 
-(bind-keys :map krisb-open-keymap
-           ("i" . krisb-erc-switch-to-buffer)
-           ("I" . krisb-erc))
-
-;;
-;; Display of buffers
-;;
-
-;; Defer to `display-buffer' and `display-buffer-alist'
-(setopt erc-buffer-display #'display-buffer
-        erc-interactive-display #'display-buffer
-        erc-receive-query-display #'display-buffer
-        erc-auto-reconnect-display 'bury)
-
-
-
-(add-to-list 'display-buffer-alist
-             '((or (this-command . erc-track-switch-buffer)
-                   (this-command . erc-switch-to-buffer)
-                   (this-command . krisb-erc-switch-to-buffer))
-               (display-buffer-in-tab)
-               (tab-name . (lambda (buffer _alist)
-                             (with-current-buffer buffer
-                               (erc-default-target))))
-               (tab-group . "media")))
+(when (eq krisb-irc-client 'erc)
+  (bind-keys :map krisb-open-keymap
+             ("i" . krisb-erc-switch-to-buffer)
+             ("I" . krisb-erc)))
 
 ;;; Ibuffer
 (with-eval-after-load 'ibuffer
@@ -6507,6 +6512,48 @@ When called with ARG, interactively the prefix argument, call
 (add-to-list 'display-buffer-alist
              '((major-mode . ibuffer-mode)
                (display-buffer-in-new-tab)))
+
+;;; Clatter
+(krisb-package-install clatter
+                       :url "https://github.com/parenworks/clatter.el.git")
+
+(when (eq krisb-irc-client 'clatter)
+  (bind-keys :map krisb-open-keymap
+             ("i" . clatter-connect)))
+
+(with-eval-after-load 'clatter
+  (setopt clatter-watchdog-log (no-littering-expand-var-file-name "clatter/watchdog.log")
+          clatter-networks
+          '(("soju-libera"
+             :server "irc.home.kristofferbalintona.me"
+             :nick "krisbalintona"
+             :username "krisbalintona/irc.libera.chat"
+             :sasl plain))
+          clatter-message-order 'oldest-first
+          clatter-track-position 'before-modes
+          clatter-track-in-buffer-mode-line t
+          clatter-suppress-messages '(join part quit nick away muted)
+          clatter-nick-column-width 17)
+  ;; Call after setting the options, as some of them affect what is
+  ;; evaluated in `clatter-setup'
+  (clatter-setup)
+
+  (add-hook 'clatter-mode-hook #'goto-address-mode) ; Buttonize links
+  
+  ;; Don't fill messages.  Visually wrap them according to the
+  ;; available window width
+  (setopt clatter-fill-column nil)
+  (add-hook 'clatter-mode-hook #'visual-line-mode)
+
+  ;; Keybindings
+  (bind-keys :map clatter-mode-map
+             ;; To avoid sending accidental input
+             ("RET" . nil)
+             ("M-RET" . clatter-send-input)
+
+             ("C-c ." . clatter-track-switch)
+             ("C-c t" . clatter-track-list)
+             ("C-c l" . clatter-nicklist-toggle)))
 
 ;;; Load config units
 (load-all-configs)

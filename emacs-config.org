@@ -309,6 +309,12 @@ There is a problem when we use the typical ~(advice-add ... :override ...)~, nam
                    (const :tag "Default Completions list UI" built-in)
                    (const :tag "Use `vertico'" vertico)))
 
+  (defcustom krisb-irc-client 'clatter
+    "Choose our IRC client."
+    :type '(choice :tag "IRC client"
+                   (const :tag "ERC" erc)
+                   (const :tag "Clatter" clatter)))
+
   ;;;;; Directories
   (defvar krisb-manuscript-directory (expand-file-name "manuscripts" krisb-notes-directory)
     "The directory containing my all manuscripts.")
@@ -2340,6 +2346,52 @@ EWW and other packages that open URLs use this library.
     (:hide-mode citar-org-node-mode))
 #+end_src
 
+*** Clatter: A new, modern IRCv3-compliant IRC client
+
+#+name: clatter
+#+begin_src emacs-lisp
+  (krisb-package-install clatter
+                         :url "https://github.com/parenworks/clatter.el.git")
+
+  (when (eq krisb-irc-client 'clatter)
+    (bind-keys :map krisb-open-keymap
+               ("i" . clatter-connect)))
+
+  (with-eval-after-load 'clatter
+    (setopt clatter-watchdog-log (no-littering-expand-var-file-name "clatter/watchdog.log")
+            clatter-networks
+            '(("soju-libera"
+               :server "irc.home.kristofferbalintona.me"
+               :nick "krisbalintona"
+               :username "krisbalintona/irc.libera.chat"
+               :sasl plain))
+            clatter-message-order 'oldest-first
+            clatter-track-position 'before-modes
+            clatter-track-in-buffer-mode-line t
+            clatter-suppress-messages '(join part quit nick away muted)
+            clatter-nick-column-width 17)
+    ;; Call after setting the options, as some of them affect what is
+    ;; evaluated in `clatter-setup'
+    (clatter-setup)
+
+    (add-hook 'clatter-mode-hook #'goto-address-mode) ; Buttonize links
+    
+    ;; Don't fill messages.  Visually wrap them according to the
+    ;; available window width
+    (setopt clatter-fill-column nil)
+    (add-hook 'clatter-mode-hook #'visual-line-mode)
+
+    ;; Keybindings
+    (bind-keys :map clatter-mode-map
+               ;; To avoid sending accidental input
+               ("RET" . nil)
+               ("M-RET" . clatter-send-input)
+
+               ("C-c ." . clatter-track-switch)
+               ("C-c t" . clatter-track-list)
+               ("C-c l" . clatter-nicklist-toggle)))
+#+end_src
+
 *** Compile
 
 #+name: compile
@@ -3346,7 +3398,19 @@ For major modes to support indentation size judged from ~editorconfig-mode~, the
       (if (not (string-empty-p reason))
           detach
         reason))
-    (setopt erc-part-reason #'krisb-erc-part-reason))
+    (setopt erc-part-reason #'krisb-erc-part-reason)
+
+
+    ;;
+    ;; Display of buffers
+    ;;
+    ;; Obey `display-buffer-alist' rules
+    (setopt erc-buffer-display #'display-buffer
+            erc-interactive-display #'display-buffer
+            erc-receive-query-display #'display-buffer
+            erc-auto-reconnect-display 'bury)
+
+    <<erc-display-buffer-alist>>)
 
   (defun krisb-erc ()
     "Connect to my IRC bouncer."
@@ -3366,28 +3430,10 @@ For major modes to support indentation size judged from ~editorconfig-mode~, the
                             #'erc-track-switch-buffer
                           #'erc-switch-to-buffer)))
 
-  (bind-keys :map krisb-open-keymap
-             ("i" . krisb-erc-switch-to-buffer)
-             ("I" . krisb-erc))
-
-  ;;
-  ;; Display of buffers
-  ;;
-
-  ;; Defer to `display-buffer' and `display-buffer-alist'
-  (setopt erc-buffer-display #'display-buffer
-          erc-interactive-display #'display-buffer
-          erc-receive-query-display #'display-buffer
-          erc-auto-reconnect-display 'bury)
-
-  <<erc-buffer-match-predicates>>
-
-  <<erc-display-buffer-alist>>
-#+end_src
-Custom ~buffer-match-p~ predicates for ~display-buffer-alist~ matching. See ~(info "(erc) display-buffer")~ for more information and examples.
-#+name: erc-buffer-match-predicates
-#+begin_src emacs-lisp
-
+  (when (eq krisb-irc-client 'erc)
+    (bind-keys :map krisb-open-keymap
+               ("i" . krisb-erc-switch-to-buffer)
+               ("I" . krisb-erc)))
 #+end_src
 #+name: erc-display-buffer-alist
 #+begin_src emacs-lisp :noweb-ref display-buffer-alist
@@ -9357,6 +9403,9 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   ;;; Ibuffer
   <<ibuffer>>
+
+  ;;; Clatter
+  <<clatter>>
 
   ;;; Load config units
   <<config-units-load>>
