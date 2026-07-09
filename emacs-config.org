@@ -4055,8 +4055,10 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
 #+name: ibuffer-display-buffer-alist
 #+begin_src emacs-lisp :noweb-ref display-buffer-alist
   (add-to-list 'display-buffer-alist
-               '((major-mode . ibuffer-mode)
-                 (display-buffer-in-new-tab)))
+               '((or "\\*Ibuffer\\*"
+                     (major-mode . ibuffer-mode))
+                 (display-buffer-in-tab)
+                 (reusable-frames . visible)))
 #+end_src
 
 *** Imenu

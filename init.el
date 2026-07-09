@@ -6511,8 +6511,10 @@ When called with ARG, interactively the prefix argument, call
 (bind-key [remap list-buffers] #'ibuffer)
 
 (add-to-list 'display-buffer-alist
-             '((major-mode . ibuffer-mode)
-               (display-buffer-in-new-tab)))
+             '((or "\\*Ibuffer\\*"
+                   (major-mode . ibuffer-mode))
+               (display-buffer-in-tab)
+               (reusable-frames . visible)))
 
 ;;; Clatter
 (krisb-package-install clatter
