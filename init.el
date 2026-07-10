@@ -6599,6 +6599,7 @@ connections.  If not, `clatter-connect' is called."
              ("C-c l" . clatter-nicklist-toggle))
 
   (setopt clatter-watchdog-log (no-littering-expand-var-file-name "clatter/watchdog.log")
+          clatter-read-state-file (no-littering-expand-var-file-name "clatter/read-state.el")
           clatter-networks
           '(("soju-libera"
              :server "irc.home.kristofferbalintona.me"
@@ -6609,7 +6610,9 @@ connections.  If not, `clatter-connect' is called."
           clatter-track-position 'before-modes
           clatter-track-in-buffer-mode-line t
           clatter-suppress-messages '(join part quit nick away muted)
-          clatter-nick-column-width 17)
+          clatter-nick-column-width 17
+          clatter-image-enable t
+          clatter-url-preview-enable t)
   ;; Call after setting the options, as some of them affect what is
   ;; evaluated in `clatter-setup'
   (clatter-setup)
@@ -6635,9 +6638,9 @@ final element of `completion-at-point-functions'."
 
 (add-to-list 'display-buffer-alist
              '((and (major-mode . clatter-mode)
-                    (this-command . clatter-track-switch)
-                    (this-command . clatter-connect)
-                    (this-command . krisb-clatter-connect-or-switch))
+                    (or (this-command . clatter-track-switch)
+                        (this-command . clatter-connect)
+                        (this-command . krisb-clatter-connect-or-switch)))
                (display-buffer-in-tab)
                (tab-name . (lambda (buffer _alist)
                              (with-current-buffer buffer
