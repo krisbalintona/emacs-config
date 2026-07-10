@@ -3987,7 +3987,7 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
     (bind-keys :map ibuffer-mode-map
                ("SPC" . scroll-up-command)
                ("DEL" . scroll-down-command))
-    
+
     (setopt ibuffer-save-with-custom nil
             ibuffer-default-sorting-mode 'recency
             ibuffer-jump-offer-only-visible-buffers t
@@ -4011,8 +4011,16 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
              :header-mouse-map ibuffer-size-header-map)
       (file-size-human-readable (buffer-size)))
 
-    ;; Bespoke command for marking buffers displayed across all tab-bar
-    ;; tabs
+    ;; Bespoke filter for buffers shown in a window on any tab-bar tab
+    (defvar krisb-ibuffer--displayed-buffers nil
+      "Cache for `krisb-ibuffer--get-displayed-buffers'.
+  We use `define-ibuffer-filter' to define a \"displayed-buffer\" filter.
+  However, to avoid calling `krisb-ibuffer--get-displayed-buffers' on
+  every buffer, we call `krisb-ibuffer--get-displayed-buffers' before
+  calling the function defined by
+  `define-ibuffer-filter' (`ibuffer-filter-by-displayed-buffer'), by means
+  of before advice.")
+
     (defun krisb-ibuffer--get-displayed-buffers ()
       "Return a list of buffers visible in all windows across all tab-bar tabs."
       (let (displayed-buffers)
@@ -4030,23 +4038,66 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
                 (cl-pushnew (window-buffer win) displayed-buffers)))))
         displayed-buffers))
 
-    (defun krisb-ibuffer-mark-displayed-buffers ()
-      "Mark all buffers visible in any windows across all tab-bar tabs."
-      (interactive)
-      ;; We re-implement `ibuffer-mark-on-buffer' to call the expensive
-      ;; `krisb-ibuffer--get-displayed-buffers' only once
-      (let* ((displayed-buffers (krisb-ibuffer--get-displayed-buffers))
-             (count
-              (ibuffer-map-lines
-               (lambda (buf _mark)
-                 (when (member buf displayed-buffers)
-                   (ibuffer-set-mark-1 ibuffer-marked-char)
-                   t))
-               nil nil)))
-        (ibuffer-redisplay t)
-        (message "Marked %s buffers" count)))
+    ;;
+    ;; Custom displayed buffer helpers and commands
+    ;;
 
-    (bind-key "* d" #'krisb-ibuffer-mark-displayed-buffers ibuffer-mode-map))
+    (defun krisb-ibuffer--displayed-buffers-cached ()
+      (or krisb-ibuffer--displayed-buffers
+          (setq krisb-ibuffer--displayed-buffers (krisb-ibuffer--get-displayed-buffers))))
+    (advice-add 'ibuffer-filter-by-displayed-buffer :before
+                (lambda (&rest _) (setq krisb-ibuffer--displayed-buffers nil)))
+
+    (defun krisb-ibuffer--displayed-buffers-func (buf)
+      "Predicate for whether BUF is displayed.
+  Return non-nil when BUF is displayed in any tab-bar tab."
+      (with-current-buffer buf
+        (memq buf (krisb-ibuffer--displayed-buffers-cached))))
+
+    (require 'ibuf-ext)           ; Needs manual require for some reason
+    (define-ibuffer-filter displayed-buffer
+        "Mark all buffers visible in any windows across all tab-bar tabs."
+      ( :description "displayed in any window on any tab"
+        :reader nil)
+      (krisb-ibuffer--displayed-buffers-func buf))
+    ;; Common pattern: "/ d" followed by "/ !" to invert the filter
+    ;; (i.e., show buffers that aren't displayed)
+    (bind-key "/ d" #'ibuffer-filter-by-displayed-buffer ibuffer-mode-map) ; Filter command
+
+    (defun krisb-ibuffer-mark-displayed-buffers ()
+      "Mark all displayed buffers."
+      (interactive)
+      (ibuffer-mark-on-buffer #'krisb-ibuffer--displayed-buffers-func))
+    ;; Common pattern: "* d" followed by "t" to toggle marks (i.e., mark
+    ;; buffers that aren't displayed)
+    (bind-key "* d" #'krisb-ibuffer-mark-displayed-buffers ibuffer-mode-map) ; Mark command
+
+    ;;
+    ;; Custom saved filters
+    ;;
+
+    (setopt ibuffer-saved-filters
+            '(;; List of buffers I'd like killed to clean up desktop.el
+              ;; saved buffers.  Switch to this saved filter then toggle
+              ;; all marks (t) to mark all buffers shown then kill them
+              ;; (D)
+              ("cull"
+               (and (not (displayed-buffer))
+                    (or (and (mode . Info-mode)
+                             (not (name . "\\*info\\*"))) ; Main Info manual buffer
+                        (visiting-file))))))
+
+    ;;
+    ;; Custom saved filter groups
+    ;;
+
+    (setopt ibuffer-saved-filter-groups
+            '(("Cull"
+               ;; Info buffers.  Useful when used in combination with
+               ;; the "cull" saved filter (as below), if I want to leave
+               ;; certain Info buffers un-culled
+               ("Info-mode" (mode . Info-mode))
+               ("Cull" (saved . "cull"))))))
 
   (bind-key [remap list-buffers] #'ibuffer)
 
@@ -8536,7 +8587,9 @@ Web templates are HTML files embedding parts of CSS or JavaScript as well as blo
       (unbind-key "M-o" scheme-mode-map))
     (with-eval-after-load 'sgml-mode
       (bind-key "M-o" #'other-window 'html-mode-map))
-
+    (with-eval-after-load 'ibuffer
+      (bind-key "M-o" #'other-window 'ibuffer-mode-map))
+    
     (setopt switch-to-buffer-obey-display-actions t
             window-resize-pixelwise t
             window-combination-resize t ; Keep proportionality of windows after splitting
