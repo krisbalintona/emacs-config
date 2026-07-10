@@ -6573,11 +6573,31 @@ Return non-nil when BUF is displayed in any tab-bar tab."
 (krisb-package-install clatter
                        :url "https://github.com/parenworks/clatter.el.git")
 
+(defun krisb-clatter-connect-or-switch ()
+  "Call `clatter-track-switch' or `clatter-connect'.
+`clatter-track-switch' is called if there are existing server
+connections.  If not, `clatter-connect' is called."
+  (interactive)
+  (require 'clatter)
+  (if (eq 0 (hash-table-count clatter-connections))
+      (call-interactively #'clatter-connect)
+    (call-interactively #'clatter-track-switch)))
+
 (when (eq krisb-irc-client 'clatter)
   (bind-keys :map krisb-open-keymap
-             ("i" . clatter-connect)))
+             ("i" . krisb-clatter-connect-or-switch)))
 
 (with-eval-after-load 'clatter
+  ;; Keybindings
+  (bind-keys :map clatter-mode-map
+             ;; To avoid sending accidental input
+             ("RET" . nil)
+             ("M-RET" . clatter-send-input)
+
+             ("C-c ." . clatter-track-switch)
+             ("C-c t" . clatter-track-list)
+             ("C-c l" . clatter-nicklist-toggle))
+
   (setopt clatter-watchdog-log (no-littering-expand-var-file-name "clatter/watchdog.log")
           clatter-networks
           '(("soju-libera"
@@ -6593,23 +6613,36 @@ Return non-nil when BUF is displayed in any tab-bar tab."
   ;; Call after setting the options, as some of them affect what is
   ;; evaluated in `clatter-setup'
   (clatter-setup)
+  ;; Ensure GnuTLS is loaded before connecting.
+  (require 'gnutls)
 
   (add-hook 'clatter-mode-hook #'goto-address-mode) ; Buttonize links
-  
+
   ;; Don't fill messages.  Visually wrap them according to the
   ;; available window width
   (setopt clatter-fill-column nil)
   (add-hook 'clatter-mode-hook #'visual-line-mode)
 
-  ;; Keybindings
-  (bind-keys :map clatter-mode-map
-             ;; To avoid sending accidental input
-             ("RET" . nil)
-             ("M-RET" . clatter-send-input)
+  ;; Modify `completion-at-point-functions'
+  (add-hook 'clatter-mode-hook (lambda ()
+                                 "Don't fall back on global `completion-at-point-functions'.
+I have certain functions in the global value of
+`completion-at-point-functions' that are undesirable when typing text in
+IRC channels.  Don't fall back to these functions by removing `t' as the
+final element of `completion-at-point-functions'."
+                                 (when (eq t (car (last completion-at-point-functions)))
+                                   (setq-local completion-at-point-functions (butlast completion-at-point-functions))))))
 
-             ("C-c ." . clatter-track-switch)
-             ("C-c t" . clatter-track-list)
-             ("C-c l" . clatter-nicklist-toggle)))
+(add-to-list 'display-buffer-alist
+             '((and (major-mode . clatter-mode)
+                    (this-command . clatter-track-switch)
+                    (this-command . clatter-connect)
+                    (this-command . krisb-clatter-connect-or-switch))
+               (display-buffer-in-tab)
+               (tab-name . (lambda (buffer _alist)
+                             (with-current-buffer buffer
+                               clatter--target)))
+               (tab-group . "media")))
 
 ;;; Load config units
 (load-all-configs)
