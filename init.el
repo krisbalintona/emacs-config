@@ -6507,15 +6507,13 @@ of before advice.")
   (defun krisb-ibuffer--displayed-buffers-cached ()
     (or krisb-ibuffer--displayed-buffers
         (setq krisb-ibuffer--displayed-buffers (krisb-ibuffer--get-displayed-buffers))))
-  (advice-add 'ibuffer-filter-by-displayed-buffer :before
-              (lambda (&rest _) (setq krisb-ibuffer--displayed-buffers nil)))
-
+  
   (defun krisb-ibuffer--displayed-buffers-func (buf)
     "Predicate for whether BUF is displayed.
 Return non-nil when BUF is displayed in any tab-bar tab."
     (with-current-buffer buf
       (memq buf (krisb-ibuffer--displayed-buffers-cached))))
-
+  
   (require 'ibuf-ext)           ; Needs manual require for some reason
   (define-ibuffer-filter displayed-buffer
       "Mark all buffers visible in any windows across all tab-bar tabs."
@@ -6525,6 +6523,8 @@ Return non-nil when BUF is displayed in any tab-bar tab."
   ;; Common pattern: "/ d" followed by "/ !" to invert the filter
   ;; (i.e., show buffers that aren't displayed)
   (bind-key "/ d" #'ibuffer-filter-by-displayed-buffer ibuffer-mode-map) ; Filter command
+  (advice-add 'ibuffer-filter-by-displayed-buffer :before
+              (lambda (&rest _) (setq krisb-ibuffer--displayed-buffers nil)))
 
   (defun krisb-ibuffer-mark-displayed-buffers ()
     "Mark all displayed buffers."
@@ -6533,6 +6533,8 @@ Return non-nil when BUF is displayed in any tab-bar tab."
   ;; Common pattern: "* d" followed by "t" to toggle marks (i.e., mark
   ;; buffers that aren't displayed)
   (bind-key "* d" #'krisb-ibuffer-mark-displayed-buffers ibuffer-mode-map) ; Mark command
+  (advice-add 'krisb-ibuffer-mark-displayed-buffers :before
+              (lambda (&rest _) (setq krisb-ibuffer--displayed-buffers nil)))
 
   ;;
   ;; Custom saved filters
@@ -6544,10 +6546,12 @@ Return non-nil when BUF is displayed in any tab-bar tab."
             ;; all marks (t) to mark all buffers shown then kill them
             ;; (D)
             ("cull"
-             (and (not (displayed-buffer))
-                  (or (and (mode . Info-mode)
-                           (not (name . "\\*info\\*"))) ; Main Info manual buffer
-                      (visiting-file))))))
+             (or (derived-mode . eww-mode)
+                 (and (not (displayed-buffer))
+                      (or (and (mode . Info-mode)
+                               (not (name . "\\*info\\*"))) ; Main Info manual buffer
+                          (visiting-file)
+                          (mode . dired-mode)))))))
 
   ;;
   ;; Custom saved filter groups
