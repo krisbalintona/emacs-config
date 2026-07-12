@@ -3305,6 +3305,176 @@ For major modes to support indentation size judged from ~editorconfig-mode~, the
   <<electric-log-edit>>
 #+end_src
 
+*** Elfeed: RSS feed reader with Notmuch-like tagging
+
+#+name: elfeed
+#+begin_src emacs-lisp
+  (krisb-package-install elfeed)
+
+  (bind-key "e" #'elfeed krisb-open-keymap)
+
+  (with-eval-after-load 'elfeed
+    (setopt elfeed-feeds
+            '("https://thehorizonandthefringe.wordpress.com/feed/" ; The Horizon and The Fringe
+              "https://coredumped.dev/index.xml" ; Core Dumped
+              "https://lgmoneda.github.io/feed.xml" ; lgmoneda (Luis Moneda)
+              "https://flandrew.srht.site/listful/feed/all.xml" ; Listful Andrew
+              "https://takeonrules.com/index.xml"  ; Take on Rules
+              "https://bzg.fr/en/feed.xml"         ; Bastien Guerry
+              "https://www.benkuhn.net/index.xml"  ; benkuhn.net
+              "https://www.goodthoughts.blog/feed" ; Good Thoughts
+              "https://www.noriparelius.com/post/index.xml" ; Nori Parelius
+              ("https://guix.gnu.org/feeds/blog.atom" guix) ; GNU Guix blog
+              "https://writingslowly.com/feed.xml"   ; Writing Slowly
+              "https://aworkinglibrary.com/feed/index.xml" ; A Working Library
+              "https://kyo.iroiro.party/en/rss.xml" ; Kyou is kyou is kyou is kyou
+              "https://empyreantrail.wordpress.com/rss" ; The Emyprean Trail
+              "https://joarvarndt.se/rss.xml"           ; Joar von Arndt
+              "https://glenneth.org/feed.xml"           ; Glenn Thompson
+              "https://www.gingerbill.org/article/index.xml" ; Ginger Bill
+              "https://jointhefreeworld.org/rss.xml")        ; Join the Free World
+
+            elfeed-use-curl nil
+            
+            elfeed-search-resize-delay nil
+            elfeed-search-remain-on-entry '(;; tag ; See `krisb-elfeed-tag-selection-as'
+                                            browse
+                                            yank
+                                            ;; show ; I tag when I open, so don't remain on point
+                                            )
+            elfeed-search-filter "-hide -ignore +unread -read-later"
+
+            elfeed-show-unique-buffers t
+            ;; Bury old buffer elfeed-show buffer when moving to a new
+            ;; elfeed-show buffer via e.g. `elfeed-show-next'
+            elfeed-show-entry-delete #'bury-buffer)
+
+    ;;
+    ;; Tags
+    ;;
+    (setopt elfeed-search-face-alist
+            ;; As per (info "(elfeed) Custom Tag Faces"), the faces are
+            ;; applied in the order they appear.  Therefore, earlier
+            ;; elements in the list take precedence over later elements
+            ;; in the list
+            '((ignore elfeed-search-title-face)
+              (hide elfeed-search-title-face)
+              (unread elfeed-search-unread-title-face)))
+
+    ;;
+    ;; Elfeed-show buffers
+    ;;
+    
+    (defun krisb-elfeed-show-setup ()
+      "Set up the visual for wombag-entry buffers."
+      (setopt-local line-spacing 0.08)
+      (face-remap-add-relative 'default :height 1.1)
+      (when (require 'mixed-pitch nil t)
+        (mixed-pitch-mode 1))
+      (text-scale-set 0.7)
+      
+      ;; (toggle-truncate-lines -1)
+      (when (require 'olivetti nil t)
+        (setopt-local olivetti-body-width 120)
+        (olivetti-mode 1))
+      (visual-line-mode 1)
+      (visual-wrap-prefix-mode 1))
+    (add-hook 'elfeed-show-mode-hook #'krisb-elfeed-show-setup)
+    
+    ;; FIXME 2026-07-14: Figure out what in
+    ;; `elfeed-show-refresh--mail-style' is causing `truncate-lines' to
+    ;; be set to a non-nil value.  I suspect it's `shr-tag-table-1'
+    ;; setting `truncate-lines' to non-nil; so this bug should only
+    ;; appear in documents with tables.
+    (defun krisb-elfeed-correct-truncate-lines ()
+      "Correct value of `truncate-lines' buffer locally.
+  For some reason the default value of `elfeed-show-refresh-function',
+  which is `elfeed-show-refresh--mail-style', causes `truncate-lines' to
+  be non-nil.  This function is called on every `elfeed-show-mode' buffer
+  from `elfeed-show-refresh'.
+
+  Since it is run last, setting `truncate-lines' to nil in
+  `elfeed-show-mode-hook' is insufficient."
+      (when visual-line-mode (setopt-local truncate-lines nil)))
+    (add-hook 'elfeed-show-update-hook #'krisb-elfeed-correct-truncate-lines)
+
+    ;;
+    ;; Different keybinds for tagging
+    ;;
+
+    (defun krisb-elfeed-toggle-tag (tag &optional remainp)
+      "Returns a function that toggles TAG on an elfeed entry or selection.
+  When REMAINP is non-nil, do not move point after toggling.  When it is
+  nil, adhere to the behavior set by `elfeed-search-remain-on-entry'.
+
+  The resulting function works both in `elfeed-search-mode' buffers and
+  `elfeed-show-mode' buffers.
+
+  Modified from https://karthinks.com/software/lazy-elfeed/#easier-tagging."
+      (lambda ()
+        "Toggle a tag on an Elfeed search selection"
+        (interactive)
+        (let ((elfeed-search-remain-on-entry (or remainp elfeed-search-remain-on-entry)))
+          (pcase major-mode
+            ('elfeed-search-mode
+             (elfeed-search-toggle-all tag))
+            ('elfeed-show-mode
+             (if (memq tag (elfeed-entry-tags elfeed-show-entry))
+                 (elfeed-show-untag tag)
+               (elfeed-show-tag tag)))
+            (_ (user-error "Unsupported major mode"))))))
+
+    (defalias 'krisb-elfeed-tag-unread (krisb-elfeed-toggle-tag 'unread t))
+    (defalias 'krisb-elfeed-tag-read-later (krisb-elfeed-toggle-tag 'read-later))
+    (defalias 'krisb-elfeed-tag-ignore (krisb-elfeed-toggle-tag 'ignore))
+    (defalias 'krisb-elfeed-tag-hide (krisb-elfeed-toggle-tag 'hide))
+    
+    (unbind-key "r" elfeed-search-mode-map)
+    (unbind-key "u" elfeed-search-mode-map)
+    (bind-keys :map elfeed-search-mode-map
+               ("r" . krisb-elfeed-tag-unread)
+               ("l" . krisb-elfeed-tag-read-later)
+               ("i" . krisb-elfeed-tag-ignore)
+               ("h" . krisb-elfeed-tag-hide)
+               :map elfeed-show-mode-map
+               ("r" . krisb-elfeed-tag-unread)
+               ("l" . krisb-elfeed-tag-read-later)
+               ("i" . krisb-elfeed-tag-ignore)
+               ("h" . krisb-elfeed-tag-hide))
+
+    ;;
+    ;; Open entry in EWW
+    ;;
+    ;; Commands taken from
+    ;; https://karthinks.com/software/lazy-elfeed/#open-feeds-in-emacs
+
+    (defun krisb-elfeed-show-eww-open (&optional use-generic-p)
+      "Open elfeed entry with EWW."
+      (interactive "P")
+      (let ((browse-url-browser-function #'eww-browse-url))
+        (elfeed-show-visit use-generic-p)))
+
+    (defun krisb-elfeed-search-eww-open (&optional use-generic-p)
+      "Open elfeed entry with EWW."
+      (interactive "P")
+      (let ((browse-url-browser-function #'eww-browse-url))
+        (elfeed-search-browse-url use-generic-p)))
+
+    (bind-key "B" #'krisb-elfeed-show-eww-open elfeed-show-mode-map)
+    (bind-key "B" #'krisb-elfeed-search-eww-open elfeed-search-mode-map))
+
+  <<elfeed-display-buffer-alist>>
+#+end_src
+#+name: elfeed-display-buffer-alist
+#+begin_src emacs-lisp :noweb-ref display-buffer-alist
+  (add-to-list 'display-buffer-alist
+               '((and (major-mode . elfeed-search-mode)
+                      (this-command . elfeed))
+                 (display-buffer-in-tab)
+                 (tab-name . "elfeed")
+                 (tab-group . "media")))
+#+end_src
+
 *** Elisp-demos: Examples in documentation
 
 #+name: elisp-demos
@@ -8675,7 +8845,9 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
         (olivetti-set-width 120))
       (when (require 'mixed-pitch nil t)
         (mixed-pitch-mode 1))
+      
       (visual-line-mode 1)
+      (visual-wrap-prefix-mode 1)
       (text-scale-set 0.7))
     (add-hook 'wombag-show-mode-hook #'krisb-wombag-entry-setup)
 
@@ -9506,6 +9678,9 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   ;;; Clatter
   <<clatter>>
+
+  ;;; Elfeed
+  <<elfeed>>
 
   ;;; Load config units
   <<config-units-load>>
