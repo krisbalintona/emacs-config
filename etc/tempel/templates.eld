@@ -88,3 +88,10 @@ typescript-ts-mode
  *
  * @throws " p "
  */")
+
+scheme-mode
+
+(s "" n ";;;" n ";;; " (p "Section name") n ";;;"
+   :ann "New section"
+   :doc "Insert new code section")
+
