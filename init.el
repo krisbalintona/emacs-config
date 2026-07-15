@@ -1265,7 +1265,11 @@ Then apply ARGS."
           help-clean-buttons t
           help-enable-symbol-autoload t
 
-          describe-bindings-outline t
+          describe-bindings-outline-rules
+          ;; Regexp taken from
+          ;; https://ottawa.place/@plantarum/116891458751803204
+          '((match-regexp . "Key translations\\|Minor Mode Bindings"))
+          
           describe-bindings-show-prefix-commands t)
 
   (add-to-list 'display-buffer-alist
