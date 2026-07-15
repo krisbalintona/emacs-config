@@ -1173,6 +1173,25 @@ Apropos is a built-in library that queries the user for a regexp or word list to
 #+end_src
 Additionally, all apropos commands will expand the subset of symbols they search when called with a universal argument. For example, ~apropos-user-option~ with a universal argument will search all variables, not just user options. (The option ~apropos-do-all~ determines whether =C-u= is required for this behavior.)
 
+*** COMMENT Arei: nREPL client
+
+The [[https://nrepl.org/nrepl/index.html][nREPL protocol]] comes from the Clojure ecosystem and is a protocol for featureful REPL experience, including async evaluation and interrupts. Arei is like Geiser, but (is currently) specific to [[https://git.sr.ht/~abcdw/guile-ares-rs/][Ares]], an nREPL server implementation (not a REPL, just a server!) for Guile.
+
+This is intended to fulfill a similar purpose as Geiser with Geiser-guile, namely, providing an IDE-like experience in Emacs for Guile.
+
+#+name: arei
+#+begin_src emacs-lisp
+  (krisb-package-install arei
+                         :url "https://git.sr.ht/~abcdw/emacs-arei")
+
+  (with-eval-after-load 'arei
+    ;; Prevent Geiser from interfering with completion
+    (with-eval-after-load 'geiser
+      (setopt geiser-mode-auto-p nil))
+    
+    (global-arei-mode))
+#+end_src
+
 *** Astro-ts-mode: Treesitter mode for Astro files
 :PROPERTIES:
 :CUSTOM_ID: h:20260409T210556.449533
@@ -9681,6 +9700,9 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   ;;; Elfeed
   <<elfeed>>
+
+  ;;; Arei
+  <<arei>>
 
   ;;; Load config units
   <<config-units-load>>
