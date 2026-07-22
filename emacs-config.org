@@ -7049,9 +7049,9 @@ These commands help do that work for me and things around it.
                 (car (string-split (org-element-property :title headline))))
                (new-draft-num
                 (when old-draft-num
-                  (number-to-string (1+ (string-to-number old-draft-num)))))
-               (begin (org-element-property :contents-begin headline))
-               (end (org-element-property :contents-end headline))
+                  (number-to-string (1+ (floor (string-to-number old-draft-num))))))
+               (begin (or (org-element-property :contents-begin headline) (point)))
+               (end (or (org-element-property :contents-end headline) (point)))
                ;; Skip passed initial heading drawers
                (true-begin (save-excursion
                              (goto-char begin)
