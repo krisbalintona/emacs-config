@@ -2582,8 +2582,8 @@ inserted with e.g. `org-insert-last-stored-link' or
               ("NEXT" :inherit (bold success org-modern-todo))
               ("TODO" :inherit (org-todo org-modern-todo))
               ("HOLD" :inherit (shadow error org-modern-todo))
-              ("MAYBE" :inherit (shadow org-todo org-modern-todo))
-              ("DONE" :inherit (bold org-done org-modern-todo))
+              ("MAYBE" :inherit (shadow bold org-todo org-modern-todo))
+              ("DONE" :inherit (shadow org-done org-modern-todo))
               ("CANCELED" :inherit (error org-modern-todo))))
 
     ;; Priorities
