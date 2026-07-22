@@ -822,7 +822,6 @@ to if called with ARG, or any prefix argument."
             (consult-location (eager-display . t))
             (consult-grep (eager-display . nil))
             (consult-info (eager-display . nil))
-            (info-menu (eager-display t))
             (org-node (eager-display . t))
             (recentf (eager-display . t))
             ;; For tempel `citar-at-point-function's and commands

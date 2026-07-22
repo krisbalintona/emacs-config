@@ -4401,10 +4401,6 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
       (set-face-attribute 'info-title-4 nil :height 1.1)))
 #+end_src
 
-#+begin_src emacs-lisp :noweb-ref completion-category-overrides
-  (info-menu (eager-display t))
-#+end_src
-
 *** Inspector: Provide a UI for showing prettified elisp objects
 
 #+name: inspector
