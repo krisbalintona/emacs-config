@@ -6835,6 +6835,10 @@ Modified from https://karthinks.com/software/lazy-elfeed/#easier-tagging."
 ;;; Arei
 
 
+;;; Calendar
+(with-eval-after-load 'calendar
+  (setopt calendar-mark-diary-entries-flag t))
+
 ;;; Load config units
 (load-all-configs)
 

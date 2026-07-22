@@ -9023,6 +9023,14 @@ Consequently, the elisp backend is used if there is no other local backend to us
     (:package yaml-mode))
 #+end_src
 
+*** Calendar
+
+#+name: calendar
+#+begin_src emacs-lisp
+  (with-eval-after-load 'calendar
+    (setopt calendar-mark-diary-entries-flag t))
+#+end_src
+
 ** Platform- and system-specific configuration
 
 *** Guix
@@ -9723,6 +9731,9 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   ;;; Arei
   <<arei>>
+
+  ;;; Calendar
+  <<calendar>>
 
   ;;; Load config units
   <<config-units-load>>
