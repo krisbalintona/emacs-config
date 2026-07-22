@@ -1117,6 +1117,27 @@ I discovered this trick in [[https://emacsredux.com/blog/2026/04/07/stealing-fro
     (setopt abbrev-mode t))
 #+end_src
 
+*** Geiser: Working with Scheme languages
+
+#+name: geiser
+#+begin_src emacs-lisp
+  (krisb-package-install geiser)
+
+  (with-eval-after-load 'geiser
+    (setopt geiser-repl-per-project-p t)
+    
+    (krisb-package-install geiser-guile)
+
+    (with-eval-after-load 'geiser-guile
+      ;; Add Guix load paths to Geiser's load paths
+      (dolist (path (mapcar #'expand-file-name
+                            '("~/.config/guix/current/share/guile/site/3.0"
+                              "~/.guix-profile/share/guile/site/3.0"
+                              "~/.guix-home/profile/share/guile/site/3.0"
+                              "/run/current-system/profile/share/guile/site/3.0")))
+        (add-to-list 'geiser-guile-load-path path t))))
+#+end_src
+
 *** COMMENT Activities: Bookmarks for window configurations
 
 *Note 2025-12-03:* I've discovered =tab-bookmarks= and now favor its simpler solution (I realized that bookmarking window configurations/tabs was all I wanted). See [[#h:20251203T041255.447488][Tab-bookmark: Bookmarks for tabs!]].
@@ -9077,20 +9098,13 @@ Consequently, the elisp backend is used if there is no other local backend to us
    'krisb-remote-source-profile)
 #+end_src
 
-#+name: guile
+#+name: guix
 #+begin_src emacs-lisp
-  (setup guix
-    (:package guix)
+  (krisb-package-install guix)
 
-    (with-eval-after-load 'scheme
-      (add-hook 'scheme-mode-hook #'guix-devel-mode)
-      (add-hook 'scheme-mode-hook #'guix-prettify-mode)))
-
-  (setup geiser
-    (:package geiser))
-
-  (setup geiser-guile
-    (:package geiser-guile))
+  (with-eval-after-load 'guix
+    (add-hook 'scheme-mode-hook #'guix-devel-mode)
+    (add-hook 'scheme-mode-hook #'guix-prettify-mode))
 #+end_src
 
 * Exposition
@@ -9616,8 +9630,11 @@ You will find in the READMEs of most of the above comparisons between each. I am
   ;;; Regexp-disasm
   <<regexp-disasm>>
 
-  ;;; Guile
-  <<guile>>
+  ;;; Geiser
+  <<geiser>>
+
+  ;;; Guix
+  <<guix>>
 
   ;;; Nftables-mode
   <<nftables-mode>>

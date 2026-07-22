@@ -5788,19 +5788,29 @@ When called with `-' instead call `inspector-inspect-expression'."
 (setup regexp-disasm
   (:package (regexp-disasm :url "https://github.com/mattiase/regexp-disasm.git")))
 
-;;; Guile
-(setup guix
-  (:package guix)
+;;; Geiser
+(krisb-package-install geiser)
 
-  (with-eval-after-load 'scheme
-    (add-hook 'scheme-mode-hook #'guix-devel-mode)
-    (add-hook 'scheme-mode-hook #'guix-prettify-mode)))
+(with-eval-after-load 'geiser
+  (setopt geiser-repl-per-project-p t)
+  
+  (krisb-package-install geiser-guile)
 
-(setup geiser
-  (:package geiser))
+  (with-eval-after-load 'geiser-guile
+    ;; Add Guix load paths to Geiser's load paths
+    (dolist (path (mapcar #'expand-file-name
+                          '("~/.config/guix/current/share/guile/site/3.0"
+                            "~/.guix-profile/share/guile/site/3.0"
+                            "~/.guix-home/profile/share/guile/site/3.0"
+                            "/run/current-system/profile/share/guile/site/3.0")))
+      (add-to-list 'geiser-guile-load-path path t))))
 
-(setup geiser-guile
-  (:package geiser-guile))
+;;; Guix
+(krisb-package-install guix)
+
+(with-eval-after-load 'guix
+  (add-hook 'scheme-mode-hook #'guix-devel-mode)
+  (add-hook 'scheme-mode-hook #'guix-prettify-mode))
 
 ;;; Nftables-mode
 (setup nftables-mode
