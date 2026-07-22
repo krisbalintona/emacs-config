@@ -2658,6 +2658,20 @@ inserted with e.g. `org-insert-last-stored-link' or
      (org-roam-db-autosync-mode -1)
      (org-mem-roamy-db-mode 1))))
 
+(defun krisb-org-mem-files-with-tags (tags)
+  "Return a list of all org-mem files with a tag in TAGS.
+TAGS is a list of tags.
+
+The truename of each org-mem entry is returned."
+  (let (result)
+    (maphash (lambda (_id entry)
+               (when (cl-intersection tags (org-mem-tags entry)
+                                      :test #'string-equal)
+                 (cl-pushnew (org-mem-file-truename entry) result
+                             :test #'string-equal)))
+             org-mem--id<>entry)
+    result))
+
 ;;;;; Org-node
 (setup org-node
   (:package org-node)
