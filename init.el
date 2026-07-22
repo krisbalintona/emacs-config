@@ -6665,9 +6665,7 @@ final element of `completion-at-point-functions'."
                         (this-command . clatter-connect)
                         (this-command . krisb-clatter-connect-or-switch)))
                (display-buffer-in-tab)
-               (tab-name . (lambda (buffer _alist)
-                             (with-current-buffer buffer
-                               clatter--target)))
+               (tab-name . "IRC")
                (tab-group . "media")))
 
 ;;; Elfeed
