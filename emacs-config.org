@@ -1116,28 +1116,6 @@ I discovered this trick in [[https://emacsredux.com/blog/2026/04/07/stealing-fro
     ;; Enable the mode globally
     (setopt abbrev-mode t))
 #+end_src
-
-*** Geiser: Working with Scheme languages
-
-#+name: geiser
-#+begin_src emacs-lisp
-  (krisb-package-install geiser)
-
-  (with-eval-after-load 'geiser
-    (setopt geiser-repl-per-project-p t)
-    
-    (krisb-package-install geiser-guile)
-
-    (with-eval-after-load 'geiser-guile
-      ;; Add Guix load paths to Geiser's load paths
-      (dolist (path (mapcar #'expand-file-name
-                            '("~/.config/guix/current/share/guile/site/3.0"
-                              "~/.guix-profile/share/guile/site/3.0"
-                              "~/.guix-home/profile/share/guile/site/3.0"
-                              "/run/current-system/profile/share/guile/site/3.0")))
-        (add-to-list 'geiser-guile-load-path path t))))
-#+end_src
-
 *** COMMENT Activities: Bookmarks for window configurations
 
 *Note 2025-12-03:* I've discovered =tab-bookmarks= and now favor its simpler solution (I realized that bookmarking window configurations/tabs was all I wanted). See [[#h:20251203T041255.447488][Tab-bookmark: Bookmarks for tabs!]].
@@ -4075,6 +4053,27 @@ I prefer this package because it supports AGit-Flow (which is the preference of 
       (advice-add 'completion-at-point :before #'krisb-gcmh-minibuffer-setup)
       (advice-add 'corfu-quit :after #'krisb-gcmh-minibuffer-exit)
       (advice-add 'corfu-insert :after #'krisb-gcmh-minibuffer-exit)))
+#+end_src
+
+*** Geiser: Working with Scheme languages
+
+#+name: geiser
+#+begin_src emacs-lisp
+  (krisb-package-install geiser)
+
+  (with-eval-after-load 'geiser
+    (setopt geiser-repl-per-project-p t)
+    
+    (krisb-package-install geiser-guile)
+
+    (with-eval-after-load 'geiser-guile
+      ;; Add Guix load paths to Geiser's load paths
+      (dolist (path (mapcar #'expand-file-name
+                            '("~/.config/guix/current/share/guile/site/3.0"
+                              "~/.guix-profile/share/guile/site/3.0"
+                              "~/.guix-home/profile/share/guile/site/3.0"
+                              "/run/current-system/profile/share/guile/site/3.0")))
+        (add-to-list 'geiser-guile-load-path path t))))
 #+end_src
 
 *** Ghostel: Very fast terminal emulator built on libghostty-vt
