@@ -6847,6 +6847,10 @@ Modified from https://karthinks.com/software/lazy-elfeed/#easier-tagging."
 (with-eval-after-load 'calendar
   (setopt calendar-mark-diary-entries-flag t))
 
+;;; Replace
+(with-eval-after-load 'replace
+  (setopt query-replace-show-preview t)) ; Emacs 31
+
 ;;; Load config units
 (load-all-configs)
 
