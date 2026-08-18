@@ -2180,6 +2180,14 @@ EWW and other packages that open URLs use this library.
     (:package caddyfile-mode))
 #+end_src
 
+*** Calendar
+
+#+name: calendar
+#+begin_src emacs-lisp
+  (with-eval-after-load 'calendar
+    (setopt calendar-mark-diary-entries-flag t))
+#+end_src
+
 *** Cape: ~completion-at-point-functions~ extensions and helpers
 :PROPERTIES:
 :CUSTOM_ID: h:20260219T023257.693377
@@ -9039,14 +9047,6 @@ Consequently, the elisp backend is used if there is no other local backend to us
 #+begin_src emacs-lisp
   (setup yaml-mode
     (:package yaml-mode))
-#+end_src
-
-*** Calendar
-
-#+name: calendar
-#+begin_src emacs-lisp
-  (with-eval-after-load 'calendar
-    (setopt calendar-mark-diary-entries-flag t))
 #+end_src
 
 ** Platform- and system-specific configuration
