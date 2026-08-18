@@ -1019,10 +1019,7 @@ matching."
 
 ;; More convenient path modification commands
 (setup vertico-directory
-  (:load-after vertico)
-
-  (with-eval-after-load 'vertico-directory
-    (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)))
+  (:load-after vertico))
 
 ;; On-demand change the type of UI
 (setup vertico-multiform
