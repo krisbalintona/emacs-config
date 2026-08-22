@@ -4917,6 +4917,7 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
     ;; installed, too
     (setopt ispell-program-name (or (executable-find "enchant-2")
                                     (executable-find "aspell"))
+            ispell-quietly t
             ispell-help-in-bufferp 'electric
             ispell-dictionary "en_US"
             ispell-complete-word-dict
