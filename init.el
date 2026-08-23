@@ -6639,7 +6639,7 @@ connections.  If not, `clatter-connect' is called."
              :sasl plain))
           clatter-message-order 'oldest-first
           clatter-track-position 'before-modes
-          clatter-track-in-buffer-mode-line t
+          clatter-track-show-in-clatter-buffers t
           clatter-suppress-messages '(join part quit nick away muted)
           clatter-nick-column-width 17
           clatter-image-enable t
