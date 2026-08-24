@@ -2573,6 +2573,47 @@ Consult-specific completion category overrides:
   (consult-info (eager-display . nil))
 #+end_src
 
+*** Cooked: A new ~comin-mode~-like terminal emulator
+
+#+name: cooked
+#+begin_src emacs-lisp
+  (krisb-package-install cooked
+                         :url "https://github.com/vodik/cooked"
+                         :lisp-dir "lisp"
+                         :rev :newest)
+
+  (bind-keys :map krisb-open-keymap
+             ("s" . cooked))
+
+  ;; 2026-09-09: Currently, these additional features have to be
+  ;; `require'd manually
+  (with-eval-after-load 'cooked
+    ;; Lets the child process ask Emacs to do things, like open file or
+    ;; open Dired.  Must configure `cooked-eval-commands' too
+    (require 'cooked-osc-eval)
+    (require 'cooked-shell-completion)    ; Use Emacs completion for TAB
+    (require 'cooked-file-link)           ; Buttonize file names
+    (require 'cooked-command-decorations) ; Fringe decorations for command statuses
+    (require 'cooked-project) ; Ties Cooked invocations to the current project
+    ;; FIXME 2026-09-09: See https://github.com/vodik/cooked/issues/2
+    ;; (require 'cooked-process)
+    ;; (cooked-process-mode 1)
+    ;; (require 'cooked-next-error)
+    )
+
+  (with-eval-after-load 'vc
+    (add-to-list 'vc-deduce-backend-nonvc-modes 'cooked-mode))
+#+end_src
+
+#+name: cooked-project-switch-commands
+#+begin_src emacs-lisp
+  ;; Overshadow `project-shell’ in keybindings with `eat-project'
+  (bind-keys :map project-prefix-map
+             ("s" . cooked-project))
+  (cl-nsubstitute '(cooked-project "Ghostel") 'project-shell project-switch-commands
+                  :key #'car)
+#+end_src
+
 *** Corfu: In-line completion interface
 
 #+name: corfu
@@ -4084,7 +4125,7 @@ I prefer this package because it supports AGit-Flow (which is the preference of 
         (add-to-list 'geiser-guile-load-path path t))))
 #+end_src
 
-*** Ghostel: Very fast terminal emulator built on libghostty-vt
+*** COMMENT Ghostel: Very fast terminal emulator built on libghostty-vt
 
 #+name: ghostel
 #+begin_src emacs-lisp
@@ -7999,7 +8040,8 @@ Persid knows how to retrieve information from the following formats:
       (add-to-list 'project-switch-commands '(project-recompile "Recompile"))
 
       <<eat-project-switch-commands>>
-      <<ghostel-project-switch-commands>>)))
+      <<ghostel-project-switch-commands>>
+      <<cooked-project-switch-commands>>)))
 #+end_src
 
 *** Pulsar: Alternative to pulse.el
@@ -9758,6 +9800,9 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   ;;; Replace
   <<replace>>
+
+  ;;; Cooked
+  <<cooked>>
 
   ;;; Load config units
   <<config-units-load>>

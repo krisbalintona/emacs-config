@@ -5159,10 +5159,11 @@ functionality."
     (add-to-list 'project-switch-commands '(project-recompile "Recompile"))
 
     
+    
     ;; Overshadow `project-shell’ in keybindings with `eat-project'
     (bind-keys :map project-prefix-map
-               ("s" . ghostel-project))
-    (cl-nsubstitute '(ghostel-project "Ghostel") 'project-shell project-switch-commands
+               ("s" . cooked-project))
+    (cl-nsubstitute '(cooked-project "Ghostel") 'project-shell project-switch-commands
                     :key #'car))))
 
 ;;; Info
@@ -6312,18 +6313,7 @@ is t or contains the mode name."
   (add-hook 'forgejo-compose-hook #'markdown-mode))
 
 ;;; Ghostel
-(krisb-package-install ghostel)
 
-(bind-keys :map krisb-open-keymap
-           ("s" . ghostel))
-
-(with-eval-after-load 'ghostel
-  (setopt ghostel-keymap-exceptions
-          ;; My personal preferred `other-window' keybind
-          (cons "M-o" ghostel-keymap-exceptions)))
-
-(with-eval-after-load 'vc
-  (add-to-list 'vc-deduce-backend-nonvc-modes 'ghostel-mode))
 
 ;;; Css-ts-mode
 (when (boundp 'treesit-enabled-modes)
@@ -6849,6 +6839,34 @@ Modified from https://karthinks.com/software/lazy-elfeed/#easier-tagging."
 ;;; Replace
 (with-eval-after-load 'replace
   (setopt query-replace-show-preview t)) ; Emacs 31
+
+;;; Cooked
+(krisb-package-install cooked
+                       :url "https://github.com/vodik/cooked"
+                       :lisp-dir "lisp"
+                       :rev :newest)
+
+(bind-keys :map krisb-open-keymap
+           ("s" . cooked))
+
+;; 2026-09-09: Currently, these additional features have to be
+;; `require'd manually
+(with-eval-after-load 'cooked
+  ;; Lets the child process ask Emacs to do things, like open file or
+  ;; open Dired.  Must configure `cooked-eval-commands' too
+  (require 'cooked-osc-eval)
+  (require 'cooked-shell-completion)    ; Use Emacs completion for TAB
+  (require 'cooked-file-link)           ; Buttonize file names
+  (require 'cooked-command-decorations) ; Fringe decorations for command statuses
+  (require 'cooked-project) ; Ties Cooked invocations to the current project
+  ;; FIXME 2026-09-09: See https://github.com/vodik/cooked/issues/2
+  ;; (require 'cooked-process)
+  ;; (cooked-process-mode 1)
+  ;; (require 'cooked-next-error)
+  )
+
+(with-eval-after-load 'vc
+  (add-to-list 'vc-deduce-backend-nonvc-modes 'cooked-mode))
 
 ;;; Load config units
 (load-all-configs)
