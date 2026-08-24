@@ -1543,7 +1543,7 @@ Then apply ARGS."
 ;; - `vc-revert-show-diff'
 ;; - `vc-dir-auto-hide-up-to-date'
 (with-eval-after-load 'vc
-  (setopt vc-follow-symlinks t
+  (setopt vc-follow-symlinks nil
           vc-allow-rewriting-published-history 'ask ; Emacs 31
           vc-async-checkin t                        ; Emacs 31
           vc-allow-async-diff t                     ; Emacs 31
@@ -1551,7 +1551,8 @@ Then apply ARGS."
           vc-display-failed-async-commands t    ; Emacs 31
           vc-find-revision-no-save t            ; Emacs 31
           vc-dir-save-some-buffers-on-revert t  ; Emacs 31
-          vc-use-incoming-outgoing-prefixes t)) ; Emacs 31
+          vc-use-incoming-outgoing-prefixes t   ; Emacs 31
+          vc-dir-show-key-binding-hints nil))   ; Emacs 31
 
 (with-eval-after-load 'vc-dir
   (add-hook 'vc-dir-mode-hook (lambda () (setq-local truncate-lines t))))
