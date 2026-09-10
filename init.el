@@ -1484,23 +1484,18 @@ Then apply ARGS."
   (add-hook 'log-edit-mode-hook 'krisb-electric-setup-log-edit))
 
 ;;; Files
-(setup files
-  
-  (with-eval-after-load 'files
-    (setopt remote-file-name-inhibit-locks t ; Don't create lock files in remotes
-            ;; Disables aggressive caching that slows Dired/Magit;
-            ;; test and toggle if needed.
-            remote-file-name-inhibit-cache nil
+;; See also `remote-file-name-inhibit-cache'
+(with-eval-after-load 'files
+  (setopt remote-file-name-inhibit-locks t ; Don't create lock files in remotes
+          remote-file-name-inhibit-auto-save-visited nil
+          remote-file-name-inhibit-auto-save nil
+          remote-file-name-inhibit-delete-by-moving-to-trash t
+          
+          ;; Set a timeout to prevent the failure to access files to
+          ;; indefinitely bloc Emacs
+          ;; remote-file-name-access-timeout 10 tk
 
-            remote-file-name-inhibit-auto-save-visited nil
-            remote-file-name-inhibit-auto-save nil
-            remote-file-name-inhibit-delete-by-moving-to-trash t
-            
-            ;; Set a timeout to prevent the failure to access files to
-            ;; indefinitely bloc Emacs
-            remote-file-name-access-timeout 10
-
-            enable-remote-dir-locals t)))
+          enable-remote-dir-locals t))
 
 ;;; Autorevert
 ;; Automatically update buffers as files are externally modified
@@ -1519,7 +1514,7 @@ Then apply ARGS."
   ;; Revert remote files too?
   ;;
   ;; See also `remote-file-name-inhibit-auto-save-visited' for
-  ;; auto-saving remote files
+  ;; automatically saving remote files
   (setopt auto-revert-remote-files t)
   
   (if (fboundp 'vc-auto-revert-mode)
@@ -3498,51 +3493,51 @@ PROP is the name of the property.  See
 ;; TODO 2025-11-28: Document this:
 ;; - `tramp-verbose'
 ;; - `tramp-syntax' - See (info "(tramp) Change file name syntax")
-(setup tramp
+;; - `remote-file-name-inhibit-cache' - See also
+;;
+;; Tip: for a list of general ways to speed up TRAMP, see (info
+;; "(tramp) Frequently Asked Questions").  Many/most of the selections
+;; below were taken from there.
+(with-eval-after-load 'tramp
+  (setopt tramp-verbose 3
+          ;; 2025-12-06: Increase the cutoff to use external methods.
+          ;; Recommendation taken from testing of
+          ;; https://coredumped.dev/2025/06/18/making-tramp-go-brrrr./
+          tramp-copy-size-limit (* 1024 1024)) ; 1MB
+  
+  ;; SSH-relevant settings.  See (info "(tramp) Ssh setup") for more
+  ;; information
+  (setopt tramp-use-connection-share t
+          ;; Most significant speedup for TRAMP, since it opens
+          ;; (multiplexes) many SSH connections
+          tramp-ssh-controlmaster-options ; Only when `tramp-use-connection-share' is t
+          (concat "-o ControlMaster=auto "
+                  "-o ControlPersist=10m "
+                  ;; See the ssh_config(5) man page for a list of the
+                  ;; possible tokens.  NOTE: %% is encoded as %
+                  "-o ControlPath=" (expand-file-name "~/.ssh/controlmasters/%%C") " "
+                  ;; Have client send "are you there?" request every
+                  ;; 30 sec, and if 3 of those go unanswered, close
+                  ;; the connection
+                  "-o ServerAliveInterval=30 "
+                  "-o ServerAliveCountMax=3")
+          
+          ;; Only effects copying between two remote hosts: when
+          ;; non-nil, to copy a file from remote1 to remote 2, instead
+          ;; of copying to the local machine then copying again to
+          ;; remote 2, we copy directly from remote1 and remote2.
+          ;; 
+          ;; Assumes we have password-less authentication into
+          ;; host. For more details see section "4.19.4 Configure
+          ;; direct copying between two remote servers" in (info
+          ;; "(tramp) Ssh setup")
+          tramp-use-scp-direct-remote-copying t))
 
-  ;; Tip: for a list of general ways to speed up TRAMP, see (info
-  ;; "(tramp) Frequently Asked Questions").  Many/most of the
-  ;; selections below were taken from there.
-  (with-eval-after-load 'tramp
-    (setopt tramp-verbose 1
-            ;; 2025-12-06: Increase the cutoff to use external
-            ;; methods.  Recommendation taken from testing of
-            ;; https://coredumped.dev/2025/06/18/making-tramp-go-brrrr./
-            tramp-copy-size-limit (* 1024 1024)) ; 1MB
-
-    ;; FIXME 2025-11-30: Not sure why this "davs"is causing problems
-    ;; for me... disable it for now.
-    (setopt tramp-gvfs-methods (cl-remove "davs" tramp-gvfs-methods :test #'string=))
-    
-    ;; SSH-relevant settings.  See (info "(tramp) Ssh setup") for more
-    ;; information
-    (setopt tramp-use-connection-share t
-            ;; Most significant speedup for TRAMP, since it opens many
-            ;; SSH connections
-            tramp-ssh-controlmaster-options ; Only when `tramp-use-connection-share' is t
-            (concat "-o ControlMaster=auto "
-                    "-o ControlPersist=30m "
-                    ;; See the ssh_config(5) man page for a list of
-                    ;; the possible tokens.  NOTE: %% is encoded as %
-                    "-o ControlPath=/tmp/tramp-cm-%%r@%%h:%%p")
-            ;; Only effects copying between two remote hosts: when
-            ;; non-nil, to copy a file from remote1 to remote 2,
-            ;; instead of copying to the local machine then copying
-            ;; again to remote 2, we copy directly from remote1 and
-            ;; remote2.
-            ;; 
-            ;; Assumes we have password-less authentication into
-            ;; host. For more details see section "4.19.4 Configure
-            ;; direct copying between two remote servers" in (info
-            ;; "(tramp) Ssh setup")
-            tramp-use-scp-direct-remote-copying t
-            remote-file-name-inhibit-cache nil))
-
-  ;; Guix-specific
-  ;; Add the user's load path to `tramp-remote-path' so that TRAMP can
-  ;; search the directories Guix adds to PATH
-  (with-eval-after-load 'tramp
-    (add-to-list 'tramp-remote-path 'tramp-own-remote-path)))
+;; Guix-specific
+;; Add the user's load path to `tramp-remote-path' so that TRAMP can
+;; search the directories Guix adds to PATH
+(with-eval-after-load 'tramp
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 
 ;; User- and host-specific configurations
 (with-eval-after-load 'tramp
@@ -3557,53 +3552,41 @@ PROP is the name of the property.  See
    '(:application tramp :machine "sublation")
    'krisb-dired-no-symlink)
 
-  ;; Use "direct async processes": create sub-processes directly on
-  ;; the host.  See 5.6.10 Improving performance of asynchronous
-  ;; remote processes in (info "(tramp) Remote processes").  I
-  ;; learned of this from
+  ;; One can also use "direct async processes": create sub-processes
+  ;; directly on the host.  See 5.6.10 Improving performance of
+  ;; asynchronous remote processes in (info "(tramp) Remote
+  ;; processes").  I learned of this from
   ;; https://coredumped.dev/2025/06/18/making-tramp-go-brrrr./#use-direct-async
   ;;
-  ;; Be aware of the limitations described in the aforementioned
+  ;; Beware of the limitations described in the aforementioned
   ;; manual page, including:
   ;; - Only works for some methods,
   ;; - Does not support interactive user authentication
   ;; - Cannot be applied for ssh-based methods that use the
   ;;   RemoteCommand option.
-  ;; - May fail when when the command is too long (e.g. long
-  ;;   directory names or long PATH that is set)
-  (connection-local-set-profile-variables
-   'krisb-remote-direct-async-process
-   '((tramp-direct-async-process . t)))
-  (connection-local-set-profiles
-   '(:application tramp :user "krisbalintona" :machine "sublation")
-   'krisb-remote-direct-async-process)
-
+  ;; - May fail when when the command is too long (e.g. long directory
+  ;;   names or long PATH that is set)
+  ;;
+  ;; I do not use this because my login shell on some hosts is Fish,
+  ;; which is not POSIX-compatible.  With direct async processes the
+  ;; command is handed to ssh and parsed by the remote login shell,
+  ;; and Fish cannot parse TRAMP's POSIX wrapper ("command
+  ;; substitutions not allowed in command position" message).
+  
   ;; NOTE 2026-01-04: Set `shell-file-name' specially.  This is a
   ;; workaround for several problems:
-  ;;
-  ;; 1. Because tramp shells are non-login, they do not source
-  ;;    ~/.profile, which is populated by the setup-environment script
-  ;;    in e.g. ~/.guix-home, which
-  ;;    `home-environment-variables-service-type' adds to.  As a
-  ;;    workaround, we manually source ~/.profile for created
-  ;;    interactive shells (e.g., `shell', `eat').
-  ;;
-  ;; 2. I use fish but currently have the SHELL for my sublation machine
-  ;;    bash.  The reason is issues using tramp on this machine with a
-  ;;    non-POSIX shell.  As a workaround, I start the fish shell
-  ;;    manually (only for created interactive shells like `shell' and
-  ;;    `eat').
   ;;
   ;; 3. Set the LC_ALL env var in order to render unicode properly.
   ;;    (Setting LC_ALL might be overkill, but I wasn't able to
   ;;    determine which specific LC_* variable suffices for this end.)
   (connection-local-set-profile-variables
    'krisb-remote-source-profile
-   `((tramp-remote-process-environment
-      . ,(cons (concat "LC_ALL=" current-locale-environment)
-               tramp-remote-process-environment))))
+   `(;; (tramp-remote-process-environment
+     ;;  . ,(cons (concat "LC_ALL=" current-locale-environment)
+     ;;           tramp-remote-process-environment))
+     (explicit-shell-file-name . "/home/krisbalintona/.guix-home/profile/bin/fish")))
   (connection-local-set-profiles
-   '(:application tramp :user "krisbalintona" :machine "sublation")
+   '(:user "krisbalintona" :machine "sublation")
    'krisb-remote-source-profile))
 
 ;;; Tramp-hlo
@@ -5217,9 +5200,7 @@ functionality."
   ;; (`tramp-backup-directory-alist'); use `backup-directory-alist'
   ;; instead
   (with-eval-after-load 'tramp
-    ;; TODO 2025-12-12: Revisit this.
-    ;; (setopt tramp-backup-directory-alist backup-directory-alist)
-    )
+    (setopt tramp-backup-directory-alist backup-directory-alist))
 
   ;; Numbering backups
   (setopt version-control t
