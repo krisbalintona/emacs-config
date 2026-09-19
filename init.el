@@ -1515,7 +1515,7 @@ Then apply ARGS."
   ;;
   ;; See also `remote-file-name-inhibit-auto-save-visited' for
   ;; automatically saving remote files
-  (setopt auto-revert-remote-files t)
+  (setopt auto-revert-remote-files nil)
   
   (if (fboundp 'vc-auto-revert-mode)
       (vc-auto-revert-mode 1)             ; Emacs 31

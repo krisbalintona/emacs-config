@@ -1000,7 +1000,7 @@ Use the right-click menu:
   ;;
   ;; See also `remote-file-name-inhibit-auto-save-visited' for
   ;; automatically saving remote files
-  (setopt auto-revert-remote-files t)
+  (setopt auto-revert-remote-files nil)
 #+end_src
 
 *** Show current working directory ("cwd") in command prompts
