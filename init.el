@@ -6830,7 +6830,7 @@ Modified from https://karthinks.com/software/lazy-elfeed/#easier-tagging."
 
 ;;; Replace
 (with-eval-after-load 'replace
-  (setopt query-replace-show-preview t)) ; Emacs 31
+  (setopt query-replace-show-preview 'both)) ; Emacs 31
 
 ;;; Cooked
 
