@@ -2568,7 +2568,7 @@ Consult-specific completion category overrides:
   (consult-info (eager-display . nil))
 #+end_src
 
-*** Cooked: A new ~comin-mode~-like terminal emulator
+*** COMMENT Cooked: A new ~comin-mode~-like terminal emulator
 
 #+name: cooked
 #+begin_src emacs-lisp
@@ -2605,7 +2605,7 @@ Consult-specific completion category overrides:
   ;; Overshadow `project-shell’ in keybindings with `eat-project'
   (bind-keys :map project-prefix-map
              ("s" . cooked-project))
-  (cl-nsubstitute '(cooked-project "Ghostel") 'project-shell project-switch-commands
+  (cl-nsubstitute '(cooked-project "Cooked") 'project-shell project-switch-commands
                   :key #'car)
 #+end_src
 
@@ -4120,7 +4120,7 @@ I prefer this package because it supports AGit-Flow (which is the preference of 
         (add-to-list 'geiser-guile-load-path path t))))
 #+end_src
 
-*** COMMENT Ghostel: Very fast terminal emulator built on libghostty-vt
+*** Ghostel: Very fast terminal emulator built on libghostty-vt
 
 #+name: ghostel
 #+begin_src emacs-lisp
