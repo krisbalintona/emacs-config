@@ -5,32 +5,38 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(org-agenda-files
-   '("/home/krisbalintona/Documents/org-database/agenda/the_audiobook_experience.org"
+   '("~/Documents/org-database/agenda/freelancing/the_audiobook_experience.org"
+     "/home/krisbalintona/Documents/org-database/agenda/freelancing/conspire_creative.org"
+     "/home/krisbalintona/Documents/org-database/agenda/freelancing/invoices.org"
      "/home/krisbalintona/Documents/org-database/agenda/coding_projects.org"
-     "/home/krisbalintona/Documents/org-database/agenda/conspire_creative.org"
      "/home/krisbalintona/Documents/org-database/agenda/mobile.org"
      "/home/krisbalintona/Documents/org-database/agenda/personal-site.org"
      "/home/krisbalintona/Documents/org-database/agenda/recurring.org"
      "/home/krisbalintona/Documents/org-database/agenda/todo.org"))
  '(package-selected-packages
-   '(apheleia astro-ts-mode astute ben breadcrumb caddyfile-mode cape
-              citar-org-node consult corfu devdocs-browser do-at-point
-              easysession ef-themes eglot el-job el-patch elisp-demos
-              exec-path-from-shell fancy-compilation fish-mode
-              flymake-vale fontaine forgejo gcmh geiser-guile ghostel
-              guix highlight-function-calls inspector lin
-              markdown-mode mixed-pitch nftables-mode no-littering
-              notmuch-addr notmuch-bookmarks ol-notmuch olivetti on
-              orderless org-contrib org-hide-drawers org-mem org-mime
-              org-modern org-node org-ql org-repeat-by-cron org-review
+   '(apheleia arei astro-ts-mode astute ben breadcrumb caddyfile-mode
+              canvas-minimap cape citar-org-node clatter consult
+              cooked corfu devdocs-browser do-at-point easysession
+              ef-themes eglot el-job el-patch elfeed elfeed-web
+              elisp-demos exec-path-from-shell fancy-compilation
+              fish-mode flymake-vale fontaine forgejo gcmh
+              geiser-guile ghostel guix highlight-function-calls
+              inspector lin markdown-mode mixed-pitch neat
+              nftables-mode no-littering notmuch-addr
+              notmuch-bookmarks ol-notmuch olivetti on orderless
+              org-contrib org-hide-drawers org-mem org-mime org-modern
+              org-node org-ql org-repeat-by-cron org-review
               org-roam-folgezettel org-web-tools orgmdb outli
               package-x paren-face persid powerthesaurus pulsar puni
               regexp-disasm setup smart-mark sops svelte-mode
-              tab-bookmark tempel tramp-rpc tramp-theme vc-jj vertico
-              web-mode wombag work-timer yaml-mode))
+              tab-bookmark tempel tramp-theme vc-jj vertico web-mode
+              wombag work-timer yaml-mode))
  '(package-vc-selected-packages
-   '((tramp-rpc :url
-                "https://github.com/ArthurHeymans/emacs-tramp-rpc.git")
+   '((canvas-minimap :url
+                     "https://github.com/Daskeladden/canvas-minimap.git")
+     (cooked :url "https://github.com/vodik/cooked" :lisp-dir "lisp")
+     (neat :url "https://github.com/nrepl/neat")
+     (arei :url "https://git.sr.ht/~abcdw/guile-ares-rs")
      (keymap-popup :vc-backend Git :url
                    "https://codeberg.org/thanosapollo/emacs-keymap-popup.git")
      (ox-astro :vc-backend Git :url
@@ -77,7 +83,8 @@
                   "lisp/org-capture.el")))
  '(pulsar-window-change-face 'pulsar-green)
  '(safe-local-variable-directories
-   '("/rpc:sublation:/home/krisbalintona/guix-config/"
+   '("/home/krisbalintona/guix-repos/sops-guix/"
+     "/sshx:sublation:/home/krisbalintona/guix-config/"
      "/home/krisbalintona/Documents/personal-site-astro/"
      "/home/krisbalintona/Documents/personal-site-svelte/"
      "/home/krisbalintona/.emacs.d/elpa/31.0/vc-jj/"
@@ -110,7 +117,9 @@
      "/home/krisbalintona/.config/guix/current/share/guile/site/3.0/"
      "/home/krisbalintona/nix-config/"))
  '(safe-local-variable-values
-   '((jinx-languages . "en_US ja_JP") (eval eglot-ensure)
+   '((eval defun krisb-org-mem-sharon-files nil
+           (krisb-org-mem-files-with-tags '("@Sharon_Woodhouse")))
+     (jinx-languages . "en_US ja_JP") (eval eglot-ensure)
      (bug-reference-prog-mode . t) (bug-reference-mode . t)
      (eval add-hook 'org-insert-heading-hook
            'org-expiry-insert-created nil t)
