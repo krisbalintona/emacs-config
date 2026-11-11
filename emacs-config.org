@@ -40,14 +40,6 @@ As of 2026-02-06, the following are the flags I prefer to compile Emacs with.
   verbose for the sake of, e.g., debugging and testing.")
 #+end_src
 
-*** Add bespoke lisp modules to ~load-path~
-
-#+name: site-lisp
-#+begin_src emacs-lisp
-  (dolist (path (list (expand-file-name "modules" user-emacs-directory)
-                      (expand-file-name "lisp" user-emacs-directory)))
-    (add-to-list 'load-path path))
-#+end_src
 
 *** Meta-configuration
 
@@ -9203,9 +9195,6 @@ You will find in the READMEs of most of the above comparisons between each. I am
   <<config-units-setup>>
 
   <<bio>>
-
-  ;;; Add bespoke lisp modules to `load-path'
-  <<site-lisp>>
 
   ;;; Add WIP "monkey patches" to `load-path'
   <<wip>>
