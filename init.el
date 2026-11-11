@@ -1,5 +1,10 @@
 ;; -*- lexical-binding: t; -*-
 
+(defconst guix-system-p
+  (string-match-p "guix" (shell-command-to-string "grep '^ID=' /etc/os-release"))
+  "Whether the current system is a Guix System.
+Non-nil if so, and nil otherwise.")
+
 (defconst krisb-extra-verbose-p (getenv "EXTRA_VERBOSE")
   "Whether Emacs should be \"extra verbose\" with certain things.
 A variable I use in several places when I want Emacs to be particularly
@@ -15,11 +20,6 @@ verbose for the sake of, e.g., debugging and testing.")
 (setopt user-full-name "Kristoffer Balintona"
         user-mail-address "krisbalintona@gmail.com")
 
-;;; Add bespoke lisp modules to `load-path'
-(dolist (path (list (expand-file-name "modules" user-emacs-directory)
-                    (expand-file-name "lisp" user-emacs-directory)))
-  (add-to-list 'load-path path))
-
 ;;; Add WIP "monkey patches" to `load-path'
 (defvar krisb-wip-monkeypatches-dir (expand-file-name "wip" user-emacs-directory)
   "Directory holding my WIP \"monkey patches.\"
@@ -32,22 +32,35 @@ patches to, say, org-mode or Emacs, by loading those versions at
 startup.")
 
 (unless (file-exists-p krisb-wip-monkeypatches-dir)
-  (message "Making directory %s..." krisb-wip-monkeypatches-dir)
+  (message "Making monkey patches directory %s..." krisb-wip-monkeypatches-dir)
   (make-directory krisb-wip-monkeypatches-dir))
 
 (add-to-list 'load-path krisb-wip-monkeypatches-dir)
 
 ;; Symbolically link my monkeypatches to `krisb-wip-monkeypatches-dir'
-(defmacro krisb-wip-monkeypatch-symlink (path)
-  "Symlink PATH into `krisb-wip-monkeypatches-dir'.
-If PATH is already symlinked into `krisb-wip-monkeypatches-dir', then do
-nothing."
-  `(let* ((patch-path (expand-file-name ,path))
-          (link-path
-           (expand-file-name (file-name-nondirectory patch-path) krisb-wip-monkeypatches-dir)))
-     (unless (file-exists-p link-path)
-       (message "Symlinking %s to %s..." patch-path link-path)
-       (make-symbolic-link patch-path link-path))))
+(defmacro krisb-wip-monkeypatch-symlink (target)
+  "Symlink a file from `krisb-wip-monkeypatches-dir' to TARGET.
+This macro is used to selectively choose files from outside the
+`user-emacs-directory' to load and override packages installed normally
+by an Emacs package manager.  (This assumes
+`krisb-wip-monkeypatches-dir' is prepended to `load-path'.)  A use case
+is loading local changes to upstream packages.
+
+TARGET is a file path.  The name of the file in
+`krisb-wip-monkeypatches-dir' is based on the `file-name-nondirectory'
+of TARGET.
+
+If TARGET is already symlinked into `krisb-wip-monkeypatches-dir', then
+do nothing."
+  `(let* ((target-path (expand-file-name ,target))
+          (wip-path (expand-file-name (file-name-nondirectory target-path)
+                                      krisb-wip-monkeypatches-dir)))
+     (cond
+      ((not (file-exists-p target-path))
+       (warn "Monkey patch target does not exist: %s..." target-path))
+      ((not (file-exists-p wip-path))
+       (message "Symlinking monkey patch %s to %s..." target-path wip-path)
+       (make-symbolic-link target-path wip-path)))))
 
 ;; I have several patches awaiting review or application.
 (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/notmuch/emacs/notmuch.el")
@@ -64,17 +77,25 @@ nothing."
 ;;; Meta-configuration
 
 ;;;; Bespoke helpers
-;;;;; Variables
-;; FIXME 2025-05-20: If the path denoted by `krisb-folio-directory'
-;; does not exist, other packages that depend on this value are given
-;; a non-existing path, likely resulting in errors.  We might solve
-;; this by turning this into a function instead, returning nil if it
-;; doesn't exist, thereby avoiding passing a non-existing file path to
-;; these packages.
-(defvar krisb-folio-directory (expand-file-name "org-database" "~/Documents")
+;;;;; Paths
+(defvar krisb-folio-directory
+  (let ((path (expand-file-name "org-database" "~/Documents")))
+    (unless (file-exists-p path)
+      ;; Ensure the path exists since many other things in the config
+      ;; depend on it.  (Creating the directory is easier than
+      ;; accounting for a non-existent directory everywhere else.)
+      (make-directory path t))
+    path)
   "The directory holding my org files.")
 
-(defvar krisb-notes-directory (expand-file-name "notes" krisb-folio-directory)
+(defvar krisb-notes-directory 
+  (let ((path (expand-file-name "notes" krisb-folio-directory)))
+    (unless (file-exists-p path)
+      ;; Ensure the path exists since many other things in the config
+      ;; depend on it.  (Creating the directory is easier than
+      ;; accounting for a non-existent directory everywhere else.)
+      (make-directory path t))
+    path)
   "My notes directory.")
 
 (defvar krisb-org-agenda-directory (expand-file-name "agenda" krisb-folio-directory)
@@ -516,7 +537,8 @@ package-archives, e.g. \"gnu\")."))
   (setup face-remap
     
     ;; Hide `buffer-face-mode' minor-mode lighter
-    (:hide-mode buffer-face-mode)))
+    (:hide-mode buffer-face-mode))
+  )
 
 ;;; Custom
 ;;; Set and load custom file
@@ -3184,12 +3206,6 @@ Removes the properties denoted by `org-review-next-property-name' and
 
   (setopt org-roam-folgezettel-default-filter-query '(box "main"))
 
-  ;; FIXME 2025-06-30: Eventually upstream contents of
-  ;; krisb-org-roam-ext once I figure out a generalizable zettelkasten
-  ;; workflow for most/all users.
-  (with-eval-after-load 'org-roam
-    (require 'krisb-org-roam-ext))
-
   ;; Load embark integration
   (with-eval-after-load 'org-roam
     (with-eval-after-load 'embark
@@ -4896,7 +4912,8 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
     ;; TODO 2025-11-09: Ensure that the enchant system package is
     ;; installed, too
     (setopt ispell-program-name (or (executable-find "enchant-2")
-                                    (executable-find "aspell"))
+                                    (executable-find "aspell")
+				    ispell-program-name)
             ispell-quietly t
             ispell-help-in-bufferp 'electric
             ispell-dictionary "en_US"
@@ -5352,7 +5369,7 @@ which file on the system it backs up."
 
 ;;; Work-timer
 (setup work-timer
-  (:package (work-timer :url "git@github.com:krisbalintona/work-timer.git"))
+  (:package (work-timer :url "https://github.com/krisbalintona/work-timer.git"))
   
   ;; FIXME 2025-11-20: I don't know how to `bind-key' before a keymap
   ;; is defined.  For now I :require, but this isn't ideal.
@@ -5886,18 +5903,21 @@ When called with `-' instead call `inspector-inspect-expression'."
 
 ;; Ensure the astro, css, and tsx tree-sitter language grammars are
 ;; installed, according to README:
-;; https://git.isincredibly.gay/srxl/astro-ts-mode#headline-5
-(with-eval-after-load 'treesit
-  (add-to-list 'treesit-language-source-alist
-               '(astro "https://github.com/virchau13/tree-sitter-astro"))
-  (unless (treesit-language-available-p 'astro)
-    (treesit-install-language-grammar 'astro))
-  (unless (treesit-language-available-p 'css)
-    (treesit-install-language-grammar 'css))
-  (add-to-list 'treesit-language-source-alist
-               '(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
-  (unless (treesit-language-available-p 'tsx)
-    (treesit-install-language-grammar 'tsx)))
+;; https://git.isincredibly.gay/srxl/astro-ts-mode#headline-5.  But
+;; only do so in non-Guix systems.  For Guix System, those packages
+;; are installed by Guix rather than compiled here.
+(unless guix-system-p
+  (with-eval-after-load 'treesit
+    (add-to-list 'treesit-language-source-alist
+		 '(astro "https://github.com/virchau13/tree-sitter-astro"))
+    (unless (treesit-language-available-p 'astro)
+      (treesit-install-language-grammar 'astro))
+    (unless (treesit-language-available-p 'css)
+      (treesit-install-language-grammar 'css))
+    (add-to-list 'treesit-language-source-alist
+		 '(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+    (unless (treesit-language-available-p 'tsx)
+      (treesit-install-language-grammar 'tsx))))
 
 ;;
 ;; Integration with `treesit-enabled-modes' and

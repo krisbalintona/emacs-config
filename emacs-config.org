@@ -34,20 +34,106 @@ As of 2026-02-06, the following are the flags I prefer to compile Emacs with.
 
 #+name: emacs-environment
 #+begin_src emacs-lisp
+  <<guix-system-p>>
+
   (defconst krisb-extra-verbose-p (getenv "EXTRA_VERBOSE")
     "Whether Emacs should be \"extra verbose\" with certain things.
   A variable I use in several places when I want Emacs to be particularly
   verbose for the sake of, e.g., debugging and testing.")
 #+end_src
 
-*** Add bespoke lisp modules to ~load-path~
 
-#+name: site-lisp
+*** Package.el: The built-in Emacs package manager
+
+#+name: package.el
 #+begin_src emacs-lisp
-  (dolist (path (list (expand-file-name "modules" user-emacs-directory)
-                      (expand-file-name "lisp" user-emacs-directory)))
-    (add-to-list 'load-path path))
+  (setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
+                             ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
+                             ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                             ("melpa" . "https://melpa.org/packages/")
+                             ("melpa-stable" . "https://stable.melpa.org/packages/"))
+          package-archive-priorities '(("gnu-elpa" . 4)
+                                       ("nongnu" . 3)
+                                       ("gnu-elpa-devel" . 2)
+                                       ("melpa" . 1)
+                                       ("melpa-stable" . 0))
+          package-install-upgrade-built-in t)
+
+  ;; 2025-10-23 TODO: Revisit this.  Ideally, should be more safe than
+  ;; setting this value to an outright t
+  (setopt package-vc-allow-build-commands t)
+  <<package-review-policy>>
+
+  <<krisb-package-install>>
 #+end_src
+
+I also relativize the packages that package.el installs by Emacs version, since I sometimes run different versions of Emacs to test packages, and bytecode incompatibilities might arise between my compiled Emacs and the package.el packages. I make sure to place this before ~package-initialize~ is called; therefore, unless ~package-enable-at-startup~ is nil, this should be placed in early-init.el.
+#+name: package-relativize-version
+#+begin_src emacs-lisp
+  ;; Install package.el packages into separate directories for each
+  ;; Emacs version, to prevent bytecode incompatibility.
+  ;; 
+  ;; I had this idea myself, but I this specific implementation is
+  ;; nearly identical to the one in from
+  ;; https://github.com/purcell/emacs.d.
+  (setopt package-user-dir
+          (expand-file-name (format "elpa/%s.%s" emacs-major-version emacs-minor-version)
+                            user-emacs-directory))
+#+end_src
+
+In Emacs 31, packages installed with package.el can now be reviewed upon upgrading them, letting one vet the code or see its changes since last release.[fn:1] (As of 2026-01-17, this does not include git packages installed with package-vc.)
+#+name: package-review-policy
+#+begin_src emacs-lisp
+  (setopt package-review-policy t) ; Review packages upon upgrade
+#+end_src
+
+Below is a bespoke macro I use for package installation.
+#+name: krisb-package-install
+#+begin_src emacs-lisp
+  (defmacro krisb-package-install (package &rest args)
+    "Convenience wrapper around `package-install'.
+  PACKAGE is the name of a package.
+
+  If ARGS are nil, then install PACKAGE using `package-install'.  If ARGS
+  is non-nil, then call `package-vc-install' with those arguments.  In
+  both cases, if PACKAGE is already installed, do nothing.
+
+  This macro was modified from Protesilaos\\='s `prot-emacs-install'
+  macro."
+    (declare (indent 0))
+    (unless (symbolp package)
+      (error "The package `%s' is not a symbol" package))
+    (cond
+     ((and package args)
+      `(unless (package-installed-p ',package)
+         (condition-case-unless-debug err
+             (package-vc-install '(,package ,@args))
+           (error (message "Failed `package-vc-install' with `%s': `%s'" ',args (cdr err))))))
+     (package
+      `(progn
+         (unless (package-installed-p ',package)
+           (unless package-archive-contents (package-refresh-contents))
+           (condition-case-unless-debug nil
+               (package-install ',package)
+             (error (message "Cannot install `%s'; try `M-x package-refresh-contents' first" ',package))))))))
+
+  (defmacro krisb-mode-line-collapse-minor-mode (&optional mode)
+    "Hide minor mode MODE in mode line.
+  MODE is an unquoted major mode symbol.
+
+  When using Emacs 31, add MODE to `mode-line-collapse-minor-modes'.  When
+  using an earlier version of Emacs, remove from `minor-mode-alist'."
+    (let* ((mode (if (string-match-p "-mode\\'" (symbol-name mode))
+                     mode
+                   (intern (format "%s-mode" mode)))))
+      (if (boundp 'mode-line-collapse-minor-modes) ; Added in Emacs 31.1
+          `(add-to-list 'mode-line-collapse-minor-modes ',mode)
+        `(setq minor-mode-alist
+               (delq (assq ',mode minor-mode-alist)
+                     minor-mode-alist)))))
+#+end_src
+
+[fn:1] See also [[https://github.com/kn66/package-upgrade-guard.el][package-upgrade-guard.el]], which I used prior to the implementation of this feature into Emacs.
 
 *** Meta-configuration
 
@@ -276,17 +362,25 @@ There is a problem when we use the typical ~(advice-add ... :override ...)~, nam
 
 #+name: config-helpers
 #+begin_src emacs-lisp
-  ;;;;; Variables
-  ;; FIXME 2025-05-20: If the path denoted by `krisb-folio-directory'
-  ;; does not exist, other packages that depend on this value are given
-  ;; a non-existing path, likely resulting in errors.  We might solve
-  ;; this by turning this into a function instead, returning nil if it
-  ;; doesn't exist, thereby avoiding passing a non-existing file path to
-  ;; these packages.
-  (defvar krisb-folio-directory (expand-file-name "org-database" "~/Documents")
+  ;;;;; Paths
+  (defvar krisb-folio-directory
+    (let ((path (expand-file-name "org-database" "~/Documents")))
+      (unless (file-exists-p path)
+        ;; Ensure the path exists since many other things in the config
+        ;; depend on it.  (Creating the directory is easier than
+        ;; accounting for a non-existent directory everywhere else.)
+        (make-directory path t))
+      path)
     "The directory holding my org files.")
 
-  (defvar krisb-notes-directory (expand-file-name "notes" krisb-folio-directory)
+  (defvar krisb-notes-directory 
+    (let ((path (expand-file-name "notes" krisb-folio-directory)))
+      (unless (file-exists-p path)
+        ;; Ensure the path exists since many other things in the config
+        ;; depend on it.  (Creating the directory is easier than
+        ;; accounting for a non-existent directory everywhere else.)
+        (make-directory path t))
+      path)
     "My notes directory.")
 
   (defvar krisb-org-agenda-directory (expand-file-name "agenda" krisb-folio-directory)
@@ -625,22 +719,35 @@ See also ~(elisp) Beeping~.
   startup.")
 
   (unless (file-exists-p krisb-wip-monkeypatches-dir)
-    (message "Making directory %s..." krisb-wip-monkeypatches-dir)
+    (message "Making monkey patches directory %s..." krisb-wip-monkeypatches-dir)
     (make-directory krisb-wip-monkeypatches-dir))
 
   (add-to-list 'load-path krisb-wip-monkeypatches-dir)
 
   ;; Symbolically link my monkeypatches to `krisb-wip-monkeypatches-dir'
-  (defmacro krisb-wip-monkeypatch-symlink (path)
-    "Symlink PATH into `krisb-wip-monkeypatches-dir'.
-  If PATH is already symlinked into `krisb-wip-monkeypatches-dir', then do
-  nothing."
-    `(let* ((patch-path (expand-file-name ,path))
-            (link-path
-             (expand-file-name (file-name-nondirectory patch-path) krisb-wip-monkeypatches-dir)))
-       (unless (file-exists-p link-path)
-         (message "Symlinking %s to %s..." patch-path link-path)
-         (make-symbolic-link patch-path link-path))))
+  (defmacro krisb-wip-monkeypatch-symlink (target)
+    "Symlink a file from `krisb-wip-monkeypatches-dir' to TARGET.
+  This macro is used to selectively choose files from outside the
+  `user-emacs-directory' to load and override packages installed normally
+  by an Emacs package manager.  (This assumes
+  `krisb-wip-monkeypatches-dir' is prepended to `load-path'.)  A use case
+  is loading local changes to upstream packages.
+
+  TARGET is a file path.  The name of the file in
+  `krisb-wip-monkeypatches-dir' is based on the `file-name-nondirectory'
+  of TARGET.
+
+  If TARGET is already symlinked into `krisb-wip-monkeypatches-dir', then
+  do nothing."
+    `(let* ((target-path (expand-file-name ,target))
+            (wip-path (expand-file-name (file-name-nondirectory target-path)
+                                        krisb-wip-monkeypatches-dir)))
+       (cond
+        ((not (file-exists-p target-path))
+         (warn "Monkey patch target does not exist: %s..." target-path))
+        ((not (file-exists-p wip-path))
+         (message "Symlinking monkey patch %s to %s..." target-path wip-path)
+         (make-symbolic-link target-path wip-path)))))
 
   <<link-monkeypatches>>
 #+end_src
@@ -1201,18 +1308,21 @@ This is intended to fulfill a similar purpose as Geiser with Geiser-guile, namel
 
   ;; Ensure the astro, css, and tsx tree-sitter language grammars are
   ;; installed, according to README:
-  ;; https://git.isincredibly.gay/srxl/astro-ts-mode#headline-5
-  (with-eval-after-load 'treesit
-    (add-to-list 'treesit-language-source-alist
-                 '(astro "https://github.com/virchau13/tree-sitter-astro"))
-    (unless (treesit-language-available-p 'astro)
-      (treesit-install-language-grammar 'astro))
-    (unless (treesit-language-available-p 'css)
-      (treesit-install-language-grammar 'css))
-    (add-to-list 'treesit-language-source-alist
-                 '(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
-    (unless (treesit-language-available-p 'tsx)
-      (treesit-install-language-grammar 'tsx)))
+  ;; https://git.isincredibly.gay/srxl/astro-ts-mode#headline-5.  But
+  ;; only do so in non-Guix systems.  For Guix System, those packages
+  ;; are installed by Guix rather than compiled here.
+  (unless guix-system-p
+    (with-eval-after-load 'treesit
+      (add-to-list 'treesit-language-source-alist
+  		 '(astro "https://github.com/virchau13/tree-sitter-astro"))
+      (unless (treesit-language-available-p 'astro)
+        (treesit-install-language-grammar 'astro))
+      (unless (treesit-language-available-p 'css)
+        (treesit-install-language-grammar 'css))
+      (add-to-list 'treesit-language-source-alist
+  		 '(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+      (unless (treesit-language-available-p 'tsx)
+        (treesit-install-language-grammar 'tsx))))
 
   ;;
   ;; Integration with `treesit-enabled-modes' and
@@ -4544,7 +4654,8 @@ See [[https://github.com/axelf4/emacs-completion-bench?tab=readme-ov-file#result
       ;; TODO 2025-11-09: Ensure that the enchant system package is
       ;; installed, too
       (setopt ispell-program-name (or (executable-find "enchant-2")
-                                      (executable-find "aspell"))
+                                      (executable-find "aspell")
+  				    ispell-program-name)
               ispell-quietly t
               ispell-help-in-bufferp 'electric
               ispell-dictionary "en_US"
@@ -7625,12 +7736,6 @@ Integration with org-ql:
 
     (setopt org-roam-folgezettel-default-filter-query '(box "main"))
 
-    ;; FIXME 2025-06-30: Eventually upstream contents of
-    ;; krisb-org-roam-ext once I figure out a generalizable zettelkasten
-    ;; workflow for most/all users.
-    (with-eval-after-load 'org-roam
-      (require 'krisb-org-roam-ext))
-
     ;; Load embark integration
     (with-eval-after-load 'org-roam
       (with-eval-after-load 'embark
@@ -8979,7 +9084,7 @@ Below are other modifications to ~display-buffer-alist~ found elsewhere in this 
 #+name: work-timer
 #+begin_src emacs-lisp
   (setup work-timer
-    (:package (work-timer :url "git@github.com:krisbalintona/work-timer.git"))
+    (:package (work-timer :url "https://github.com/krisbalintona/work-timer.git"))
     
     ;; FIXME 2025-11-20: I don't know how to `bind-key' before a keymap
     ;; is defined.  For now I :require, but this isn't ideal.
@@ -9095,6 +9200,14 @@ Consequently, the elisp backend is used if there is no other local backend to us
 
 *** Guix
 
+#+name: guix-system-p
+#+begin_src emacs-lisp
+  (defconst guix-system-p
+    (string-match-p "guix" (shell-command-to-string "grep '^ID=' /etc/os-release"))
+    "Whether the current system is a Guix System.
+  Non-nil if so, and nil otherwise.")
+#+end_src
+
 #+name: guix-trusted-content
 #+begin_src emacs-lisp
   (add-to-list 'trusted-content "/gnu/store/")
@@ -9204,9 +9317,6 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   <<bio>>
 
-  ;;; Add bespoke lisp modules to `load-path'
-  <<site-lisp>>
-
   ;;; Add WIP "monkey patches" to `load-path'
   <<wip>>
 
@@ -9232,7 +9342,8 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   ;;; Miscellaneous options for built-ins
   (setup emacs
-    <<emacs-misc>>)
+    <<emacs-misc>>
+    )
 
   ;;; Custom
   <<set-and-load-custom-file>>

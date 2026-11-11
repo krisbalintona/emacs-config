@@ -1,1 +1,0 @@
-/home/krisbalintona/emacs-repos/packages/emacs-vtable-ship-mints/lisp/emacs-lisp/vtable.el
