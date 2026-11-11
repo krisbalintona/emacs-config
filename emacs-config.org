@@ -34,6 +34,8 @@ As of 2026-02-06, the following are the flags I prefer to compile Emacs with.
 
 #+name: emacs-environment
 #+begin_src emacs-lisp
+  <<guix-system-p>>
+
   (defconst krisb-extra-verbose-p (getenv "EXTRA_VERBOSE")
     "Whether Emacs should be \"extra verbose\" with certain things.
   A variable I use in several places when I want Emacs to be particularly
@@ -1293,18 +1295,21 @@ This is intended to fulfill a similar purpose as Geiser with Geiser-guile, namel
 
   ;; Ensure the astro, css, and tsx tree-sitter language grammars are
   ;; installed, according to README:
-  ;; https://git.isincredibly.gay/srxl/astro-ts-mode#headline-5
-  (with-eval-after-load 'treesit
-    (add-to-list 'treesit-language-source-alist
-                 '(astro "https://github.com/virchau13/tree-sitter-astro"))
-    (unless (treesit-language-available-p 'astro)
-      (treesit-install-language-grammar 'astro))
-    (unless (treesit-language-available-p 'css)
-      (treesit-install-language-grammar 'css))
-    (add-to-list 'treesit-language-source-alist
-                 '(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
-    (unless (treesit-language-available-p 'tsx)
-      (treesit-install-language-grammar 'tsx)))
+  ;; https://git.isincredibly.gay/srxl/astro-ts-mode#headline-5.  But
+  ;; only do so in non-Guix systems.  For Guix System, those packages
+  ;; are installed by Guix rather than compiled here.
+  (unless guix-system-p
+    (with-eval-after-load 'treesit
+      (add-to-list 'treesit-language-source-alist
+  		 '(astro "https://github.com/virchau13/tree-sitter-astro"))
+      (unless (treesit-language-available-p 'astro)
+        (treesit-install-language-grammar 'astro))
+      (unless (treesit-language-available-p 'css)
+        (treesit-install-language-grammar 'css))
+      (add-to-list 'treesit-language-source-alist
+  		 '(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+      (unless (treesit-language-available-p 'tsx)
+        (treesit-install-language-grammar 'tsx))))
 
   ;;
   ;; Integration with `treesit-enabled-modes' and
@@ -9186,6 +9191,14 @@ Consequently, the elisp backend is used if there is no other local backend to us
 ** Platform- and system-specific configuration
 
 *** Guix
+
+#+name: guix-system-p
+#+begin_src emacs-lisp
+  (defconst guix-system-p
+    (string-match-p "guix" (shell-command-to-string "grep '^ID=' /etc/os-release"))
+    "Whether the current system is a Guix System.
+  Non-nil if so, and nil otherwise.")
+#+end_src
 
 #+name: guix-trusted-content
 #+begin_src emacs-lisp

@@ -1,5 +1,10 @@
 ;; -*- lexical-binding: t; -*-
 
+(defconst guix-system-p
+  (string-match-p "guix" (shell-command-to-string "grep '^ID=' /etc/os-release"))
+  "Whether the current system is a Guix System.
+Non-nil if so, and nil otherwise.")
+
 (defconst krisb-extra-verbose-p (getenv "EXTRA_VERBOSE")
   "Whether Emacs should be \"extra verbose\" with certain things.
 A variable I use in several places when I want Emacs to be particularly
@@ -5890,18 +5895,21 @@ When called with `-' instead call `inspector-inspect-expression'."
 
 ;; Ensure the astro, css, and tsx tree-sitter language grammars are
 ;; installed, according to README:
-;; https://git.isincredibly.gay/srxl/astro-ts-mode#headline-5
-(with-eval-after-load 'treesit
-  (add-to-list 'treesit-language-source-alist
-               '(astro "https://github.com/virchau13/tree-sitter-astro"))
-  (unless (treesit-language-available-p 'astro)
-    (treesit-install-language-grammar 'astro))
-  (unless (treesit-language-available-p 'css)
-    (treesit-install-language-grammar 'css))
-  (add-to-list 'treesit-language-source-alist
-               '(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
-  (unless (treesit-language-available-p 'tsx)
-    (treesit-install-language-grammar 'tsx)))
+;; https://git.isincredibly.gay/srxl/astro-ts-mode#headline-5.  But
+;; only do so in non-Guix systems.  For Guix System, those packages
+;; are installed by Guix rather than compiled here.
+(unless guix-system-p
+  (with-eval-after-load 'treesit
+    (add-to-list 'treesit-language-source-alist
+		 '(astro "https://github.com/virchau13/tree-sitter-astro"))
+    (unless (treesit-language-available-p 'astro)
+      (treesit-install-language-grammar 'astro))
+    (unless (treesit-language-available-p 'css)
+      (treesit-install-language-grammar 'css))
+    (add-to-list 'treesit-language-source-alist
+		 '(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+    (unless (treesit-language-available-p 'tsx)
+      (treesit-install-language-grammar 'tsx))))
 
 ;;
 ;; Integration with `treesit-enabled-modes' and
