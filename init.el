@@ -511,7 +511,8 @@ package-archives, e.g. \"gnu\")."))
   (setup face-remap
     
     ;; Hide `buffer-face-mode' minor-mode lighter
-    (:hide-mode buffer-face-mode)))
+    (:hide-mode buffer-face-mode))
+  )
 
 ;;; Custom
 ;;; Set and load custom file

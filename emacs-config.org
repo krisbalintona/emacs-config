@@ -9221,7 +9221,8 @@ You will find in the READMEs of most of the above comparisons between each. I am
 
   ;;; Miscellaneous options for built-ins
   (setup emacs
-    <<emacs-misc>>)
+    <<emacs-misc>>
+    )
 
   ;;; Custom
   <<set-and-load-custom-file>>
