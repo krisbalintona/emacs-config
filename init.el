@@ -59,17 +59,25 @@ nothing."
 ;;; Meta-configuration
 
 ;;;; Bespoke helpers
-;;;;; Variables
-;; FIXME 2025-05-20: If the path denoted by `krisb-folio-directory'
-;; does not exist, other packages that depend on this value are given
-;; a non-existing path, likely resulting in errors.  We might solve
-;; this by turning this into a function instead, returning nil if it
-;; doesn't exist, thereby avoiding passing a non-existing file path to
-;; these packages.
-(defvar krisb-folio-directory (expand-file-name "org-database" "~/Documents")
+;;;;; Paths
+(defvar krisb-folio-directory
+  (let ((path (expand-file-name "org-database" "~/Documents")))
+    (unless (file-exists-p path)
+      ;; Ensure the path exists since many other things in the config
+      ;; depend on it.  (Creating the directory is easier than
+      ;; accounting for a non-existent directory everywhere else.)
+      (make-directory path t))
+    path)
   "The directory holding my org files.")
 
-(defvar krisb-notes-directory (expand-file-name "notes" krisb-folio-directory)
+(defvar krisb-notes-directory 
+  (let ((path (expand-file-name "notes" krisb-folio-directory)))
+    (unless (file-exists-p path)
+      ;; Ensure the path exists since many other things in the config
+      ;; depend on it.  (Creating the directory is easier than
+      ;; accounting for a non-existent directory everywhere else.)
+      (make-directory path t))
+    path)
   "My notes directory.")
 
 (defvar krisb-org-agenda-directory (expand-file-name "agenda" krisb-folio-directory)
