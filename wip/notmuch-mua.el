@@ -1,1 +1,0 @@
-/home/krisbalintona/emacs-repos/packages/notmuch/emacs/notmuch-mua.el

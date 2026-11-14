@@ -9,3 +9,4 @@ recipes/*.elc
 /user-lisp/.user-lisp-autoloads.el
 /var/
 /var-old/
+wip/
