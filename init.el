@@ -32,22 +32,35 @@ patches to, say, org-mode or Emacs, by loading those versions at
 startup.")
 
 (unless (file-exists-p krisb-wip-monkeypatches-dir)
-  (message "Making directory %s..." krisb-wip-monkeypatches-dir)
+  (message "Making monkey patches directory %s..." krisb-wip-monkeypatches-dir)
   (make-directory krisb-wip-monkeypatches-dir))
 
 (add-to-list 'load-path krisb-wip-monkeypatches-dir)
 
 ;; Symbolically link my monkeypatches to `krisb-wip-monkeypatches-dir'
-(defmacro krisb-wip-monkeypatch-symlink (path)
-  "Symlink PATH into `krisb-wip-monkeypatches-dir'.
-If PATH is already symlinked into `krisb-wip-monkeypatches-dir', then do
-nothing."
-  `(let* ((patch-path (expand-file-name ,path))
-          (link-path
-           (expand-file-name (file-name-nondirectory patch-path) krisb-wip-monkeypatches-dir)))
-     (unless (file-exists-p link-path)
-       (message "Symlinking %s to %s..." patch-path link-path)
-       (make-symbolic-link patch-path link-path))))
+(defmacro krisb-wip-monkeypatch-symlink (target)
+  "Symlink a file from `krisb-wip-monkeypatches-dir' to TARGET.
+This macro is used to selectively choose files from outside the
+`user-emacs-directory' to load and override packages installed normally
+by an Emacs package manager.  (This assumes
+`krisb-wip-monkeypatches-dir' is prepended to `load-path'.)  A use case
+is loading local changes to upstream packages.
+
+TARGET is a file path.  The name of the file in
+`krisb-wip-monkeypatches-dir' is based on the `file-name-nondirectory'
+of TARGET.
+
+If TARGET is already symlinked into `krisb-wip-monkeypatches-dir', then
+do nothing."
+  `(let* ((target-path (expand-file-name ,target))
+          (wip-path (expand-file-name (file-name-nondirectory target-path)
+                                      krisb-wip-monkeypatches-dir)))
+     (cond
+      ((not (file-exists-p target-path))
+       (warn "Monkey patch target does not exist: %s..." target-path))
+      ((not (file-exists-p wip-path))
+       (message "Symlinking monkey patch %s to %s..." target-path wip-path)
+       (make-symbolic-link target-path wip-path)))))
 
 ;; I have several patches awaiting review or application.
 (krisb-wip-monkeypatch-symlink "~/emacs-repos/packages/notmuch/emacs/notmuch.el")
