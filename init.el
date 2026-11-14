@@ -5361,7 +5361,7 @@ which file on the system it backs up."
 
 ;;; Work-timer
 (setup work-timer
-  (:package (work-timer :url "git@github.com:krisbalintona/work-timer.git"))
+  (:package (work-timer :url "https://github.com/krisbalintona/work-timer.git"))
   
   ;; FIXME 2025-11-20: I don't know how to `bind-key' before a keymap
   ;; is defined.  For now I :require, but this isn't ideal.
