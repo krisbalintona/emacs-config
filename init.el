@@ -3193,12 +3193,6 @@ Removes the properties denoted by `org-review-next-property-name' and
 
   (setopt org-roam-folgezettel-default-filter-query '(box "main"))
 
-  ;; FIXME 2025-06-30: Eventually upstream contents of
-  ;; krisb-org-roam-ext once I figure out a generalizable zettelkasten
-  ;; workflow for most/all users.
-  (with-eval-after-load 'org-roam
-    (require 'krisb-org-roam-ext))
-
   ;; Load embark integration
   (with-eval-after-load 'org-roam
     (with-eval-after-load 'embark
