@@ -4905,7 +4905,8 @@ https://github.com/org-mime/org-mime?tab=readme-ov-file#css-style-customization.
     ;; TODO 2025-11-09: Ensure that the enchant system package is
     ;; installed, too
     (setopt ispell-program-name (or (executable-find "enchant-2")
-                                    (executable-find "aspell"))
+                                    (executable-find "aspell")
+				    ispell-program-name)
             ispell-quietly t
             ispell-help-in-bufferp 'electric
             ispell-dictionary "en_US"
