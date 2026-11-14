@@ -649,7 +649,10 @@ package-archives, e.g. \"gnu\")."))
   (setopt fontaine-latest-state-file
           (no-littering-expand-var-file-name "fontaine/fontaine-latest-state.eld")
           fontaine-presets
-          '((default-wsl2
+          '((default-Maur            ; With 1.7 display scaling factor
+             :default-height 130
+             :inherit iosevka-variants)
+            (default-Mute
              :default-height 180
              :inherit iosevka-variants)
             (iosevka-variants
